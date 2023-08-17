@@ -1,12 +1,37 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.linting.lintOnSave": true,
-    "python.linting.pylintArgs": [
-         "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
-    ],
-    "python.autoComplete.extraPaths": ["./code/"],
+    "pylint.severity": {
+        "convention": "Information",
+        "error": "Error",
+        "fatal": "Error",
+        "refactor": "Hint",
+        "warning": "Warning",
+        "info": "Information"
+    },
+    "pylint.args": ["--rcfile=${workspaceFolder}/.vscode/.pylintrc"],
+    // "pylint.path": ["~/.local/bin/pylint"],
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.inlayHints.callArgumentNames": true,
     "python.analysis.extraPaths": ["./code/"],
+    "python.autoComplete.extraPaths": ["./code/"],
+    "editor.inlayHints.enabled": "on",
+
+    // "python.linting.pylintEnabled": true,
+    // "python.linting.enabled": true,
+    // "python.linting.lintOnSave": true,
+    // "python.linting.pylintArgs": [
+    //      "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
+    // ],
+
     "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "basic",
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": true,
+    "git.detectSubmodules": true,
+    "git.enableStatusBarSync": true,
+
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/__pycache__/**": true
+      }
 }
