@@ -1,10 +1,13 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.linting.lintOnSave": true,
-    "python.linting.pylintArgs": [
-         "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
-    ],
+    "pylint.args": ["--rcfile=${workspaceFolder}/.vscode/.pylintrc"],
+    
+    // "python.linting.pylintEnabled": true,
+    // "python.linting.enabled": true,
+    // "python.linting.lintOnSave": true,
+    // "python.linting.pylintArgs": [
+    //      "--rcfile=${workspaceFolder}/.vscode/.pylintrc"
+    // ],
+
     "python.autoComplete.extraPaths": ["./code/"],
     "python.analysis.extraPaths": ["./code/"],
     "python.languageServer": "Pylance",
