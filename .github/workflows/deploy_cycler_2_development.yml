@@ -23,7 +23,7 @@ jobs:
     name: Build package on push ${{ github.ref_name }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      module_name: "./"
+      module_name: "."
 
   build-package-on-pull-request:
     if: ${{ github.event_name == 'pull_request_review' }}
