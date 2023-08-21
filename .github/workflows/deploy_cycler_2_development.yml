@@ -17,7 +17,7 @@ on:
                 "mid_pwr", "app_diag", "app_man" ]
 
 env:
-  package-name: "wattrex-battery-cycler-controller"
+  package-name: wattrex-battery-cycler-controller
 
 jobs:
 
