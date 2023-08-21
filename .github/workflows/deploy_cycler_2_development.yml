@@ -7,14 +7,14 @@ on:
     branches: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
 
-  # pull_request_review:
-  #   # types: [edited]
-  #   review:
-  #     state: [approved]
-  #     pull_request:
-  #       base:
-  #         ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
-  #               "mid_pwr", "app_diag", "app_man" ]
+  pull_request_review:
+    # types: [edited]
+    review:
+      state: [approved]
+      pull_request:
+        base:
+          ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
+                "mid_pwr", "app_diag", "app_man" ]
 
 jobs:
 
