@@ -22,6 +22,7 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
+
 class MidDataAllStatusC:
     '''
     Class that gather status of all used devices.

@@ -12,6 +12,8 @@
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.inlayHints.callArgumentNames": true,
+    "python.autoComplete.extraPaths": ["./code/"],
+
     "python.analysis.extraPaths": ["./code/"],
     "python.autoComplete.extraPaths": ["./code/"],
     "editor.inlayHints.enabled": "on",
