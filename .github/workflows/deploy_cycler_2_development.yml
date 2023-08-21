@@ -17,7 +17,7 @@ on:
                 "mid_pwr", "app_diag", "app_man" ]
 
 env:
-  package-name: wattrex-battery-cycler-controller
+  PACKAGE_NAME: wattrex-battery-cycler-controller
 
 jobs:
 
@@ -26,14 +26,14 @@ jobs:
     name: Build package on push ${{ github.ref_name }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: "${{ package-name }}"
+      package-name: $PACKAGE_NAME
 
   build-package-on-pull-request:
     if: ${{ github.event_name == 'pull_request_review' }}
     name: Build package  ${{ github.event.pull_request.head.ref }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: ${{ package-name }}
+      package-name: $PACKAGE_NAME
 
   publish-package:
 
@@ -54,12 +54,12 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name:  ${{ package-name }}
-          path: "${{ package-name }}/dist/"
+          name: $PACKAGE_NAME
+          path: "$PACKAGE_NAME/dist/"
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: "${{ package-name }}/dist/"
+          packages-dir: "$PACKAGE_NAME/dist/"
