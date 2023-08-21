@@ -53,7 +53,7 @@ ignore-paths=.*/build/, .*/resources
 # Files or directories matching the regular expression patterns are skipped.
 # The regex matches against base names, not paths. The default value ignores
 # Emacs file locks
-ignore-patterns=^\., ..txt, ..yaml, ..yml, __version__.py, MANIFEST.in, pyproject.toml
+ignore-patterns=^\., ..txt, ..yaml, ..yml, __version__.py, MANIFEST.in, pyproject.toml, requirements.txt
 
 # List of module names for which member attributes should not be checked
 # (useful for modules/projects where namespaces are manipulated during runtime
