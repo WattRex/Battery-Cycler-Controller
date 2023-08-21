@@ -16,6 +16,8 @@ on:
           ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
 
+env:
+  package-name: "wattrex-battery-cycler-controller"
 jobs:
 
   build-package-on-push:
@@ -23,14 +25,14 @@ jobs:
     name: Build package on push ${{ github.ref_name }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      module_name: "*"
+      package-name: ${{ env.package-name }}
 
   build-package-on-pull-request:
     if: ${{ github.event_name == 'pull_request_review' }}
     name: Build package  ${{ github.event.pull_request.head.ref }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      module_name: "*" # ${{ github.event.pull_request.head.ref }}
+      package-name: ${{ env.package-name }}
 
   publish-package:
 
@@ -51,12 +53,12 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name:  "wattrex-battery-controller" #${{ github.event.pull_request.head.ref }}
-          path: "wattrex-battery-controller/dist/" #${{ github.event.pull_request.head.ref }}/dist/
+          name:  ${{ env.package-name }}
+          path: "${{ env.package-name }}/dist/"
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: "wattrex-battery-controller/dist/" # ${{ github.event.pull_request.head.ref }}/dist/
+          packages-dir: "${{ env.package-name }}/dist/"

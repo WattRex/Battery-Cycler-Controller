@@ -15,7 +15,6 @@
     "python.autoComplete.extraPaths": ["./code/"],
 
     "python.analysis.extraPaths": ["./code/"],
-    "python.autoComplete.extraPaths": ["./code/"],
     "editor.inlayHints.enabled": "on",
 
     // "python.linting.pylintEnabled": true,
