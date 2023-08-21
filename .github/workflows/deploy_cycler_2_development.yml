@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
-    
+
   # pull_request_review:
   #   # types: [edited]
   #   review:
@@ -17,23 +17,23 @@ on:
   #               "mid_pwr", "app_diag", "app_man" ]
 
 jobs:
-  
+
   build-package-on-push:
     if: ${{ github.event_name == 'push'}}
     name: Build package on push ${{ github.ref_name }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      module_name: ""
-        
+      module_name: "./"
+
   build-package-on-pull-request:
     if: ${{ github.event_name == 'pull_request_review' }}
     name: Build package  ${{ github.event.pull_request.head.ref }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
       module_name: ${{ github.event.pull_request.head.ref }}
-    
+
   publish-package:
-    
+
     name: Publish package ${{ github.event.pull_request.head.ref }} to PyPi
     if: ${{ github.event_name == 'pull_request_review' }}
     needs: build-package-on-pull-request
