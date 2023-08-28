@@ -1,0 +1,21 @@
+[Unit]
+Description=can_sniffer
+After=multi-user.target
+StartLimitBurst=3
+StartLimitIntervalSec=15
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+
+ExecStartPre=/usr/sbin/ip link set down can0
+ExecStartPre=/usr/sbin/ip link set up txqueuelen 100000 can0 type can bitrate 125000
+
+ExecStart=/usr/bin/python3 ${R_PATH}/can_node.py
+
+ExecStopPost=/usr/sbin/ip link set down can0
+ExecStopPost=echo "FINAL"
+
+[Install]
+WantedBy=multi-user.target
