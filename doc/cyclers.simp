@@ -139,7 +139,7 @@
       </counter>
       <counter>
         <item-type type-id="erd-relationship" type="Relationship" />
-        <value>205</value>
+        <value>206</value>
       </counter>
       <counter>
         <item-type type-id="universal-connector" type="Universal Connector" />
@@ -17704,7 +17704,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-51,-328" zoom="0.9">
+              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="368,-94" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -18520,7 +18520,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-101,-178" zoom="0.8">
+              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-101,-142" zoom="0.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -19596,7 +19596,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pee3136417d5145208b50e53e02701d01_126679192" name="mid_pwr" order-index="3" overview-order-index="6" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-32,26">
+              <diagram type="uml-class" id="pee3136417d5145208b50e53e02701d01_126679192" name="mid_pwr" order-index="3" overview-order-index="6" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-113,-46" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -25035,7 +25035,7 @@ Qué se hace con el código de error?</comment>
             <layer id="886157dfeeaa49c6a2c51509a2e0c784" name="Default" visible="true" enabled="true" locked="false" />
           </diagram>
         </model>
-        <model id="p2bea01753635461cb0987c27c40a3b51_921758731" name="StatusMachineDiagram" namespace="" order-index="10" expanded="true">
+        <model id="p2bea01753635461cb0987c27c40a3b51_921758731" name="StatusMachineDiagram" namespace="" order-index="10">
           <meta>
             <authors>
               <author> </author>
@@ -25226,7 +25226,7 @@ Qué se hace con el código de error?</comment>
               </item>
             </layer>
           </diagram>
-          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-323,-51" zoom="0.5">
+          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-16,357" zoom="0.9">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -25576,7 +25576,7 @@ Qué se hace con el código de error?</comment>
           </meta>
           <abstract-items />
           <sub-models />
-          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-111,-401" zoom="0.6">
+          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-109,-330" zoom="0.6">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -29689,7 +29689,7 @@ Qué se hace con el código de error?</comment>
           </diagram>
         </model>
       </sub-models>
-      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="ComponentsDiagram" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-60,-346" zoom="0.6">
+      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="ComponentsDiagram" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="397,-757">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -31058,7 +31058,7 @@ Qué se hace con el código de error?</comment>
             <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" from-iid="35c3b924a749449789beb94849902c09" to="di2b54705cd02143bc86dd5919a175eb066328" to-iid="b86f5fbe4f1141e0b30e0d377c9e4215" />
           </item>
           <item id="1ddfc31a3d1d41a78efc43a74c489211" iid="df8a592483a3495b82bef562fe444693" creation-date="07/05/2023 09:23:19" order-index="123" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1228" y1="-590" x2="1228" y2="-250" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="65" end-local-pos="65" name-position="-80,-120">
+            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1228" y1="-590" x2="1228" y2="-250" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="65" end-local-pos="65" name-position="-80,-80">
               <points>
                 <point x="1228" y="-590" />
                 <point x="1228" y="-250" />
@@ -31384,7 +31384,7 @@ Qué se hace con el código de error?</comment>
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="188,434">
+      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-472,-130" zoom="0.4">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -31396,7 +31396,7 @@ Qué se hace con el código de error?</comment>
           </authors>
           <description />
           <creation-date>06/29/2023 13:19:45</creation-date>
-          <change-date>07/17/2023 12:47:08</change-date>
+          <change-date>08/29/2023 09:45:48</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
