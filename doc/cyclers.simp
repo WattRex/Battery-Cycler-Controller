@@ -25,7 +25,7 @@
       </counter>
       <counter>
         <item-type type-id="text" type="Text" />
-        <value>2</value>
+        <value>3</value>
       </counter>
       <counter>
         <item-type type-id="class" type="Class" />
@@ -111,6 +111,10 @@
         <item-type type="Unknown" />
         <value>1</value>
       </counter>
+      <counter>
+        <item-type type-id="drawing-shape" type="Simple Shape" />
+        <value>4</value>
+      </counter>
     </entity-names>
     <entity-ids>
       <counter>
@@ -147,15 +151,15 @@
       </counter>
       <counter>
         <item-type type-id="drawing-shape" type="Simple Shape" />
-        <value>192</value>
+        <value>231</value>
       </counter>
       <counter>
         <item-type type-id="text" type="Text" />
-        <value>198</value>
+        <value>232</value>
       </counter>
       <counter>
         <item-type type-id="group" type="Group" />
-        <value>56</value>
+        <value>61</value>
       </counter>
       <counter>
         <item-type type-id="relationship" type="Association" />
@@ -2153,6 +2157,33 @@
       <structural-feature type="DrvBkDataC" type-id="Class:f4756779010447738bd4900eca258469" />
     </item>
     <item id="df2490d5ff734ecaa32c523e46afbfd0" cid="PROP129" type="property" owner="cefe948466e645a088c4513d53a6da2f" creation-date="07/10/2023 09:16:30" visibility="private" />
+    <item id="di566d5f0c72154eadbaa69c2eb4f79e7f3816" cid="ELEM231" type="text" name="Text3" creation-date="08/28/2023 15:03:42">
+      <style style-name="Transparent" shadow-type="smooth" shadow-offset="2,2" shadow-color="#32000000" wrap-name-text="true" wrap-other-text="true" padding="1" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#000000" font="Segoe UI;11.25;B" horizontal-alignment="left" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#000000" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#1E1E1E" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#1E1E1E" font="Segoe UI;9;I" />
+        <background type="solid" colors="#00FFFFFF,#00FFFFFF" />
+        <border color="#000000" width="0" dash-style="Solid" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-color="#32000000" wrap-name-text="true" wrap-other-text="true" padding="1" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#000000" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#000000" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#1E1E1E" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#1E1E1E" font="Segoe UI;9;I" />
+            <background type="solid" colors="#7E1E90FF,#87CEFA" />
+            <border color="#00008B" dash-style="Solid" />
+            <label-connector color="#000000" dash-style="Solid" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <drawing-text>
+        <text>Push</text>
+      </drawing-text>
+    </item>
     <item id="dic85f547c1e6242d6910d7ce7e3a03b6c1893" cid="ELEM029" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
@@ -2739,6 +2770,11 @@
       </fragment>
       <interaction-operand guard="" />
     </item>
+    <item id="di05155e19a10b4512ae3d20d201aa04523816" cid="ELEM230" type="drawing-shape" name="SimpleShape4" style-class="Flat Yellow" creation-date="08/28/2023 15:03:17">
+      <style class="Flat Yellow" />
+      <drawing />
+      <drawing-shape type="ArrowDown" />
+    </item>
     <item id="3253a323aeed4badaa3fdeefa82adb4d" cid="GROUP027" type="group" name="Group" creation-date="07/17/2023 15:05:03" />
     <item id="dib43b676bf3754ef59270a94f7e56423b7186" cid="PROP329" type="property" name="voltage" owner="di116f34e82bb64559a9aeedceecd72ab15430" creation-date="07/10/2023 13:43:09" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -2851,6 +2887,11 @@
     </item>
     <item id="1b23c79755b543ad8cc55de6cc20a8d8" cid="ELEM195" type="general-transition" creation-date="08/28/2023 12:53:10" from="dide062257e4ba4868a20bb1d3f7a084609248" to="dia0a7d1fca1614b848fe3ea7bbd47513c5111" visibility="package">
       <transition guard="" behaviourExpression="" />
+    </item>
+    <item id="di4fd8fc1669494c189167836b47076b554599" cid="ELEM210" type="drawing-shape" name="SimpleShape4" style-class="Flat Yellow" creation-date="08/28/2023 15:03:17">
+      <style class="Flat Yellow" />
+      <drawing />
+      <drawing-shape type="ArrowDown" />
     </item>
     <item id="die89adf7834414038adf0dbbdbf1532187850" cid="PROP241" type="property" name="model" owner="di3f1173a556014bcb8a71995de064eadc7850" creation-date="07/10/2023 09:06:51" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -5617,6 +5658,33 @@ Qué se hace con el código de error?</comment>
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
+    <item id="di944de6863eea44e6ba8da56ea6aac7924599" cid="ELEM227" type="text" name="Text3" creation-date="08/28/2023 15:03:42">
+      <style style-name="Transparent" shadow-type="smooth" shadow-offset="2,2" shadow-color="#32000000" wrap-name-text="true" wrap-other-text="true" padding="1" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#000000" font="Segoe UI;11.25;B" horizontal-alignment="left" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#000000" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#1E1E1E" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#1E1E1E" font="Segoe UI;9;I" />
+        <background type="solid" colors="#00FFFFFF,#00FFFFFF" />
+        <border color="#000000" width="0" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-color="#32000000" wrap-name-text="true" wrap-other-text="true" padding="1" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#000000" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#000000" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#1E1E1E" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#1E1E1E" font="Segoe UI;9;I" />
+            <background type="solid" colors="#7E1E90FF,#87CEFA" />
+            <border color="#00008B" />
+            <label-connector color="#000000" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <drawing-text>
+        <text>Pull Request</text>
+      </drawing-text>
+    </item>
     <item id="b6379799296e42f5b2e812f2d2839bb2" cid="ST008" type="state" name="Calc new pwr direction (chg, dchg or wait)" creation-date="08/28/2023 12:43:44" visibility="undefined">
       <state composite="false" orthogonal="false" simple="false" submachine-state="false">
         <state-invariant />
@@ -7163,6 +7231,7 @@ Qué se hace con el código de error?</comment>
       </style>
       <structural-feature type="str" type-id="Python.str" />
     </item>
+    <item id="84dd7ae83c70495fbf1a2a92f8fe760e" cid="GROUP059" type="group" name="Group" creation-date="08/28/2023 15:07:34" />
     <item id="78f3d0e86a1741a7ab9217f2963991b4" cid="PROP103" type="property" name="__appliedMode" owner="dieffed73c069a46ba8b56be643176419e9124" creation-date="07/10/2023 09:03:36" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -28584,7 +28653,7 @@ Qué se hace con el código de error?</comment>
               </item>
             </layer>
           </diagram>
-          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="2172,-170" zoom="0.7">
+          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="2022,-41" zoom="0.8">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -28596,34 +28665,36 @@ Qué se hace con el código de error?</comment>
               </authors>
               <description />
               <creation-date>08/24/2023 09:17:45</creation-date>
-              <change-date>08/24/2023 11:03:46</change-date>
+              <change-date>08/28/2023 15:07:43</change-date>
               <revision-count>0</revision-count>
               <version />
             </meta>
             <abstract-items>
-              <item id="di67d6780c4455418db4f944f5345482c58078" cid="DEP059" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:26:52" from="dib31d6a5ee65745fe877743a490ab71168078" to="dif0d4d186dbec4d89b085773e5854cab98078" visibility="package" />
-              <item id="dia6417330ad214659beab1dff919e8fe44849" cid="CPT122" type="component" name="Build" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+              <item id="di77d8f1c9791b415eaad874251af9e3588078" cid="DEP058" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:33:38" from="di4923bbd655e2412bb592fb6a0efa7b5c8078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
+              <item id="dib0b03e731c1d426f843ab48d013ab70a4232" cid="DEP067" type="dependency" owner="dic089daa9c354486b9ce02c7056e9b9c04083" creation-date="08/24/2023 08:33:38" from="di96cf8c60383e4100a92b7f20a42316198078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
+              <item id="di0be84338928343749c47228f4305c0489887" cid="AF094" type="artifact" name="deploy_staging.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
                 <stereotypes>
-                  <stereotype name="process" />
+                  <stereotype name="github workflow" />
                 </stereotypes>
                 <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
                 </stereotype-instances>
-                <component />
+                <style class="Flat Orange" />
+                <artifact filename="" />
               </item>
-              <item id="di4182a35240644b7a9e97062d565549c24849" cid="ELEM218" type="frame" name="Test with emulated battery" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:19:57">
-                <owned-items />
-                <frame type="dep" />
-              </item>
-              <item id="7b2228fb9904426fa00462d49e6a8964" cid="DPL045" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:14" from="di0be84338928343749c47228f4305c0489887" to="di84deca95ab80476eb59beec0e3906d641736" visibility="package">
+              <item id="di3d9d6614bb464658b39dde92d2bedf314849" cid="DEP053" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:33:38" from="di1c91ee61359d40b9b92b57ca12ac9f344849" to="di0ff20b1c79f24eb58aee437861d6938c4849" visibility="package" />
+              <item id="di8959222a4186451183ee37e7e0090ed14727" cid="DEP075" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:31:01" from="dieaef2cc8956c4ff0a3569a3a6f0faf944727" to="diaebca61610d94dcf9d2284fe251c4db04727" visibility="package" />
+              <item id="diee816438912a4fc2811d6a09dd3122d54849" cid="GNR057" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="di0ff20b1c79f24eb58aee437861d6938c4849" to="dia6417330ad214659beab1dff919e8fe44849" visibility="package" />
+              <item id="di530f8e4426284aaaa038282ab7808dce8078" cid="AF086" type="artifact" name="Test battery" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
                 <stereotypes>
-                  <stereotype name="deploy" />
+                  <stereotype name="device" />
                 </stereotypes>
                 <stereotype-instances>
-                  <stereotype id="7b2228fb9904426fa00462d49e6a8964_deploy_c" type="deploy" ref="" />
+                  <stereotype id="d67d53db432f4379ba565a9618b52982" type="device" ref="" />
                 </stereotype-instances>
+                <artifact filename="" />
               </item>
-              <item id="die2ab11139fcc43e0a5a1055a6277a4e38492" cid="CPT136" type="component" name="Make github release" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
+              <item id="diaebca61610d94dcf9d2284fe251c4db04727" cid="CPT135" type="component" name="Publish package to Pypi" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
                 <stereotypes>
                   <stereotype name="process" />
                 </stereotypes>
@@ -28636,33 +28707,296 @@ Qué se hace con el código de error?</comment>
                 <object-node />
                 <activity-parameter parameter-ref="f4a8b146882c4c2c9a2208797eec9941" />
               </item>
-              <item id="di971b8f946e1f4f279498d147709c59884727" cid="NOD033" type="node" name="Development Github docker container" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="08/24/2023 09:19:39" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="de871d9a8adf46f086cffd98eed547d5" cid="DPL043" type="deployment" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 09:42:07" from="dibe9214d33c664d3bb7a4aeb07bf4245f5510" to="430fbc9a54af42638b01fe266a9c38ce" visibility="package">
+              <item id="di52302367690e42d796877e59f3572f378078" cid="AF082" type="artifact" name="Battery model" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
                 <stereotypes>
-                  <stereotype name="deploy" />
+                  <stereotype name="files" />
                 </stereotypes>
                 <stereotype-instances>
-                  <stereotype id="de871d9a8adf46f086cffd98eed547d5_deploy_c" type="deploy" ref="" />
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
                 </stereotype-instances>
+                <artifact filename="" />
               </item>
-              <item id="di1b36587dd49b439eb4fed50ca78c9d6a8078" cid="DEP065" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:26:52" from="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" to="di051de0e771214d34844d99185a5201198078" visibility="package" />
-              <item id="di617a5ba16e3d42328603d29e6386a1098078" cid="AF085" type="artifact" name="EPC" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+              <item id="b4fa54378fbd47a290c646c938e3fcd0" cid="ELEM200" type="text" name="Text3" style-class="Transparent" creation-date="08/28/2023 15:03:42">
+                <style class="Transparent" />
+                <drawing-text>
+                  <text>Push</text>
+                </drawing-text>
+              </item>
+              <item id="diad13df56bc2449c09ad23ec2765e0b268078" cid="NOD031" type="node" name="On host docker container" creation-date="08/24/2023 08:51:29" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="di0da879d8799d4e2faaa96b165c94c2014727" cid="DEP076" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" from="dic8ad030bf4bc4022a7b647973a1d67a74727" to="dic51bdcd917d04944ae1916e8305448134727" visibility="package" />
+              <item id="di1a2922bf33634bd6ae0b0710d140e7818078" cid="AF073" type="artifact" name="Python package" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="package" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di56353b7d5dd54f6ea0f4789cd135ccd88078" cid="DEP063" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:26:52" from="di530f8e4426284aaaa038282ab7808dce8078" to="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" visibility="package" />
+              <item id="difa0999064e9545dd8c23c3ad326fd1108476" cid="CPT137" type="component" name="Create docker image" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="dia2182288644049e3b260e5083957bcd24849" cid="NOD027" type="node" name="Github docker container" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 08:51:29" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="di01d36229e1d248f8baa3c26a949f0c778078" cid="DEP064" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:33:38" from="di617a5ba16e3d42328603d29e6386a1098078" to="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" visibility="package" />
+              <item id="di3c65a489382b49b2b761498a25f35f368078" cid="AF078" type="artifact" name="Test battery" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
                 <stereotypes>
                   <stereotype name="device" />
                 </stereotypes>
                 <stereotype-instances>
-                  <stereotype id="dcddb124ded44cae95743f690d9da875" type="device" ref="" />
+                  <stereotype id="d67d53db432f4379ba565a9618b52982" type="device" ref="" />
                 </stereotype-instances>
                 <artifact filename="" />
               </item>
-              <item id="di8959222a4186451183ee37e7e0090ed14727" cid="DEP075" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:31:01" from="dieaef2cc8956c4ff0a3569a3a6f0faf944727" to="diaebca61610d94dcf9d2284fe251c4db04727" visibility="package" />
+              <item id="di5bf3e200a70e49b88aa7b1f938cfb9618078" cid="DEP061" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:33:38" from="di61cc4825006d43c7a5c65c49dc267faa8078" to="di37d1e3dedb3041d180422581005c649b8078" visibility="package" />
+              <item id="di4182a35240644b7a9e97062d565549c24849" cid="ELEM218" type="frame" name="Test with emulated battery" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:19:57">
+                <owned-items />
+                <frame type="dep" />
+              </item>
+              <item id="di9f4f319c1ee54247915111d129be05b14849" cid="GNR059" type="generalization" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:08:11" from="di4182a35240644b7a9e97062d565549c24849" to="dib51fa6b1fe164c919fee3c0b55a28dc18078" visibility="package" />
+              <item id="di87fcb0d1fb464f5fa856bfc57f6069554727" cid="DEP074" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="dic51bdcd917d04944ae1916e8305448134727" to="dieaef2cc8956c4ff0a3569a3a6f0faf944727" visibility="package" />
+              <item id="didc2a4c015ce8499fa024cc0bca96c9637275" cid="DEP081" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" to="difa0999064e9545dd8c23c3ad326fd1108476" visibility="package" />
+              <item id="di2792318b8a7d4f7884c933d3eb1698634849" cid="DEP049" type="dependency" owner="dia2182288644049e3b260e5083957bcd24849" creation-date="08/24/2023 08:26:52" visibility="package" />
+              <item id="dibe9214d33c664d3bb7a4aeb07bf4245f5510" cid="AF093" type="artifact" name="deploy_development.yaml" style-class="Flat Orange" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="github workflow" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
+              </item>
+              <item id="di1e98d85f939d4f0da03edb5b2336a26c6570" cid="AF095" type="artifact" name="deploy_emulated_bat.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="github workflow" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
+              </item>
+              <item id="dib68bbc4daacd4584933dff7f2e6ea8e88078" cid="NOD030" type="node" name="Github docker container" creation-date="08/24/2023 08:51:29" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="dic8ad030bf4bc4022a7b647973a1d67a74727" cid="AF090" type="artifact" name="Git Repository" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di2f05d525814e418f8d057769233286f44849" cid="GNR058" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="dia6417330ad214659beab1dff919e8fe44849" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" visibility="package" />
+              <item id="dia05bb16166724ed38d005657af63d16a4849" cid="AF071" type="artifact" name="Test data" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di0ff20b1c79f24eb58aee437861d6938c4849" cid="CPT121" type="component" name="Pytest" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="di561c07dbf77c4ff387a0cc58c3a46d4d8078" cid="DEP055" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:33:38" from="dia05bb16166724ed38d005657af63d16a4849" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
+              <item id="dib51fa6b1fe164c919fee3c0b55a28dc18078" cid="ELEM219" type="frame" name="Test with real battery" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:19:57">
+                <owned-items />
+                <frame type="dep" />
+              </item>
+              <item id="dibd5a8b59bde24671bfcd441c329551b84337" cid="AF099" type="artifact" name="Release" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="package" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dic51bdcd917d04944ae1916e8305448134727" cid="CPT134" type="component" name="Build" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="di2d1b6427b8cd43d89075f528bf514bbf8078" cid="DEP057" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:26:52" from="di3c65a489382b49b2b761498a25f35f368078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
+              <item id="di18d3152ae9c34c6f8c50bcfb3c3371793275" cid="AF098" type="artifact" name="cycler_platform.yaml" style-class="Flat Orange" owner="di4182a35240644b7a9e97062d565549c24849" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="docker-compose" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="a8021f46210b45a8a12e2c78552e5a12" type="docker-compose" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
+              </item>
+              <item id="dib5a6a028e02c48e496d4cf2313a70bed8078" cid="DEP054" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:26:52" from="di1a2922bf33634bd6ae0b0710d140e7818078" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
+              <item id="di625ef1c1b4b74bdf9fcf609623c7bb2e8078" cid="AF074" type="artifact" name="Battery model" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dif8e51c90bece45ada447b08485a2c3ed6760" cid="DEP078" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:33:38" from="di56abf72b38b84b92bea303be73c2051c4849" to="dif3a347bf68284a2aac30f68bb75f13c14849" visibility="package" />
+              <item id="di1b1f7b3df6c647488437f1cd206c25a64849" cid="ELEM215" type="activity-parameter-node" name="development" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 08:34:51" visibility="undefined">
+                <object-node />
+                <activity-parameter parameter-ref="5a16bc7b31ad43eb92620e3e8a7d9a0c" />
+              </item>
+              <item id="dieaef2cc8956c4ff0a3569a3a6f0faf944727" cid="AF092" type="artifact" name="Python package" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="package" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dib31d6a5ee65745fe877743a490ab71168078" cid="AF075" type="artifact" name="Test files" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="script" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="d0a6d129f4a245c58c423e9aad91eca1" cid="DPL044" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:06" from="di0be84338928343749c47228f4305c0489887" to="di1e98d85f939d4f0da03edb5b2336a26c6570" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="d0a6d129f4a245c58c423e9aad91eca1_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="dia6417330ad214659beab1dff919e8fe44849" cid="CPT122" type="component" name="Build" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="di1b36587dd49b439eb4fed50ca78c9d6a8078" cid="DEP065" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:26:52" from="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" to="di051de0e771214d34844d99185a5201198078" visibility="package" />
+              <item id="dib2d34e6799344ada9e467b0201ac695a8078" cid="AF072" type="artifact" name="Test files" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="script" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di308c5a39d9c947cbb53f7d85769286084849" cid="ELEM214" type="frame" name="QA Testing" creation-date="08/24/2023 08:19:57">
+                <owned-items />
+                <frame type="dep" />
+              </item>
+              <item id="di10aa592773b4485c9d71edc905e01fab8078" cid="NOD029" type="node" name="On host docker container" owner="dib51fa6b1fe164c919fee3c0b55a28dc18078" creation-date="08/24/2023 08:51:29" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="di96cf8c60383e4100a92b7f20a42316198078" cid="AF076" type="artifact" name="Test data" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="728d99b1de524ad396c818e21e3b7846" cid="DPL047" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="di84deca95ab80476eb59beec0e3906d641736" to="dicb3392ca63fd43b7a0a2977a2e8e1c452703" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="di27bd758b85a446148a87e37d4f01aeea8078" cid="AF084" type="artifact" name="Test data" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dibab11c758e574a3cad0e0a3521817ea44727" cid="GNR066" type="generalization" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:22:13" from="dic51bdcd917d04944ae1916e8305448134727" to="diaebca61610d94dcf9d2284fe251c4db04727" visibility="package" />
+              <item id="di1c91ee61359d40b9b92b57ca12ac9f344849" cid="AF069" type="artifact" name="Test data" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dicb3392ca63fd43b7a0a2977a2e8e1c452703" cid="AF097" type="artifact" name="cycler_platform.yaml" style-class="Flat Orange" owner="dib51fa6b1fe164c919fee3c0b55a28dc18078" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="docker-compose" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="a8021f46210b45a8a12e2c78552e5a12" type="docker-compose" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
+              </item>
               <item id="di207cdf5af5c64bb89209c75487feba5e2638" cid="ELEM216" type="frame" name="QA Testing" creation-date="08/24/2023 08:19:57">
                 <owned-items />
                 <frame type="dep" />
               </item>
-              <item id="di4c430b3069d6485e8b8565bee29695084849" cid="DEP050" type="dependency" owner="dia2182288644049e3b260e5083957bcd24849" creation-date="08/24/2023 08:26:52" from="di56abf72b38b84b92bea303be73c2051c4849" to="dif3a347bf68284a2aac30f68bb75f13c14849" visibility="package" />
+              <item id="di87dfa886f9eb4b689402f6e2bbb2504b4849" cid="CPT123" type="component" name="Publish package to Pypi" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="di8339da99f6e24cc8b3017cd815451f682831" cid="DEP079" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="die2ab11139fcc43e0a5a1055a6277a4e38492" to="dibd5a8b59bde24671bfcd441c329551b84337" visibility="package" />
+              <item id="di5efe9d3fa9934b60b6da604cc11842a48078" cid="DEP060" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:26:52" from="di58b8ff2fef804ae7a22aa12595e8f4eb8078" to="di37d1e3dedb3041d180422581005c649b8078" visibility="package" />
+              <item id="di51ea8a25f9e44255a3305414add62d324849" cid="CPT124" type="component" name="Test and emulate battery" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="di8515327148064642910e4aa3fbf55bb26181" cid="DPL049" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="di18d3152ae9c34c6f8c50bcfb3c3371793275" to="di8851d788b0494dd08680b5ff65b675aa4849" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
               <item id="di051de0e771214d34844d99185a5201198078" cid="CPT127" type="component" name="Test with physical battery" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:23:08" visibility="undefined">
                 <stereotypes>
                   <stereotype name="process" />
@@ -28672,7 +29006,91 @@ Qué se hace con el código de error?</comment>
                 </stereotype-instances>
                 <component />
               </item>
-              <item id="diaebca61610d94dcf9d2284fe251c4db04727" cid="CPT135" type="component" name="Publish package to Pypi" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
+              <item id="di61cc4825006d43c7a5c65c49dc267faa8078" cid="AF079" type="artifact" name="Test data" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di204fde911dd446e8ba81643c1178f0db4849" cid="DEP051" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:30:30" from="dia6417330ad214659beab1dff919e8fe44849" to="di31955118195f4d8ba80c59c4e3cfbb034849" visibility="package" />
+              <item id="dieb47197345c840eca3d043618ba422494571" cid="DEP077" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" from="dic8ad030bf4bc4022a7b647973a1d67a74727" to="die2ab11139fcc43e0a5a1055a6277a4e38492" visibility="package" />
+              <item id="di56abf72b38b84b92bea303be73c2051c4849" cid="AF068" type="artifact" name="Git Repository" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="files" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di617a5ba16e3d42328603d29e6386a1098078" cid="AF085" type="artifact" name="EPC" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="device" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="dcddb124ded44cae95743f690d9da875" type="device" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="de871d9a8adf46f086cffd98eed547d5" cid="DPL043" type="deployment" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 09:42:07" from="dibe9214d33c664d3bb7a4aeb07bf4245f5510" to="430fbc9a54af42638b01fe266a9c38ce" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="de871d9a8adf46f086cffd98eed547d5_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="di24242a0b15874bf2a2bbd119ee0d8b218078" cid="DEP062" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:26:52" from="di37d1e3dedb3041d180422581005c649b8078" to="dif720354b8b8e410ca58a2ddb0c1d49538078" visibility="package" />
+              <item id="di37d1e3dedb3041d180422581005c649b8078" cid="AF080" type="artifact" name="Test files" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="script" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="5d30e9939b4247059a8b42098ecb1351" cid="DPL046" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:24" from="di1e98d85f939d4f0da03edb5b2336a26c6570" to="di18d3152ae9c34c6f8c50bcfb3c3371793275" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="5d30e9939b4247059a8b42098ecb1351_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="di4c430b3069d6485e8b8565bee29695084849" cid="DEP050" type="dependency" owner="dia2182288644049e3b260e5083957bcd24849" creation-date="08/24/2023 08:26:52" from="di56abf72b38b84b92bea303be73c2051c4849" to="dif3a347bf68284a2aac30f68bb75f13c14849" visibility="package" />
+              <item id="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" cid="AF083" type="artifact" name="Test files" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="script" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dib64f48f66a58450a86a2feca6bd1defc7406" cid="DEP066" type="dependency" owner="di080d60cc656843b3a1201d9b08fc724b9169" creation-date="08/24/2023 08:26:52" from="di625ef1c1b4b74bdf9fcf609623c7bb2e8078" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
+              <item id="dicb9fffde7cb94ebab31233a1f13c5ee38476" cid="DEP080" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="difa0999064e9545dd8c23c3ad326fd1108476" to="did55bf4a1bf234aeaa6734c2d50c003828476" visibility="package" />
+              <item id="di4923bbd655e2412bb592fb6a0efa7b5c8078" cid="AF077" type="artifact" name="EPC" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="device" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="dcddb124ded44cae95743f690d9da875" type="device" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="dia07b58f6cc18400abee9b3326b4164d25861" cid="DPL048" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="dicb3392ca63fd43b7a0a2977a2e8e1c452703" to="di10aa592773b4485c9d71edc905e01fab8078" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="die2ab11139fcc43e0a5a1055a6277a4e38492" cid="CPT136" type="component" name="Make github release" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
                 <stereotypes>
                   <stereotype name="process" />
                 </stereotypes>
@@ -28681,14 +29099,25 @@ Qué se hace con el código de error?</comment>
                 </stereotype-instances>
                 <component />
               </item>
-              <item id="did599bc6c9afe499b90382a495afa85bd4849" cid="ELEM217" type="activity-parameter-node" name="staging" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:38:01" visibility="undefined">
-                <object-node />
-                <activity-parameter parameter-ref="85433c8ec99544d68a321255f214c81b" />
+              <item id="di523b5e76c67e4e77858c4e6ebc18fae01375" cid="AF101" type="artifact" name="deploy_production.yaml" style-class="Flat Orange" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="github workflow" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
               </item>
-              <item id="dib0b03e731c1d426f843ab48d013ab70a4232" cid="DEP067" type="dependency" owner="dic089daa9c354486b9ce02c7056e9b9c04083" creation-date="08/24/2023 08:33:38" from="di96cf8c60383e4100a92b7f20a42316198078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
-              <item id="di9f4f319c1ee54247915111d129be05b14849" cid="GNR059" type="generalization" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:08:11" from="di4182a35240644b7a9e97062d565549c24849" to="dib51fa6b1fe164c919fee3c0b55a28dc18078" visibility="package" />
-              <item id="di24242a0b15874bf2a2bbd119ee0d8b218078" cid="DEP062" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:26:52" from="di37d1e3dedb3041d180422581005c649b8078" to="dif720354b8b8e410ca58a2ddb0c1d49538078" visibility="package" />
-              <item id="dieaef2cc8956c4ff0a3569a3a6f0faf944727" cid="AF092" type="artifact" name="Python package" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
+              <item id="8735b50eb6f14647bf480ef62fb60fd5" cid="DPL050" type="deployment" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="08/24/2023 11:03:46" from="di523b5e76c67e4e77858c4e6ebc18fae01375" to="di971b8f946e1f4f279498d147709c59884727" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="8735b50eb6f14647bf480ef62fb60fd5_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
+              </item>
+              <item id="di58b8ff2fef804ae7a22aa12595e8f4eb8078" cid="AF081" type="artifact" name="Python package" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
                 <stereotypes>
                   <stereotype name="package" />
                 </stereotypes>
@@ -28701,428 +29130,13 @@ Qué se hace con el código de error?</comment>
                 <owned-items />
                 <frame type="dep" />
               </item>
-              <item id="di56353b7d5dd54f6ea0f4789cd135ccd88078" cid="DEP063" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:26:52" from="di530f8e4426284aaaa038282ab7808dce8078" to="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" visibility="package" />
-              <item id="dif3a347bf68284a2aac30f68bb75f13c14849" cid="CPT120" type="component" name="Pylint QA" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="dib68bbc4daacd4584933dff7f2e6ea8e88078" cid="NOD030" type="node" name="Github docker container" creation-date="08/24/2023 08:51:29" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="di96cf8c60383e4100a92b7f20a42316198078" cid="AF076" type="artifact" name="Test data" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di8851d788b0494dd08680b5ff65b675aa4849" cid="NOD028" type="node" name="Github docker container" owner="di4182a35240644b7a9e97062d565549c24849" creation-date="08/24/2023 08:51:29" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="dicb9fffde7cb94ebab31233a1f13c5ee38476" cid="DEP080" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="difa0999064e9545dd8c23c3ad326fd1108476" to="did55bf4a1bf234aeaa6734c2d50c003828476" visibility="package" />
-              <item id="dieb47197345c840eca3d043618ba422494571" cid="DEP077" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" from="dic8ad030bf4bc4022a7b647973a1d67a74727" to="die2ab11139fcc43e0a5a1055a6277a4e38492" visibility="package" />
-              <item id="did55bf4a1bf234aeaa6734c2d50c003828476" cid="AF100" type="artifact" name="Docker image" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="package" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di2f05d525814e418f8d057769233286f44849" cid="GNR058" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="dia6417330ad214659beab1dff919e8fe44849" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" visibility="package" />
-              <item id="di0ff20b1c79f24eb58aee437861d6938c4849" cid="CPT121" type="component" name="Pytest" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="di448e59f679ee4e2887b34eee9519c4408078" cid="DEP056" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:26:52" from="dib2d34e6799344ada9e467b0201ac695a8078" to="di51ea8a25f9e44255a3305414add62d324849" visibility="package" />
-              <item id="dibe9214d33c664d3bb7a4aeb07bf4245f5510" cid="AF093" type="artifact" name="deploy_cycler_2_development.yaml" style-class="Flat Orange" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="github workflow" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="di625ef1c1b4b74bdf9fcf609623c7bb2e8078" cid="AF074" type="artifact" name="Battery model" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="5d30e9939b4247059a8b42098ecb1351" cid="DPL046" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:24" from="di1e98d85f939d4f0da03edb5b2336a26c6570" to="di18d3152ae9c34c6f8c50bcfb3c3371793275" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="5d30e9939b4247059a8b42098ecb1351_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="di77a01b2d0f47498fac18abb8590c76b84849" cid="DEP052" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:31:01" from="di31955118195f4d8ba80c59c4e3cfbb034849" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" visibility="package" />
-              <item id="di0da879d8799d4e2faaa96b165c94c2014727" cid="DEP076" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" from="dic8ad030bf4bc4022a7b647973a1d67a74727" to="dic51bdcd917d04944ae1916e8305448134727" visibility="package" />
-              <item id="430fbc9a54af42638b01fe266a9c38ce" cid="NOD032" type="node" name="Development Github docker container" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 09:19:39" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="di1e98d85f939d4f0da03edb5b2336a26c6570" cid="AF095" type="artifact" name="deploy_cycler_2_emulated_bat.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="github workflow" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="di84deca95ab80476eb59beec0e3906d641736" cid="AF096" type="artifact" name="deploy_cycler_2_physical_bat.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="github workflow" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="di37d1e3dedb3041d180422581005c649b8078" cid="AF080" type="artifact" name="Test files" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="script" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di8339da99f6e24cc8b3017cd815451f682831" cid="DEP079" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="die2ab11139fcc43e0a5a1055a6277a4e38492" to="dibd5a8b59bde24671bfcd441c329551b84337" visibility="package" />
-              <item id="dic51bdcd917d04944ae1916e8305448134727" cid="CPT134" type="component" name="Build" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="dicb3392ca63fd43b7a0a2977a2e8e1c452703" cid="AF097" type="artifact" name="cycler_platform.yaml" style-class="Flat Orange" owner="dib51fa6b1fe164c919fee3c0b55a28dc18078" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="docker-compose" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="a8021f46210b45a8a12e2c78552e5a12" type="docker-compose" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="di1a2922bf33634bd6ae0b0710d140e7818078" cid="AF073" type="artifact" name="Python package" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="package" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="dib2d34e6799344ada9e467b0201ac695a8078" cid="AF072" type="artifact" name="Test files" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="script" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di2d1b6427b8cd43d89075f528bf514bbf8078" cid="DEP057" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:26:52" from="di3c65a489382b49b2b761498a25f35f368078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
-              <item id="d0a6d129f4a245c58c423e9aad91eca1" cid="DPL044" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:06" from="di0be84338928343749c47228f4305c0489887" to="di1e98d85f939d4f0da03edb5b2336a26c6570" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="d0a6d129f4a245c58c423e9aad91eca1_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="di58b8ff2fef804ae7a22aa12595e8f4eb8078" cid="AF081" type="artifact" name="Python package" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="package" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="diad13df56bc2449c09ad23ec2765e0b268078" cid="NOD031" type="node" name="On host docker container" creation-date="08/24/2023 08:51:29" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="didc2a4c015ce8499fa024cc0bca96c9637275" cid="DEP081" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:33:38" to="difa0999064e9545dd8c23c3ad326fd1108476" visibility="package" />
-              <item id="di1b1f7b3df6c647488437f1cd206c25a64849" cid="ELEM215" type="activity-parameter-node" name="development" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 08:34:51" visibility="undefined">
-                <object-node />
-                <activity-parameter parameter-ref="5a16bc7b31ad43eb92620e3e8a7d9a0c" />
-              </item>
-              <item id="di0be84338928343749c47228f4305c0489887" cid="AF094" type="artifact" name="deploy_cycler_2_staging.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="github workflow" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="dibab11c758e574a3cad0e0a3521817ea44727" cid="GNR066" type="generalization" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:22:13" from="dic51bdcd917d04944ae1916e8305448134727" to="diaebca61610d94dcf9d2284fe251c4db04727" visibility="package" />
-              <item id="di204fde911dd446e8ba81643c1178f0db4849" cid="DEP051" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:30:30" from="dia6417330ad214659beab1dff919e8fe44849" to="di31955118195f4d8ba80c59c4e3cfbb034849" visibility="package" />
-              <item id="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" cid="AF083" type="artifact" name="Test files" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="script" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di5efe9d3fa9934b60b6da604cc11842a48078" cid="DEP060" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:26:52" from="di58b8ff2fef804ae7a22aa12595e8f4eb8078" to="di37d1e3dedb3041d180422581005c649b8078" visibility="package" />
-              <item id="difa0999064e9545dd8c23c3ad326fd1108476" cid="CPT137" type="component" name="Create docker image" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="diee816438912a4fc2811d6a09dd3122d54849" cid="GNR057" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="di0ff20b1c79f24eb58aee437861d6938c4849" to="dia6417330ad214659beab1dff919e8fe44849" visibility="package" />
-              <item id="di10aa592773b4485c9d71edc905e01fab8078" cid="NOD029" type="node" name="On host docker container" owner="dib51fa6b1fe164c919fee3c0b55a28dc18078" creation-date="08/24/2023 08:51:29" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="di8515327148064642910e4aa3fbf55bb26181" cid="DPL049" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="di18d3152ae9c34c6f8c50bcfb3c3371793275" to="di8851d788b0494dd08680b5ff65b675aa4849" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="di1c91ee61359d40b9b92b57ca12ac9f344849" cid="AF069" type="artifact" name="Test data" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="dif8e51c90bece45ada447b08485a2c3ed6760" cid="DEP078" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:33:38" from="di56abf72b38b84b92bea303be73c2051c4849" to="dif3a347bf68284a2aac30f68bb75f13c14849" visibility="package" />
-              <item id="di52302367690e42d796877e59f3572f378078" cid="AF082" type="artifact" name="Battery model" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di2792318b8a7d4f7884c933d3eb1698634849" cid="DEP049" type="dependency" owner="dia2182288644049e3b260e5083957bcd24849" creation-date="08/24/2023 08:26:52" visibility="package" />
-              <item id="dib31d6a5ee65745fe877743a490ab71168078" cid="AF075" type="artifact" name="Test files" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="script" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7ea5c50f70cb43a1a7d1899121a487fc" type="script" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di87fcb0d1fb464f5fa856bfc57f6069554727" cid="DEP074" type="dependency" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:30:30" from="dic51bdcd917d04944ae1916e8305448134727" to="dieaef2cc8956c4ff0a3569a3a6f0faf944727" visibility="package" />
-              <item id="di308c5a39d9c947cbb53f7d85769286084849" cid="ELEM214" type="frame" name="QA Testing" creation-date="08/24/2023 08:19:57">
-                <owned-items />
-                <frame type="dep" />
-              </item>
-              <item id="did7eb791493c64033a2cd12b3f88ce78c4849" cid="GNR056" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="dif3a347bf68284a2aac30f68bb75f13c14849" to="di0ff20b1c79f24eb58aee437861d6938c4849" visibility="package" />
-              <item id="dia2182288644049e3b260e5083957bcd24849" cid="NOD027" type="node" name="Github docker container" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 08:51:29" visibility="undefined">
-                <owned-items />
-              </item>
-              <item id="di530f8e4426284aaaa038282ab7808dce8078" cid="AF086" type="artifact" name="Test battery" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="device" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="d67d53db432f4379ba565a9618b52982" type="device" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di61cc4825006d43c7a5c65c49dc267faa8078" cid="AF079" type="artifact" name="Test data" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="8735b50eb6f14647bf480ef62fb60fd5" cid="DPL050" type="deployment" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="08/24/2023 11:03:46" from="di523b5e76c67e4e77858c4e6ebc18fae01375" to="di971b8f946e1f4f279498d147709c59884727" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="8735b50eb6f14647bf480ef62fb60fd5_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="dib5a6a028e02c48e496d4cf2313a70bed8078" cid="DEP054" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:26:52" from="di1a2922bf33634bd6ae0b0710d140e7818078" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
-              <item id="di561c07dbf77c4ff387a0cc58c3a46d4d8078" cid="DEP055" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:33:38" from="dia05bb16166724ed38d005657af63d16a4849" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
-              <item id="di4923bbd655e2412bb592fb6a0efa7b5c8078" cid="AF077" type="artifact" name="EPC" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="device" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="dcddb124ded44cae95743f690d9da875" type="device" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di51ea8a25f9e44255a3305414add62d324849" cid="CPT124" type="component" name="Test and emulate battery" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="di87dfa886f9eb4b689402f6e2bbb2504b4849" cid="CPT123" type="component" name="Publish package to Pypi" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="di3d9d6614bb464658b39dde92d2bedf314849" cid="DEP053" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:33:38" from="di1c91ee61359d40b9b92b57ca12ac9f344849" to="di0ff20b1c79f24eb58aee437861d6938c4849" visibility="package" />
-              <item id="di3c65a489382b49b2b761498a25f35f368078" cid="AF078" type="artifact" name="Test battery" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="device" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="d67d53db432f4379ba565a9618b52982" type="device" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di56abf72b38b84b92bea303be73c2051c4849" cid="AF068" type="artifact" name="Git Repository" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di77d8f1c9791b415eaad874251af9e3588078" cid="DEP058" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:33:38" from="di4923bbd655e2412bb592fb6a0efa7b5c8078" to="dib31d6a5ee65745fe877743a490ab71168078" visibility="package" />
-              <item id="dibd5a8b59bde24671bfcd441c329551b84337" cid="AF099" type="artifact" name="Release" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="package" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="dib64f48f66a58450a86a2feca6bd1defc7406" cid="DEP066" type="dependency" owner="di080d60cc656843b3a1201d9b08fc724b9169" creation-date="08/24/2023 08:26:52" from="di625ef1c1b4b74bdf9fcf609623c7bb2e8078" to="dib2d34e6799344ada9e467b0201ac695a8078" visibility="package" />
-              <item id="dif0d4d186dbec4d89b085773e5854cab98078" cid="CPT125" type="component" name="Test with physical battery" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:23:08" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="process" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
-                </stereotype-instances>
-                <component />
-              </item>
-              <item id="dib51fa6b1fe164c919fee3c0b55a28dc18078" cid="ELEM219" type="frame" name="Test with real battery" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:19:57">
-                <owned-items />
-                <frame type="dep" />
-              </item>
-              <item id="dic8ad030bf4bc4022a7b647973a1d67a74727" cid="AF090" type="artifact" name="Git Repository" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="dia07b58f6cc18400abee9b3326b4164d25861" cid="DPL048" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="dicb3392ca63fd43b7a0a2977a2e8e1c452703" to="di10aa592773b4485c9d71edc905e01fab8078" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="728d99b1de524ad396c818e21e3b7846" cid="DPL047" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:31" from="di84deca95ab80476eb59beec0e3906d641736" to="dicb3392ca63fd43b7a0a2977a2e8e1c452703" visibility="package">
-                <stereotypes>
-                  <stereotype name="deploy" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="728d99b1de524ad396c818e21e3b7846_deploy_c" type="deploy" ref="" />
-                </stereotype-instances>
-              </item>
-              <item id="dia05bb16166724ed38d005657af63d16a4849" cid="AF071" type="artifact" name="Test data" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di5bf3e200a70e49b88aa7b1f938cfb9618078" cid="DEP061" type="dependency" owner="dib68bbc4daacd4584933dff7f2e6ea8e88078" creation-date="08/24/2023 08:33:38" from="di61cc4825006d43c7a5c65c49dc267faa8078" to="di37d1e3dedb3041d180422581005c649b8078" visibility="package" />
-              <item id="di01d36229e1d248f8baa3c26a949f0c778078" cid="DEP064" type="dependency" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:33:38" from="di617a5ba16e3d42328603d29e6386a1098078" to="dib58bcd2c9f9a42f1a455f9a3ae663fff8078" visibility="package" />
-              <item id="di18d3152ae9c34c6f8c50bcfb3c3371793275" cid="AF098" type="artifact" name="cycler_platform.yaml" style-class="Flat Orange" owner="di4182a35240644b7a9e97062d565549c24849" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="docker-compose" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="a8021f46210b45a8a12e2c78552e5a12" type="docker-compose" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
-              <item id="di523b5e76c67e4e77858c4e6ebc18fae01375" cid="AF101" type="artifact" name="deploy_cycler_2_production.yaml" style-class="Flat Orange" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="07/17/2023 09:28:26" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="github workflow" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
-                </stereotype-instances>
-                <style class="Flat Orange" />
-                <artifact filename="" />
-              </item>
+              <item id="di623bd6f6863f4675af61ca8c96ff6fee4599" cid="GROUP058" type="group" name="Group" creation-date="08/28/2023 15:04:41" />
               <item id="di31955118195f4d8ba80c59c4e3cfbb034849" cid="AF070" type="artifact" name="Python package" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:20:21" visibility="undefined">
                 <stereotypes>
                   <stereotype name="package" />
                 </stereotypes>
                 <stereotype-instances>
                   <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
-                </stereotype-instances>
-                <artifact filename="" />
-              </item>
-              <item id="di27bd758b85a446148a87e37d4f01aeea8078" cid="AF084" type="artifact" name="Test data" owner="diad13df56bc2449c09ad23ec2765e0b268078" creation-date="08/24/2023 08:20:21" visibility="undefined">
-                <stereotypes>
-                  <stereotype name="files" />
-                </stereotypes>
-                <stereotype-instances>
-                  <stereotype id="0b832d1be4844804a03f6ccba1a27bf3" type="files" ref="" />
                 </stereotype-instances>
                 <artifact filename="" />
               </item>
@@ -29134,6 +29148,74 @@ Qué se hace con el código de error?</comment>
                   <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
                 </stereotype-instances>
                 <component />
+              </item>
+              <item id="di2b5df0b82b3d43148305f9264328522d3816" cid="GROUP060" type="group" name="Group" creation-date="08/28/2023 15:07:34" />
+              <item id="di84deca95ab80476eb59beec0e3906d641736" cid="AF096" type="artifact" name="deploy_real_bat.yaml" style-class="Flat Orange" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="07/17/2023 09:28:26" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="github workflow" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7b1c779ffff24b8982eac4c32039fa9e" type="github workflow" ref="" />
+                </stereotype-instances>
+                <style class="Flat Orange" />
+                <artifact filename="" />
+              </item>
+              <item id="430fbc9a54af42638b01fe266a9c38ce" cid="NOD032" type="node" name="Development Github docker container" owner="di308c5a39d9c947cbb53f7d85769286084849" creation-date="08/24/2023 09:19:39" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="di67d6780c4455418db4f944f5345482c58078" cid="DEP059" type="dependency" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:26:52" from="dib31d6a5ee65745fe877743a490ab71168078" to="dif0d4d186dbec4d89b085773e5854cab98078" visibility="package" />
+              <item id="did7eb791493c64033a2cd12b3f88ce78c4849" cid="GNR056" type="generalization" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:22:13" from="dif3a347bf68284a2aac30f68bb75f13c14849" to="di0ff20b1c79f24eb58aee437861d6938c4849" visibility="package" />
+              <item id="60626c53a209412ab736d88aeafa0489" cid="ELEM199" type="drawing-shape" name="SimpleShape4" style-class="Flat Yellow" creation-date="08/28/2023 15:03:17">
+                <style class="Flat Yellow" />
+                <drawing />
+                <drawing-shape type="ArrowDown" />
+              </item>
+              <item id="di77a01b2d0f47498fac18abb8590c76b84849" cid="DEP052" type="dependency" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:31:01" from="di31955118195f4d8ba80c59c4e3cfbb034849" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" visibility="package" />
+              <item id="di8851d788b0494dd08680b5ff65b675aa4849" cid="NOD028" type="node" name="Github docker container" owner="di4182a35240644b7a9e97062d565549c24849" creation-date="08/24/2023 08:51:29" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="did599bc6c9afe499b90382a495afa85bd4849" cid="ELEM217" type="activity-parameter-node" name="staging" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 08:38:01" visibility="undefined">
+                <object-node />
+                <activity-parameter parameter-ref="85433c8ec99544d68a321255f214c81b" />
+              </item>
+              <item id="did55bf4a1bf234aeaa6734c2d50c003828476" cid="AF100" type="artifact" name="Docker image" owner="di971b8f946e1f4f279498d147709c59884727" creation-date="08/24/2023 08:20:21" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="package" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="di5ca0795315a9416d84f52de02a4669fe7192_package_c" type="package" ref="" />
+                </stereotype-instances>
+                <artifact filename="" />
+              </item>
+              <item id="di448e59f679ee4e2887b34eee9519c4408078" cid="DEP056" type="dependency" owner="di8851d788b0494dd08680b5ff65b675aa4849" creation-date="08/24/2023 08:26:52" from="dib2d34e6799344ada9e467b0201ac695a8078" to="di51ea8a25f9e44255a3305414add62d324849" visibility="package" />
+              <item id="di971b8f946e1f4f279498d147709c59884727" cid="NOD033" type="node" name="Development Github docker container" owner="di04ac7eabfb9744b6958806c10897fffd4687" creation-date="08/24/2023 09:19:39" visibility="undefined">
+                <owned-items />
+              </item>
+              <item id="dif0d4d186dbec4d89b085773e5854cab98078" cid="CPT125" type="component" name="Test with physical battery" owner="di10aa592773b4485c9d71edc905e01fab8078" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="dif3a347bf68284a2aac30f68bb75f13c14849" cid="CPT120" type="component" name="Pylint QA" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+                <stereotypes>
+                  <stereotype name="process" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="23faa9f168e2421daba982c3b49405e0_process_c" type="process" ref="" />
+                </stereotype-instances>
+                <component />
+              </item>
+              <item id="7b2228fb9904426fa00462d49e6a8964" cid="DPL045" type="deployment" owner="di207cdf5af5c64bb89209c75487feba5e2638" creation-date="08/24/2023 09:47:14" from="di0be84338928343749c47228f4305c0489887" to="di84deca95ab80476eb59beec0e3906d641736" visibility="package">
+                <stereotypes>
+                  <stereotype name="deploy" />
+                </stereotypes>
+                <stereotype-instances>
+                  <stereotype id="7b2228fb9904426fa00462d49e6a8964_deploy_c" type="deploy" ref="" />
+                </stereotype-instances>
               </item>
             </abstract-items>
             <layer id="300f2f3b213940ee9f4748e30e4f6eb4" name="Default" visible="true" enabled="true" locked="false">
@@ -29580,6 +29662,28 @@ Qué se hace con el código de error?</comment>
                   </points>
                 </layout>
                 <relation from="di523b5e76c67e4e77858c4e6ebc18fae01375" from-iid="df66504be1f34e82a219bc34c3a9bcd1" to="di971b8f946e1f4f279498d147709c59884727" to-iid="285dcb98621e4fa99085f36934ded96b" />
+              </item>
+              <item id="84dd7ae83c70495fbf1a2a92f8fe760e" iid="72bacd50915f487188cf46525325db00" creation-date="08/28/2023 15:07:34" order-index="161" type="group">
+                <layout ax="3080" ay="410" awidth="130.0002" aheight="50" x="3080" y="410" width="140" height="160" />
+                <group-items>
+                  <item id="di4fd8fc1669494c189167836b47076b554599" iid="dc6a23752f2d4f3c9e89eda08d1e26a6" creation-date="08/28/2023 15:03:17" order-index="159" type="entity">
+                    <layout ax="3115" ay="365.0002" awidth="50" aheight="130" x="3080" y="365.0002" width="50" height="130" angle="270" rotation-center="5,0" />
+                  </item>
+                  <item id="di944de6863eea44e6ba8da56ea6aac7924599" iid="1d590f5bc0004d04b996585a0d5d5b52" creation-date="08/28/2023 15:03:42" order-index="160" type="drawing-text">
+                    <layout ax="3090" ay="425.0002" awidth="85" aheight="23" x="3090" y="425.0002" width="250" height="100" />
+                  </item>
+                </group-items>
+              </item>
+              <item id="di2b5df0b82b3d43148305f9264328522d3816" iid="35fd30cb47a049d193f3b3695692838b" creation-date="08/28/2023 15:07:34" order-index="161" type="group">
+                <layout ax="3080" ay="-340" awidth="130.0002" aheight="50" x="3080" y="-340" width="140" height="160" />
+                <group-items>
+                  <item id="di05155e19a10b4512ae3d20d201aa04523816" iid="7c8f615435e3464a961b5764b122595c" creation-date="08/28/2023 15:03:17" order-index="159" type="entity">
+                    <layout ax="3115" ay="-384.9998" awidth="50" aheight="130" x="3080" y="-384.9998" width="50" height="130" angle="270" rotation-center="5,0" />
+                  </item>
+                  <item id="di566d5f0c72154eadbaa69c2eb4f79e7f3816" iid="b50d33325e8846d5980c5c9032246dad" creation-date="08/28/2023 15:03:42" order-index="160" type="drawing-text">
+                    <layout ax="3090" ay="-324.9998" awidth="85" aheight="23" x="3090" y="-324.9998" width="250" height="100" />
+                  </item>
+                </group-items>
               </item>
             </layer>
           </diagram>
