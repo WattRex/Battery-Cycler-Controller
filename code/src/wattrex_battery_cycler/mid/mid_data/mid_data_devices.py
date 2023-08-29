@@ -38,6 +38,7 @@ class MidDataDeviceTypeE(Enum):
     BISOURCE = "BiSource"
     LOAD = "Load"
     METER = "Meter"
+    EPC     = 'Epc'
 
 #######################             CLASSES              #######################
 
