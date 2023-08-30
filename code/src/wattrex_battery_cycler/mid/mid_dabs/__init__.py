@@ -2,10 +2,8 @@
 This file specifies what is going to be exported from this module.
 In this case is mid_dabas
 '''
-from .mid_dabs import DrvEpcDataC, DrvEpcDeviceC, DrvEpcPropertiesC, DrvEpcLimitE, DrvEpcModeE, \
-                DrvEpcStatusE, DrvEpcStatusC
+from .mid_dabs import MidDabsPwrMeterC, MidDabsPwrDevC, MidDabsEpcDevC
 
 __all__ = [
-    "DrvEpcDataC", "DrvEpcDeviceC", "DrvEpcPropertiesC", "DrvEpcLimitE", "DrvEpcModeE", 
-    "DrvEpcStatusE", "DrvEpcStatusC"
+    "MidDabsPwrMeterC", "MidDabsPwrDevC", "MidDabsEpcDevC"
 ]
