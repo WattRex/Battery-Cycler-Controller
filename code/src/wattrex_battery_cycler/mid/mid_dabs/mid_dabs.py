@@ -16,7 +16,6 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from scpi_sniffer       import DrvScpiHandlerC
-from serial import PARITY_ODD
 from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
 from wattrex_driver_ea  import DrvEaDeviceC, DrvEaDataC
 from wattrex_driver_rs  import DrvRsDeviceC, DrvRsDataC
@@ -26,52 +25,39 @@ from system_shared_tool import SysShdChanC
 #######################          MODULE IMPORTS          #######################
 
 #######################          PROJECT IMPORTS         #######################
-from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE
+from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, \
+                MidDataLinkConfSerialC
 #######################              ENUMS               #######################
 #######################             CLASSES              #######################
 class MidDabsPwrMeterC:
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, device: MidDataDeviceC, device_conf: dict, tx_queue: SysShdChanC) -> None:
+    def __init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC) -> None:
         self.device_type = device.device_type
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         self.meter      : DrvBkDeviceC | None = None
-        if 'separator' in device_conf.keys():
-            if device_conf['separator']=='\\n':
-                device_conf['separator'] = '\n'
-        if 'parity' in device_conf.keys():
-            parity = str(device_conf['parity']).lower()
-            if 'odd' in parity:
-                device_conf['parity'] = 'O'
-            elif 'even' in parity:
-                device_conf['parity'] = 'E'
-            elif 'none' in parity:
-                device_conf['parity'] = 'N'
-            elif 'mark' in parity:
-                device_conf['parity'] = 'M'
-            elif 'space' in parity:
-                device_conf['parity'] = 'S'
-            else:
-                log.error("Wrong value for parity")
-                raise ValueError("Wrong value for parity")
+        link_conf = device.link_conf.__dict__
+        if isinstance(device.link_conf, MidDataLinkConfSerialC):
+            if link_conf['separator']=='\\n':
+                link_conf['separator'] = '\n'
         try:
             if self.device_type is MidDataDeviceTypeE.EPC:
                 # TODO: UPDATE DrvEpcDeviceC-> no queues in arguments are created internally
-                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(device_conf['can_id']),
+                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']),
                                 device_handler= SysShdChanC(), tx_can_queue= tx_queue)
                 self.epc.open()
             elif self.device_type is MidDataDeviceTypeE.SOURCE:
                 # TODO: Update SCPI not needing handler
-                self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**device_conf))
+                self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
             elif self.device_type is MidDataDeviceTypeE.LOAD:
-                self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**device_conf))
+                self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
             elif self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**device_conf))
+                self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
             elif self.device_type is MidDataDeviceTypeE.METER:
-                self.meter : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**device_conf))
+                self.meter : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**link_conf))
             else:
                 log.error("The dessire device doesn't have values in yaml file")
         except Exception as error:
@@ -97,8 +83,8 @@ class MidDabsPwrMeterC:
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
-    def _init__(self, device: MidDataDeviceC, device_conf: dict, tx_queue: SysShdChanC)->None:
-        super().__init__(device, device_conf, tx_queue)
+    def _init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC)->None:
+        super().__init__(device, tx_queue)
 
     def set_cv_mode(self,volt_ref: int, current_limit: int):
         """Set the CV mode with the given voltage and current limit.
@@ -181,13 +167,13 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
 class MidDabsEpcDevC(MidDabsPwrMeterC):
     """Class method for class - method that returns a class class for MIDDabsPwrC .
     """
-    def _init__(self, device: MidDataDeviceC, device_conf: dict, tx_queue: SysShdChanC)->None:
+    def _init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC)->None:
         if device.device_type is MidDataDeviceTypeE.EPC:
             log.error((("Trying to instanciate a epc device but "
                              f"receive type {device.device_type.name}")))
             raise ValueError(("Trying to instanciate a epc device but "
                              f"receive type {device.device_type.name}"))
-        super().__init__(device, device_conf, tx_queue)
+        super().__init__(device, tx_queue)
 
     def set_cc_mode(self, current_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
         """Set the CC mode with the specified limits.

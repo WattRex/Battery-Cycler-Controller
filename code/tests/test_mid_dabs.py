@@ -26,7 +26,8 @@ from scpi_sniffer import DrvScpiHandlerC
 sys.path.append(os.getcwd()+'/code/')
 from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsEpcDevC, MidDabsPwrDevC
 from src.wattrex_battery_cycler.mid.mid_data import MidDataDeviceC, MidDataDeviceTypeE, \
-                                                    MidDataPwrLimitE
+                                                    MidDataPwrLimitE, MidDataLinkConfSerialC, \
+                                                    MidDataLinkConfCanC
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -64,8 +65,10 @@ class TestChannels:
         can = DrvCanNodeC(tx_queue, _working_can)
         can.start()
         # Instantiate MidDabsEpcDeviceC
-        test_dev1_info = MidDataDeviceC('a', 'b', 'c', MidDataDeviceTypeE.EPC, 'd', {'e': 0})
-        epc = MidDabsEpcDevC(test_dev1_info,dev_conf['epc'],tx_queue)
+        test_dev1_info = MidDataDeviceC('a', 'b', 'c',
+                                        MidDataDeviceTypeE.EPC, 'd', {'e': 0},
+                                        MidDataLinkConfCanC(**dev_conf['epc']))
+        epc = MidDabsEpcDevC(test_dev1_info,tx_queue)
         log.info("Can started and epc instantiate")
 
         try:
@@ -80,8 +83,10 @@ class TestChannels:
         epc.disable()
         epc.close()
         log.info("Starting test for ea source")
-        test_dev2_info = MidDataDeviceC('a', 'b', 'c', MidDataDeviceTypeE.SOURCE, 'd', {'e': 0})
-        ea_source = MidDabsPwrDevC(test_dev2_info, dev_conf['source'], tx_queue)
+        test_dev2_info = MidDataDeviceC('a', 'b', 'c',
+                                    MidDataDeviceTypeE.SOURCE, 'd', {'e': 0},
+                                    MidDataLinkConfSerialC(**dev_conf['source']))
+        ea_source = MidDabsPwrDevC(test_dev2_info, tx_queue)
 
         ea_source.set_cv_mode(5000, 500)
         for i in range(0,5):
