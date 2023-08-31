@@ -7,10 +7,8 @@ the device and request info from it.
 from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
-from enum import Enum
 
 #######################       THIRD PARTY IMPORTS        #######################
-from system_config_tool import sys_conf_read_config_params
 
 from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
 if __name__ == '__main__':
@@ -18,10 +16,11 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from scpi_sniffer       import DrvScpiHandlerC
-from wattrex_driver_epc import DrvEpcDeviceC
-from wattrex_driver_ea  import DrvEaDeviceC
-from wattrex_driver_rs  import DrvRsDeviceC
-from wattrex_driver_bk import DrvBkDeviceC
+from serial import PARITY_ODD
+from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
+from wattrex_driver_ea  import DrvEaDeviceC, DrvEaDataC
+from wattrex_driver_rs  import DrvRsDeviceC, DrvRsDataC
+from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 
 from system_shared_tool import SysShdChanC
 #######################          MODULE IMPORTS          #######################
@@ -35,69 +34,65 @@ class MidDabsPwrMeterC:
     '''
     def __init__(self, device: MidDataDeviceC, device_conf: dict, tx_queue: SysShdChanC) -> None:
         self.device_type = device.device_type
-        self.__bisource   : DrvEaDeviceC | None = None
-        self.__source     : DrvEaDeviceC | None = None
-        self.__load       : DrvRsDeviceC | None = None
-        self.__epc        : DrvEpcDeviceC| None = None
-        self.__meter      : DrvBkDeviceC | None = None
+        self.bisource   : DrvEaDeviceC | None = None
+        self.source     : DrvEaDeviceC | None = None
+        self.load       : DrvRsDeviceC | None = None
+        self.epc        : DrvEpcDeviceC| None = None
+        self.meter      : DrvBkDeviceC | None = None
+        if 'separator' in device_conf.keys():
+            if device_conf['separator']=='\\n':
+                device_conf['separator'] = '\n'
+        if 'parity' in device_conf.keys():
+            parity = str(device_conf['parity']).lower()
+            if 'odd' in parity:
+                device_conf['parity'] = 'O'
+            elif 'even' in parity:
+                device_conf['parity'] = 'E'
+            elif 'none' in parity:
+                device_conf['parity'] = 'N'
+            elif 'mark' in parity:
+                device_conf['parity'] = 'M'
+            elif 'space' in parity:
+                device_conf['parity'] = 'S'
+            else:
+                log.error("Wrong value for parity")
+                raise ValueError("Wrong value for parity")
         try:
             if self.device_type is MidDataDeviceTypeE.EPC:
                 # TODO: UPDATE DrvEpcDeviceC-> no queues in arguments are created internally
-                self.__epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(device_conf['epc']['can_id']),
+                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(device_conf['can_id']),
                                 device_handler= SysShdChanC(), tx_can_queue= tx_queue)
-                self.__epc.open()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE and 'source' in device_conf:
-                # TODO: Update SCPI not needing
-                self.__source : DrvEaDeviceC = DrvEaDeviceC(
-                    DrvScpiHandlerC(port=device_conf['source']['port'],
-                                    separator= device_conf['source']['separator'],
-                                    baudrate = int(device_conf['source']['baudrate']),
-                                    timeout = device_conf['source']['timeout'],
-                                    write_timeout = device_conf['source']['write_timeout'],
-                                    parity = device_conf['source']['parity']))
-            elif self.device_type is MidDataDeviceTypeE.LOAD and 'load' in device_conf:
-                self.__load : DrvRsDeviceC = DrvRsDeviceC(
-                    DrvScpiHandlerC(port =device_conf['load']['port'],
-                                    separator = device_conf['load']['separator'],
-                                    baudrate = int(device_conf['load']['baudrate']),
-                                    timeout = device_conf['load']['timeout'],
-                                    write_timeout= device_conf['load']['write_timeout'],
-                                    parity = device_conf['load']['parity']))
-            elif self.device_type is MidDataDeviceTypeE.BISOURCE and 'bisource' in device_conf:
-                self.__bisource : DrvEaDeviceC = DrvEaDeviceC(
-                    DrvScpiHandlerC(port =device_conf['bisource']['port'],
-                                    separator = device_conf['bisource']['separator'],
-                                    baudrate = int(device_conf['bisource']['baudrate']),
-                                    timeout = device_conf['bisource']['timeout'],
-                                    write_timeout = device_conf['bisource']['write_timeout'],
-                                    parity = device_conf['bisource']['parity']))
-            elif self.device_type is MidDataDeviceTypeE.METER and 'meter' in device_conf:
-                self.meter : DrvBkDeviceC = DrvBkDeviceC(
-                            DrvScpiHandlerC(port=device_conf['port'],
-                                    separator = device_conf['separator'],
-                                    baudrate = int(device_conf['bisource']['baudrate']),
-                                    timeout = device_conf['bisource']['timeout'],
-                                    write_timeout = device_conf['bisource']['write_timeout'],
-                                    parity = device_conf['bisource']['parity']))
+                self.epc.open()
+            elif self.device_type is MidDataDeviceTypeE.SOURCE:
+                # TODO: Update SCPI not needing handler
+                self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**device_conf))
+            elif self.device_type is MidDataDeviceTypeE.LOAD:
+                self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**device_conf))
+            elif self.device_type is MidDataDeviceTypeE.BISOURCE:
+                self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**device_conf))
+            elif self.device_type is MidDataDeviceTypeE.METER:
+                self.meter : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**device_conf))
             else:
                 log.error("The dessire device doesn't have values in yaml file")
         except Exception as error:
             log.error(error)
             raise error
 
-    def update(self):
+    def update(self) -> DrvEpcDataC | DrvEaDataC | DrvRsDataC | DrvBkDataC:
         """Update the data from the hardware sendind the corresponding messages.
         """
+        res = None
         if self.device_type is MidDataDeviceTypeE.BISOURCE:
-            self.__bisource.get_data()
+            res: DrvEaDataC = self.bisource.get_data()
         elif self.device_type is MidDataDeviceTypeE.SOURCE:
-            self.__source.get_data()
+            res: DrvEaDataC = self.source.get_data()
         elif self.device_type is MidDataDeviceTypeE.LOAD:
-            self.__load.get_data()
+            res: DrvRsDataC = self.load.get_data()
         elif self.device_type is MidDataDeviceTypeE.METER:
-            self.meter.get_data()
+            res: DrvBkDataC = self.meter.get_data()
         elif self.device_type is MidDataDeviceTypeE.EPC:
-            self.__epc.get_data(update=True)
+            res: DrvEpcDataC  = self.epc.get_data(update=True)
+        return res
 
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
@@ -114,18 +109,18 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """
         try:
             if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.__bisource.set_cv_mode(volt_ref, current_limit)
+                self.bisource.set_cv_mode(volt_ref, current_limit)
             elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.__source.set_cv_mode(volt_ref, current_limit)
+                self.source.set_cv_mode(volt_ref, current_limit)
             elif self.device_type == MidDataDeviceTypeE.LOAD:
                 # TODO: upgrade DrvRs to write limits when setting modes
-                self.__load.set_cv_mode(volt_ref)
+                self.load.set_cv_mode(volt_ref)
             else:
                 log.error("The device is not able to change between modes.")
                 raise ValueError("The device is not able to change between modes")
         except Exception as err:
             log.error(f"Error while setting cv mode: {err}")
-            raise Exception("Error while setting cv mode") from err
+            raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
 
     def set_cc_mode(self, current_ref: int, volt_limit: int) -> None:
         """Set the CC mode with the given current and voltage limit.
@@ -136,35 +131,52 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """
         try:
             if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.__bisource.set_cc_mode(current_ref, volt_limit)
+                self.bisource.set_cc_mode(current_ref, volt_limit)
             elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.__source.set_cc_mode(current_ref, volt_limit)
+                self.source.set_cc_mode(current_ref, volt_limit)
             elif self.device_type is MidDataDeviceTypeE.LOAD:
                 # TODO: upgrade DrvRs to write limits when setting modes
-                self.__load.set_cc_mode(current_ref)
+                self.load.set_cc_mode(current_ref)
             else:
                 log.error("The device is not able to change between modes.")
                 raise ValueError("The device is not able to change between modes")
         except Exception as err:
             log.error(f"Error while setting cc mode: {err}")
-            raise Exception("Error while setting cc mode") from err
+            raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
 
     def disable(self) -> None:
         """Disable the devices.
         """
         try:
             if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.__bisource.disable()
+                self.bisource.disable()
             elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.__bisource.disable()
+                self.source.disable()
             elif self.device_type is MidDataDeviceTypeE.LOAD:
-                self.__load.disable()
+                self.load.disable()
             else:
                 log.error("The device can not be disable")
                 raise ValueError("The device can not be disable")
         except Exception as err:
-            log.error(f"Error while setting cc mode: {err}")
-            raise Exception("Error while setting cc mode") from err
+            log.error(f"Error while disabling device: {err}")
+            raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
+        
+    def close(self):
+        """Close connection in serial with the device"""
+        try:
+            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+                self.bisource.close()
+            elif self.device_type is MidDataDeviceTypeE.SOURCE:
+                self.source.close()
+            elif self.device_type is MidDataDeviceTypeE.LOAD:
+                self.load.close()
+            else:
+                log.error("The device can not be disable")
+                raise ValueError("The device can not be disable")
+        except Exception as err:
+            log.error(f"Error while closing device: {err}")
+            raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
+        
 
 class MidDabsEpcDevC(MidDabsPwrMeterC):
     """Class method for class - method that returns a class class for MIDDabsPwrC .
@@ -186,10 +198,10 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            self.__epc.set_cc_mode(current_ref, limit_type, limit_ref)
+            self.epc.set_cc_mode(current_ref, limit_type, limit_ref)
         except Exception as err:
             log.error(f"Error while setting cc mode: {err}")
-            raise Exception(f"Error while setting cc mode") from err
+            raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
     def set_cv_mode(self, volt_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
         """Set the CV mode with the specified limits.
 
@@ -199,10 +211,10 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            self.__epc.set_cv_mode(volt_ref, limit_type, limit_ref)
+            self.epc.set_cv_mode(volt_ref, limit_type, limit_ref)
         except Exception as err:
             log.error(f"Error while setting cv mode: {err}")
-            raise Exception(f"Error while setting cv mode") from err
+            raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
     def set_cp_mode(self, pwr_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
         """Set the CP mode with the specified limits.
 
@@ -212,23 +224,88 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            self.__epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
+            self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
         except Exception as err:
             log.error(f"Error while setting cp mode: {err}")
-            raise Exception(f"Error while setting cp mode") from err
-    
+            raise Exception("Error while setting cp mode") from err #pylint: disable= broad-exception-raised
+
     def set_wait_mode(self, limit_type: MidDataPwrLimitE, limit_ref):
+        """Set the wait mode of the ECP to be used in the ECP .
+
+        Args:
+            limit_type (MidDataPwrLimitE): [description]
+            limit_ref ([type]): [description]
+
+        Raises:
+            Exception: [description]
+        """
         try:
-            self.__epc.set_wait_mode(limit_type, limit_ref)
+            self.epc.set_wait_mode(limit_type, limit_ref)
         except Exception as err:
             log.error(f"Error while setting wait mode: {err}")
-            raise Exception(f"Error while setting wait mode") from err
+            raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+    def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
+                   ls_pwr: tuple | None = None, hs_volt: tuple | None = None,
+                   temp: tuple | None = None) -> None:
+        """Set the limits of the ECP.
+
+        Args:
+            ls_volt (tuple, optional): [max_value, min_value]. Defaults to None.
+            ls_curr (tuple, optional): [max_value, min_value]. Defaults to None.
+            ls_pwr (tuple, optional): [max_value, min_value]. Defaults to None.
+            hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
+            temp (tuple, optional): [max_value, min_value]. Defaults to None.
+
+        Raises:
+            Exception: [description]
+            Exception: [description]
+            Exception: [description]
+            Exception: [description]
+            Exception: [description]
+        """
+        if isinstance(ls_curr, tuple):
+            try:
+                self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
+            except Exception as err:
+                log.error(f"Error while setting ls current limit: {err}")
+                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        if isinstance(ls_volt, tuple):
+            try:
+                self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
+            except Exception as err:
+                log.error(f"Error while setting ls current limit: {err}")
+                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        if isinstance(ls_pwr, tuple):
+            try:
+                self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
+            except Exception as err:
+                log.error(f"Error while setting ls current limit: {err}")
+                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        if isinstance(hs_volt, tuple):
+            try:
+                self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
+            except Exception as err:
+                log.error(f"Error while setting ls current limit: {err}")
+                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        if isinstance(temp, tuple):
+            try:
+                self.epc.set_temp_limit(temp[0], temp[1])
+            except Exception as err:
+                log.error(f"Error while setting ls current limit: {err}")
+                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
 
     def disable(self):
         """Disable the EPC device.
         """
         try:
-            self.__epc.disable()
+            self.epc.disable()
         except Exception as err:
-            log.error(f"Error while setting cv mode: {err}")
-            raise Exception(f"Error while setting cv mode") from err
+            log.error(f"Error while disabling epc: {err}")
+            raise Exception("Error while disabling epc") from err #pylint: disable= broad-exception-raised
+    def close(self):
+        """Close connection with epc not receiving more messages and not controlling it"""
+        try:
+            self.epc.close()
+        except Exception as err:
+            log.error(f"Error while closing epc: {err}")
+            raise Exception("Error while closing epc") from err #pylint: disable= broad-exception-raised
