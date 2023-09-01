@@ -21,7 +21,6 @@ from wattrex_driver_ea  import DrvEaDeviceC, DrvEaDataC
 from wattrex_driver_rs  import DrvRsDeviceC, DrvRsDataC
 from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 
-from system_shared_tool import SysShdChanC
 #######################          MODULE IMPORTS          #######################
 
 #######################          PROJECT IMPORTS         #######################
@@ -32,7 +31,7 @@ from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, \
 class MidDabsPwrMeterC:
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC) -> None:
+    def __init__(self, device: MidDataDeviceC) -> None:
         self.device_type = device.device_type
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
@@ -45,9 +44,7 @@ class MidDabsPwrMeterC:
                 link_conf['separator'] = '\n'
         try:
             if self.device_type is MidDataDeviceTypeE.EPC:
-                # TODO: UPDATE DrvEpcDeviceC-> no queues in arguments are created internally
-                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']),
-                                device_handler= SysShdChanC(), tx_can_queue= tx_queue)
+                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']))
                 self.epc.open()
             elif self.device_type is MidDataDeviceTypeE.SOURCE:
                 # TODO: Update SCPI not needing handler
@@ -83,12 +80,11 @@ class MidDabsPwrMeterC:
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
-    def _init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC)->None:
-        super().__init__(device, tx_queue)
+    def _init__(self, device: MidDataDeviceC, )->None:
+        super().__init__(device)
 
     def set_cv_mode(self,volt_ref: int, current_limit: int):
         """Set the CV mode with the given voltage and current limit.
-
         Args:
             volt_ref (int): [voltage in mV]
             current_limit (int): [current in mA]
@@ -110,7 +106,6 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
 
     def set_cc_mode(self, current_ref: int, volt_limit: int) -> None:
         """Set the CC mode with the given current and voltage limit.
-
         Args:
             current_ref (int): [current in mA]
             volt_limit (int): [voltage in mV]
@@ -146,7 +141,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         except Exception as err:
             log.error(f"Error while disabling device: {err}")
             raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
-        
+
     def close(self):
         """Close connection in serial with the device"""
         try:
@@ -162,18 +157,17 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         except Exception as err:
             log.error(f"Error while closing device: {err}")
             raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
-        
 
 class MidDabsEpcDevC(MidDabsPwrMeterC):
     """Class method for class - method that returns a class class for MIDDabsPwrC .
     """
-    def _init__(self, device: MidDataDeviceC, tx_queue: SysShdChanC)->None:
+    def _init__(self, device: MidDataDeviceC)->None:
         if device.device_type is MidDataDeviceTypeE.EPC:
             log.error((("Trying to instanciate a epc device but "
                              f"receive type {device.device_type.name}")))
             raise ValueError(("Trying to instanciate a epc device but "
                              f"receive type {device.device_type.name}"))
-        super().__init__(device, tx_queue)
+        super().__init__(device)
 
     def set_cc_mode(self, current_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
         """Set the CC mode with the specified limits.

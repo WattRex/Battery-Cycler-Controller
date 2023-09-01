@@ -62,7 +62,7 @@ class TestChannels:
         _working_can = Event()
         _working_can.set()
         #Create the thread for CAN
-        can = DrvCanNodeC(tx_queue, _working_can)
+        can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can)
         can.start()
         # Instantiate MidDabsEpcDeviceC
         test_dev1_info = MidDataDeviceC('a', 'b', 'c',
