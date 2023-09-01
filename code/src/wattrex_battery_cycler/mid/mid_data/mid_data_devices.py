@@ -114,6 +114,7 @@ class MidDataLinkConfSerialC:
                 parity: str,
                 stopbits: int, timeout: float, write_timeout: float,
                 inter_byte_timeout: float) -> None:
+        # Translation between parity specified by user and parity understable by python serial
         if 'odd' in parity.lower():
             parity = 'O'
         elif 'even' in parity.lower():
