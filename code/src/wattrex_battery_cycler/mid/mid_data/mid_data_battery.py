@@ -16,8 +16,7 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-
-
+from .mid_data_experiment import MidDataPwrRangeC
 #######################              ENUMS               #######################
 
 
@@ -34,10 +33,8 @@ class MidDataBatteryC:
 
         self.name : str = name
         self.model : str = model
-        self.volt_min : int = volt_min
-        self.volt_max : int = volt_max
-        self.curr_min : int = curr_min
-        self.curr_max : int = curr_max
+        self.elec_ranges: MidDataPwrRangeC = MidDataPwrRangeC(volt_min, volt_max,
+                                                              curr_min, curr_max)
 
 
 class MidDataRedoxBatC(MidDataBatteryC):

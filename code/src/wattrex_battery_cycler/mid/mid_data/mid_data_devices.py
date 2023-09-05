@@ -39,7 +39,7 @@ class MidDataDeviceTypeE(Enum):
     LOAD        = "Load"
     METER       = "Meter"
     EPC         = 'Epc'
-
+    SOURCE_LOAD = "Source-Load"
 #######################             CLASSES              #######################
 
 class MidDataDeviveStatusC:
