@@ -21,9 +21,9 @@ from wattrex_driver_ea  import DrvEaDeviceC, DrvEaDataC
 from wattrex_driver_rs  import DrvRsDeviceC, DrvRsDataC
 from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 
-#######################          MODULE IMPORTS          #######################
-
 #######################          PROJECT IMPORTS         #######################
+
+#######################          MODULE IMPORTS          #######################
 from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataPwrRangeC \
                 MidDataLinkConfSerialC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
 #######################              ENUMS               #######################
