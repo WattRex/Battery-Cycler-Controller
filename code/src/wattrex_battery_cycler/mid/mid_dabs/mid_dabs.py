@@ -114,12 +114,8 @@ class MidDabsPwrMeterC:
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
-    def _init__(self, device: MidDataDeviceC, experiment_limits: MidDataPwrRangeC)->None:
+    def _init__(self, device: MidDataDeviceC)->None:
         super().__init__(device)
-        if self.device_type is MidDataDeviceTypeE.EPC:
-            self.__set_limits(
-                        ls_volt=(experiment_limits.ls_volt_max, experiment_limits.ls_volt_min),
-                        ls_curr=(experiment_limits.ls_curr_max, experiment_limits.ls_curr_min))
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
                     limit_type: MidDataPwrLimitE = None) -> None:
@@ -209,7 +205,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             log.error(f"Error while setting wait mode: {err}")
             raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
 
-    def __set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
+    def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
                    ls_pwr: tuple | None = None, hs_volt: tuple | None = None,
                    temp: tuple | None = None) -> None:
         """Set the limits of the ECP.
@@ -221,36 +217,39 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
             temp (tuple, optional): [max_value, min_value]. Defaults to None.
         """
-        if isinstance(ls_curr, tuple):
-            try:
-                self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
-            except Exception as err:
-                log.error(f"Error while setting ls current limit: {err}")
-                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
-        if isinstance(ls_volt, tuple):
-            try:
-                self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
-            except Exception as err:
-                log.error(f"Error while setting ls current limit: {err}")
-                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
-        if isinstance(ls_pwr, tuple):
-            try:
-                self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
-            except Exception as err:
-                log.error(f"Error while setting ls current limit: {err}")
-                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
-        if isinstance(hs_volt, tuple):
-            try:
-                self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
-            except Exception as err:
-                log.error(f"Error while setting ls current limit: {err}")
-                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
-        if isinstance(temp, tuple):
-            try:
-                self.epc.set_temp_limit(temp[0], temp[1])
-            except Exception as err:
-                log.error(f"Error while setting ls current limit: {err}")
-                raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        if self.device_type is MidDataDeviceTypeE.EPC:
+            if isinstance(ls_curr, tuple):
+                try:
+                    self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
+                except Exception as err:
+                    log.error(f"Error while setting ls current limit: {err}")
+                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+            if isinstance(ls_volt, tuple):
+                try:
+                    self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
+                except Exception as err:
+                    log.error(f"Error while setting ls current limit: {err}")
+                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+            if isinstance(ls_pwr, tuple):
+                try:
+                    self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
+                except Exception as err:
+                    log.error(f"Error while setting ls current limit: {err}")
+                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+            if isinstance(hs_volt, tuple):
+                try:
+                    self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
+                except Exception as err:
+                    log.error(f"Error while setting ls current limit: {err}")
+                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+            if isinstance(temp, tuple):
+                try:
+                    self.epc.set_temp_limit(temp[0], temp[1])
+                except Exception as err:
+                    log.error(f"Error while setting ls current limit: {err}")
+                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+        else:
+            log.error("The limits can not be change in this device")
 
     def disable(self) -> None:
         """Disable the devices.
