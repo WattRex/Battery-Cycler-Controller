@@ -51,6 +51,10 @@ class MidDabsPwrMeterC:
             if self.device_type is MidDataDeviceTypeE.EPC:
                 self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']))
                 self.epc.open()
+                # TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
+                self.epc.set_periodic(ack_en: bool = False,
+                     elect_en: bool = True, elect_period: int = 1000,
+                     temp_en: bool = True, temp_period: int = 1000)
             elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
                 # TODO: Update SCPI not needing handler
                 self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
@@ -69,7 +73,7 @@ class MidDabsPwrMeterC:
             log.error(error)
             raise error
 
-    def update(self,gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
+    def update(self, gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
                status: MidDataAllStatusC) -> None:
         """Update the data from the hardware sendind the corresponding messages.
         Update the variables that
@@ -88,22 +92,24 @@ class MidDabsPwrMeterC:
                 ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('body_temp')],
                                      res.hs_voltage)
         elif self.device_type is MidDataDeviceTypeE.EPC:
-            res: DrvEpcDataC  = self.epc.get_data(update=True)
-            status = res.status
-            gen_meas.voltage = res.ls_voltage
-            gen_meas.current = res.ls_current
-            gen_meas.power   = res.ls_power
-            ext_meas.pwr_mode = res.mode
+            msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
+            msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
+            msg_mode: DrvEpcDataC  = self.epc.get_mode()
+            status = self.epc.get_mode()
+            gen_meas.voltage = msg_elect_meas.ls_voltage
+            gen_meas.current = msg_elect_meas.ls_current
+            gen_meas.power   = msg_elect_meas.ls_power
+            ext_meas.pwr_mode = msg_mode.mode
             if 'body_temp' in ext_att:
                 ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('body_temp')],
-                                     res.hs_voltage)
+                                     msg_temp_meas.temp_body)
             if 'anod_temp' in ext_att:
                 ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('anod_temp')],
-                                     res.hs_voltage)
+                                     msg_temp_meas.temp_anod)
             if 'amb_temp' in ext_att:
                 ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('amb_temp')],
-                                     res.hs_voltage)
-            ext_meas.__setattr__('hs_voltage', res.hs_voltage)
+                                     msg_temp_meas.temp_amb)
+            ext_meas.__setattr__('hs_voltage', msg_elect_meas.hs_voltage)
 
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
