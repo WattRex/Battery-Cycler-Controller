@@ -24,7 +24,7 @@ from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 #######################          MODULE IMPORTS          #######################
 
 #######################          PROJECT IMPORTS         #######################
-from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, \
+from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataPwrRangeC \
                 MidDataLinkConfSerialC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
 #######################              ENUMS               #######################
 mapping_device: {'epc': {'ls_current': 'ls_curr'},
