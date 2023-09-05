@@ -25,31 +25,39 @@ from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 
 #######################          PROJECT IMPORTS         #######################
 from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, \
-                MidDataLinkConfSerialC
+                MidDataLinkConfSerialC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
 #######################              ENUMS               #######################
+mapping_device: {'epc': {'ls_current': 'ls_curr'},
+                 'source': {},
+                 'load': {},
+                 'meter': {},
+                 'bisource': {}}
 #######################             CLASSES              #######################
 class MidDabsPwrMeterC:
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, device: MidDataDeviceC) -> None:
-        self.device_type = device.device_type
+    def __init__(self, device: list [MidDataDeviceC]) -> None:
+        self.device_type = device[0].device_type if len(device) == 1 else MidDataDeviceTypeE.SOURCE_LOAD
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         self.meter      : DrvBkDeviceC | None = None
-        link_conf = device.link_conf.__dict__
-        if isinstance(device.link_conf, MidDataLinkConfSerialC):
+        link_conf = device[0].link_conf.__dict__
+        if isinstance(device[0].link_conf, MidDataLinkConfSerialC):
             if link_conf['separator']=='\\n':
                 link_conf['separator'] = '\n'
         try:
             if self.device_type is MidDataDeviceTypeE.EPC:
                 self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']))
                 self.epc.open()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE:
+            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
                 # TODO: Update SCPI not needing handler
                 self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
-            elif self.device_type is MidDataDeviceTypeE.LOAD:
+                link_conf = device[1].link_conf.__dict__
+                if isinstance(device[1].link_conf, MidDataLinkConfSerialC):
+                    if link_conf['separator']=='\\n':
+                        link_conf['separator'] = '\n'
                 self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
             elif self.device_type is MidDataDeviceTypeE.BISOURCE:
                 self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
@@ -61,42 +69,74 @@ class MidDabsPwrMeterC:
             log.error(error)
             raise error
 
-    def update(self) -> DrvEpcDataC | DrvEaDataC | DrvRsDataC | DrvBkDataC:
+    def update(self,gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
+               status: MidDataAllStatusC) -> None:
         """Update the data from the hardware sendind the corresponding messages.
+        Update the variables that
         """
         res = None
+        ext_att = [x.lower() for x in ext_meas.__dict__.keys()]
         if self.device_type is MidDataDeviceTypeE.BISOURCE:
             res: DrvEaDataC = self.bisource.get_data()
-        elif self.device_type is MidDataDeviceTypeE.SOURCE:
+        elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
             res: DrvEaDataC = self.source.get_data()
-        elif self.device_type is MidDataDeviceTypeE.LOAD:
             res: DrvRsDataC = self.load.get_data()
         elif self.device_type is MidDataDeviceTypeE.METER:
             res: DrvBkDataC = self.meter.get_data()
+            res = res.__dict__
+            for x in res.keys():
+                ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('body_temp')],
+                                     res.hs_voltage)
         elif self.device_type is MidDataDeviceTypeE.EPC:
             res: DrvEpcDataC  = self.epc.get_data(update=True)
-        return res
+            status = res.status
+            gen_meas.voltage = res.ls_voltage
+            gen_meas.current = res.ls_current
+            gen_meas.power   = res.ls_power
+            ext_meas.pwr_mode = res.mode
+            if 'body_temp' in ext_att:
+                ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('body_temp')],
+                                     res.hs_voltage)
+            if 'anod_temp' in ext_att:
+                ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('anod_temp')],
+                                     res.hs_voltage)
+            if 'amb_temp' in ext_att:
+                ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index('amb_temp')],
+                                     res.hs_voltage)
+            ext_meas.__setattr__('hs_voltage', res.hs_voltage)
 
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
-    def _init__(self, device: MidDataDeviceC, )->None:
+    def _init__(self, device: MidDataDeviceC, experiment_limits: MidDataPwrRangeC)->None:
         super().__init__(device)
+        if self.device_type is MidDataDeviceTypeE.EPC:
+            self.__set_limits(
+                        ls_volt=(experiment_limits.ls_volt_max, experiment_limits.ls_volt_min),
+                        ls_curr=(experiment_limits.ls_curr_max, experiment_limits.ls_curr_min))
 
-    def set_cv_mode(self,volt_ref: int, current_limit: int):
+    def set_cv_mode(self,volt_ref: int, limit_ref: int,
+                    limit_type: MidDataPwrLimitE = None) -> None:
         """Set the CV mode with the given voltage and current limit.
+        To set cv mode in epc must have argument limit_type
         Args:
             volt_ref (int): [voltage in mV]
-            current_limit (int): [current in mA]
+            limit_ref (int): [limit reference, for the epc could be mA/dW/ms the rest of devices
+                            is mA]
         """
         try:
             if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource.set_cv_mode(volt_ref, current_limit)
-            elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.source.set_cv_mode(volt_ref, current_limit)
-            elif self.device_type == MidDataDeviceTypeE.LOAD:
-                # TODO: upgrade DrvRs to write limits when setting modes
-                self.load.set_cv_mode(volt_ref)
+                self.bisource.set_cv_mode(volt_ref, limit_ref)
+            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+                if limit_ref>0:
+                    self.load.disable()
+                    self.source.set_cv_mode(volt_ref, limit_ref)
+                else:
+                    # TODO: upgrade DrvRs to write limits when setting modes
+                    self.source.disable()
+                    self.load.set_cv_mode(volt_ref)
+            elif self.device_type is MidDataDeviceTypeE.EPC:
+                self.epc.set_cv_mode(volt_ref,limit_type, limit_ref)
             else:
                 log.error("The device is not able to change between modes.")
                 raise ValueError("The device is not able to change between modes")
@@ -104,20 +144,28 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             log.error(f"Error while setting cv mode: {err}")
             raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
 
-    def set_cc_mode(self, current_ref: int, volt_limit: int) -> None:
+    def set_cc_mode(self, current_ref: int, limit_ref: int,
+                    limit_type: MidDataPwrLimitE = None) -> None:
         """Set the CC mode with the given current and voltage limit.
+            To set cc mode in epc must have argument limit_type
         Args:
             current_ref (int): [current in mA]
-            volt_limit (int): [voltage in mV]
+            limit_ref (int): [limit reference, for the epc could be mV/dW/ms the rest of devices
+                            is mV]
         """
         try:
             if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource.set_cc_mode(current_ref, volt_limit)
-            elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.source.set_cc_mode(current_ref, volt_limit)
-            elif self.device_type is MidDataDeviceTypeE.LOAD:
-                # TODO: upgrade DrvRs to write limits when setting modes
-                self.load.set_cc_mode(current_ref)
+                self.bisource.set_cc_mode(current_ref, limit_ref)
+            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+                if current_ref>0:
+                    self.load.disable()
+                    self.source.set_cc_mode(current_ref, limit_ref)
+                else:
+                    # TODO: upgrade DrvRs to write limits when setting modes
+                    self.source.disable()
+                    self.load.set_cc_mode(current_ref)
+            elif self.device_type is MidDataDeviceTypeE.EPC:
+                self.epc.set_cc_mode(current_ref,limit_type, limit_ref)
             else:
                 log.error("The device is not able to change between modes.")
                 raise ValueError("The device is not able to change between modes")
@@ -125,78 +173,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             log.error(f"Error while setting cc mode: {err}")
             raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
 
-    def disable(self) -> None:
-        """Disable the devices.
-        """
-        try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource.disable()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.source.disable()
-            elif self.device_type is MidDataDeviceTypeE.LOAD:
-                self.load.disable()
-            else:
-                log.error("The device can not be disable")
-                raise ValueError("The device can not be disable")
-        except Exception as err:
-            log.error(f"Error while disabling device: {err}")
-            raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
-
-    def close(self):
-        """Close connection in serial with the device"""
-        try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource.close()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE:
-                self.source.close()
-            elif self.device_type is MidDataDeviceTypeE.LOAD:
-                self.load.close()
-            else:
-                log.error("The device can not be disable")
-                raise ValueError("The device can not be disable")
-        except Exception as err:
-            log.error(f"Error while closing device: {err}")
-            raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
-
-class MidDabsEpcDevC(MidDabsPwrMeterC):
-    """Class method for class - method that returns a class class for MIDDabsPwrC .
-    """
-    def _init__(self, device: MidDataDeviceC)->None:
-        if device.device_type is MidDataDeviceTypeE.EPC:
-            log.error((("Trying to instanciate a epc device but "
-                             f"receive type {device.device_type.name}")))
-            raise ValueError(("Trying to instanciate a epc device but "
-                             f"receive type {device.device_type.name}"))
-        super().__init__(device)
-
-    def set_cc_mode(self, current_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
-        """Set the CC mode with the specified limits.
-
-        Args:
-            current_ref (int): [description]
-            limit_type (MidDataPwrLimitE): [description]
-            limit_ref (int): [description]
-        """
-        try:
-            self.epc.set_cc_mode(current_ref, limit_type, limit_ref)
-        except Exception as err:
-            log.error(f"Error while setting cc mode: {err}")
-            raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
-    def set_cv_mode(self, volt_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
-        """Set the CV mode with the specified limits.
-
-        Args:
-            volt_ref (int): [description]
-            limit_type (MidDataPwrLimitE): [description]
-            limit_ref (int): [description]
-        """
-        try:
-            self.epc.set_cv_mode(volt_ref, limit_type, limit_ref)
-        except Exception as err:
-            log.error(f"Error while setting cv mode: {err}")
-            raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
     def set_cp_mode(self, pwr_ref: int, limit_type: MidDataPwrLimitE, limit_ref: int) -> None:
-        """Set the CP mode with the specified limits.
+        """Set the CP mode with the specified limits, only possible in the epc.
 
         Args:
             pwr_ref (int): [description]
@@ -204,27 +182,28 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
+            if self.device_type is MidDataDeviceTypeE.EPC:
+                self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
+            else:
+                log.error('This device is incompatible with power control mode')
         except Exception as err:
             log.error(f"Error while setting cp mode: {err}")
             raise Exception("Error while setting cp mode") from err #pylint: disable= broad-exception-raised
 
-    def set_wait_mode(self, limit_type: MidDataPwrLimitE, limit_ref):
-        """Set the wait mode of the ECP to be used in the ECP .
-
-        Args:
-            limit_type (MidDataPwrLimitE): [description]
-            limit_ref ([type]): [description]
-
-        Raises:
-            Exception: [description]
+    def set_wait_mode(self, time_ref: int = 0):
+        """Set the wait mode for the device.
+        To set the wait mode in epc must write argument time_ref = number_in_ms
         """
         try:
-            self.epc.set_wait_mode(limit_type, limit_ref)
+            if self.device_type is MidDataDeviceTypeE.EPC:
+                self.epc.set_wait_mode(limit_ref = time_ref)
+            else:
+                self.disable()
         except Exception as err:
             log.error(f"Error while setting wait mode: {err}")
             raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
-    def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
+
+    def __set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
                    ls_pwr: tuple | None = None, hs_volt: tuple | None = None,
                    temp: tuple | None = None) -> None:
         """Set the limits of the ECP.
@@ -235,13 +214,6 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
             ls_pwr (tuple, optional): [max_value, min_value]. Defaults to None.
             hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
             temp (tuple, optional): [max_value, min_value]. Defaults to None.
-
-        Raises:
-            Exception: [description]
-            Exception: [description]
-            Exception: [description]
-            Exception: [description]
-            Exception: [description]
         """
         if isinstance(ls_curr, tuple):
             try:
@@ -274,18 +246,38 @@ class MidDabsEpcDevC(MidDabsPwrMeterC):
                 log.error(f"Error while setting ls current limit: {err}")
                 raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
 
-    def disable(self):
-        """Disable the EPC device.
+    def disable(self) -> None:
+        """Disable the devices.
         """
         try:
-            self.epc.disable()
+            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+                self.bisource.disable()
+            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+                self.source.disable()
+                self.load.disable()
+            elif self.device_type is MidDataDeviceTypeE.EPC:
+                log.info("Disabling epc")
+                self.epc.disable()
+            else:
+                log.error("The device can not be disable")
+                raise ValueError("The device can not be disable")
         except Exception as err:
-            log.error(f"Error while disabling epc: {err}")
-            raise Exception("Error while disabling epc") from err #pylint: disable= broad-exception-raised
+            log.error(f"Error while disabling device: {err}")
+            raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
+
     def close(self):
-        """Close connection with epc not receiving more messages and not controlling it"""
+        """Close connection in serial with the device"""
         try:
-            self.epc.close()
+            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+                self.bisource.close()
+            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+                self.source.close()
+                self.load.close()
+            elif self.device_type is MidDataDeviceTypeE.EPC:
+                self.epc.close()
+            else:
+                log.error("The device can not be close")
+                raise ValueError("The device can not be close")
         except Exception as err:
-            log.error(f"Error while closing epc: {err}")
-            raise Exception("Error while closing epc") from err #pylint: disable= broad-exception-raised
+            log.error(f"Error while closing device: {err}")
+            raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised

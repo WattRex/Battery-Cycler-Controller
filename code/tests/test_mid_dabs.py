@@ -12,7 +12,7 @@ from threading import Event
 from signal import signal, SIGINT
 from time import sleep
 from pytest import fixture, mark
-
+from datetime import datetime as dt
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 from system_config_tool import sys_conf_read_config_params
@@ -27,7 +27,8 @@ sys.path.append(os.getcwd()+'/code/')
 from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsEpcDevC, MidDabsPwrDevC
 from src.wattrex_battery_cycler.mid.mid_data import MidDataDeviceC, MidDataDeviceTypeE, \
                                                     MidDataPwrLimitE, MidDataLinkConfSerialC, \
-                                                    MidDataLinkConfCanC
+                                                    MidDataLinkConfCanC, MidDataGenMeasC, \
+                                                    MidDataExtMeasC, MidDataAllStatusC
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -68,15 +69,22 @@ class TestChannels:
         test_dev1_info = MidDataDeviceC('a', 'b', 'c',
                                         MidDataDeviceTypeE.EPC, 'd', {'e': 0},
                                         MidDataLinkConfCanC(**dev_conf['epc']))
-        epc = MidDabsEpcDevC(test_dev1_info,tx_queue)
+        epc = MidDabsPwrDevC(device=[test_dev1_info])
         log.info("Can started and epc instantiate")
+        gen_meas = MidDataGenMeasC(dt.now(), 0, 0, 0)
+        ext_meas = MidDataExtMeasC()
+        status = MidDataAllStatusC()
 
         try:
-            epc.set_wait_mode(MidDataPwrLimitE.TIME, 30000)
+            epc.set_wait_mode(time_ref = 30000)
         except Exception as exc:
             raise AssertionError("Error while trying to set wait mode for 30s") from exc
         for i in range(0,5):
-            if epc.update().mode.value == 0 and i != 1:
+            gen_meas.timestamp = dt.now()
+            epc.update(gen_meas, ext_meas, status)
+            log.info(f"Set wait mode and measuring: {gen_meas.voltage}mV and {gen_meas.current}mA")
+            log.info(f"Set wait mode and measuring: {ext_meas.pwr_mode.name} and {ext_meas.hs_voltage}mV")
+            if ext_meas.pwr_mode.value == 0 and i != 1:
                 log.info("Correctly set wait mode")
                 break
             sleep(1)
