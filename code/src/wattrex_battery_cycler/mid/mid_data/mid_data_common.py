@@ -18,7 +18,7 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-
+from .mid_data_experiment import MidDataPwrModeE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -63,3 +63,4 @@ class MidDataExtMeasC:
         '''
         Initialize the with the specified extended measures.
         '''
+        self.pwr_mode: MidDataPwrModeE
