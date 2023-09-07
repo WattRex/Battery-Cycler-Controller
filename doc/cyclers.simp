@@ -2403,9 +2403,6 @@
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="0c8286d02f2e4efe80986f7b7bb6d5d7" cid="ELEM146" type="general-transition" creation-date="08/28/2023 12:51:13" from="81916221789d46f0b33aa836c26e1665" to="cae4730f7a964963b90fc6e7334f9c8e" visibility="package">
-      <transition guard="" behaviourExpression="" />
-    </item>
     <item id="2061e2c586d145b88486ae7679b30cee" cid="PROP293" type="property" owner="af3489c6f8544c3bb34a0a962b64f335" creation-date="07/10/2023 14:33:33" visibility="private">
       <structural-feature type="DrvBkDataC" type-id="Class:f4756779010447738bd4900eca258469" />
     </item>
@@ -6207,12 +6204,6 @@
       <structural-feature type="int" type-id="Python.int" />
       <property default-value="0" />
     </item>
-    <item id="81916221789d46f0b33aa836c26e1665" cid="ST009" type="state" name="Sync shared measures" creation-date="08/28/2023 12:44:50" visibility="undefined">
-      <state composite="false" orthogonal="false" simple="false" submachine-state="false">
-        <state-invariant />
-        <actions />
-      </state>
-    </item>
     <item id="82ddab5ad64c4a8ebf1c24014a5905d6" cid="PKG093" type="package" name="MIDDLEWARE" style-class="Flat Light White" creation-date="08/30/2023 13:09:29" visibility="undefined">
       <owned-items />
       <style class="Flat Light White" />
@@ -6899,7 +6890,6 @@ Qué se hace con el código de error?</comment>
       <drawing-shape type="Rectangle" />
     </item>
     <item id="di5415558b245e4fe6b99b6d8faac8bf0e1660" cid="CN019" type="comment-connector" creation-date="07/31/2023 15:12:10" from="68124557b9af4140b25e56e214494eb9" to="493f129545f04ac38d9fe3f26f583dec" />
-    <item id="di69025c96b69142a5a4451cf20097b0449689" cid="CN029" type="comment-connector" creation-date="09/04/2023 14:55:31" from="49e9015ec0e54bf5b2c5de650dcc3f50" to="di3f79f9935bd6405ea626309708f76f479719" />
     <item id="di924e45e906804e2fb0454dbab87b14b84955" cid="PROP120" type="property" name="sn" owner="dideb76258a8704f56ab70dcfb2aea79124955" creation-date="07/10/2023 09:09:08" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -7098,9 +7088,6 @@ Qué se hace con el código de error?</comment>
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="49e9015ec0e54bf5b2c5de650dcc3f50" cid="CMT031" type="comment" name="Comment" creation-date="09/04/2023 14:55:31">
-      <comment>Hace falta tenerlo en local?</comment>
-    </item>
     <item id="411caf17fbdb4584af8aa80caff5d039" cid="ELEM327" type="uml-required-interface-connector" style-class="Flat Yellow" creation-date="08/30/2023 11:52:57" to="921db79826ea4eb88dfdc9d976b32ac2">
       <style class="Flat Yellow" />
     </item>
@@ -7145,7 +7132,7 @@ Qué se hace con el código de error?</comment>
       </drawing>
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="fda19309d40342a88630c088262c1b2e" cid="ELEM140" type="general-transition" creation-date="08/28/2023 12:51:09" from="bb28505f84c94ffa8c1c62fba3dfc621" to="81916221789d46f0b33aa836c26e1665" visibility="package">
+    <item id="fda19309d40342a88630c088262c1b2e" cid="ELEM140" type="general-transition" creation-date="08/28/2023 12:51:09" from="bb28505f84c94ffa8c1c62fba3dfc621" to="cae4730f7a964963b90fc6e7334f9c8e" visibility="package">
       <transition guard="" behaviourExpression="" />
     </item>
     <item id="f6e244eb555547618a8ae1b4771132d2" cid="IFC015" type="uml-interface" style-class="Flat Green" creation-date="08/30/2023 11:43:52">
@@ -8871,7 +8858,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
       </meta>
       <abstract-items />
       <sub-models>
-        <model id="pff8a2ebe218c4ad7a0c7eacd88f89076_100289540" name="Class Diagrams" namespace="" order-index="6">
+        <model id="pff8a2ebe218c4ad7a0c7eacd88f89076_100289540" name="Class Diagrams" namespace="" order-index="6" expanded="true">
           <meta>
             <authors>
               <author> </author>
@@ -21714,7 +21701,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pee3136417d5145208b50e53e02701d01_126679192" name="mid_pwr" order-index="3" overview-order-index="6" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-220,-172" zoom="0.7">
+              <diagram type="uml-class" id="pee3136417d5145208b50e53e02701d01_126679192" name="mid_pwr" order-index="3" overview-order-index="6" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="193,101" zoom="1.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -26301,7 +26288,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                 </layer>
               </diagram>
             </model>
-            <model id="p26476c6cb8ff42f8ac6770ef17fb1a10_207488399" name="app" namespace="" order-index="0">
+            <model id="p26476c6cb8ff42f8ac6770ef17fb1a10_207488399" name="app" namespace="" order-index="0" expanded="true">
               <meta>
                 <authors>
                   <author> </author>
@@ -28583,7 +28570,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </diagram>
             </model>
           </sub-models>
-          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-40,142" zoom="0.8">
+          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="0,-38" zoom="0.8">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -28595,7 +28582,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </authors>
               <description />
               <creation-date>08/28/2023 11:58:08</creation-date>
-              <change-date>08/28/2023 13:10:24</change-date>
+              <change-date>09/07/2023 10:53:49</change-date>
               <revision-count>0</revision-count>
               <version />
             </meta>
@@ -28665,9 +28652,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               <item id="b6379799296e42f5b2e812f2d2839bb2" iid="7afd4d8820d9433fafac463dcd91f784" creation-date="08/28/2023 12:43:44" order-index="1" type="entity">
                 <layout ax="424.5" ay="1069" awidth="322" aheight="50" x="424.5" y="1069" width="100" height="50" expanded="424.5,981,322,50" collapsed="0,0,0,0" />
               </item>
-              <item id="81916221789d46f0b33aa836c26e1665" iid="12bf95fca1844344924dd29abfb39290" creation-date="08/28/2023 12:44:50" order-index="3" type="entity">
-                <layout ax="500" ay="200" awidth="170" aheight="50" x="500" y="200" width="170" height="50" expanded="500,200,170,50" collapsed="0,0,0,0" rotation-center="3.125,0" />
-              </item>
               <item id="cae4730f7a964963b90fc6e7334f9c8e" iid="c454a97b152f4f9a92f90b0dbc4cb036" creation-date="08/28/2023 12:46:31" order-index="5" type="entity">
                 <layout ax="482.5" ay="294" awidth="206" aheight="50" x="482.5" y="294" width="120.25" height="50" expanded="228.5,307,206,50" collapsed="0,0,0,0" />
               </item>
@@ -28687,22 +28671,13 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                 <layout name-position="7.5,-1.086914" name-anchor="right" auto-anchor="true" label-attached="false" ax="555" ay="507" awidth="61" aheight="60" x="555" y="507" width="61" height="60" rotation-center="-4.5,0" />
               </item>
               <item id="fda19309d40342a88630c088262c1b2e" iid="d057cfca22924656879f5d133933222f" creation-date="08/28/2023 12:51:09" order-index="7" type="relation">
-                <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="586" y1="158" x2="585" y2="200" start-border-pos="0.622357686360677" end-border-pos="0.125448339125689" name-position="0,20">
+                <layout line-style="rounded-rectangular" start-auto-side="false" lock-end-point="true" lock-to-fields="false" auto-path="" x1="586" y1="158" x2="586" y2="294" start-border-pos="0.625" end-border-pos="0.125606790184975" start-local-pos="12" end-local-pos="103.5" name-position="0,20">
                   <points>
                     <point x="586" y="158" />
-                    <point x="585" y="200" />
-                  </points>
-                </layout>
-                <relation from="bb28505f84c94ffa8c1c62fba3dfc621" from-iid="9be9f1a8b573411c980e612497ab488b" to="81916221789d46f0b33aa836c26e1665" to-iid="12bf95fca1844344924dd29abfb39290" />
-              </item>
-              <item id="0c8286d02f2e4efe80986f7b7bb6d5d7" iid="a10d704fa630412f8d64fe92620af631" creation-date="08/28/2023 12:51:13" order-index="8" type="relation">
-                <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="585" y1="250" x2="586" y2="294" start-border-pos="0.624608926212086" end-border-pos="0.125284065320654" name-position="0,20">
-                  <points>
-                    <point x="585" y="250" />
                     <point x="586" y="294" />
                   </points>
                 </layout>
-                <relation from="81916221789d46f0b33aa836c26e1665" from-iid="12bf95fca1844344924dd29abfb39290" to="cae4730f7a964963b90fc6e7334f9c8e" to-iid="c454a97b152f4f9a92f90b0dbc4cb036" />
+                <relation from="bb28505f84c94ffa8c1c62fba3dfc621" from-iid="9be9f1a8b573411c980e612497ab488b" to="cae4730f7a964963b90fc6e7334f9c8e" to-iid="c454a97b152f4f9a92f90b0dbc4cb036" />
               </item>
               <item id="82d2bdb8db604fa4ad9b82deaa61a806" iid="5bac617cea3343dca1dabc5fcb17354a" creation-date="08/28/2023 12:51:30" order-index="9" type="relation">
                 <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="586" y1="344" x2="586" y2="386" start-border-pos="0.624393203883495" end-border-pos="0.127049180327869" name-position="0,20">
@@ -28933,7 +28908,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </meta>
           <abstract-items />
           <sub-models />
-          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="264,-554" zoom="0.7">
+          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="262,-545" zoom="0.7">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -37708,7 +37683,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="pb110bc52920149b7bb60230c21f2d99d_340556814" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-379,-183" zoom="0.7">
+      <diagram type="entity-relationship" id="pb110bc52920149b7bb60230c21f2d99d_340556814" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="183,172" zoom="0.9">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -37720,7 +37695,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </authors>
           <description />
           <creation-date>06/29/2023 13:19:45</creation-date>
-          <change-date>09/04/2023 14:56:36</change-date>
+          <change-date>09/07/2023 11:23:08</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -37882,7 +37857,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </attribute-pairs>
             </erd-relation>
           </item>
-          <item id="did4498dcbd2af4a93b7b209d638b5cabd9719" cid="CN028" type="comment-connector" creation-date="09/04/2023 14:11:25" from="difd635b70ef244717b4491d42cc1db4699719" to="difb0bff99ece749449a424e5b8c55d8c29719" />
           <item id="did6f9a0c2e7f644bd88fdbe24139f59fa9719" cid="REL228" type="erd-relationship" creation-date="07/04/2023 12:19:52" from="dieee90cf636714e5d8d6790ddde7b56829719" to="di51e9400679874f38abce41f2616e98069719">
             <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="0..*">
               <attribute-pairs>
@@ -37900,50 +37874,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               <attribute uid="2d93d9b4-3d5e-4e17-b781-0be5b15a527d" cid="EA036" name="Value" type="mediumint" type-id="MySql.mediumint" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:44:30" />
             </attributes>
             <indexes />
-          </item>
-          <item id="di8a063af134154e84b3e8230a966a63f69719" cid="REL225" type="erd-relationship" creation-date="07/03/2023 12:10:09" from="dieaeb64efa928447d8ed2fc1c652e9aac9719" to="difb0bff99ece749449a424e5b8c55d8c29719">
-            <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="1..*">
-              <attribute-pairs>
-                <attribute-pair from-attribute="a6819ab75310c4f3faf196df0d0249c4e99" to-attribute="a43e4a7317a9e41948b41dcdb7dddcb1a179" />
-              </attribute-pairs>
-            </erd-relation>
-          </item>
-          <item id="di76d7dce701c5420db9f769389a002bc09719" cid="REL237" type="erd-relationship" creation-date="07/07/2023 10:12:11" from="difb0bff99ece749449a424e5b8c55d8c29719" to="die42b7d8635454b3abc6a9f304d5e02299719">
-            <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="0..*">
-              <attribute-pairs>
-                <attribute-pair from-attribute="ad90194f323154653b9c6ec651267e951834" to-attribute="aaec5ee522a5040c58679b3b13f9fc4a5818" />
-              </attribute-pairs>
-            </erd-relation>
-          </item>
-          <item id="di3f79f9935bd6405ea626309708f76f479719" cid="ENT090" type="erd-entity" name="MeasuresDeclaration" creation-date="07/03/2023 10:49:17">
-            <entity description="" />
-            <attributes>
-              <attribute uid="aa460de1-f12e-47bb-afac-93b49260d3d5" cid="EA042" name="MeasType" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="true" creation-date="07/03/2023 10:57:39" />
-              <attribute uid="e36cbe04-557f-47ab-bae7-3a193784ca86" cid="EA043" name="MeasName" type="varchar" type-id="MySql.varchar" type-size="20" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 10:49:58" />
-            </attributes>
-            <indexes />
-            <entity-data>
-              <row uid="edr4e63bfd2fb18417aa602e98ff3d1c1a3138">
-                <v>0</v>
-                <v>SoC</v>
-              </row>
-              <row uid="edref0a82b479f54c79bd2aecbf558b326e138">
-                <v>1</v>
-                <v>PresPosIn</v>
-              </row>
-              <row uid="edrf4ad345d93674684939d5fc19214de2f138">
-                <v>2</v>
-                <v>PresPosOut</v>
-              </row>
-              <row uid="edr4e871a8fe400435daabda7edae3e4c81138">
-                <v>3</v>
-                <v>PresNegIn</v>
-              </row>
-              <row uid="edr3b21e8dffac94ce29014dab17db90af9138">
-                <v>4</v>
-                <v>PresNegOut</v>
-              </row>
-            </entity-data>
           </item>
           <item id="di51e9400679874f38abce41f2616e98069719" cid="ENT086" type="erd-entity" name="ExtendedMeasures" creation-date="07/03/2023 09:43:51">
             <entity description="" />
@@ -37992,13 +37922,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                 <v />
               </row>
             </entity-data>
-          </item>
-          <item id="dic1825b9882284a59803109f641b58ec99719" cid="REL234" type="erd-relationship" creation-date="07/04/2023 12:36:38" from="di3f79f9935bd6405ea626309708f76f479719" to="di51e9400679874f38abce41f2616e98069719">
-            <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="0..*">
-              <attribute-pairs>
-                <attribute-pair from-attribute="a1348816ecbde4a13b7639e4f03759c1d600" to-attribute="a1b59b7a3aa944b19b015a3aaebc02f11242" />
-              </attribute-pairs>
-            </erd-relation>
           </item>
           <item id="die42b7d8635454b3abc6a9f304d5e02299719" cid="ENT094" type="erd-entity" name="Status" creation-date="07/03/2023 09:43:51">
             <entity description="" />
@@ -38068,56 +37991,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </attribute-pairs>
             </erd-relation>
           </item>
-          <item id="difb0bff99ece749449a424e5b8c55d8c29719" cid="ENT091" type="erd-entity" name="UsedDevices" creation-date="07/03/2023 11:41:00">
-            <entity description="" />
-            <attributes>
-              <attribute uid="87d1000b-46e2-40bd-920d-b77e257aa1fe" cid="EA059" name="DevID" type="varchar (MySql.varchar)" type-id="varchar (MySql.varchar)" type-size="" foreign-key="false" primary-key="true" nullable="true" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:45:16" />
-              <attribute uid="f88715ef-cd2d-400e-97b5-7674ccc4e9bb" cid="EA069" name="CSID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 12:08:06" />
-              <attribute uid="a13c79dc-f4db-4c57-96d2-2625658e7ea2" cid="EA060" name="CompDevID" type="smallint unsigned" type-id="MySql.smallint unsigned" type-size="" foreign-key="true" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:44:46" />
-              <attribute uid="e76ac5ae-b985-4719-a738-a2fc93de1ed4" cid="EA061" name="SN" type="varchar" type-id="MySql.varchar" type-size="30" foreign-key="false" primary-key="false" nullable="false" description="Laboratory Invetory label" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:45:03" />
-              <attribute uid="3c85fc1d-afe3-45fa-aa3a-cfba2349ac9d" cid="EA097" name="UdevName" type="varchar (MySql.varchar)" type-id="varchar (MySql.varchar)" type-size="30" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/17/2023 12:59:56" />
-            </attributes>
-            <indexes />
-            <entity-data>
-              <row uid="edr875bf5056cea45f995f28f2a7b4fdabb890">
-                <v />
-                <v />
-                <v />
-                <v />
-                <v />
-              </row>
-            </entity-data>
-          </item>
-          <item id="die1c30ffc5a7248318fb28cdd37f934a69719" cid="REL226" type="erd-relationship" creation-date="07/04/2023 09:54:07" from="dieaeb64efa928447d8ed2fc1c652e9aac9719" to="dieee90cf636714e5d8d6790ddde7b56829719">
-            <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="0..*">
-              <attribute-pairs>
-                <attribute-pair from-attribute="" to-attribute="" />
-              </attribute-pairs>
-            </erd-relation>
-          </item>
-          <item id="dieaeb64efa928447d8ed2fc1c652e9aac9719" cid="ENT087" type="erd-entity" name="CycleStation" creation-date="07/03/2023 09:52:44">
-            <entity description="" />
-            <attributes>
-              <attribute uid="241c21c4-330d-41b5-8b03-e10aae57f5ea" cid="EA057" name="CSID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:39:09" />
-              <attribute uid="81c429c1-46b6-4981-a1b0-d49fe006526c" cid="EA058" name="CUID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:39:23" />
-              <attribute uid="868b71a2-c9e3-4fdd-bc72-892f6fd12814" cid="EA064" name="Name" type="varchar" type-id="MySql.varchar" type-size="30" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:46:48" />
-              <attribute uid="6d52458b-abe5-453f-9914-a36aaec827eb" cid="EA065" name="Location" type="varchar" type-id="MySql.varchar" type-size="30" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:47:04" />
-              <attribute uid="c80e5026-93f8-4bf7-840c-cec8e050e703" cid="EA066" name="RegisterDate" type="datetime" type-id="MySql.datetime" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:47:04" />
-            </attributes>
-            <indexes />
-            <entity-data>
-              <row uid="edrd5c6abd35ce747378c9a458294404116567">
-                <v />
-                <v />
-                <v />
-                <v />
-                <v />
-              </row>
-            </entity-data>
-          </item>
-          <item id="difd635b70ef244717b4491d42cc1db4699719" cid="CMT030" type="comment" name="Comment" creation-date="09/04/2023 14:11:25">
-            <comment>Hay un problema antes de vincular los dispositivos a las CS, a que CS pertenece? Pueden haber varios CS con el mismo CUID.</comment>
-          </item>
           <item id="dib4beedfa02184d7789cedc44520a059d9719" cid="REL236" type="erd-relationship" creation-date="07/07/2023 10:10:02" from="dieee90cf636714e5d8d6790ddde7b56829719" to="die42b7d8635454b3abc6a9f304d5e02299719">
             <erd-relation type="Identifying" multiplicity-from="1" multiplicity-to="0..*">
               <attribute-pairs>
@@ -38139,36 +38012,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
             <layout ax="199" ay="-78" awidth="420" aheight="144" x="199" y="-78" width="420" height="140" rotation-center="-140,35.5" />
             <erd-entity show-nullability="true" />
           </item>
-          <item id="dieaeb64efa928447d8ed2fc1c652e9aac9719" iid="ef99a92936d94e199c30f0b09068f395" creation-date="07/03/2023 09:52:44" order-index="9" type="entity">
-            <layout ax="420" ay="799" awidth="480" aheight="163" x="420" y="799" width="480" height="160" rotation-center="-170,-0.5" />
-            <erd-entity show-nullability="true" />
-          </item>
-          <item id="di3f79f9935bd6405ea626309708f76f479719" iid="38aa4e00d70d4d02a3043fbe96cbec2c" creation-date="07/03/2023 10:49:17" order-index="10" type="entity">
-            <layout ax="-469" ay="12" awidth="420" aheight="190" x="-469" y="12" width="420" height="190" rotation-center="-120.5,-15" />
-            <erd-entity show-nullability="true" />
-          </item>
-          <item id="difb0bff99ece749449a424e5b8c55d8c29719" iid="7eb07a5da09341469021e0c2bd270fca" creation-date="07/03/2023 11:41:00" order-index="11" type="entity">
-            <layout ax="1106" ay="750" awidth="328" aheight="163" x="1040" y="750" width="328" height="160" rotation-center="-141.5,0" />
-            <erd-entity show-nullability="true" />
-          </item>
-          <item id="di8a063af134154e84b3e8230a966a63f69719" iid="9adbf13848b143bd8d4a47176c8ae259" creation-date="07/03/2023 12:10:09" order-index="16" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" start-auto-side="false" lock-to-fields="true" auto-path="" x1="900" y1="880" x2="1106" y2="832" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="41" end-local-pos="60" name-position="0,20">
-              <points>
-                <point x="900" y="880" />
-                <point x="1106" y="832" />
-              </points>
-            </layout>
-            <relation from="dieaeb64efa928447d8ed2fc1c652e9aac9719" from-iid="ef99a92936d94e199c30f0b09068f395" from-field="a6819ab75310c4f3faf196df0d0249c4e99" to="difb0bff99ece749449a424e5b8c55d8c29719" to-iid="7eb07a5da09341469021e0c2bd270fca" to-field="a43e4a7317a9e41948b41dcdb7dddcb1a179" />
-          </item>
-          <item id="die1c30ffc5a7248318fb28cdd37f934a69719" iid="1a10c787b78a419bb9dc8d52a949f192" creation-date="07/04/2023 09:54:07" order-index="17" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="660" y1="799" x2="435" y2="718" start-border-pos="0.125" end-border-pos="0.625" start-local-pos="245" end-local-pos="240" name-position="0,20">
-              <points>
-                <point x="660" y="799" />
-                <point x="435" y="718" />
-              </points>
-            </layout>
-            <relation from="dieaeb64efa928447d8ed2fc1c652e9aac9719" from-iid="ef99a92936d94e199c30f0b09068f395" to="dieee90cf636714e5d8d6790ddde7b56829719" to-iid="b3b6185f1a2a4c6ca29eb77ef442241c" />
-          </item>
           <item id="did6f9a0c2e7f644bd88fdbe24139f59fa9719" iid="91873e9694ed48d7ae9d1a88c050784b" creation-date="07/04/2023 12:19:52" order-index="21" type="relation">
             <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" end-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="140" y1="405" x2="199" y2="-38" start-border-pos="0.971317280453258" end-border-pos="0.9296875" start-local-pos="40" end-local-pos="40" name-position="0,20">
               <points>
@@ -38178,16 +38021,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </points>
             </layout>
             <relation from="dieee90cf636714e5d8d6790ddde7b56829719" from-iid="b3b6185f1a2a4c6ca29eb77ef442241c" from-field="a791b85e975a64a3192b3ac2d7f2b0eb8982" to="di51e9400679874f38abce41f2616e98069719" to-iid="ac9872cf4d254f5395dc10e3ce213448" to-field="acf3284fd2c0c4da3b9c37d293cc54e1b706" />
-          </item>
-          <item id="dic1825b9882284a59803109f641b58ec99719" iid="5413066754e04ff78da874fc31a362d7" creation-date="07/04/2023 12:36:38" order-index="28" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="-49" y1="53" x2="409" y2="-78" start-border-pos="0.303289473684211" end-border-pos="0.125" start-local-pos="41" end-local-pos="210" name-position="0,20">
-              <points>
-                <point x="-49" y="53" />
-                <point x="6.5" y="-69.16783" />
-                <point x="409" y="-78" />
-              </points>
-            </layout>
-            <relation from="di3f79f9935bd6405ea626309708f76f479719" from-iid="38aa4e00d70d4d02a3043fbe96cbec2c" from-field="a1348816ecbde4a13b7639e4f03759c1d600" to="di51e9400679874f38abce41f2616e98069719" to-iid="ac9872cf4d254f5395dc10e3ce213448" to-field="a1b59b7a3aa944b19b015a3aaebc02f11242" />
           </item>
           <item id="dibe9cd372763440f193021bd38c863fad9719" iid="3357f8c8638e46a78d7947b58f27cb33" creation-date="07/04/2023 12:19:06" order-index="20" type="relation">
             <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" start-auto-side="false" end-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="140" y1="405" x2="174" y2="149" start-border-pos="0.971317280453258" end-border-pos="0.946710526315789" start-local-pos="40" end-local-pos="41" name-position="0,20">
@@ -38217,16 +38050,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
             </layout>
             <relation from="dieee90cf636714e5d8d6790ddde7b56829719" from-iid="b3b6185f1a2a4c6ca29eb77ef442241c" from-field="a791b85e975a64a3192b3ac2d7f2b0eb8982" to="die42b7d8635454b3abc6a9f304d5e02299719" to-iid="f3cbca2fd9d34c5c94a1f20c2e43e870" to-field="acf3284fd2c0c4da3b9c37d293cc54e1b706" />
           </item>
-          <item id="di76d7dce701c5420db9f769389a002bc09719" iid="b0c65210ccf64cc1bf6808e3d4d632de" creation-date="07/07/2023 10:12:11" order-index="30" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-to-fields="true" auto-path="" x1="1434" y1="790" x2="1358" y2="641" start-border-pos="0.312116564417178" end-border-pos="0.380803797468354" start-local-pos="40" end-local-pos="60" name-position="0,20">
-              <points>
-                <point x="1434" y="790" />
-                <point x="1489" y="641" />
-                <point x="1358" y="641" />
-              </points>
-            </layout>
-            <relation from="difb0bff99ece749449a424e5b8c55d8c29719" from-iid="7eb07a5da09341469021e0c2bd270fca" from-field="ad90194f323154653b9c6ec651267e951834" to="die42b7d8635454b3abc6a9f304d5e02299719" to-iid="f3cbca2fd9d34c5c94a1f20c2e43e870" to-field="aaec5ee522a5040c58679b3b13f9fc4a5818" />
-          </item>
           <item id="di6db752147bb340edb3f37e51ba3285119719" iid="e040bebb4afa43fe84e220af2f3b5eac" creation-date="07/07/2023 10:15:36" order-index="31" type="relation">
             <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="930" y1="160" x2="730" y2="420" start-border-pos="0.9375" end-border-pos="0.288951840251684" start-local-pos="41.5" end-local-pos="55" name-position="0,20">
               <points>
@@ -38235,30 +38058,6 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
               </points>
             </layout>
             <relation from="di13306c5e8b314cc6b564b16c816336b49719" from-iid="35f68786e6c74c12bd250e515b5d91cf" from-field="acf3284fd2c0c4da3b9c37d293cc54e1b706" to="dieee90cf636714e5d8d6790ddde7b56829719" to-iid="b3b6185f1a2a4c6ca29eb77ef442241c" to-field="a791b85e975a64a3192b3ac2d7f2b0eb8982" />
-          </item>
-          <item id="difd635b70ef244717b4491d42cc1db4699719" iid="07d028cc8c794d4cbf1ce4ae37114ee6" creation-date="09/04/2023 14:11:25" order-index="36" type="entity">
-            <layout ax="1540" ay="810" awidth="290" aheight="50" x="1540" y="810" width="290" height="50" rotation-center="8.5,25" />
-          </item>
-          <item id="did4498dcbd2af4a93b7b209d638b5cabd9719" iid="5c7869729e4740068aae6d8a4a2b4049" creation-date="09/04/2023 14:11:25" order-index="37" type="comment-connector">
-            <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="1540" y1="834" x2="1434" y2="833" start-border-pos="0.880241088867187" end-border-pos="0.377585194593558" name-position="0,20">
-              <points>
-                <point x="1540" y="834" />
-                <point x="1434" y="833" />
-              </points>
-            </layout>
-            <relation from="difd635b70ef244717b4491d42cc1db4699719" from-iid="07d028cc8c794d4cbf1ce4ae37114ee6" to="difb0bff99ece749449a424e5b8c55d8c29719" to-iid="7eb07a5da09341469021e0c2bd270fca" />
-          </item>
-          <item id="49e9015ec0e54bf5b2c5de650dcc3f50" iid="410c426747064a9b9b848054916d94cd" creation-date="09/04/2023 14:55:31" order-index="38" type="entity">
-            <layout ax="-330" ay="-150" awidth="150" aheight="40" x="-330" y="-150" width="150" height="40" rotation-center="5,30" />
-          </item>
-          <item id="di69025c96b69142a5a4451cf20097b0449689" iid="ec5eee1bfc984633a064b2568e66fc0e" creation-date="09/04/2023 14:55:31" order-index="39" type="comment-connector">
-            <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="-255" y1="-110" x2="-257" y2="12" start-border-pos="0.625562591552734" end-border-pos="0.125954382760184" name-position="0,20">
-              <points>
-                <point x="-255" y="-110" />
-                <point x="-257" y="12" />
-              </points>
-            </layout>
-            <relation from="49e9015ec0e54bf5b2c5de650dcc3f50" from-iid="410c426747064a9b9b848054916d94cd" to="di3f79f9935bd6405ea626309708f76f479719" to-iid="38aa4e00d70d4d02a3043fbe96cbec2c" />
           </item>
         </layer>
       </diagram>
