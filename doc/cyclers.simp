@@ -21730,7 +21730,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pe64468d2a1d64625ba62ce8691ab5e5f_428683468" name="mid_sync" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-278,-190" zoom="0.8">
+              <diagram type="uml-class" id="pe64468d2a1d64625ba62ce8691ab5e5f_428683468" name="mid_sync" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-171,-220">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21791,15 +21791,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                         </source-codes>
                       </operation>
                       <operation id="3113b94d-8b50-4956-baae-117ee8ee07ba" cid="OP140" name="push_status" creation-date="07/31/2023 12:50:31" type="" type-id="" visibility="public" />
-                      <operation id="2a721133-72a7-491b-aa55-335a1991b308" cid="OP165" name="pull_new_experiment" creation-date="07/31/2023 15:13:34" type="" type-id="" visibility="public">
-                        <parameters>
-                          <parameter id="pf9853c77c7fd4446b21bd9bb89fedb73" name="cycler_station" type="int" type-id="Python.int" />
-                        </parameters>
-                      </operation>
                       <operation id="83b14645-b225-4a4c-b6a7-ee62af7446c1" cid="OP141" name="update_experiments" creation-date="07/31/2023 12:50:42" type="" type-id="" visibility="public">
-                        <parameters>
-                          <parameter id="p201cb6680c3545f68e6ad64ed5b7ca23" name="expId" type="int" type-id="Python.int" direction="In" />
-                        </parameters>
                         <source-codes>
                           <source-code language="ActionScript" />
                         </source-codes>
@@ -22121,13 +22113,13 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
                     <class />
                   </item>
                   <item id="8693de902c8243e7aa4c6533fe3dfa00" iid="c911ab557ecb42c4a18131c0b2f80159" creation-date="09/04/2023 15:17:11" order-index="192" type="entity">
-                    <layout ax="1090" ay="120" awidth="170" aheight="30" x="1090" y="120" width="170" height="30" rotation-center="-15,35" />
+                    <layout ax="640" ay="-120" awidth="170" aheight="30" x="640" y="-120" width="170" height="30" rotation-center="-15,35" />
                   </item>
                   <item id="dibb746a4f23b24cf9875cf5583e41427f5135" iid="16aa6429247148d6a7c6bc9fb18776a1" creation-date="09/04/2023 15:17:11" order-index="193" type="comment-connector">
-                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="1090" y1="135" x2="940" y2="135" start-border-pos="0.875" end-border-pos="0.375" name-position="0,20">
+                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="724" y1="-90" x2="720" y2="20" start-border-pos="0.625919117647059" end-border-pos="0.127662048339844" name-position="0,20">
                       <points>
-                        <point x="1090" y="135" />
-                        <point x="940" y="135" />
+                        <point x="724" y="-90" />
+                        <point x="720" y="20" />
                       </points>
                     </layout>
                     <relation from="8693de902c8243e7aa4c6533fe3dfa00" from-iid="c911ab557ecb42c4a18131c0b2f80159" to="di3f32757054ec473fb923858e62d4d3c34801" to-iid="256f6ef7e4574f1a915a8bd541f848d4" />
@@ -28908,7 +28900,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </meta>
           <abstract-items />
           <sub-models />
-          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="262,-545" zoom="0.7">
+          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="350,-595" zoom="0.9">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -34792,7 +34784,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-498,-70" zoom="0.4">
+      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-386,-76" zoom="0.4">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -37683,7 +37675,7 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="pb110bc52920149b7bb60230c21f2d99d_340556814" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="183,172" zoom="0.9">
+      <diagram type="entity-relationship" id="pb110bc52920149b7bb60230c21f2d99d_340556814" name="CacheDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-308,-199" zoom="0.5">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -37879,8 +37871,8 @@ Se puede añadir todos los dispositivos a la CS que contiene la CU que lo ha det
             <entity description="" />
             <attributes>
               <attribute uid="6a255725-56cb-4552-ba0b-afe5566fccd4" cid="EA040" name="ExpID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:45:25" />
-              <attribute uid="9e96cfe6-2097-4eb6-9b63-91f9b24cdc02" cid="EA041" name="MeasType" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:52:17" />
               <attribute uid="79097e5b-e6b7-442c-a352-354d8136aaf8" cid="EA038" name="MeasID" type="int unsigned" type-id="MySql.int unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:44:53" />
+              <attribute uid="9e96cfe6-2097-4eb6-9b63-91f9b24cdc02" cid="EA041" name="MeasType" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:52:17" />
               <attribute uid="7a128514-e141-4b86-bf67-bc59e5b75c2a" cid="EA036" name="Value" type="mediumint" type-id="MySql.mediumint" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:44:30" />
             </attributes>
             <indexes />
