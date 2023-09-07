@@ -19,6 +19,7 @@ log = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 from .mid_data_experiment import MidDataPwrModeE
+from .mid_data_devices import MidDataDeviveStatusC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -32,13 +33,19 @@ class MidDataAllStatusC:
         '''
         Intialize the instance with the given status.
         '''
+        # One attribute for each device, all of them initialized to OK
+        self.epc_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
+        self.source_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
+        self.load_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
+        self.bisource_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
+        self.meter_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
 
 class MidDataGenMeasC:
     '''
     Class used to store generic power measures.
     '''
 
-    def __init__(self, timestamp: datetime, voltage: int, current: int,
+    def __init__(self, voltage: int, current: int,
         power: int) -> None:
         '''
         Initialize the instance with the given measures.
@@ -49,7 +56,6 @@ class MidDataGenMeasC:
             power (int): active power applied to the battery in a given instant
             timestamp (datetime): instante when the measures has been taken
         '''
-        self.timestamp : datetime = timestamp
         self.voltage : int = voltage
         self.current : int = current
         self.power : int = power

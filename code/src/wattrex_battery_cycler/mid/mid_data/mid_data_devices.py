@@ -25,6 +25,7 @@ log = sys_log_logger_get_module_logger(__name__)
 class MidDataDeviceStatusE(Enum):
     '''
     Device status types.
+    All the errors different from comm error will be interpreted as internal error.
     '''
     COMM_ERROR = -1
     OK = 0
