@@ -6,7 +6,7 @@ sudo systemctl set-environment R_PATH=$(pwd)
 ```
 
 ```
-sudo systemctl enable /home/plc/JAVI/Battery-Cyclers-Controler/devops/can/can_sniffer.service
+sudo systemctl enable /home/user/Battery-Cyclers-Controller/devops/can/can_sniffer.service
 ```
 
 The following command is used to start the service's execution
