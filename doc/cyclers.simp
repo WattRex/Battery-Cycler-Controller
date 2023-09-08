@@ -387,7 +387,7 @@
     <fields>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Erd.ErdEntityAttribute</type>
-        <value>99</value>
+        <value>102</value>
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.EnumerationItemField</type>
@@ -3782,10 +3782,6 @@
       </style>
       <structural-feature type="int" type-id="Python.int" />
     </item>
-    <item id="2857a2470ffa475aab4941d94e81d687" cid="CMT027" type="comment" name="Comment" creation-date="09/04/2023 14:09:10">
-      <comment>Añadir concentracion electrolito
-</comment>
-    </item>
     <item id="c4c7d3dcb7ad46f4a8123392d0f77c69" cid="IFC010" type="uml-interface" style-class="Flat Yellow" creation-date="08/30/2023 11:41:11">
       <style class="Flat Yellow" />
       <interface>
@@ -4069,7 +4065,6 @@
     <item id="bb9c5338d61242c498dd32ca14a7899f" cid="ELEM012" type="parameter" name="staging" creation-date="08/30/2023 12:20:15" visibility="undefined">
       <parameter />
     </item>
-    <item id="di34be18d7f32f47c78899339c36b44d864227" cid="CN025" type="comment-connector" creation-date="09/04/2023 14:09:10" from="2857a2470ffa475aab4941d94e81d687" to="di0472ba534fcf441db91dfbbc8096ec279697" />
     <item id="di73cc8e2c4f2d47418778cd63107631215092" cid="ELEM282" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
@@ -35729,7 +35724,7 @@ Qué se hace con el código de error?</comment>
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-774,295" zoom="0.7">
+      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-497,-129" zoom="0.6">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -35741,7 +35736,7 @@ Qué se hace con el código de error?</comment>
           </authors>
           <description />
           <creation-date>06/29/2023 13:19:45</creation-date>
-          <change-date>09/08/2023 09:30:49</change-date>
+          <change-date>09/08/2023 13:00:01</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -36278,12 +36273,27 @@ Qué se hace con el código de error?</comment>
             <attributes>
               <attribute uid="a2cb2f34348414d3fafdb844445b68a47218" cid="EA074" name="ExpID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/04/2023 11:54:01" />
               <attribute uid="a6d44105c591f466d812fd15006b52313979" cid="EA022" name="BatID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:28:07" />
+              <attribute uid="a6371daa2c1c4497b9e273f8047895bbe496" cid="EA099" name="Polarity" type="enum" type-id="MySql.enum" type-size="" foreign-key="false" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="09/08/2023 12:58:04" />
               <attribute uid="ab75071c71e634f63b5e5176be3d13184641" cid="EA034" name="ElectrolyteVol" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:39:40" />
+              <attribute uid="ab09c051c546741689bebefc2ebd60ec0928" cid="EA101" name="InitialSOC" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="09/08/2023 12:58:13" />
+              <attribute uid="a6d04280aba1b4da3b69e3c6f70f4d550234" cid="EA100" name="MinFlowRate" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="09/08/2023 12:58:23" />
               <attribute uid="a10052a518caa45a684ca376e59efa788858" cid="EA035" name="MaxFlowRate" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="false" primary-key="false" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 09:42:08" />
             </attributes>
             <indexes />
             <entity-data>
               <row uid="edrd0129f48b77f411bb377ad88ff4276ea186">
+                <v />
+                <v />
+                <v>POS</v>
+                <v />
+                <v />
+                <v />
+                <v />
+              </row>
+              <row uid="edrb186012ac8f847b294c2a684f326829f744">
+                <v />
+                <v />
+                <v>NEG</v>
                 <v />
                 <v />
                 <v />
@@ -36598,7 +36608,7 @@ Qué se hace con el código de error?</comment>
             <erd-entity show-nullability="true" />
           </item>
           <item id="di0472ba534fcf441db91dfbbc8096ec279697" iid="6e48adee4ae14b1a841443f98b5082a7" creation-date="06/29/2023 13:20:02" order-index="1" type="entity">
-            <layout ax="-297" ay="1100" awidth="530" aheight="144" x="-297" y="1100" width="530" height="180" rotation-center="-197,64.5" />
+            <layout ax="-297" ay="1100" awidth="530" aheight="240" x="-297" y="1100" width="530" height="240" rotation-center="-197,16.5" />
             <erd-entity show-nullability="true" />
           </item>
           <item id="8dd54755eac74ae19433c0f3ff0cfd3c" iid="50d443e817824f518b2ee4e310dd3d0f" creation-date="07/03/2023 09:43:51" order-index="8" type="entity">
@@ -36723,7 +36733,7 @@ Qué se hace con el código de error?</comment>
             <relation from="di231c7a5f20934638a428ecf4487dfcae9271" from-iid="646ec3ec5de64c44b36284a97e441fa5" to="di0472ba534fcf441db91dfbbc8096ec279697" to-iid="6e48adee4ae14b1a841443f98b5082a7" />
           </item>
           <item id="63b6b796b26a4f288058324b9b0efb86" iid="5a8c69c53a6b49a1965d147ba39858dd" creation-date="07/04/2023 12:36:09" order-index="27" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="280" y1="718" x2="233" y2="1140" start-border-pos="0.690677970647812" end-border-pos="0.3203125" start-local-pos="140" end-local-pos="40" name-position="0,20">
+            <layout start-role-position="25,15" end-role-position="25,-15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="280" y1="718" x2="233" y2="1140" start-border-pos="0.690677970647812" end-border-pos="0.2921875" start-local-pos="140" end-local-pos="40" name-position="0,20">
               <points>
                 <point x="280" y="718" />
                 <point x="233" y="1140" />
@@ -36812,18 +36822,6 @@ Qué se hace con el código de error?</comment>
               </points>
             </layout>
             <relation to="a462ad5aa6cf4bf4bad6d937575ade97" to-iid="51acae4d65ec4ab797298c698b63fe13" to-field="a523b9dd9da904a9296bb998e220c83d7665" />
-          </item>
-          <item id="2857a2470ffa475aab4941d94e81d687" iid="bdec65c239ce4fa9828b6e4ac51e75df" creation-date="09/04/2023 14:09:10" order-index="34" type="entity">
-            <layout ax="-126" ay="1370" awidth="196" aheight="26" x="-126" y="1370" width="196" height="26" rotation-center="-28,37" />
-          </item>
-          <item id="di34be18d7f32f47c78899339c36b44d864227" iid="c6c500063abf4c91a6e4b2627450cef3" creation-date="09/04/2023 14:09:10" order-index="35" type="comment-connector">
-            <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="-28" y1="1370" x2="-31" y2="1244" start-border-pos="0.124685657267668" end-border-pos="0.624356165472067" name-position="0,20">
-              <points>
-                <point x="-28" y="1370" />
-                <point x="-31" y="1244" />
-              </points>
-            </layout>
-            <relation from="2857a2470ffa475aab4941d94e81d687" from-iid="bdec65c239ce4fa9828b6e4ac51e75df" to="di0472ba534fcf441db91dfbbc8096ec279697" to-iid="6e48adee4ae14b1a841443f98b5082a7" />
           </item>
         </layer>
       </diagram>
