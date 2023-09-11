@@ -15,7 +15,7 @@ if __name__ == '__main__':
     cycler_logger = SysLogLoggerC(file_log_levels= 'log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
-from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdParamsC
+from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC
 
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC #pylint: disable= relative-beyond-top-level
@@ -36,7 +36,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     def __init__(self,shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
                  shared_status: SysShdSharedObjC, cycle_period: float, working_flag : Event,
                  devices: List[MidDataDeviceC],
-                 meas_params: SysShdParamsC= SysShdParamsC()) -> None:
+                 meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the thread node used to update measurements from devices.
         '''
