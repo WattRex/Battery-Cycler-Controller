@@ -58,7 +58,7 @@ class MidDataInstructionC:
     '''
     Instruction to applied on experiments.
     '''
-    def __init__(self, mode : MidDataPwrModeE, ref : int,
+    def __init__(self, instr_id: int, mode : MidDataPwrModeE, ref : int,
                 limit_type : MidDataPwrLimitE, limit_ref : int):
         '''
         Initialize Instruction.
@@ -70,6 +70,7 @@ class MidDataInstructionC:
                 this instruction
             limit_ref (int): limit reference to be reached to instruction completion
         '''
+        self.instr_id : int = instr_id
         self.mode : MidDataPwrModeE = mode
         self.ref : int = ref
         self.limit_type : MidDataPwrLimitE = limit_type
