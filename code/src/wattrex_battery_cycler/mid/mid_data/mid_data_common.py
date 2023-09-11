@@ -6,7 +6,6 @@ Definition of MID DATA devices used on battery cycler.
 from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
-from datetime import datetime
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -45,7 +44,7 @@ class MidDataGenMeasC:
     Class used to store generic power measures.
     '''
 
-    def __init__(self, voltage: int, current: int,
+    def __init__(self,pwr_mode: MidDataPwrModeE, voltage: int, current: int,
         power: int) -> None:
         '''
         Initialize the instance with the given measures.
@@ -56,6 +55,7 @@ class MidDataGenMeasC:
             power (int): active power applied to the battery in a given instant
             timestamp (datetime): instante when the measures has been taken
         '''
+        self.pwr_mode : MidDataPwrModeE = pwr_mode
         self.voltage : int = voltage
         self.current : int = current
         self.power : int = power
@@ -69,4 +69,3 @@ class MidDataExtMeasC:
         '''
         Initialize the with the specified extended measures.
         '''
-        self.pwr_mode: MidDataPwrModeE
