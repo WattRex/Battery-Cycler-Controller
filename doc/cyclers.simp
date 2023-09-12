@@ -143,7 +143,7 @@
       </counter>
       <counter>
         <item-type type-id="universal-connector" type="Universal Connector" />
-        <value>434</value>
+        <value>445</value>
       </counter>
       <counter>
         <item-type type-id="component" type="Component" />
@@ -151,15 +151,15 @@
       </counter>
       <counter>
         <item-type type-id="drawing-shape" type="Simple Shape" />
-        <value>432</value>
+        <value>443</value>
       </counter>
       <counter>
         <item-type type-id="text" type="Text" />
-        <value>430</value>
+        <value>441</value>
       </counter>
       <counter>
         <item-type type-id="group" type="Group" />
-        <value>99</value>
+        <value>100</value>
       </counter>
       <counter>
         <item-type type-id="relationship" type="Association" />
@@ -167,7 +167,7 @@
       </counter>
       <counter>
         <item-type type-id="property" type="Property" />
-        <value>1047</value>
+        <value>1048</value>
       </counter>
       <counter>
         <item-type type-id="drawing-polygon-path" type="Polygon Path" />
@@ -391,7 +391,7 @@
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.EnumerationItemField</type>
-        <value>95</value>
+        <value>97</value>
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.OperationField</type>
@@ -900,7 +900,7 @@
         <text>Queue</text>
       </drawing-text>
     </item>
-    <item id="di1fb0ccb5d3df4b0694d77375a448024c4772" cid="PROP801" type="property" name="cycler_station_id" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:45" visibility="private">
+    <item id="di1fb0ccb5d3df4b0694d77375a448024c4772" cid="PROP801" type="property" name="cycler_station_id" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:45" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -1271,6 +1271,10 @@
     <item id="52a2bc36dc2d4715a0ab3c05d72dd1d6" cid="ELEM013" type="parameter" name="development" creation-date="08/28/2023 13:21:10" visibility="undefined">
       <parameter />
     </item>
+    <item id="di51a4890afc97415ba5b36c6aeba776967807" cid="ELEM439" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
+    </item>
     <item id="a56b1c2898bf46b189fae6b14edbaf9d" cid="PROP071" type="property" name="TempBode" owner="c6df9a2d560c46f388aa5f2263296ef5" creation-date="07/05/2023 14:37:03" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -1484,6 +1488,10 @@
     </item>
     <item id="d287ca60f0b245a68d6bf7fcd04069fe" cid="ELEM101" type="universal-connector" name="200ms" creation-date="06/30/2023 13:24:48">
       <connector start-cap="narrow-arrow" end-cap="narrow-arrow" />
+    </item>
+    <item id="dib4381f0ca49c4a94a2cbddcedce9f8f97807" cid="ELEM438" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
     </item>
     <item id="2a9b57d698524d71ae58d727e2f49a46" cid="PROP814" type="property" name="__extMeas" owner="dib94fffb8976a4733acfeba6837bc9ff38135" creation-date="08/01/2023 09:32:17" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -2959,6 +2967,10 @@
       </style>
       <structural-feature type="str" type-id="Python.str" />
     </item>
+    <item id="di2902dea586a34ab0b5230956d41af5897807" cid="ELEM434" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
+    </item>
     <item id="08510133d5b7426685668fec5286cef9" cid="PROP002" type="property" owner="7dde15b91b4d498d9adf6e975dad53d7" creation-date="07/04/2023 15:27:02" visibility="private">
       <structural-feature type="drv_scpi" type-id="Class:di180be9ab6da8448d86990a0be157a4a81531" />
     </item>
@@ -3502,7 +3514,7 @@
     <item id="a97b49cb5d8248d6b9d8070c62292810" cid="ELEM215" type="parameter" name="development" creation-date="08/30/2023 12:20:16" visibility="undefined">
       <parameter />
     </item>
-    <item id="di9f19bf87c93a4cdc83fdf03b2b2b156c4772" cid="PROP800" type="property" name="cmd_type" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:41" visibility="private">
+    <item id="di9f19bf87c93a4cdc83fdf03b2b2b156c4772" cid="PROP800" type="property" name="cmd_type" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:41" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -3914,6 +3926,10 @@
         <text>Update extended measures of device N</text>
       </drawing-text>
     </item>
+    <item id="di06fe3e153eb24ed0bb7c3c3041b8ba807807" cid="ELEM437" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
+    </item>
     <item id="cbf986aa991342b28adbb83ac31a0ffe" cid="PKG094" type="package" name="DRIVERS" style-class="Flat Light White" creation-date="08/30/2023 13:11:17" visibility="undefined">
       <owned-items />
       <style class="Flat Light White" />
@@ -4236,6 +4252,33 @@
     <item id="di2471ab414cb745558de0f10d70428e205092" cid="ELEM293" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
+    </item>
+    <item id="dief82d4ac41624f33ac9bcef9cd44259e7807" cid="ELEM440" type="text" name="Text1" creation-date="07/04/2023 15:19:04">
+      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#2A2A2A" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#2A2A2A" font="Segoe UI;9.75;" />
+        <text-style type="tagged-value" color="#2A2A2A" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#2A2A2A" font="Segoe UI;9;I" />
+        <background type="solid" colors="#82C881,#B6E2B5" />
+        <border color="#69AE68" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#2A2A2A" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#2A2A2A" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#2A2A2A" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#2A2A2A" font="Segoe UI;9;I" />
+            <background type="solid" colors="#CDE9CD,#E2F3E1" />
+            <border color="#C3DFC3" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <drawing-text>
+        <text>ALARMS</text>
+      </drawing-text>
     </item>
     <item id="di5b714976f8c145519c4e657ebb8dae5f4574" cid="ELEM130" type="drawing-shape" name="M" creation-date="06/14/2023 12:39:47">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -5399,6 +5442,10 @@
         </alternate-styles>
       </style>
       <structural-feature multiplicity="*" type="MidDataInstructionC" type-id="Class:d8919b2da14e4f8aae65c57461b079b6" />
+    </item>
+    <item id="di26f2816c56b44838bfa432358fd191847807" cid="ELEM435" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
     </item>
     <item id="08cd2b16cfc94a7cb531da6358c9357c" cid="PROP475" type="property" owner="5e7e8bd8154b4389bfc63fc89ce7f2e7" creation-date="07/17/2023 09:31:51" visibility="private">
       <structural-feature type="Cache DB" type-id="Class:di21e9a147e2d84a71a400e07708d7a2f09831" />
@@ -7101,6 +7148,10 @@
       </drawing>
       <drawing-shape type="Rectangle" />
     </item>
+    <item id="di5d138d284a06419bbd478bce3a9dd10d7807" cid="ELEM441" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
+    </item>
     <item id="920748126fa445808b4d356cc02ce38b" cid="CMT008" type="comment" name="Comment" owner="cbfe393e2e6140b0b2861b470b9a22b0" creation-date="07/05/2023 15:00:25">
       <comment>Estos dos enums y el estado deberían estar definidos aquí o en otro lado?
 Qué se hace con el código de error?</comment>
@@ -8013,6 +8064,10 @@ Qué se hace con el código de error?</comment>
       <structural-feature type="str" type-id="Python.str" />
       <property default-value="None" />
     </item>
+    <item id="di9ddb3073081c4071afbe175198c692107807" cid="ELEM436" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
+    </item>
     <item id="di7d07279382a24f0bbc414e38b221cb845921" cid="ELEM424" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
@@ -8139,6 +8194,10 @@ Qué se hace con el código de error?</comment>
     </item>
     <item id="209e1b7859ae45e7afefacb1415c3a84" cid="ELEM054" type="parameter" name="staging" creation-date="09/04/2023 14:05:33" visibility="undefined">
       <parameter />
+    </item>
+    <item id="dicbe4343feabf46bf93cf263a44d468687807" cid="ELEM442" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
+      <drawing />
+      <drawing-shape type="Rectangle" />
     </item>
     <item id="d24d93b70ecd4ae5b48a26c326e0f270" cid="RQI044" type="uml-required-interface-end" style-class="Flat Green" creation-date="08/30/2023 13:13:22">
       <style class="Flat Green" />
@@ -20746,7 +20805,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-215,-120" zoom="0.6">
+              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-121,110" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21588,7 +21647,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-222,67" zoom="0.8">
+              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-321,-58" zoom="0.7">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21641,6 +21700,7 @@ Qué se hace con el código de error?</comment>
                     <enumeration-items>
                       <enumeration-item id="a963f6be9b4d44f52a74c294f3b71cead821" cid="ENI090" name="EXP_DATA" creation-date="08/01/2023 12:21:43" value="0" />
                       <enumeration-item id="aaa2728d5e94e4d8c89bce403d79bbf16341" cid="ENI094" name="CS_DATA" creation-date="09/12/2023 10:51:56" value="1" />
+                      <enumeration-item id="a7c7ba9b6f7d346f181a19fd749ea185f830" cid="ENI096" name="EXP_STATUS" creation-date="09/12/2023 12:48:56" value="2" />
                     </enumeration-items>
                   </item>
                   <item id="di4db3e472bf8e46cbafee0dff39d3bdc57225" cid="PROP1032" type="property" name="globalExtMeas" owner="di58f501e757da4de2aaf456db829af51a7225" creation-date="08/01/2023 09:31:54" visibility="public">
@@ -21667,6 +21727,10 @@ Qué se hace con el código de error?</comment>
                       </alternate-styles>
                     </style>
                     <structural-feature type="SysShdSharedObjC" type-id="Class:di662d81f40b0449c09e93b91ff4947c087596" />
+                  </item>
+                  <item id="a875d1efbf9848b690809f4ea34c3bb6" cid="PROP1047" type="property" name="exp_status" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 12:49:09" visibility="public">
+                    <structural-feature type="MidDataExpStatusE" type-id="Class:0c349928e3684e698259a31941d160a5" />
+                    <property default-value="None" constraint="SET_EXP_STATUS, EXP_STATUS" />
                   </item>
                   <item id="diee24538e90aa4280954391cd7cda618f7225" cid="PROP1031" type="property" name="globalGenMeas" owner="di58f501e757da4de2aaf456db829af51a7225" creation-date="08/01/2023 09:31:46" visibility="public">
                     <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -21727,6 +21791,7 @@ Qué se hace con el código de error?</comment>
                       <attribute id="ac4abc71704d2435481908e9cb9ed2dce39" cid="PROP1044" name="profile" creation-date="09/12/2023 09:58:03" property-ref="c08b67c0e19042a1a14845aee2b11696" />
                       <attribute id="ad02e81a23409485887a4b7187e2f4942224" cid="PROP1045" name="battery" creation-date="09/12/2023 09:58:09" property-ref="60b4e2666556403eba08e87401033ee3" />
                       <attribute id="a720ea257a15e456f9c377f2709767db8671" cid="PROP1046" name="cycler_station" creation-date="09/12/2023 09:58:12" property-ref="d96b90c00c2048dfa0b348f9a64511ab" />
+                      <attribute id="ad8d60ddc3383463e95ce5d6350ee5c86310" cid="PROP1047" name="exp_status" creation-date="09/12/2023 12:49:09" property-ref="a875d1efbf9848b690809f4ea34c3bb6" />
                     </attributes>
                     <operations>
                       <operation id="o61c094f6f3b7414a9e9e569f14df5ce6112" cid="OP166" name="MidStrCmdDataC" creation-date="08/01/2023 08:45:03" type="" type-id="" visibility="public">
@@ -22651,6 +22716,7 @@ Qué se hace con el código de error?</comment>
                       <enumeration-item id="a1741e9122c694f60ab83b5421b55624f985" cid="ENI002" name="GET_NEW_EXP" creation-date="07/05/2023 12:31:49" value="0" />
                       <enumeration-item id="a1514d030e97b44599fddd6491c5775c2172" cid="ENI003" name="GET_EXP_STATUS" creation-date="07/05/2023 13:04:02" value="1" />
                       <enumeration-item id="a40245e5618a4414a96b5076d70ef29ae36" cid="ENI093" name="GET_CS" creation-date="09/12/2023 09:06:28" value="2" />
+                      <enumeration-item id="a761f0ce170a148828f931113e48a86c6167" cid="ENI095" name="SET_EXP_STATUS" creation-date="09/12/2023 12:48:20" value="3" />
                     </enumeration-items>
                   </item>
                   <item id="e2f504c5b0af42e5991e3429cfad1501" cid="C198" type="class" name="MidStrExpDataC" owner="b6fc97c3a2ab472388583b809d0b84cb" creation-date="08/01/2023 08:38:39" visibility="undefined">
@@ -22880,7 +22946,7 @@ Qué se hace con el código de error?</comment>
                     <layout ax="710" ay="460" awidth="166" aheight="159" x="710" y="460" width="210" height="130" rotation-center="-35,1" />
                   </item>
                   <item id="di4d32d8cf0f884052a562834bae1a159e4772" iid="12c732f09bb04a99af5f0d000512613c" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" show-fields="true" creation-date="07/05/2023 12:30:12" order-index="2" type="entity">
-                    <layout ax="480" ay="660" awidth="470" aheight="192" x="480" y="660" width="470" height="170" rotation-center="-127.5,31.5" />
+                    <layout ax="480" ay="660" awidth="470" aheight="211" x="480" y="660" width="470" height="170" rotation-center="-127.5,31.5" />
                     <classifier />
                     <class />
                   </item>
@@ -31661,7 +31727,7 @@ Qué se hace con el código de error?</comment>
           </meta>
           <abstract-items />
           <sub-models />
-          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-417,-921" zoom="0.7">
+          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-282,-654" zoom="0.5">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -34304,7 +34370,7 @@ Qué se hace con el código de error?</comment>
             </abstract-items>
             <layer id="5261458db43d4b6caf66a24622204746" name="Default" visible="true" enabled="true" locked="false">
               <item id="30442c29bba3491687a1fdc0d3d11cde" iid="0d3dd0b0f4254c15a6b0b1744529ae51" creation-date="07/17/2023 09:30:10" order-index="50" type="entity">
-                <layout ax="-520" ay="-1080" awidth="2013" aheight="1040" x="90" y="-550" width="1950" height="1040" expanded="-520,-1080,2013,1040" collapsed="0,0,0,0" rotation-center="-52.5,-220" />
+                <layout ax="-520" ay="-1080" awidth="2040" aheight="1040" x="90" y="-550" width="2040" height="1040" expanded="-520,-1080,2040,1040" collapsed="0,0,0,0" rotation-center="-66,-220" />
               </item>
               <item id="72e4e88e741b4ef9833cb7b7d7d8e39e" iid="31cc2ea593944041b9bdcdd2a5fece9b" container="30442c29bba3491687a1fdc0d3d11cde" container-iid="0d3dd0b0f4254c15a6b0b1744529ae51" creation-date="07/13/2023 15:23:00" order-index="1" type="entity">
                 <layout ax="930" ay="-1020" awidth="563" aheight="204" x="930" y="-1020" width="440" height="190" expanded="930,-1020,563,204" collapsed="0,0,0,0" rotation-center="-90,15" />
@@ -36201,7 +36267,7 @@ Qué se hace con el código de error?</comment>
           </authors>
           <description />
           <creation-date>06/29/2023 12:58:13</creation-date>
-          <change-date>09/12/2023 09:34:18</change-date>
+          <change-date>09/12/2023 12:50:34</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -36245,6 +36311,9 @@ Qué se hace con el código de error?</comment>
             </relation>
           </item>
           <item id="aec031f180bc47d2b3b5a67ddfe5dfcb" cid="PKG058" type="package" name="drv" creation-date="07/13/2023 11:21:22" visibility="undefined" />
+          <item id="die9906371ad07493caaaf61369d7a14443197" cid="ELEM444" type="universal-connector" name="AppDiagAlarmC" creation-date="09/12/2023 08:40:04" from="did80a11c9827f482782cdebdac7e4c9392879" to="di91b398c6162748cdb945f44f959fc03e7807">
+            <connector />
+          </item>
           <item id="di52e9d20233824b7db6d09b2b0bde0b7e6159" cid="CPT012" type="component" name="SYS_CONF" owner="di041be8edb19348169262ee571d64652e3164" creation-date="07/03/2023 08:34:24" visibility="undefined">
             <stereotypes>
               <stereotype name="component" />
@@ -36972,6 +37041,9 @@ Qué se hace con el código de error?</comment>
             <drawing />
             <drawing-shape type="Rectangle" />
           </item>
+          <item id="didaf46fbacc254bf8adc6a4b8adef059b3285" cid="ELEM443" type="universal-connector" creation-date="09/12/2023 08:40:04" from="di91b398c6162748cdb945f44f959fc03e7807">
+            <connector />
+          </item>
           <item id="die73e9766b57d4bb6a5789964e12c41bc6486" cid="PROP1015" type="property" owner="di94d487e92fdb480e91622505981b31cc6486" creation-date="07/05/2023 09:33:14" visibility="undefined">
             <structural-feature type="app_man" type-id="Class:die7458004519c4d3e9d0a30105f3628b17063" />
           </item>
@@ -36987,6 +37059,7 @@ Qué se hace con el código de error?</comment>
             <structural-feature type="drv_ea" type-id="Class:005965939887431b9fcc80dd67a0cb41" />
           </item>
           <item id="di9fdc8be469394eda8e52a86988a00c029681" cid="PROP012" type="property" owner="di7894d8e9a8a64bfc9ef993055d97ea119681" creation-date="07/04/2023 15:27:02" visibility="private" />
+          <item id="di91b398c6162748cdb945f44f959fc03e7807" cid="GROUP099" type="group" name="Group" owner="didb199d1724ba4d25894dd6674bd9c2979501" creation-date="09/12/2023 08:39:35" />
           <item id="dic2a0a7f8639c48a784572c7fa5cf834c2882" cid="REL021" type="relationship" owner="dia3a53a9f66c14135bf8f4538c5e8f05a9501" creation-date="07/04/2023 15:27:02" from="7eb2cb51c3624e50a3b46283d098029a" to="di903bdc66973343d1b31dde5c914d985e2312" visibility="package">
             <owned-items />
             <relation from="7eb2cb51c3624e50a3b46283d098029a" to="di903bdc66973343d1b31dde5c914d985e2312" derived="false">
@@ -37452,6 +37525,9 @@ Qué se hace con el código de error?</comment>
             <layout ax="420" ay="-770" awidth="1240" aheight="400" x="420" y="-770" width="1240" height="400" expanded="420,-770,1240,400" collapsed="0,0,0,0" rotation-center="-470,-100" />
             <package name-in-body="false" />
           </item>
+          <item id="di2b54705cd02143bc86dd5919a175eb066328" iid="b86f5fbe4f1141e0b30e0d377c9e4215" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
+            <layout ax="480" ay="-460" awidth="130" aheight="50" x="480" y="-460" width="130" height="50" expanded="480,-460,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
+          </item>
           <item id="ac833c6afd004f1096edfed13dbd6d65" iid="4cbc5671048747db864e86b393024b64" creation-date="07/05/2023 09:33:14" order-index="124" type="relation">
             <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1441" y1="-60" x2="1880" y2="-685" start-border-pos="0.375" end-border-pos="0.375" start-local-pos="26.5" end-local-pos="15" name-position="160,10" name-width="290">
               <points>
@@ -37462,8 +37538,37 @@ Qué se hace con el código de error?</comment>
             </layout>
             <relation from="did80a11c9827f482782cdebdac7e4c9392879" from-iid="3afd73b9bac743528584b3dd48ead1fc" to="ada32959671d49b3bb9cdd058a0d7e4b" to-iid="84ce5e077c7045109904b0e2ea28d570" />
           </item>
-          <item id="di2b54705cd02143bc86dd5919a175eb066328" iid="b86f5fbe4f1141e0b30e0d377c9e4215" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
-            <layout ax="480" ay="-460" awidth="130" aheight="50" x="480" y="-460" width="130" height="50" expanded="480,-460,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
+          <item id="di91b398c6162748cdb945f44f959fc03e7807" iid="295039fab36646539d20447a80f5d123" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" creation-date="09/12/2023 08:39:35" order-index="129" type="group">
+            <layout ax="1510" ay="-450" awidth="130" aheight="30" x="1510" y="-450" width="140" height="160" />
+            <group-items>
+              <item id="di2902dea586a34ab0b5230956d41af5897807" iid="2e75935114814175bf3342ed47c0037b" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1526.25" ay="-450" awidth="16.25" aheight="30" x="1526.25" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="di26f2816c56b44838bfa432358fd191847807" iid="d31527ce52324c0a8452fd7bae876942" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1542.5" ay="-450" awidth="16.25" aheight="30" x="1542.5" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="di9ddb3073081c4071afbe175198c692107807" iid="6e55e405d2e6492f9e7ff488fa878bed" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1558.75" ay="-450" awidth="16.25" aheight="30" x="1558.75" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="di06fe3e153eb24ed0bb7c3c3041b8ba807807" iid="f98237657a0a4d279514b94f07b6b5e5" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1575" ay="-450" awidth="16.25" aheight="30" x="1575" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="dib4381f0ca49c4a94a2cbddcedce9f8f97807" iid="3f3590ad81d94bdcb4ccc8676d257c69" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1591.25" ay="-450" awidth="16.25" aheight="30" x="1591.25" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="di51a4890afc97415ba5b36c6aeba776967807" iid="a01aa349da7941ab9420f9654ce55d67" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1607.5" ay="-450" awidth="16.25" aheight="30" x="1607.5" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="dief82d4ac41624f33ac9bcef9cd44259e7807" iid="94de54fc67a449cd8be86fc684cdf4b0" creation-date="07/04/2023 15:19:04" order-index="114" type="drawing-text">
+                <layout ax="1536" ay="-441.75" awidth="78" aheight="23" x="1536" y="-441.75" width="67" height="20" rotation-center="-0.5,-1.25" />
+              </item>
+              <item id="di5d138d284a06419bbd478bce3a9dd10d7807" iid="9628134122684499b6451b815d0e55b1" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1510" ay="-450" awidth="16.25" aheight="30" x="1510" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+              <item id="dicbe4343feabf46bf93cf263a44d468687807" iid="912f4c61b2db4b328ff442ab47cffa5c" creation-date="09/02/2022 09:34:43" order-index="113" type="entity">
+                <layout ax="1623.75" ay="-450" awidth="16.25" aheight="30" x="1623.75" y="-450" width="16.25" height="30" rotation-center="60,58.5" />
+              </item>
+            </group-items>
           </item>
           <item id="die7458004519c4d3e9d0a30105f3628b17063" iid="f238daaea51a440ebfc888918548e7aa" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
             <layout ax="830" ay="-640" awidth="130" aheight="50" x="830" y="-640" width="130" height="50" expanded="830,-640,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
@@ -37717,6 +37822,24 @@ Qué se hace con el código de error?</comment>
               </points>
             </layout>
             <relation from="f150a2ca8441455c8f8d37267b41a117" from-iid="dbaebdd726934e9d865b3587f29b34cf" to="die7458004519c4d3e9d0a30105f3628b17063" to-iid="f238daaea51a440ebfc888918548e7aa" />
+          </item>
+          <item id="didaf46fbacc254bf8adc6a4b8adef059b3285" iid="b9394a1e7a804438b8295c5af733a49e" creation-date="09/12/2023 08:40:04" order-index="130" type="relation">
+            <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1580" y1="-450" x2="960" y2="-615" start-border-pos="0.134615384615385" end-border-pos="0.375" start-local-pos="70" end-local-pos="25" name-position="0,20">
+              <points>
+                <point x="1580" y="-450" />
+                <point x="960" y="-615" />
+              </points>
+            </layout>
+            <relation from="di91b398c6162748cdb945f44f959fc03e7807" from-iid="295039fab36646539d20447a80f5d123" />
+          </item>
+          <item id="die9906371ad07493caaaf61369d7a14443197" iid="25355e6679db429ea6bf06c2fb8a9475" creation-date="09/12/2023 08:40:04" order-index="130" type="relation">
+            <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1386" y1="-86" x2="1575" y2="-420" start-border-pos="0.126126125454903" end-border-pos="0.625" start-local-pos="56" end-local-pos="65" name-position="0,20">
+              <points>
+                <point x="1386" y="-86" />
+                <point x="1575" y="-420" />
+              </points>
+            </layout>
+            <relation from="did80a11c9827f482782cdebdac7e4c9392879" from-iid="3afd73b9bac743528584b3dd48ead1fc" to="di91b398c6162748cdb945f44f959fc03e7807" to-iid="295039fab36646539d20447a80f5d123" />
           </item>
         </layer>
       </diagram>
@@ -38019,7 +38142,7 @@ Qué se hace con el código de error?</comment>
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="24,256" zoom="0.8">
+      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-578,-226" zoom="0.4">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
