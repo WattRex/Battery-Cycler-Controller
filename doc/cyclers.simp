@@ -163,11 +163,11 @@
       </counter>
       <counter>
         <item-type type-id="relationship" type="Association" />
-        <value>263</value>
+        <value>264</value>
       </counter>
       <counter>
         <item-type type-id="property" type="Property" />
-        <value>1041</value>
+        <value>1047</value>
       </counter>
       <counter>
         <item-type type-id="drawing-polygon-path" type="Polygon Path" />
@@ -183,7 +183,7 @@
       </counter>
       <counter>
         <item-type type-id="enumeration" type="Enumeration" />
-        <value>50</value>
+        <value>51</value>
       </counter>
       <counter>
         <item-type type-id="uml-interface-classifier" type="Interface" />
@@ -391,7 +391,7 @@
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.EnumerationItemField</type>
-        <value>94</value>
+        <value>95</value>
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.OperationField</type>
@@ -500,7 +500,7 @@
         <type id="Class:dif66eb6046ab64d27812ab75b28052daf2488" name="MidDabsPwrDevC" class-ref="dif66eb6046ab64d27812ab75b28052daf2488" />
         <type id="Class:di981e1e5fd82846428d6da112ab4c531e7850" name="DrvPwrDeviceC" class-ref="di981e1e5fd82846428d6da112ab4c531e7850" />
         <type id="DrvDbLeadAcidChemistryE" tid="Class:f178b9e959754db3a01354c23ed75bbd" name="DrvDbLeadAcidChemistryE" class-ref="f178b9e959754db3a01354c23ed75bbd" />
-        <type id="Class:die6224b686bcc4db681ef014af6a9e9754772" name="MidStrCmdTypeE" class-ref="die6224b686bcc4db681ef014af6a9e9754772" />
+        <type id="Class:die6224b686bcc4db681ef014af6a9e9754772" name="MidStrReqCmdE" class-ref="die6224b686bcc4db681ef014af6a9e9754772" />
         <type id="Class:di55390f12075246a2907dc38293ba6e4c8644" name="MidDataAllStatusC" class-ref="di55390f12075246a2907dc38293ba6e4c8644" />
         <type id="DrvDbBatteryTechE" tid="Class:e8161d425ce34f61a4f0a80efae7c529" name="DrvDbBatteryTechE" class-ref="e8161d425ce34f61a4f0a80efae7c529" />
         <type id="Class:di70ca4bf9f69841bd954db888945ebb578407" name="MidDataPwrRangeC" class-ref="di70ca4bf9f69841bd954db888945ebb578407" />
@@ -529,6 +529,7 @@
         <type id="Class:810c85d8b38345d5aa14da3d0319735c" name="MidDataExperimentC" class-ref="810c85d8b38345d5aa14da3d0319735c" />
         <type id="Class:262c6c2af14e493e9f3d585300af2c09" tid="Class:262c6c2af14e493e9f3d585300af2c09" name="DrvDbCyclingLimitE" class-ref="262c6c2af14e493e9f3d585300af2c09" />
         <type id="Class:b10a835783a5437aa07a6bb96c9c8c14" name="DrvCanMessageC" class-ref="b10a835783a5437aa07a6bb96c9c8c14" />
+        <type id="MidStrReqCmdE | MidStrDataCmdE" name="MidStrReqCmdE | MidStrDataCmdE" />
         <type id="Class:di03e6451256874710a76629d0abe938485330" name="Remote DB" class-ref="di03e6451256874710a76629d0abe938485330" />
         <type id="Dict" name="Dict" />
         <type id="DRV_DB_Measure_c" tid="Class:e1dceafe4954451a8e596faeff635df5" name="DRV_DB_Measure_c" class-ref="e1dceafe4954451a8e596faeff635df5" />
@@ -899,7 +900,7 @@
         <text>Queue</text>
       </drawing-text>
     </item>
-    <item id="di1fb0ccb5d3df4b0694d77375a448024c4772" cid="PROP801" type="property" name="exp_id" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:45" visibility="private">
+    <item id="di1fb0ccb5d3df4b0694d77375a448024c4772" cid="PROP801" type="property" name="cycler_station_id" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="07/05/2023 13:04:45" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -923,6 +924,7 @@
         </alternate-styles>
       </style>
       <structural-feature type="int" type-id="Python.int" />
+      <property default-value="None" constraint="GET_NEW_EXP" />
     </item>
     <item id="5520aad092b743158366b391caa8e579" cid="PROP398" type="property" name="limit_ref" owner="d8919b2da14e4f8aae65c57461b079b6" creation-date="07/11/2023 15:30:14" visibility="public">
       <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -1412,6 +1414,32 @@
         </alternate-styles>
       </style>
       <structural-feature type="DrvCanCmdTypeE" type-id="Class:362e6b83fe564d3ca7de2ca9e6d4aa77" />
+    </item>
+    <item id="60b4e2666556403eba08e87401033ee3" cid="PROP1045" type="property" name="battery" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 09:58:09" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="MidDataBatteryC" type-id="Class:ee8706f0cdfb4277bd1a5b3f7b71acdf" />
+      <property default-value="None" constraint="EXP_DATA" />
     </item>
     <item id="61e0bd2346ec483abdc343e380aed07d" cid="RQI041" type="uml-required-interface-end" style-class="Flat Yellow" creation-date="08/30/2023 12:12:29">
       <style class="Flat Yellow" />
@@ -2094,6 +2122,32 @@
     <item id="die40781fdbb7c4d11a3769dc8110131fa8552" cid="ELEM181" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
+    </item>
+    <item id="c08b67c0e19042a1a14845aee2b11696" cid="PROP1044" type="property" name="profile" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 09:58:03" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="MidDataProfileC" type-id="Class:062db154a441474690c6b0a1f57b74c1" />
+      <property default-value="None" constraint="EXP_DATA" />
     </item>
     <item id="di46aaf6eb0ea14c83bd73acd6dab27afc1416" cid="PROP1008" type="property" name="deprecated" owner="di6712a74d0d4c42ffa2ab3632bc23dfc21416" creation-date="07/17/2023 12:53:14" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -3471,7 +3525,7 @@
           </alternate-style>
         </alternate-styles>
       </style>
-      <structural-feature type="MidStrCmdTypeE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
+      <structural-feature type="MidStrReqCmdE | MidStrDataCmdE" type-id="MidStrReqCmdE | MidStrDataCmdE" />
     </item>
     <item id="56789207cfd644b2bfb95dc0708e3557" cid="PROP460" type="property" owner="19c149cf40024cb18765429210de9241" creation-date="07/13/2023 14:59:45" visibility="private">
       <structural-feature type="Master Node" type-id="Class:3f95c63fbd804af394e3f6141ff83cb8" />
@@ -3916,6 +3970,32 @@
       <comment>Añadir info de batería que se neceista
 </comment>
     </item>
+    <item id="d96b90c00c2048dfa0b348f9a64511ab" cid="PROP1046" type="property" name="cycler_station" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 09:58:12" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="MidDataCyclerStationC" type-id="Class:di6712a74d0d4c42ffa2ab3632bc23dfc21416" />
+      <property default-value="None" constraint="GET_CS" />
+    </item>
     <item id="fbbbeee0224d42f9b2abb911221f5c1c" cid="PROP999" type="property" name="__cache_db" owner="493f129545f04ac38d9fe3f26f583dec" creation-date="09/11/2023 08:32:47" visibility="public">
       <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -4055,6 +4135,32 @@
     <item id="921db79826ea4eb88dfdc9d976b32ac2" cid="RQI006" type="uml-required-interface-end" style-class="Flat Yellow" creation-date="08/30/2023 11:52:57">
       <style class="Flat Yellow" />
       <required-interface interface-ref="c4c7d3dcb7ad46f4a8123392d0f77c69" />
+    </item>
+    <item id="288f7cf10fd042c1bb0828aa56b2158d" cid="PROP1043" type="property" name="exp_data" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 09:57:58" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="MidDataExperimentC" type-id="Class:810c85d8b38345d5aa14da3d0319735c" />
+      <property default-value="None" constraint="EXP_DATA" />
     </item>
     <item id="ea41d4e3f6c04307b42b57e7ae6cfaa6" cid="RQI005" type="uml-required-interface-end" creation-date="08/30/2023 11:52:44">
       <required-interface />
@@ -20640,7 +20746,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="449,192" zoom="0.8">
+              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-215,-120" zoom="0.6">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21482,7 +21588,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-185,-230" zoom="0.6">
+              <diagram type="uml-class" id="p380b4d17a5d041b6be93f332a2497189_407412780" name="mid_str" order-index="2" overview-order-index="5" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-222,67" zoom="0.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21494,7 +21600,7 @@ Qué se hace con el código de error?</comment>
                   </authors>
                   <description />
                   <creation-date>07/05/2023 13:13:44</creation-date>
-                  <change-date>09/12/2023 09:31:52</change-date>
+                  <change-date>09/12/2023 12:22:08</change-date>
                   <revision-count>0</revision-count>
                   <version />
                 </meta>
@@ -21524,6 +21630,18 @@ Qué se hace con el código de error?</comment>
                       </alternate-styles>
                     </style>
                     <structural-feature type="MidDataGenMeasC" type-id="Class:6b135ac57b3642f0ac0798b4a2f5b559" />
+                  </item>
+                  <item id="di7d07077bd94d4240ba1ffe47bd9fae061466" cid="E050" type="enumeration" name="MidStrDataCmdE" owner="b6fc97c3a2ab472388583b809d0b84cb" creation-date="07/05/2023 12:31:29" visibility="undefined">
+                    <stereotypes>
+                      <stereotype name="enumeration" />
+                    </stereotypes>
+                    <stereotype-instances>
+                      <stereotype id="362e6b83fe564d3ca7de2ca9e6d4aa77_enumeration_c" type="enumeration" ref="" />
+                    </stereotype-instances>
+                    <enumeration-items>
+                      <enumeration-item id="a963f6be9b4d44f52a74c294f3b71cead821" cid="ENI090" name="EXP_DATA" creation-date="08/01/2023 12:21:43" value="0" />
+                      <enumeration-item id="aaa2728d5e94e4d8c89bce403d79bbf16341" cid="ENI094" name="CS_DATA" creation-date="09/12/2023 10:51:56" value="1" />
+                    </enumeration-items>
                   </item>
                   <item id="di4db3e472bf8e46cbafee0dff39d3bdc57225" cid="PROP1032" type="property" name="globalExtMeas" owner="di58f501e757da4de2aaf456db829af51a7225" creation-date="08/01/2023 09:31:54" visibility="public">
                     <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -21604,12 +21722,16 @@ Qué se hace con el código de error?</comment>
                     <owned-items />
                     <attributes>
                       <attribute id="a5e453e8e1a5c4a3e954835df55808fd1189" cid="PROP800" name="cmd_type" creation-date="07/05/2023 13:04:41" property-ref="di9f19bf87c93a4cdc83fdf03b2b2b156c4772" />
-                      <attribute id="a4495669247c64519ad1a2db943eda3dc75" cid="PROP801" name="exp_id" creation-date="07/05/2023 13:04:45" property-ref="di1fb0ccb5d3df4b0694d77375a448024c4772" />
+                      <attribute id="a4495669247c64519ad1a2db943eda3dc75" cid="PROP801" name="cycler_station_id" creation-date="07/05/2023 13:04:45" property-ref="di1fb0ccb5d3df4b0694d77375a448024c4772" />
+                      <attribute id="adb3b2cc4ea3842ae9eee16c998fe7b16448" cid="PROP1043" name="exp_data" creation-date="09/12/2023 09:57:58" property-ref="288f7cf10fd042c1bb0828aa56b2158d" />
+                      <attribute id="ac4abc71704d2435481908e9cb9ed2dce39" cid="PROP1044" name="profile" creation-date="09/12/2023 09:58:03" property-ref="c08b67c0e19042a1a14845aee2b11696" />
+                      <attribute id="ad02e81a23409485887a4b7187e2f4942224" cid="PROP1045" name="battery" creation-date="09/12/2023 09:58:09" property-ref="60b4e2666556403eba08e87401033ee3" />
+                      <attribute id="a720ea257a15e456f9c377f2709767db8671" cid="PROP1046" name="cycler_station" creation-date="09/12/2023 09:58:12" property-ref="d96b90c00c2048dfa0b348f9a64511ab" />
                     </attributes>
                     <operations>
                       <operation id="o61c094f6f3b7414a9e9e569f14df5ce6112" cid="OP166" name="MidStrCmdDataC" creation-date="08/01/2023 08:45:03" type="" type-id="" visibility="public">
                         <parameters>
-                          <parameter id="p9bf7cf2f19074a749c4811c3539d3f60" name="cmdType" type="MidStrCmdTypeE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
+                          <parameter id="p9bf7cf2f19074a749c4811c3539d3f60" name="cmdType" type="MidStrReqCmdE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
                           <parameter id="pe918b8c808534ebc855c1de6c062a7a1" name="expId" type="int" type-id="Python.int" />
                         </parameters>
                         <stereotypes>
@@ -22517,7 +22639,7 @@ Qué se hace con el código de error?</comment>
                   <item id="10a94039fa414ddab3d3b74f670655dd" cid="PKG074" type="package" name="mid_str_node" owner="di3aaa151abf604f059ebd84887be3e2251888" creation-date="07/17/2023 14:18:26" visibility="undefined">
                     <owned-items />
                   </item>
-                  <item id="die6224b686bcc4db681ef014af6a9e9754772" cid="E045" type="enumeration" name="MidStrCmdTypeE" owner="b6fc97c3a2ab472388583b809d0b84cb" creation-date="07/05/2023 12:31:29" visibility="undefined">
+                  <item id="die6224b686bcc4db681ef014af6a9e9754772" cid="E045" type="enumeration" name="MidStrReqCmdE" owner="b6fc97c3a2ab472388583b809d0b84cb" creation-date="07/05/2023 12:31:29" visibility="undefined">
                     <stereotypes>
                       <stereotype name="enumeration" />
                     </stereotypes>
@@ -22528,8 +22650,7 @@ Qué se hace con el código de error?</comment>
                     <enumeration-items>
                       <enumeration-item id="a1741e9122c694f60ab83b5421b55624f985" cid="ENI002" name="GET_NEW_EXP" creation-date="07/05/2023 12:31:49" value="0" />
                       <enumeration-item id="a1514d030e97b44599fddd6491c5775c2172" cid="ENI003" name="GET_EXP_STATUS" creation-date="07/05/2023 13:04:02" value="1" />
-                      <enumeration-item id="a963f6be9b4d44f52a74c294f3b71cead821" cid="ENI090" name="EXP_DATA" creation-date="08/01/2023 12:21:43" value="2" />
-                      <enumeration-item id="a40245e5618a4414a96b5076d70ef29ae36" cid="ENI093" name="GET_CS" creation-date="09/12/2023 09:06:28" />
+                      <enumeration-item id="a40245e5618a4414a96b5076d70ef29ae36" cid="ENI093" name="GET_CS" creation-date="09/12/2023 09:06:28" value="2" />
                     </enumeration-items>
                   </item>
                   <item id="e2f504c5b0af42e5991e3429cfad1501" cid="C198" type="class" name="MidStrExpDataC" owner="b6fc97c3a2ab472388583b809d0b84cb" creation-date="08/01/2023 08:38:39" visibility="undefined">
@@ -22701,7 +22822,7 @@ Qué se hace con el código de error?</comment>
                 </abstract-items>
                 <layer id="12e90c6e75c6402296234a76f5d4764c" name="Default" visible="true" enabled="true" locked="false">
                   <item id="di3aaa151abf604f059ebd84887be3e2251888" iid="f36e47504f134b0aa1f02cb4e75a321e" creation-date="07/13/2023 11:19:29" order-index="0" type="entity">
-                    <layout ax="-170" ay="-70" awidth="1210" aheight="830" x="-170" y="-70" width="1210" height="830" expanded="-170,-70,1210,830" collapsed="0,0,0,0" rotation-center="-150,-252" />
+                    <layout ax="-170" ay="-70" awidth="1210" aheight="980" x="-170" y="-70" width="1210" height="980" expanded="-170,-70,1210,980" collapsed="0,0,0,0" rotation-center="-150,-282" />
                     <package name-in-body="false" />
                   </item>
                   <item id="10a94039fa414ddab3d3b74f670655dd" iid="4fba5752b3fb4405a0fcf3eae50211f3" container="di3aaa151abf604f059ebd84887be3e2251888" container-iid="f36e47504f134b0aa1f02cb4e75a321e" creation-date="07/17/2023 14:18:26" order-index="1" type="entity">
@@ -22714,7 +22835,7 @@ Qué se hace con el código de error?</comment>
                     <class />
                   </item>
                   <item id="ec23884643ce4b35837f8282ae30cbd7" iid="4d27b269a71b405f824c5e6edbf9c3b3" container="di3aaa151abf604f059ebd84887be3e2251888" container-iid="f36e47504f134b0aa1f02cb4e75a321e" creation-date="07/17/2023 14:18:39" order-index="2" type="entity">
-                    <layout ax="460" ay="-30" awidth="500" aheight="390" x="610" y="-30" width="500" height="390" expanded="310,-30,500,390" collapsed="0,0,0,0" rotation-center="60,-26" />
+                    <layout ax="460" ay="-30" awidth="500" aheight="390" x="610" y="-30" width="500" height="390" expanded="460,-30,500,390" collapsed="0,0,0,0" rotation-center="60,-26" />
                     <package name-in-body="false" />
                   </item>
                   <item id="di122015bdf4de4107b46b188346bf6c3f1003" iid="7bf31cf97b5740799d3116d377bc4d19" container="10a94039fa414ddab3d3b74f670655dd" container-iid="4fba5752b3fb4405a0fcf3eae50211f3" show-fields="true" creation-date="07/31/2023 13:51:40" order-index="188" type="entity">
@@ -22744,24 +22865,22 @@ Qué se hace con el código de error?</comment>
                     <relation from="68124557b9af4140b25e56e214494eb9" from-iid="712e5347ece941fcbc11ea884db6e401" to="493f129545f04ac38d9fe3f26f583dec" to-iid="61816f17f40640a7ac043b2dd67b9a56" />
                   </item>
                   <item id="b6fc97c3a2ab472388583b809d0b84cb" iid="38e0fcc758ef46eaa1cfb46f120d7e72" container="di3aaa151abf604f059ebd84887be3e2251888" container-iid="f36e47504f134b0aa1f02cb4e75a321e" creation-date="08/01/2023 08:46:07" order-index="52" type="entity">
-                    <layout ax="460" ay="410" awidth="544" aheight="334" x="610" y="410" width="300" height="330" expanded="310,410,544,334" collapsed="0,0,0,0" rotation-center="0,-65" />
+                    <layout ax="460" ay="410" awidth="544" aheight="470" x="610" y="410" width="300" height="470" expanded="460,410,544,470" collapsed="0,0,0,0" rotation-center="0,-99" />
                     <package name-in-body="false" />
-                  </item>
-                  <item id="die6224b686bcc4db681ef014af6a9e9754772" iid="97c2da2800894ddfa9c79937f08223fd" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" creation-date="07/05/2023 12:31:29" order-index="3" type="entity">
-                    <layout ax="480" ay="460" awidth="166" aheight="130" x="0" y="440" width="210" height="130" rotation-center="-35,1" />
-                  </item>
-                  <item id="e2f504c5b0af42e5991e3429cfad1501" iid="fc7239980ff845239d2d7becc0eecd71" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" show-fields="true" creation-date="08/01/2023 08:38:39" order-index="51" type="entity">
-                    <layout ax="680" ay="460" awidth="300" aheight="117" x="350" y="440" width="300" height="160" rotation-center="-80,0" />
-                    <classifier />
-                    <class />
-                  </item>
-                  <item id="di4d32d8cf0f884052a562834bae1a159e4772" iid="12c732f09bb04a99af5f0d000512613c" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" show-fields="true" creation-date="07/05/2023 12:30:12" order-index="2" type="entity">
-                    <layout ax="480" ay="610" awidth="470" aheight="110" x="0" y="590" width="470" height="110" rotation-center="-127.5,61.5" />
-                    <classifier />
-                    <class />
                   </item>
                   <item id="493f129545f04ac38d9fe3f26f583dec" iid="61816f17f40640a7ac043b2dd67b9a56" container="ec23884643ce4b35837f8282ae30cbd7" container-iid="4d27b269a71b405f824c5e6edbf9c3b3" show-fields="true" creation-date="07/17/2023 14:21:17" order-index="47" type="entity">
                     <layout ax="490" ay="20" awidth="450" aheight="320" x="760" y="20" width="450" height="320" rotation-center="-188,-15.5" />
+                    <classifier />
+                    <class />
+                  </item>
+                  <item id="die6224b686bcc4db681ef014af6a9e9754772" iid="97c2da2800894ddfa9c79937f08223fd" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" creation-date="07/05/2023 12:31:29" order-index="3" type="entity">
+                    <layout ax="480" ay="460" awidth="166" aheight="159" x="0" y="440" width="210" height="130" rotation-center="-35,1" />
+                  </item>
+                  <item id="di7d07077bd94d4240ba1ffe47bd9fae061466" iid="cfc70e3a26974c05949416c3a897b908" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" creation-date="07/05/2023 12:31:29" order-index="3" type="entity">
+                    <layout ax="710" ay="460" awidth="166" aheight="159" x="710" y="460" width="210" height="130" rotation-center="-35,1" />
+                  </item>
+                  <item id="di4d32d8cf0f884052a562834bae1a159e4772" iid="12c732f09bb04a99af5f0d000512613c" container="b6fc97c3a2ab472388583b809d0b84cb" container-iid="38e0fcc758ef46eaa1cfb46f120d7e72" show-fields="true" creation-date="07/05/2023 12:30:12" order-index="2" type="entity">
+                    <layout ax="480" ay="660" awidth="470" aheight="192" x="480" y="660" width="470" height="170" rotation-center="-127.5,31.5" />
                     <classifier />
                     <class />
                   </item>
@@ -22890,7 +23009,7 @@ Qué se hace con el código de error?</comment>
                         </alternate-style>
                       </alternate-styles>
                     </style>
-                    <structural-feature type="MidStrCmdTypeE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
+                    <structural-feature type="MidStrReqCmdE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
                   </item>
                   <item id="di1da6aeb4f1d041649a890b97e6ee8ca04801" cid="PROP917" type="property" name="working_flag" owner="di4e968a7b0b8b4f9488f11b5fd7470ceb4801" creation-date="07/31/2023 13:46:54" visibility="public">
                     <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -22996,7 +23115,7 @@ Qué se hace con el código de error?</comment>
                     <operations>
                       <operation id="10d10aff-90e0-4129-99c2-83bfa6ebf182" cid="OP166" name="MidStrCmdDataC" creation-date="08/01/2023 08:45:03" type="" type-id="" visibility="public">
                         <parameters>
-                          <parameter id="p9bf7cf2f19074a749c4811c3539d3f60" name="cmdType" type="MidStrCmdTypeE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
+                          <parameter id="p9bf7cf2f19074a749c4811c3539d3f60" name="cmdType" type="MidStrReqCmdE" type-id="Class:die6224b686bcc4db681ef014af6a9e9754772" />
                           <parameter id="pe918b8c808534ebc855c1de6c062a7a1" name="expId" type="int" type-id="Python.int" />
                         </parameters>
                         <stereotypes>
@@ -36070,7 +36189,7 @@ Qué se hace con el código de error?</comment>
           </diagram>
         </model>
       </sub-models>
-      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="380,-713" zoom="0.7">
+      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="0,-439" zoom="0.5">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -36082,7 +36201,7 @@ Qué se hace con el código de error?</comment>
           </authors>
           <description />
           <creation-date>06/29/2023 12:58:13</creation-date>
-          <change-date>09/12/2023 08:40:04</change-date>
+          <change-date>09/12/2023 09:34:18</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -36300,9 +36419,9 @@ Qué se hace con el código de error?</comment>
           <item id="di75804c7a31c94f25b893553cc32a9a851948" cid="PROP008" type="property" owner="dia662ad0c05954239af349acee866347e1948" creation-date="07/04/2023 15:27:02" visibility="private">
             <structural-feature type="drv_bk" type-id="Class:die3a7299fd4494663ad32dbc7a6a1fd2d5166" />
           </item>
-          <item id="dieb383019e59f4f9c9506828e034373582726" cid="REL037" type="relationship" creation-date="07/05/2023 09:08:57" from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="di2b54705cd02143bc86dd5919a175eb066328" visibility="package">
+          <item id="dieb383019e59f4f9c9506828e034373582726" cid="REL037" type="relationship" creation-date="07/05/2023 09:08:57" from="die7458004519c4d3e9d0a30105f3628b17063" to="di2b54705cd02143bc86dd5919a175eb066328" visibility="package">
             <owned-items />
-            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="di2b54705cd02143bc86dd5919a175eb066328" derived="false">
+            <relation from="die7458004519c4d3e9d0a30105f3628b17063" to="di2b54705cd02143bc86dd5919a175eb066328" derived="false">
               <start-role id="umlar-15aff6e1-2f9f-4b75-92b7-94d1cb55199c" name="" navigability="" association-type="association" visibility="private" property-ref="did21e2ac9417d43fca2e4892a4a78a3005955" />
               <end-role id="umlar-2a35e32f-e8ce-416e-882b-cd887d3e2980" name="" navigability="yes" association-type="association" visibility="private" property-ref="di53c23e0fb33d439a87d4474fe1865cb75955" />
             </relation>
@@ -36575,6 +36694,9 @@ Qué se hace con el código de error?</comment>
               <text>Queue</text>
             </drawing-text>
           </item>
+          <item id="dic6fbbaf2efcb4507853624eba485a7a98282" cid="PROP1041" type="property" owner="di9778db5160074eae99617515b838c6b18282" creation-date="07/05/2023 09:23:19" visibility="undefined">
+            <structural-feature type="app_man" type-id="Class:die7458004519c4d3e9d0a30105f3628b17063" />
+          </item>
           <item id="di3e1aca5cf3d445eead835df75e9beadd1383" cid="REL199" type="relationship" owner="dia3a53a9f66c14135bf8f4538c5e8f05a9501" creation-date="07/04/2023 15:27:02" to="did58b8c11e8e34661a6aed84fb137f0776549" visibility="package">
             <owned-items />
             <relation from="" to="did58b8c11e8e34661a6aed84fb137f0776549" derived="false">
@@ -36649,7 +36771,7 @@ Qué se hace con el código de error?</comment>
             <structural-feature type="app_man" type-id="Class:die7458004519c4d3e9d0a30105f3628b17063" />
           </item>
           <item id="di17057d85c9d4441ea9a9613f026d0f164288" cid="PROP040" type="property" owner="dif4be136f751147a9aa171fc67ce8ac9a4288" creation-date="07/05/2023 09:08:57" visibility="undefined">
-            <structural-feature type="mid_pwr" type-id="Class:57a54de4aee6428b91c2ff77dc6b0859" />
+            <structural-feature type="app_man" type-id="Class:die7458004519c4d3e9d0a30105f3628b17063" />
           </item>
           <item id="di73b8be25c5684d868012a20b861a1f8b5181" cid="PROP003" type="property" owner="di4f66e6ae1b5c43cc9556b33b6e02ae0e5181" creation-date="07/04/2023 15:27:02" visibility="private">
             <structural-feature type="drv_scpi" type-id="Class:di180be9ab6da8448d86990a0be157a4a81531" />
@@ -36665,7 +36787,7 @@ Qué se hace con el código de error?</comment>
             </relation>
           </item>
           <item id="did21e2ac9417d43fca2e4892a4a78a3005955" cid="PROP041" type="property" owner="dieb383019e59f4f9c9506828e034373582726" creation-date="07/05/2023 09:08:57" visibility="undefined">
-            <structural-feature type="MidDataGenMeasC" type-id="Class:e6ee8731d7be4a4fb03f6a1d8bf12c75" />
+            <structural-feature type="app_man" type-id="Class:die7458004519c4d3e9d0a30105f3628b17063" />
           </item>
           <item id="dia662ad0c05954239af349acee866347e1948" cid="REL006" type="relationship" owner="dia3a53a9f66c14135bf8f4538c5e8f05a9501" creation-date="07/04/2023 15:27:02" from="didfec208e64ea426a8e1f6a56bd12674c8552" to="die3a7299fd4494663ad32dbc7a6a1fd2d5166" visibility="package">
             <owned-items />
@@ -36813,9 +36935,9 @@ Qué se hace con el código de error?</comment>
           <item id="di3ff1170cfb374da1bb477115150439048428" cid="PROP448" type="property" creation-date="07/05/2023 09:08:57" visibility="undefined">
             <structural-feature type="MidDataGenMeasC" type-id="Class:6b135ac57b3642f0ac0798b4a2f5b559" />
           </item>
-          <item id="dif4be136f751147a9aa171fc67ce8ac9a4288" cid="REL036" type="relationship" creation-date="07/05/2023 09:08:57" from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="57a54de4aee6428b91c2ff77dc6b0859" visibility="package">
+          <item id="dif4be136f751147a9aa171fc67ce8ac9a4288" cid="REL036" type="relationship" creation-date="07/05/2023 09:08:57" from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="die7458004519c4d3e9d0a30105f3628b17063" visibility="package">
             <owned-items />
-            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="57a54de4aee6428b91c2ff77dc6b0859" derived="false">
+            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" to="die7458004519c4d3e9d0a30105f3628b17063" derived="false">
               <start-role id="umlar-7f478bdd-a4cf-4eea-84b5-5776a3b15edf" name="" navigability="" association-type="association" visibility="private" property-ref="di24b6d9ce5cd04766b13f4a1f3fee9b5a4288" />
               <end-role id="umlar-8ade171d-52ca-413b-924e-1e24fe445522" name="" navigability="yes" association-type="association" visibility="private" property-ref="di17057d85c9d4441ea9a9613f026d0f164288" />
             </relation>
@@ -36835,6 +36957,9 @@ Qué se hace con el código de error?</comment>
               <start-role id="umlar-0adafb8c-a55d-4b8b-8830-e2d968bbdaca" name="" navigability="" association-type="association" visibility="private" property-ref="di36d4de163b754e4ba32c536a28e0ad746031" />
               <end-role id="umlar-23636101-998f-4f5f-94b3-12b839684bf9" name="" navigability="yes" association-type="association" visibility="private" property-ref="di2476e9c0b6084aff9cca78b1b23d5f366031" />
             </relation>
+          </item>
+          <item id="di024cd07257ee4fa986a1b05a1cde82748282" cid="PROP1042" type="property" owner="di9778db5160074eae99617515b838c6b18282" creation-date="07/05/2023 09:23:19" visibility="undefined">
+            <structural-feature type="app_diag" type-id="Class:di2b54705cd02143bc86dd5919a175eb066328" />
           </item>
           <item id="c591409168da400595dd158907f53d11" cid="ELEM001" type="frame" name="DRV" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="06/29/2023 13:09:16">
             <owned-items />
@@ -37338,10 +37463,10 @@ Qué se hace con el código de error?</comment>
             <relation from="did80a11c9827f482782cdebdac7e4c9392879" from-iid="3afd73b9bac743528584b3dd48ead1fc" to="ada32959671d49b3bb9cdd058a0d7e4b" to-iid="84ce5e077c7045109904b0e2ea28d570" />
           </item>
           <item id="di2b54705cd02143bc86dd5919a175eb066328" iid="b86f5fbe4f1141e0b30e0d377c9e4215" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
-            <layout ax="820" ay="-470" awidth="130" aheight="50" x="820" y="-470" width="130" height="50" expanded="820,-470,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
+            <layout ax="480" ay="-460" awidth="130" aheight="50" x="480" y="-460" width="130" height="50" expanded="480,-460,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
           </item>
           <item id="die7458004519c4d3e9d0a30105f3628b17063" iid="f238daaea51a440ebfc888918548e7aa" container="didb199d1724ba4d25894dd6674bd9c2979501" container-iid="0a9f567af9074c6f9e4508b837fdc3a0" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
-            <layout ax="1163.5" ay="-640" awidth="130" aheight="50" x="1160" y="-640" width="130" height="50" expanded="1163.5,-640,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
+            <layout ax="830" ay="-640" awidth="130" aheight="50" x="830" y="-640" width="130" height="50" expanded="830,-640,130,50" collapsed="0,0,0,0" rotation-center="5,55" />
           </item>
           <item id="dicf0e97bdf66b497fb807bc1978ebb67b7452" iid="3ac8cbe20b4f4ba3943e612141e33562" container="di00f88dfe437144ac9a3bd7e79794aaa79501" container-iid="b53688834d184a0eac4093edd8a57e6b" creation-date="07/05/2023 09:08:57" order-index="122" type="relation">
             <layout start-role-position="20,-35" end-role-position="22,-20" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="542" y1="-40" x2="780" y2="-153" start-border-pos="0.125" end-border-pos="0.371951222419739" start-local-pos="65" end-local-pos="20" name-position="0,20">
@@ -37423,7 +37548,7 @@ Qué se hace con el código de error?</comment>
             <layout ax="480" ay="-40" awidth="125" aheight="53" x="480" y="-40" width="80.49315" height="43.15068" expanded="480,-40,125,53" collapsed="0,0,0,0" rotation-center="5,55" />
           </item>
           <item id="di2dc60b2b6d8840c1a1fcb7ae9e021fd93793" iid="6d4581ac412e48f3abbd04a7747dbc12" container="di00f88dfe437144ac9a3bd7e79794aaa79501" container-iid="b53688834d184a0eac4093edd8a57e6b" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
-            <layout ax="880" ay="100" awidth="123" aheight="53" x="890" y="30" width="80.49315" height="43.15068" expanded="880,100,123,53" collapsed="0,0,0,0" rotation-center="5,55" />
+            <layout ax="510" ay="100" awidth="123" aheight="53" x="510" y="100" width="80.49315" height="43.15068" expanded="510,100,123,53" collapsed="0,0,0,0" rotation-center="5,55" />
           </item>
           <item id="di1100ab88bc8e4699b3221b7b009c2b685878" iid="7e0af4d7ec124667bd29309b14299023" container="di00f88dfe437144ac9a3bd7e79794aaa79501" container-iid="b53688834d184a0eac4093edd8a57e6b" show-fields="false" creation-date="07/03/2023 08:33:00" order-index="2" type="entity">
             <layout ax="480" ay="-260" awidth="122" aheight="53" x="480" y="-260" width="80" height="49.99997" expanded="480,-260,122,53" collapsed="0,0,0,0" rotation-center="5.246582,51.57538" />
@@ -37446,28 +37571,28 @@ Qué se hace con el código de error?</comment>
             <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" from-iid="35c3b924a749449789beb94849902c09" to="did80a11c9827f482782cdebdac7e4c9392879" to-iid="3afd73b9bac743528584b3dd48ead1fc" />
           </item>
           <item id="dif4be136f751147a9aa171fc67ce8ac9a4288" iid="b253c6a1980f465ca0318ef48e6f186b" creation-date="07/05/2023 09:08:57" order-index="122" type="relation">
-            <layout start-role-position="20,-35" end-role-position="22,-20" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="935" y1="-153" x2="1170" y2="-229" start-border-pos="0.371951222419739" end-border-pos="0.900000005960464" start-local-pos="0" end-local-pos="25" name-position="0,20">
+            <layout start-role-position="20,-35" end-role-position="22,-20" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="935" y1="-153" x2="894" y2="-590" start-border-pos="0.371951222419739" end-border-pos="0.625961542129517" start-local-pos="0" end-local-pos="64.5" name-position="0,20">
               <points>
                 <point x="935" y="-153" />
                 <point x="1050" y="-190" />
-                <point x="1170" y="-229" />
+                <point x="894" y="-590" />
               </points>
             </layout>
-            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" from-iid="35c3b924a749449789beb94849902c09" to="57a54de4aee6428b91c2ff77dc6b0859" to-iid="6137ff40399b4351bcb1abdfda44401a" />
+            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" from-iid="35c3b924a749449789beb94849902c09" to="die7458004519c4d3e9d0a30105f3628b17063" to-iid="f238daaea51a440ebfc888918548e7aa" />
           </item>
           <item id="dieb383019e59f4f9c9506828e034373582726" iid="3ce9d688580c4762b8bf9f3ee44208fb" creation-date="07/05/2023 09:08:57" order-index="122" type="relation">
-            <layout start-role-position="20,-35" end-role-position="22,-20" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="935" y1="-152" x2="950" y2="-445" start-border-pos="0.378571435809135" end-border-pos="0.375" start-local-pos="18" end-local-pos="25" name-position="0,20">
+            <layout start-role-position="20,-35" end-role-position="22,-20" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="830" y1="-615" x2="610" y2="-435" start-border-pos="0.875" end-border-pos="0.375" start-local-pos="25" end-local-pos="25" name-position="0,20">
               <points>
-                <point x="935" y="-152" />
-                <point x="950" y="-445" />
+                <point x="830" y="-615" />
+                <point x="610" y="-435" />
               </points>
             </layout>
-            <relation from="e6ee8731d7be4a4fb03f6a1d8bf12c75" from-iid="35c3b924a749449789beb94849902c09" to="di2b54705cd02143bc86dd5919a175eb066328" to-iid="b86f5fbe4f1141e0b30e0d377c9e4215" />
+            <relation from="die7458004519c4d3e9d0a30105f3628b17063" from-iid="f238daaea51a440ebfc888918548e7aa" to="di2b54705cd02143bc86dd5919a175eb066328" to-iid="b86f5fbe4f1141e0b30e0d377c9e4215" />
           </item>
           <item id="1ddfc31a3d1d41a78efc43a74c489211" iid="df8a592483a3495b82bef562fe444693" creation-date="07/05/2023 09:23:19" order-index="123" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1228" y1="-590" x2="1228" y2="-250" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="65" end-local-pos="65" name-position="-80,-80">
+            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="895" y1="-590" x2="1228" y2="-250" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="65" end-local-pos="65" name-position="-80,-80">
               <points>
-                <point x="1228" y="-590" />
+                <point x="895" y="-590" />
                 <point x="1228" y="-250" />
               </points>
             </layout>
@@ -37503,10 +37628,10 @@ Qué se hace con el código de error?</comment>
             <relation from-field="di180be9ab6da8448d86990a0be157a4a81531_component" to="didfec208e64ea426a8e1f6a56bd12674c8552" to-iid="d13956d63c544efc801b10a2d16d13a1" />
           </item>
           <item id="di94d487e92fdb480e91622505981b31cc6486" iid="eab38d48ed144968a7f5efbb346f30ff" creation-date="07/05/2023 09:33:14" order-index="124" type="relation">
-            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1750" y1="-685" x2="1228" y2="-640" start-border-pos="0.875" end-border-pos="0.124038457870483" start-local-pos="15" end-local-pos="64.5" name-position="0,20">
+            <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1750" y1="-685" x2="894" y2="-640" start-border-pos="0.875" end-border-pos="0.124038457870483" start-local-pos="15" end-local-pos="64.5" name-position="0,20">
               <points>
                 <point x="1750" y="-685" />
-                <point x="1228" y="-640" />
+                <point x="894" y="-640" />
               </points>
             </layout>
             <relation from="dif379644404a74fb19897572cdc125dd37033" from-iid="0c52503448044519a5e049cf6619c876" to="die7458004519c4d3e9d0a30105f3628b17063" to-iid="f238daaea51a440ebfc888918548e7aa" />
@@ -37585,10 +37710,10 @@ Qué se hace con el código de error?</comment>
             <relation from="f150a2ca8441455c8f8d37267b41a117" from-iid="dbaebdd726934e9d865b3587f29b34cf" to="did80a11c9827f482782cdebdac7e4c9392879" to-iid="3afd73b9bac743528584b3dd48ead1fc" />
           </item>
           <item id="b30ccfebeb27455bb024c9a7b296252d" iid="88ccbe310aef436b803894cea967b878" creation-date="09/12/2023 08:40:04" order-index="130" type="relation">
-            <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1805" y1="-470" x2="1294" y2="-615" start-border-pos="0.125" end-border-pos="0.375" start-local-pos="65" end-local-pos="25" name-position="0,20">
+            <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1805" y1="-470" x2="960" y2="-615" start-border-pos="0.125" end-border-pos="0.375" start-local-pos="65" end-local-pos="25" name-position="0,20">
               <points>
                 <point x="1805" y="-470" />
-                <point x="1294" y="-615" />
+                <point x="960" y="-615" />
               </points>
             </layout>
             <relation from="f150a2ca8441455c8f8d37267b41a117" from-iid="dbaebdd726934e9d865b3587f29b34cf" to="die7458004519c4d3e9d0a30105f3628b17063" to-iid="f238daaea51a440ebfc888918548e7aa" />
