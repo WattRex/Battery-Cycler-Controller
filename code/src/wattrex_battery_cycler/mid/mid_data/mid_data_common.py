@@ -4,7 +4,7 @@ Definition of MID DATA devices used on battery cycler.
 '''
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-
+from copy import deepcopy
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -18,7 +18,7 @@ log = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 from .mid_data_experiment import MidDataPwrModeE
-from .mid_data_devices import MidDataDeviveStatusC
+from .mid_data_devices import MidDataDeviceStatusC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -32,12 +32,8 @@ class MidDataAllStatusC:
         '''
         Intialize the instance with the given status.
         '''
-        # One attribute for each device, all of them initialized to OK
-        self.epc_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
-        self.source_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
-        self.load_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
-        self.bisource_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
-        self.meter_status : MidDataDeviveStatusC = MidDataDeviveStatusC(0)
+        # Power device is the main device, the  status will be overwriten by the devices in use
+        self.pwr_dev : MidDataDeviceStatusC = MidDataDeviceStatusC(0)
 
 class MidDataGenMeasC:
     '''

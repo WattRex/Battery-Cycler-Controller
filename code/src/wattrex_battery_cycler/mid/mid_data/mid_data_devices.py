@@ -43,7 +43,7 @@ class MidDataDeviceTypeE(Enum):
     SOURCE_LOAD = "Source-Load"
 #######################             CLASSES              #######################
 
-class MidDataDeviveStatusC:
+class MidDataDeviceStatusC:
     '''Handles status of the driver power.
     '''
     def __init__(self, error: int|MidDataDeviceStatusE) -> None:
