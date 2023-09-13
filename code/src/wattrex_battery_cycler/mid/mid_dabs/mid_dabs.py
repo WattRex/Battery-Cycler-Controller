@@ -5,7 +5,7 @@ the device and request info from it.
 """
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-
+from typing import List
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -24,7 +24,7 @@ from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataDeviveStatusC,\
+from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataDeviceStatusC,\
                 MidDataLinkConfSerialC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
 #######################              ENUMS               #######################
 mapping_device: {'epc': {'ls_current': 'ls_curr'},
@@ -38,6 +38,7 @@ class MidDabsPwrMeterC:
     '''
     def __init__(self, device: list [MidDataDeviceC]) -> None:
         self.device_type = device[0].device_type if len(device) == 1 else MidDataDeviceTypeE.SOURCE_LOAD
+        self.dev_id: List = [x.dev_id for x in device]
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
@@ -73,6 +74,18 @@ class MidDabsPwrMeterC:
             log.error(error)
             raise error
 
+    def __update_source_load_status(self, status: MidDataAllStatusC):
+        if status.source.value > 0 :
+            status.pwr_device = status.source
+        elif status.load.value > 0:
+            status.pwr_device = status.load
+        elif status.source.value < 0:
+            status.pwr_device = status.source
+        elif status.load.value < 0:
+            status.pwr_device = status.load
+        else:
+            status.pwr_device = status.source
+
     def update(self, gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
                status: MidDataAllStatusC) -> None:
         """Update the data from the hardware sendind the corresponding messages.
@@ -82,9 +95,16 @@ class MidDabsPwrMeterC:
         ext_att = [x.lower() for x in ext_meas.__dict__.keys()]
         if self.device_type is MidDataDeviceTypeE.BISOURCE:
             res: DrvEaDataC = self.bisource.get_data()
+            status.pwr_device = MidDataDeviceStatusC(error= res.status.error_code,
+                                                    dev_id= self.dev_id[0])
         elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
             res: DrvEaDataC = self.source.get_data()
+            status.source = MidDataDeviceStatusC(error= res.status.error_code,
+                                            dev_id= dev_id= self.dev_id[0])
             res: DrvRsDataC = self.load.get_data()
+            status.load = MidDataDeviceStatusC(error= res.status.error_code,
+                                            dev_id= self.dev_id[0])
+            self.__update_source_load_status(status= status)
         elif self.device_type is MidDataDeviceTypeE.METER:
             res: DrvBkDataC = self.meter.get_data()
             res = res.__dict__
@@ -96,7 +116,8 @@ class MidDabsPwrMeterC:
             msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
             msg_mode: DrvEpcDataC  = self.epc.get_mode()
             epc_status = self.epc.get_status()
-            status.epc_status = MidDataDeviveStatusC(epc_status.error_code)
+            status.pwr_device = MidDataDeviceStatusC(error= epc_status.error_code,
+                                                    dev_id= self.dev_id[0])
             gen_meas.voltage = msg_elect_meas.ls_voltage
             gen_meas.current = msg_elect_meas.ls_current
             gen_meas.power   = msg_elect_meas.ls_power
