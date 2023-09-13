@@ -46,7 +46,8 @@ class MidDataDeviceTypeE(Enum):
 class MidDataDeviceStatusC:
     '''Handles status of the driver power.
     '''
-    def __init__(self, error: int|MidDataDeviceStatusE) -> None:
+    def __init__(self, error: int|MidDataDeviceStatusE, dev_id: int) -> None:
+        self.dev_id: int= dev_id
         if isinstance(error, MidDataDeviceStatusE):
             self.__status = error
             self.__error_code = error.value
