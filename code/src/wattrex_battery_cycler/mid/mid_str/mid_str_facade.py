@@ -10,21 +10,21 @@ from datetime import datetime
 from typing import List
 
 #######################       THIRD PARTY IMPORTS        #######################
-from sqlalchemy import BigInteger, false, null, select, update, insert
+from sqlalchemy import select, update, insert
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import sys_log_logger_get_module_logger
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_driver_db.drv_db_engine import DrvDbSqlEngineC
-from wattrex_driver_db.drv_db_dao import DrvDbExperimentC, DrvDbBatteryC, DrvDbProfileC, \
-                                        DrvDbCycleStationC, DrvDbInstructionC
-from wattrex_driver_db.drv_db_types import DrvDbExpStatusE
+from wattrex_driver_db import DrvDbSqlEngineC, DrvDbExperimentC, DrvDbBatteryC, DrvDbProfileC, \
+                        DrvDbCycleStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC, \
+                        DrvDbExtendedMeasureC, DrvDbGenericMeasureC, DrvDbStatusC
 
 #######################          MODULE IMPORTS          #######################
-
-
+from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC,\
+                MidDataExpStatusE, MidDataProfileC, MidDataBatteryC,\
+                MidDataExperimentC, MidDataCyclerStationC\
 
 #######################              ENUMS               #######################
 #
@@ -48,101 +48,179 @@ class MidStrDbElementNotFoundErrorC(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class MidStrExperimentC(DrvDbExperimentC):
-    
-    def __init__(self, exp : DrvDbExperimentC, filePath: str, cs : DrvDbCycleStationC = None, \
-                    bat : DrvDbBatteryC = None, prof : DrvDbProfileC = None, \
-                    instr : List[DrvDbInstructionC] = None):
-        for key, value in exp.__dict__.items():
-            setattr(self, key, value)
-        if cs is not None:
-            self.CS = cs
-        else:
-            self.CS = select(DrvDbCycleStationC)\
-                            .where(DrvDbCycleStationC.CSID == exp.CSID).first()[0]
-        if bat is not None:
-            self.Bat = bat
-        else:
-            self.Bat = select(DrvDbBatteryC)\
-                            .where(DrvDbBatteryC.BatID == exp.BatID).first()[0]
-        if prof is not None:
-            self.Prof = prof
-        else:
-            self.Prof = select(DrvDbProfileC)\
-                            .where(DrvDbProfileC.ProfID == exp.ProfID).first()[0]
-        if instr is not None:
-            self.Instr = instr
-        else:
-            self.Instr = select(DrvDbInstructionC)\
-                            .where(DrvDbInstructionC.ExpID == exp.ExpID)\
-                            .order_by(DrvDbExperimentC.DateCreation.asc()).all()
-        
-        print(self.__dict__.items())
-    
-
-
-
-class MidStrFacadeC(DrvDbSqlEngineC):
+class MidStrFacadeC:
     '''
     This class is used to interface with the database.
     '''
-    def __init__(self, cycler_station_id : int, config_file : str = ".cred.yaml"):
+    def __init__(self, master_file : str = ".cred.yaml", cache_file : str = ".cred.yaml") -> None:
         log.info("Initializing DB Connection...")
-        super().__init__(config_file = config_file)
-        self.cycler_station_id = cycler_station_id
+        self.__master_db: DrvDbSqlEngineC = DrvDbSqlEngineC(master_file)
+        self.__cache_db: DrvDbSqlEngineC = DrvDbSqlEngineC(cache_file)
+        self.meas_id: int = 0
 
-    def getAndStartQueuedExp(self) -> MidStrExperimentC:
+    def get_start_queued_exp(self, cycler_station_id) -> MidDataExperimentC:
         '''
         Get the oldest queued experiment, assigned to the cycler station where this 
         cycler would be running, and change its status to RUNNING in database.
         '''
+        self.meas_id = 0
+        exp = {}
+        battery = {}
+        profile = {}
         try:
             stmt =  select(DrvDbExperimentC)\
                         .where(DrvDbExperimentC.Status == DrvDbExpStatusE.QUEUED)\
-                        .where(DrvDbExperimentC.CSID == self.cycler_station_id)\
+                        .where(DrvDbExperimentC.CSID == cycler_station_id)\
                         .order_by(DrvDbExperimentC.DateCreation.asc())
-            result = self.session.execute(stmt).first()
+            result = self.__master_db.execute(stmt).first()
             if result is None:
-                raise MidStrDbElementNotFoundErrorC(f"No experiment \
-                    found for cycler station with ID: {self.cycler_station_id}")
+                raise MidStrDbElementNotFoundErrorC(("No experiment found for cycler station "
+                                                    f"with ID: {cycler_station_id}"))
             exp : DrvDbExperimentC = result[0]
+            # Get battery info
+            stmt =  select(DrvDbBatteryC)\
+                        .where(DrvDbBatteryC.BatID == exp.BatID)
+            result = self.__master_db.execute(stmt).first()
+            if result is None:
+                raise MidStrDbElementNotFoundErrorC(("No battery found with ID: {exp.BatID}"))
+            battery = result[0]
+            # Get profile info
+            stmt =  select(DrvDbProfileC)\
+                        .where(DrvDbProfileC.ProfID == exp.ProfID)
+            result = self.__master_db.execute(stmt).first()
+            if result is None:
+                raise MidStrDbElementNotFoundErrorC(("No profile found with ID: {exp.ProfID}"))
+            profile = result[0]
 
             # Change experiment status to running and update begin datetime
-            stmt = update(DrvDbExperimentC)\
-                        .where(DrvDbExperimentC.ExpID == exp.ExpID)\
+            stmt = update(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp.ExpID)\
                         .values(Status=DrvDbExpStatusE.RUNNING, DateBegin=datetime.utcnow())
-            self.session.execute(stmt)
-
-            
-            # # Get File Path
-            # stmt = select(DRV_DB_Profile_c).where(DRV_DB_Profile_c.ProfID == exp.Profile)
-            # result = self.session.execute(stmt).first()
-            # if result is None:
-            #     raise MID_COMM_DB_Element_Not_Found_Error_c(f"Any profile found for that experiment. Profile ID: {exp.Profile}")
-            # prof = result[0] 
-            # MID_exp = MID_COMM_Experiment_c(exp, prof.CMDFilePath)
-            # #print(expVO.ExpID)
-            
-            # # Get Battery info
-            # stmt = select(DRV_DB_Battery_c).where(DRV_DB_Battery_c.BatID == exp.Battery)
-            # result = self.session.execute(stmt).first()
-            # if result is None:
-            #     raise MID_COMM_DB_Element_Not_Found_Error_c(f"Any battery found for that experiment. Battery ID: {exp.Battery}")
-            # MID_bat = MID_COMM_Battery_c(result[0])
-            self.session.commit()
-                
-        except Exception as err:
-            # TODO: not catch own raised exceptions 
+            self.__cache_db.execute(stmt)
+        except Exception as err: #pylint: disable=broad-except
+            # TODO: not catch own raised exceptions
             # print(err)
             # print("Error on GetQueuedExperimentById. Performing rollback...")
-            self.session.rollback()
+            # self.session.rollback()
+            pass
         finally:
-            return MidStrExperimentC(exp)
+            return MidDataExperimentC(**exp.__dict__), MidDataBatteryC(**battery.__dict__),\
+                        MidDataProfileC(**profile.__dict__)
 
+    ## All methods that get information will gather the info from the master db
+    def get_exp_status(self, exp_id: int) -> MidDataExpStatusE:
+        """Returns the experiment status .
+        Args:
+            exp_id (int): [description]
+        Returns:
+            MidDataExpStatusE: [description]
+        """
+        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).fetchone()
+        if result is None:
+            raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
+        return MidDataExpStatusE(result.get("Status"))
 
+    def get_exp_profile_data(self,exp_id: int) -> MidDataProfileC:
+        """AI is creating summary for get_exp_profile_data
+        Args:
+            exp_id (int): [description]
+        Returns:
+            MidDataProfileC: [description]
+        """
+        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).fetchone()
+        if result is None:
+            raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
+        return MidDataProfileC(**result.get("Profile"))
 
+    def get_exp_battery_data(self, exp_id: int) -> MidDataBatteryC:
+        """Get the mid - data of an experiment .
+        Args:
+            exp_id (int): [description]
+        Returns:
+            MidDataBatteryC: [description]
+        """
+        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).fetchone()
+        if result is None:
+            raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
+        return MidDataBatteryC(**result.get("Battery"))
 
+    def get_cycler_station_info(self, exp_id: int) -> MidDataCyclerStationC:
+        """Returns the name and name of the cycle station for the experiment .
+        Returns:
+            [type]: [description]
+        """
+        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).fetchone()
+        if result is None:
+            raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
+        result = result.get("CyclerStation")
+        ## TODO: Check what is going to return exactly this function (ask Marius and Javi)
+        return MidDataCyclerStationC(**result.__dict__)
 
-#######################            FUNCTIONS             #######################
-if __name__ == '__main__':
-    MidStrFacadeC()
+    ## All methods that write information will write the info into the cache db
+    def modify_current_exp(self, exp_status: MidDataExperimentC) -> None:
+        """Modify the current experiment status .
+        Args:
+            exp_status (MidDataExpStatusE): [description]
+        """
+        stmt = update(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_status.exp_id).\
+            values(Timestamp= datetime.now(), Status = exp_status.status)
+        self.__cache_db.execute(stmt)
+
+    def write_status_changes(self, all_status: MidDataAllStatusC) -> None:
+        """Write the status changes into the cache db .
+        Args:
+            new_status (MidDataAllStatusC): [description]
+        """
+        stmt = update(DrvDbStatusC).where(DrvDbStatusC.ExpID == all_status.exp_id).\
+            values(Timestamp= datetime.now(), **all_status.__dict__)
+        self.__cache_db.execute(stmt)
+
+    def write_new_alarm(self, alarms: List[MidDataAlarmC]) -> None:
+        """Write an alarm into the cache db .
+        Args:
+            alarm (List[MidDataAlarmC]): [description]
+        """
+        for alarm in alarms:
+            stmt = insert(DrvDbAlarmC).values(Timestamp= datetime.now(), **alarm.__dict__)
+            self.__cache_db.execute(stmt)
+
+    def write_generic_measures(self, gen_meas: MidDataGenMeasC) -> None:
+        """Write the generic measures into the cache db .
+        Args:
+            gen_meas (MidDataGenMeasC): [description]
+        """
+        stmt = insert(DrvDbGenericMeasureC).values(Timestamp= datetime.now(), MeasID= self.meas_id,
+                                                   **gen_meas.__dict__)
+        self.__cache_db.execute(stmt)
+        self.meas_id += 1
+
+    def write_extended_measures(self, ext_meas: MidDataExtMeasC) -> None:
+        """Write the extended measures into the cache db .
+        Args:
+            ext_meas (MidDataExtMeasC): [description]
+        """
+        stmt = insert(DrvDbExtendedMeasureC).values(Timestamp= datetime.now(), MeasID= self.meas_id,
+                                                     **ext_meas.__dict__)
+        self.__cache_db.execute(stmt)
+
+    def commit_changes(self):
+        """Commit changes made to the cache database.
+        """
+        self.__cache_db.commit_changes()
+
+    def reset_db_connection(self):
+        """Reset the connection to the both database.
+        """
+        # Closing connection to databases
+        self.__cache_db.reset()
+        self.__master_db.reset()
+
+    def close_db_connection(self):
+        """Close the connection to the both databases.
+        """
+        # Closing connection to databases
+        self.__cache_db.closeConnection()
+        self.__master_db.closeConnection()
