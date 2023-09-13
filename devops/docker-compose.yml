@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  cache_db:
+    #image: linuxserver/mariadb
+    image: tobi312/rpi-mariadb:10.11-alpine
+    container_name: wattrex_cycler_cache_db
+    restart: unless-stopped
+    ports:
+      - "3368:3306"
+    volumes:
+      - wattrex_cycler_cache_db:/var/lib/mysql:rw
+      - ./cache_db/createCacheTables.sql:/docker-entrypoint-initdb.d/createCacheTables.sql
+    environment:
+      TZ: Europe/Berlin
+    env_file:
+      - .cred.env
+
+    # healthcheck:
+    #   test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+    #   interval: 60s
+    #   timeout: 5s
+
+volumes:
+  wattrex_cycler_cache_db:
+    name: wattrex_cycler_cache_db
