@@ -33,7 +33,7 @@ class MidDataAllStatusC:
         Intialize the instance with the given status.
         '''
         # Power device is the main device, the  status will be overwriten by the devices in use
-        self.pwr_dev : MidDataDeviceStatusC = MidDataDeviceStatusC(0)
+        self.pwr_dev : MidDataDeviceStatusC| None = None
 
 class MidDataGenMeasC:
     '''

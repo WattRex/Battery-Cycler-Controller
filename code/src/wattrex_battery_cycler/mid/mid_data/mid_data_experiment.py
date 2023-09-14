@@ -58,8 +58,8 @@ class MidDataCyclerStationC:
     '''
     Cycler station information.
     '''
-    def __init__(self, cycler_id: int, name: str, devices: List[MidDataDeviceC],
-                 deprecated: bool = False):
+    def __init__(self, cycler_id: int| None= None, name: str| None= None,
+                devices: List[MidDataDeviceC]| None= None, deprecated: bool = False):
         '''
         Initialize CyclerStation instance with the given parameters.
 
@@ -69,17 +69,18 @@ class MidDataCyclerStationC:
             devices (List[MidDataDeviceC]): List of devices included in the cycler station
             deprecated (bool, optional): Flag that indicates if the cycler station is deprecated
         '''
-        self.name : str = name
-        self.cycler_id : int = cycler_id
-        self.devices : List[MidDataDeviceC] = devices
+        self.name : str| None = name
+        self.cycler_id : int| None = cycler_id
+        self.devices : List[MidDataDeviceC]| None = devices
         self.deprecated: bool = deprecated
 
 class MidDataInstructionC:
     '''
     Instruction to applied on experiments.
     '''
-    def __init__(self, instr_id: int, mode : MidDataPwrModeE, ref : int,
-                limit_type : MidDataPwrLimitE, limit_ref : int):
+    def __init__(self, instr_id: int| None= None, mode : MidDataPwrModeE| None= None,
+                ref : int| None= None, limit_type : MidDataPwrLimitE| None= None,
+                limit_ref : int| None= None):
         '''
         Initialize Instruction.
 
@@ -90,11 +91,11 @@ class MidDataInstructionC:
                 this instruction
             limit_ref (int): limit reference to be reached to instruction completion
         '''
-        self.instr_id : int = instr_id
-        self.mode : MidDataPwrModeE = mode
-        self.ref : int = ref
-        self.limit_type : MidDataPwrLimitE = limit_type
-        self.limit_ref : int = limit_ref
+        self.instr_id : int| None= instr_id
+        self.mode : MidDataPwrModeE| None = mode
+        self.ref : int| None = ref
+        self.limit_type : MidDataPwrLimitE| None = limit_type
+        self.limit_ref : int| None = limit_ref
 
 
 class MidDataExperimentC:

@@ -146,13 +146,14 @@ class MidDataDeviceC:
     '''
 
     # pylint: disable=too-many-arguments
-    def __init__(self, manufacturer : str, model : str, serial_number : str,
-                device_type : MidDataDeviceTypeE, iface_name : str, mapping_names : Dict,
+    def __init__(self, manufacturer : str| None= None, model :str| None= None,
+                serial_number : str| None= None, device_type : MidDataDeviceTypeE,
+                iface_name : str| None= None, mapping_names : Dict| None= None,
                 link_configuration: MidDataLinkConfCanC|MidDataLinkConfSerialC) -> None:
-        self.manufacturer : str = manufacturer
-        self.model : str = model
-        self.serial_number : str  = serial_number
+        self.manufacturer : str| None= None = manufacturer
+        self.model : str| None= None = model
+        self.serial_number : str| None= None  = serial_number
         self.device_type : MidDataDeviceTypeE = device_type
-        self.iface_name :str = iface_name
-        self.mapping_names : Dict = mapping_names
+        self.iface_name :str| None= None = iface_name
+        self.mapping_names : Dict| None= None = mapping_names
         self.link_conf: MidDataLinkConfCanC|MidDataLinkConfSerialC = link_configuration

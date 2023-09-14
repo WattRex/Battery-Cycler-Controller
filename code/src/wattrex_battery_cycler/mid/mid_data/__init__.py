@@ -13,7 +13,7 @@ from .mid_data_common import MidDataAllStatusC, MidDataExtMeasC, MidDataGenMeasC
 from .mid_data_battery import MidDataBatteryC, MidDataLithiumBatC, MidDataRedoxBatC
 
 __all__ = [
-    'MidDataDeviceStatusE', 'MidDataDeviceTypeE', 'MidDataDeviveStatusC', 'MidDataDeviceC',
+    'MidDataDeviceStatusE', 'MidDataDeviceTypeE', 'MidDataDeviceStatusC', 'MidDataDeviceC',
     'MidDataLinkConfSerialC', 'MidDataLinkConfCanC', 'MidDataPwrLimitE', 'MidDataPwrModeE',
     'MidDataPwrRangeC', 'MidDataAlarmC', 'MidDataExperimentC', 'MidDataExpStatusE',
     'MidDataInstructionC', 'MidDataCyclerStationC', 'MidDataProfileC', 'MidDataAllStatusC',
