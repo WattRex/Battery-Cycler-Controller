@@ -100,7 +100,7 @@ class MidDabsPwrMeterC:
         elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
             res: DrvEaDataC = self.source.get_data()
             status.source = MidDataDeviceStatusC(error= res.status.error_code,
-                                            dev_id= dev_id= self.dev_id[0])
+                                            dev_id= self.dev_id[0])
             res: DrvRsDataC = self.load.get_data()
             status.load = MidDataDeviceStatusC(error= res.status.error_code,
                                             dev_id= self.dev_id[0])
