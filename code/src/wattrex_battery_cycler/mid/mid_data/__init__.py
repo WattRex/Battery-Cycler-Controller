@@ -5,7 +5,7 @@ This file specifies what is going to be exported from this module.
 '''
 
 from .mid_data_devices import MidDataDeviceStatusE, MidDataDeviceTypeE, MidDataDeviceStatusC, \
-                    MidDataDeviceC, MidDataLinkConfSerialC, MidDataLinkConfCanC
+                    MidDataDeviceC, MidDataLinkConfSerialC
 from .mid_data_experiment import MidDataPwrLimitE, MidDataPwrModeE, MidDataProfileC, MidDataAlarmC,\
                     MidDataPwrRangeC, MidDataExperimentC, MidDataExpStatusE, MidDataInstructionC,\
                     MidDataCyclerStationC
@@ -14,7 +14,7 @@ from .mid_data_battery import MidDataBatteryC, MidDataLithiumBatC, MidDataRedoxB
 
 __all__ = [
     'MidDataDeviceStatusE', 'MidDataDeviceTypeE', 'MidDataDeviceStatusC', 'MidDataDeviceC',
-    'MidDataLinkConfSerialC', 'MidDataLinkConfCanC', 'MidDataPwrLimitE', 'MidDataPwrModeE',
+    'MidDataLinkConfSerialC', 'MidDataPwrLimitE', 'MidDataPwrModeE',
     'MidDataPwrRangeC', 'MidDataAlarmC', 'MidDataExperimentC', 'MidDataExpStatusE',
     'MidDataInstructionC', 'MidDataCyclerStationC', 'MidDataProfileC', 'MidDataAllStatusC',
     'MidDataExtMeasC', 'MidDataGenMeasC', 'MidDataBatteryC', 'MidDataLithiumBatC',

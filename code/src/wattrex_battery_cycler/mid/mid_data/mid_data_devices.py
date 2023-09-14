@@ -101,18 +101,12 @@ class MidDataDeviceStatusC:
         '''
         return self.__status.name
 
-class MidDataLinkConfCanC:
-    """A class method that implements the MIDDataLinkConCanf class .
-    """
-    def __init__(self, can_id: int):
-        self.can_id = can_id
-class MidDataLinkConfSerialC:
+class MidDataLinkConfSerialC: #pylint: disable=too-many-instance-attributes
     '''
     A class method that implements the MIDDataLinkConSerialf class .
     '''
     # pylint: disable=too-many-arguments
-    def __init__(self,
-                port: str, separator: str, baudrate: int, bytesize: int,
+    def __init__(self, separator: str, baudrate: int, bytesize: int,
                 parity: str,
                 stopbits: int, timeout: float, write_timeout: float,
                 inter_byte_timeout: float) -> None:
@@ -130,7 +124,6 @@ class MidDataLinkConfSerialC:
         else:
             log.error("Wrong value for parity")
             raise ValueError("Wrong value for parity")
-        self.port = port
         self.separator = separator
         self.baudrate = baudrate
         self.bytesize = bytesize
@@ -147,13 +140,25 @@ class MidDataDeviceC:
 
     # pylint: disable=too-many-arguments
     def __init__(self, manufacturer : str| None= None, model :str| None= None,
-                serial_number : str| None= None, device_type : MidDataDeviceTypeE,
+                serial_number : str| None= None, device_type : MidDataDeviceTypeE| None= None,
                 iface_name : str| None= None, mapping_names : Dict| None= None,
-                link_configuration: MidDataLinkConfCanC|MidDataLinkConfSerialC) -> None:
-        self.manufacturer : str| None= None = manufacturer
-        self.model : str| None= None = model
-        self.serial_number : str| None= None  = serial_number
-        self.device_type : MidDataDeviceTypeE = device_type
-        self.iface_name :str| None= None = iface_name
-        self.mapping_names : Dict| None= None = mapping_names
-        self.link_conf: MidDataLinkConfCanC|MidDataLinkConfSerialC = link_configuration
+                link_configuration: MidDataLinkConfSerialC|None = None) -> None:
+        """Initialize the attributes of the device .
+
+        Args:
+            manufacturer (str, optional): [description]. Defaults to None.
+            model (str, optional): [description]. Defaults to None.
+            serial_number (str, optional): [description]. Defaults to None.
+            device_type (MidDataDeviceTypeE, optional): [description]. Defaults to None.
+            iface_name (str, optional): [Name needed to communicate,in case of serial will be the
+              port while in can will be the can id]. Defaults to None.
+            mapping_names (Dict, optional): [description]. Defaults to None.
+            link_configuration (MidDataLinkConfSerialC, optional): [description]. Defaults to None.
+        """
+        self.manufacturer : str| None= manufacturer
+        self.model : str| None = model
+        self.serial_number : str| None = serial_number
+        self.device_type : MidDataDeviceTypeE|None = device_type
+        self.iface_name :str| None = iface_name
+        self.mapping_names : Dict| None = mapping_names
+        self.link_conf: MidDataLinkConfSerialC|None = link_configuration

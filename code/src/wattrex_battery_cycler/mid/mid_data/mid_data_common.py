@@ -4,7 +4,6 @@ Definition of MID DATA devices used on battery cycler.
 '''
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-from copy import deepcopy
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################

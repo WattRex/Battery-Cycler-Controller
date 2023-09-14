@@ -29,11 +29,10 @@ class MidDataBatteryC:
                  volt_max : int = 1200, curr_min : int = 0,
                  curr_max : int = 5000) -> None:
 
-        self.name : str = name
-        self.model : str = model
-        self.elec_ranges: MidDataPwrRangeC = MidDataPwrRangeC(volt_min, volt_max,
-                                                              curr_min, curr_max)
-
+        self.name : str|None = name
+        self.model : str|None = model
+        self.elec_ranges: MidDataPwrRangeC = MidDataPwrRangeC(volt_max= volt_max,
+                                        volt_min= volt_min, curr_max= curr_max, curr_min= curr_min)
 
 class MidDataRedoxBatC(MidDataBatteryC):
     '''
@@ -57,5 +56,5 @@ class MidDataLithiumBatC(MidDataBatteryC):
                 volt_min : int = 800, volt_max : int = 1200, curr_min : int = 0,
                 curr_max : int = 5000) -> None:
 
-        self.capacity : int| None= None = capacity
+        self.capacity : int| None= capacity
         super().__init__(name, model, volt_min, volt_max, curr_min, curr_max)
