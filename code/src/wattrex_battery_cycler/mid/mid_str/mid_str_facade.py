@@ -17,11 +17,13 @@ from system_logger_tool import sys_log_logger_get_module_logger
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_driver_db import DrvDbSqlEngineC, DrvDbExperimentC, DrvDbBatteryC, DrvDbProfileC, \
-                        DrvDbCycleStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC, \
-                        DrvDbExtendedMeasureC, DrvDbGenericMeasureC, DrvDbStatusC
+from wattrex_driver_db import DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBatteryC, DrvDbProfileC, \
+                        DrvDbCyclerStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC, \
+                        DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheStatusC
 
 #######################          MODULE IMPORTS          #######################
+from .mid_str_mapping import mapping_alarm, mapping_status, mapping_gen_meas,\
+                            remap_dict
 from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC,\
                 MidDataExpStatusE, MidDataProfileC, MidDataBatteryC,\
                 MidDataExperimentC, MidDataCyclerStationC\
@@ -68,15 +70,15 @@ class MidStrFacadeC:
         battery = {}
         profile = {}
         try:
-            stmt =  select(DrvDbExperimentC)\
-                        .where(DrvDbExperimentC.Status == DrvDbExpStatusE.QUEUED)\
-                        .where(DrvDbExperimentC.CSID == cycler_station_id)\
-                        .order_by(DrvDbExperimentC.DateCreation.asc())
+            stmt =  select(DrvDbMasterExperimentC)\
+                        .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED)\
+                        .where(DrvDbMasterExperimentC.CSID == cycler_station_id)\
+                        .order_by(DrvDbMasterExperimentC.DateCreation.asc())
             result = self.__master_db.execute(stmt).first()
             if result is None:
                 raise MidStrDbElementNotFoundErrorC(("No experiment found for cycler station "
                                                     f"with ID: {cycler_station_id}"))
-            exp : DrvDbExperimentC = result[0]
+            exp : DrvDbMasterExperimentC = result[0]
             # Get battery info
             stmt =  select(DrvDbBatteryC)\
                         .where(DrvDbBatteryC.BatID == exp.BatID)
@@ -93,7 +95,7 @@ class MidStrFacadeC:
             profile = result[0]
 
             # Change experiment status to running and update begin datetime
-            stmt = update(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp.ExpID)\
+            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp.ExpID)\
                         .values(Status=DrvDbExpStatusE.RUNNING, DateBegin=datetime.utcnow())
             self.__cache_db.execute(stmt)
         except Exception as err: #pylint: disable=broad-except
@@ -114,8 +116,8 @@ class MidStrFacadeC:
         Returns:
             MidDataExpStatusE: [description]
         """
-        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
-        result = self.__master_db.execute(stmt).fetchone()
+        stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
         return MidDataExpStatusE(result.get("Status"))
@@ -127,8 +129,8 @@ class MidStrFacadeC:
         Returns:
             MidDataProfileC: [description]
         """
-        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
-        result = self.__master_db.execute(stmt).fetchone()
+        stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
         return MidDataProfileC(**result.get("Profile"))
@@ -140,8 +142,8 @@ class MidStrFacadeC:
         Returns:
             MidDataBatteryC: [description]
         """
-        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
-        result = self.__master_db.execute(stmt).fetchone()
+        stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
         return MidDataBatteryC(**result.get("Battery"))
@@ -151,8 +153,8 @@ class MidStrFacadeC:
         Returns:
             [type]: [description]
         """
-        stmt = select(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_id)
-        result = self.__master_db.execute(stmt).fetchone()
+        stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
+        result = self.__master_db.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
         result = result.get("CyclerStation")
@@ -165,7 +167,7 @@ class MidStrFacadeC:
         Args:
             exp_status (MidDataExpStatusE): [description]
         """
-        stmt = update(DrvDbExperimentC).where(DrvDbExperimentC.ExpID == exp_status.exp_id).\
+        stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_status.exp_id).\
             values(Timestamp= datetime.now(), Status = exp_status.status)
         self.__cache_db.execute(stmt)
 
@@ -174,8 +176,8 @@ class MidStrFacadeC:
         Args:
             new_status (MidDataAllStatusC): [description]
         """
-        stmt = update(DrvDbStatusC).where(DrvDbStatusC.ExpID == all_status.exp_id).\
-            values(Timestamp= datetime.now(), **all_status.__dict__)
+        stmt = update(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == all_status.exp_id).\
+            values(Timestamp= datetime.now(), **remap_dict(all_status.__dict__, mapping_status))
         self.__cache_db.execute(stmt)
 
     def write_new_alarm(self, alarms: List[MidDataAlarmC]) -> None:
@@ -184,7 +186,8 @@ class MidStrFacadeC:
             alarm (List[MidDataAlarmC]): [description]
         """
         for alarm in alarms:
-            stmt = insert(DrvDbAlarmC).values(Timestamp= datetime.now(), **alarm.__dict__)
+            stmt = insert(DrvDbAlarmC).values(Timestamp= datetime.now(),
+                                              **remap_dict(alarm.__dict__,mapping_alarm))
             self.__cache_db.execute(stmt)
 
     def write_generic_measures(self, gen_meas: MidDataGenMeasC) -> None:
@@ -192,8 +195,9 @@ class MidStrFacadeC:
         Args:
             gen_meas (MidDataGenMeasC): [description]
         """
-        stmt = insert(DrvDbGenericMeasureC).values(Timestamp= datetime.now(), MeasID= self.meas_id,
-                                                   **gen_meas.__dict__)
+        
+        stmt = insert(DrvDbCacheGenericMeasureC).values(Timestamp= datetime.now(), MeasID= self.meas_id,
+                                                **remap_dict(gen_meas.__dict__, mapping_gen_meas))
         self.__cache_db.execute(stmt)
         self.meas_id += 1
 
@@ -202,9 +206,10 @@ class MidStrFacadeC:
         Args:
             ext_meas (MidDataExtMeasC): [description]
         """
-        stmt = insert(DrvDbExtendedMeasureC).values(Timestamp= datetime.now(), MeasID= self.meas_id,
-                                                     **ext_meas.__dict__)
-        self.__cache_db.execute(stmt)
+        if ext_meas__dict__.get("hs_voltage") is not None:
+            stmt = insert(DrvDbCacheExtendedMeasureC).values(Timestamp= datetime.now(),
+                                    MeasID= self.meas_id, Value= ext_meas.hs_voltage, MeasType= 0)
+            self.__cache_db.execute(stmt)
 
     def commit_changes(self):
         """Commit changes made to the cache database.
@@ -222,5 +227,5 @@ class MidStrFacadeC:
         """Close the connection to the both databases.
         """
         # Closing connection to databases
-        self.__cache_db.closeConnection()
-        self.__master_db.closeConnection()
+        self.__cache_db.close()
+        self.__master_db.close()

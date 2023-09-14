@@ -42,7 +42,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def __init__(self, name: str, working_flag : Event, shared_gen_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
                  shared_ext_meas: SysShdSharedObjC, shared_status: SysShdSharedObjC,
                  str_reqs: SysShdChanC, str_data: SysShdChanC, str_alarms: SysShdChanC,
-                 cycle_period: int, cycler_station: int,
+                 cycle_period: int, cycler_station: int, master_file: str, cache_file: str,
                  str_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the MID_STR thread used as database proxy.
@@ -57,7 +57,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.cycle_period = cycle_period
         self.working_flag = working_flag
         self.cycler_station = cycler_station
-        self.db_iface = MidStrFacadeC(master_file= './config.yaml', cache_file= './cache.yaml')
+        self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file)
         self.str_reqs: SysShdChanC = str_reqs
         self.str_data: SysShdChanC = str_data
         self.str_alarms: SysShdChanC = str_alarms
