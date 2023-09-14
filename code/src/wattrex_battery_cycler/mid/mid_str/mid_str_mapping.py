@@ -42,6 +42,17 @@ mapping_status: Dict[str, str] = {
     "date": 'Date'
 }
 
+map_cs_db: Dict[str, str] = {
+    'Name': 'name',
+    'CSID': 'cycler_id'}
+    # 'Deprecated': 'deprecated'}
+
+map_dev_db: Dict[str, str] = {
+    'Manufacturer': 'manufacturer',
+    'DeviceType': 'device_type',
+    'UdevName': 'iface_name',
+    'SN': 'serial_number'}
+
 #######################             CLASSES              #######################
 def remap_dict(data: dict, mapping: dict) -> dict:
     """Change the key names of the data dictionary with the names of the mapping dictionary.
