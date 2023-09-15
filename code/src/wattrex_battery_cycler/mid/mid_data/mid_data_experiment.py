@@ -147,15 +147,15 @@ class MidDataProfileC:
     '''
     The class of MidDataProfileC is a class that is used for the MIDDataProfileC .
     '''
-    def __init__(self, name : str, power_range : MidDataPwrRangeC,
-            instructions : List[MidDataInstructionC]):
+    def __init__(self, name : str|None = None, power_range : MidDataPwrRangeC|None = None,
+            instructions : List[MidDataInstructionC]|None = None):
         '''
         Initialize the class .
 
         '''
-        self.name : str = name
-        self.instructions : List[MidDataInstructionC] = instructions
-        self.range : MidDataPwrRangeC = power_range
+        self.name : str|None = name
+        self.instructions : List[MidDataInstructionC]|None = instructions
+        self.range : MidDataPwrRangeC|None = power_range
 
 
 class MidDataAlarmC:
@@ -163,7 +163,8 @@ class MidDataAlarmC:
     Alarm triggered to notify that an unexpected event has occurred
     during cycler operation.
     """
-    def __init__(self, timestamp : datetime, code : int, value : int):
+    def __init__(self, timestamp : datetime|None = None, code : int|None = None,
+                value : int|None = None):
         '''
         Initialize Alarm instance with the raising timestamp and with the
         associated alarm code. It also contains the value that triggered the alarm.
@@ -173,6 +174,6 @@ class MidDataAlarmC:
             code (int): Code of the alarm
             value (int): Value that triggered the alarm
         '''
-        self.timestamp : datetime = timestamp
-        self.code : int = code
-        self.value : int = value
+        self.timestamp : datetime|None = timestamp
+        self.code : int|None = code
+        self.value : int|None = value
