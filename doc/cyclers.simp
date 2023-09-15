@@ -29,7 +29,7 @@
       </counter>
       <counter>
         <item-type type-id="class" type="Class" />
-        <value>78</value>
+        <value>79</value>
       </counter>
       <counter>
         <item-type type-id="data-type" type="Data Type" />
@@ -131,11 +131,11 @@
       </counter>
       <counter>
         <item-type type-id="comment" type="Comment" />
-        <value>41</value>
+        <value>42</value>
       </counter>
       <counter>
         <item-type type-id="comment-connector" type="Comment Connector" />
-        <value>37</value>
+        <value>38</value>
       </counter>
       <counter>
         <item-type type-id="erd-relationship" type="Relationship" />
@@ -163,11 +163,11 @@
       </counter>
       <counter>
         <item-type type-id="relationship" type="Association" />
-        <value>264</value>
+        <value>265</value>
       </counter>
       <counter>
         <item-type type-id="property" type="Property" />
-        <value>1048</value>
+        <value>1059</value>
       </counter>
       <counter>
         <item-type type-id="drawing-polygon-path" type="Polygon Path" />
@@ -175,7 +175,7 @@
       </counter>
       <counter>
         <item-type type-id="class" type="Class" />
-        <value>228</value>
+        <value>229</value>
       </counter>
       <counter>
         <item-type type-id="data-type" type="Data Type" />
@@ -391,11 +391,11 @@
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.EnumerationItemField</type>
-        <value>97</value>
+        <value>99</value>
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.OperationField</type>
-        <value>209</value>
+        <value>212</value>
       </counter>
     </fields>
   </counters>
@@ -547,6 +547,7 @@
         <type id="Class:dida2d7c220d204c02accd269d976b6c3a8518" name="DrvRsModeE" class-ref="dida2d7c220d204c02accd269d976b6c3a8518" />
         <type id="Class:c734ea04ee5141c6b507430b74975f40" name="Master DB" class-ref="c734ea04ee5141c6b507430b74975f40" />
         <type id="Serial" name="Serial" />
+        <type id="Class:2fedd3143c09449d996547439563132d" name="MidDataLinkC" class-ref="2fedd3143c09449d996547439563132d" />
         <type id="Class:di02d0126d4e904b16bafdb3ea4be5c9eb7113" name="DrvScpiMessageC" class-ref="di02d0126d4e904b16bafdb3ea4be5c9eb7113" />
         <type id="Class:da616008aa9a4ac2896e159a0fb9f439" name="DrvEpcDataC" class-ref="da616008aa9a4ac2896e159a0fb9f439" />
         <type id="Class:dif83ef4bb323c415abee6a7aae24f99e69092" name="MidDataAlarmC" class-ref="dif83ef4bb323c415abee6a7aae24f99e69092" />
@@ -652,6 +653,33 @@
     </item>
     <item id="59be1f7ffed64c9fa1b809526ed7bf1d" cid="ELEM010" type="parameter" name="production" creation-date="08/28/2023 11:53:04" visibility="undefined">
       <parameter />
+    </item>
+    <item id="cd5b53cdd0d14d3484285942593cc9f1" cid="PROP1057" type="property" owner="440c779db2a948e99fd64702ec86d077" creation-date="09/15/2023 08:54:48" visibility="private">
+      <structural-feature type="MidDataLinkC" type-id="Class:2fedd3143c09449d996547439563132d" />
+    </item>
+    <item id="94115d4db1014ad0a7436dcce20869b2" cid="PROP828" type="property" name="capacity" owner="2ec4ef5b1f93432b9ce58d0e434da4c5" creation-date="08/01/2023 12:14:57" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
     </item>
     <item id="2bad4463d4d6489581c9164998d65b6a" cid="PROP364" type="property" owner="ed4b443fce33497bb143209da3eda339" creation-date="07/11/2023 13:22:31" visibility="undefined">
       <structural-feature type="DrvBkPropertiesC" type-id="Class:c85cff38728f4541b229235ee8f82082" />
@@ -816,6 +844,30 @@
     </item>
     <item id="e06fbca38aff452f8ca3a35bf5df4d2c" cid="GROUP029" type="group" name="Group" creation-date="07/17/2023 15:05:19" />
     <item id="9c73ba22ceef44de8e983147a55707eb" cid="PROP265" type="property" owner="69d1270176ef4ba9af0a70e58b4f6fd5" creation-date="07/10/2023 12:50:27" visibility="undefined" />
+    <item id="2ea916c258134bee83c8cd49ecd259fd" cid="PROP1050" type="property" name="__shd_gen_meas" owner="abb9d0f3eed74dfd8fbe58140d38e001" creation-date="09/14/2023 14:48:36" visibility="private">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+    </item>
     <item id="di052a4f18d1a44454bbc509e18f0cd2f08552" cid="ELEM180" type="text" name="Text1" creation-date="07/04/2023 15:19:04">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#2A2A2A" font="Segoe UI;11.25;B" />
@@ -1167,6 +1219,9 @@
     </item>
     <item id="759f7cab75c14095a391df78c865a1f1" cid="PROP473" type="property" owner="1d4e4081e5464bddb189461b2f9a795c" creation-date="07/17/2023 09:31:45" visibility="private">
       <structural-feature type="Cache DB" type-id="Class:di21e9a147e2d84a71a400e07708d7a2f09831" />
+    </item>
+    <item id="5f98c5b5ace240fe98dee480b79e62c0" cid="PROP1058" type="property" owner="440c779db2a948e99fd64702ec86d077" creation-date="09/15/2023 08:54:48" visibility="private">
+      <structural-feature type="MidDataDeviceC" type-id="Class:2735a60811c246f4b641bc0e913434ae" />
     </item>
     <item id="eb8681a7193447b5891ecd95b048ebd1" cid="PROP179" type="property" owner="0b504e8c851c41128a8baa452bd882db" creation-date="07/10/2023 12:08:15" visibility="private">
       <structural-feature type="DrvRsDataC" type-id="Class:5e5acadfb9b04572bd9c8a8fd676fb99" />
@@ -2385,35 +2440,10 @@
     <item id="8a151dc8c9ae49d39d54997918255dcd" cid="ELEM003" type="parameter" name="staging" creation-date="08/28/2023 11:53:03" visibility="undefined">
       <parameter />
     </item>
-    <item id="71e549cd67ac44f99a9d32a087073f6d" cid="PROP825" type="property" name="volt_max" owner="ee8706f0cdfb4277bd1a5b3f7b71acdf" creation-date="08/01/2023 12:13:52" visibility="public">
-      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
-        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
-        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
-        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
-        <background type="solid" colors="#F2F2F2,#F2F2F2" />
-        <border color="#555555" width="2" />
-        <label-connector color="#80000000" dash-style="Dash" />
-        <alternate-styles>
-          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
-            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
-            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
-            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
-            <background type="solid" colors="#203D85,#203D85" />
-            <border color="#203D85" width="2" />
-            <label-connector color="#80000000" dash-style="Dash" />
-          </alternate-style>
-        </alternate-styles>
-      </style>
-      <structural-feature type="int" type-id="Python.int" />
-    </item>
     <item id="82d2bdb8db604fa4ad9b82deaa61a806" cid="ELEM148" type="general-transition" creation-date="08/28/2023 12:51:30" from="cae4730f7a964963b90fc6e7334f9c8e" to="7d75ef201e114e11a7bfeeb2c9b4159e" visibility="package">
       <transition guard="" behaviourExpression="" />
     </item>
-    <item id="04195fbe7c484308a41d4cf3199c4359" cid="PROP429" type="property" name="exp_+ id" owner="810c85d8b38345d5aa14da3d0319735c" creation-date="07/13/2023 09:47:44" visibility="undefined">
+    <item id="04195fbe7c484308a41d4cf3199c4359" cid="PROP429" type="property" name="exp_+ id" owner="810c85d8b38345d5aa14da3d0319735c" creation-date="07/13/2023 09:47:44" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -2511,6 +2541,30 @@
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
+    <item id="1589a07f22ab4f5f96b7051a1f18dc80" cid="PROP1048" type="property" name="__shd_gen_meas" owner="abb9d0f3eed74dfd8fbe58140d38e001" creation-date="09/14/2023 14:48:21" visibility="private">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+    </item>
     <item id="46b31fdac93c4cfcb7c015a86de518b3" cid="RQI011" type="uml-required-interface-end" style-class="Flat Yellow" owner="cbf986aa991342b28adbb83ac31a0ffe" creation-date="08/30/2023 11:56:26">
       <style class="Flat Yellow" />
       <required-interface interface-ref="c69fa1b414b049448593664a6af962fe" />
@@ -2596,6 +2650,9 @@
         <text>I</text>
       </drawing>
       <drawing-shape type="Rectangle" />
+    </item>
+    <item id="c19b1671ab1942d993711530a426d8a2" cid="CMT041" type="comment" name="Comment" owner="819629b727884935a142760424ff1214" creation-date="09/15/2023 08:53:10">
+      <comment>Contains configuration of the devices interfaces. Ex: baudrate, parity, timeout, etc.</comment>
     </item>
     <item id="f5cfcc305bfc4f969338caa1627be398" cid="PROP971" type="property" name="__pushed_alarms" owner="di3f32757054ec473fb923858e62d4d3c34801" creation-date="09/08/2023 12:43:36" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -2821,9 +2878,6 @@
       </drawing>
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="ec7bc3bcda2f4662a67a79fab72f06b2" cid="ELEM108" type="universal-connector" name="100us" creation-date="06/30/2023 13:23:19" from="di0b6d2d36ba244d7788b06822fe3597a41757" to="di15bf75cd81a24db8b03d86b568a575da1851">
-      <connector />
-    </item>
     <item id="be6cdf6a158b43679bcb7994773ead9b" cid="PROP734" type="property" name="manufacturer" owner="2735a60811c246f4b641bc0e913434ae" creation-date="07/17/2023 12:53:01" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -2848,6 +2902,9 @@
         </alternate-styles>
       </style>
       <structural-feature type="str" type-id="Python.str" />
+    </item>
+    <item id="ec7bc3bcda2f4662a67a79fab72f06b2" cid="ELEM108" type="universal-connector" name="100us" creation-date="06/30/2023 13:23:19" from="di0b6d2d36ba244d7788b06822fe3597a41757" to="di15bf75cd81a24db8b03d86b568a575da1851">
+      <connector />
     </item>
     <item id="419caf045eb644e6bd66e19b1974e461" cid="PROP363" type="property" name="__properties" owner="di981e1e5fd82846428d6da112ab4c531e7850" creation-date="07/11/2023 12:42:34" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -2885,6 +2942,31 @@
     <item id="3473c5abb9274717806ec4394af1e772" cid="ELEM322" type="parameter" name="development" creation-date="08/30/2023 13:47:20" visibility="undefined">
       <parameter />
     </item>
+    <item id="f3fba770882c46e5bba95a888fe6db68" cid="PROP756" type="property" name="mapping_names" owner="2735a60811c246f4b641bc0e913434ae" creation-date="07/17/2023 13:29:09" visibility="public">
+      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="dict" type-id="Python.dict" />
+    </item>
     <item id="2bada1b6643f45d8837e22a18d0bc96c" cid="PROP368" type="property" name="__properties" owner="6bffc31616834617a816b51af2a23838" creation-date="07/11/2023 13:23:54" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -2910,31 +2992,6 @@
       </style>
       <structural-feature type="DrvBkPropertiesC" type-id="Class:c85cff38728f4541b229235ee8f82082" />
       <property redefines="419caf045eb644e6bd66e19b1974e461" />
-    </item>
-    <item id="f3fba770882c46e5bba95a888fe6db68" cid="PROP756" type="property" name="mapping_names" owner="2735a60811c246f4b641bc0e913434ae" creation-date="07/17/2023 13:29:09" visibility="public">
-      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
-        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
-        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
-        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
-        <background type="solid" colors="#F2F2F2,#F2F2F2" />
-        <border color="#555555" width="2" />
-        <label-connector color="#80000000" dash-style="Dash" />
-        <alternate-styles>
-          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
-            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
-            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
-            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
-            <background type="solid" colors="#203D85,#203D85" />
-            <border color="#203D85" width="2" />
-            <label-connector color="#80000000" dash-style="Dash" />
-          </alternate-style>
-        </alternate-styles>
-      </style>
-      <structural-feature type="dict" type-id="Python.dict" />
     </item>
     <item id="dif150fe4bf61b4d64bfd2f23fa13739893335" cid="ELEM235" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
@@ -2982,6 +3039,7 @@
     <item id="08510133d5b7426685668fec5286cef9" cid="PROP002" type="property" owner="7dde15b91b4d498d9adf6e975dad53d7" creation-date="07/04/2023 15:27:02" visibility="private">
       <structural-feature type="drv_scpi" type-id="Class:di180be9ab6da8448d86990a0be157a4a81531" />
     </item>
+    <item id="difc07ee8ffcde4f7a8d2fd9b94e962a2d7496" cid="CN037" type="comment-connector" creation-date="09/15/2023 08:53:10" from="c19b1671ab1942d993711530a426d8a2" to="2fedd3143c09449d996547439563132d" />
     <item id="1f4040c3e00441cda6f93e5a74c9004f" cid="PROP957" type="property" name="local_gen_meas" owner="3f0f0f291f0e4be99c6f0f0baa47954e" creation-date="09/07/2023 09:33:02" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -3724,31 +3782,6 @@
       </style>
       <structural-feature type="str" type-id="Python.str" />
       <property default-value="None" />
-    </item>
-    <item id="b2907e5971e844a6ba4fc8a97308925a" cid="PROP826" type="property" name="curr_min" owner="ee8706f0cdfb4277bd1a5b3f7b71acdf" creation-date="08/01/2023 12:13:59" visibility="public">
-      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
-        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
-        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
-        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
-        <background type="solid" colors="#F2F2F2,#F2F2F2" />
-        <border color="#555555" width="2" />
-        <label-connector color="#80000000" dash-style="Dash" />
-        <alternate-styles>
-          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
-            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
-            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
-            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
-            <background type="solid" colors="#203D85,#203D85" />
-            <border color="#203D85" width="2" />
-            <label-connector color="#80000000" dash-style="Dash" />
-          </alternate-style>
-        </alternate-styles>
-      </style>
-      <structural-feature type="int" type-id="Python.int" />
     </item>
     <item id="82e955cc0eda4b3db78dca05bbf1294c" cid="IFC018" type="uml-interface" creation-date="08/30/2023 11:44:56">
       <interface />
@@ -4780,6 +4813,30 @@
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
+    <item id="53a5022c2eac42eca1482c56621172be" cid="PROP1049" type="property" name="__shd_ext_meas" owner="abb9d0f3eed74dfd8fbe58140d38e001" creation-date="09/14/2023 14:48:24" visibility="private">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+    </item>
     <item id="di2870dfa6c3af4452b5daeb5f6f612b536549" cid="ELEM066" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
@@ -5038,31 +5095,6 @@
     <item id="di96bdbd0a08444f31a4da6416bbd2768a5706" cid="ELEM170" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
-    </item>
-    <item id="e10790e6db034627a060478ec43ca3c0" cid="PROP827" type="property" name="curr_max" owner="ee8706f0cdfb4277bd1a5b3f7b71acdf" creation-date="08/01/2023 12:14:02" visibility="public">
-      <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
-        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
-        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
-        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
-        <background type="solid" colors="#F2F2F2,#F2F2F2" />
-        <border color="#555555" width="2" />
-        <label-connector color="#80000000" dash-style="Dash" />
-        <alternate-styles>
-          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
-            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
-            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
-            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
-            <background type="solid" colors="#203D85,#203D85" />
-            <border color="#203D85" width="2" />
-            <label-connector color="#80000000" dash-style="Dash" />
-          </alternate-style>
-        </alternate-styles>
-      </style>
-      <structural-feature type="int" type-id="Python.int" />
     </item>
     <item id="die42114168af14758b21a10249246f7603088" cid="PROP277" type="property" name="mode" owner="di2da58ea8b94c43ab99727451727631633088" creation-date="07/05/2023 14:40:03" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -8315,7 +8347,7 @@ Qué se hace con el código de error?</comment>
       <interaction-operand guard="Cycler experiment data storage" />
     </item>
     <item id="71dab51962e34c6884d1d72a854ee3b7" cid="PROP463" type="property" owner="5202192911e6486491fb46319432af21" creation-date="07/13/2023 15:02:15" visibility="private" />
-    <item id="722d9d08155c49f49e23614f71f7e412" cid="PROP824" type="property" name="volt_min" owner="ee8706f0cdfb4277bd1a5b3f7b71acdf" creation-date="08/01/2023 12:13:42" visibility="public">
+    <item id="722d9d08155c49f49e23614f71f7e412" cid="PROP824" type="property" name="pwr_range" owner="ee8706f0cdfb4277bd1a5b3f7b71acdf" creation-date="08/01/2023 12:13:42" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -8338,7 +8370,7 @@ Qué se hace con el código de error?</comment>
           </alternate-style>
         </alternate-styles>
       </style>
-      <structural-feature type="int" type-id="Python.int" />
+      <structural-feature type="MidDataPwrRangeC" type-id="Class:di70ca4bf9f69841bd954db888945ebb578407" />
     </item>
     <item id="di945da1606b9748a9b12b16664481ca8d9851" cid="ELEM121" type="drawing-shape" name="M" creation-date="06/14/2023 12:39:47">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -20842,7 +20874,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="91,310" zoom="1.2">
+              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-225,-200" zoom="0.4">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -20854,7 +20886,7 @@ Qué se hace con el código de error?</comment>
                   </authors>
                   <description />
                   <creation-date>07/05/2023 13:13:34</creation-date>
-                  <change-date>09/11/2023 14:08:59</change-date>
+                  <change-date>09/15/2023 08:54:48</change-date>
                   <revision-count>0</revision-count>
                   <version />
                 </meta>
@@ -20921,6 +20953,13 @@ Qué se hace con el código de error?</comment>
                       <end-role id="umlar-443e1996-5220-4876-90a9-3ed070bfe4ef" name="" navigability="yes" association-type="association" visibility="private" attribute-ref="aa466bc4bb4784253a8a716acc5a7cb45510" property-ref="b72ca94c545a4cb68ec69dd3d008d169" />
                     </relation>
                   </item>
+                  <item id="440c779db2a948e99fd64702ec86d077" cid="REL264" type="relationship" owner="819629b727884935a142760424ff1214" creation-date="09/15/2023 08:54:48" from="2fedd3143c09449d996547439563132d" to="2735a60811c246f4b641bc0e913434ae" visibility="package">
+                    <owned-items />
+                    <relation from="2fedd3143c09449d996547439563132d" to="2735a60811c246f4b641bc0e913434ae" derived="false">
+                      <start-role id="umlar-36d2d8f8-0508-40f4-9208-2454859410c8" name="" navigability="" association-type="association" visibility="private" property-ref="cd5b53cdd0d14d3484285942593cc9f1" />
+                      <end-role id="umlar-a6a9fee3-7ab8-4b2b-aa1a-75531a204881" name="" navigability="yes" association-type="association" visibility="private" property-ref="5f98c5b5ace240fe98dee480b79e62c0" />
+                    </relation>
+                  </item>
                   <item id="af9c9a9363a247cb91c55b3ce6f6a760" cid="E026" type="enumeration" name="DrvPwrStatusE" creation-date="07/11/2023 15:16:57" visibility="undefined">
                     <stereotypes>
                       <stereotype name="enumeration" />
@@ -20961,7 +21000,6 @@ Qué se hace con el código de error?</comment>
                   <item id="e8a435041f2b4afc813d074159e7bac1" cid="PROP419" type="property" name="curr_min" owner="di70ca4bf9f69841bd954db888945ebb578407" creation-date="07/13/2023 09:28:56" visibility="public">
                     <structural-feature type="int" type-id="Python.int" />
                   </item>
-                  <item id="94115d4db1014ad0a7436dcce20869b2" cid="PROP828" type="property" name="capacity" owner="2ec4ef5b1f93432b9ce58d0e434da4c5" creation-date="08/01/2023 12:14:57" visibility="public" />
                   <item id="79bcbe8df74340f5a6a5e37c79608574" cid="PKG083" type="package" name="mid_data_battery" creation-date="08/01/2023 12:06:02" visibility="undefined">
                     <owned-items />
                   </item>
@@ -21008,17 +21046,6 @@ Qué se hace con el código de error?</comment>
                             </style>
                           </default>
                           <styles />
-                          <definition>
-                            <sections>
-                              <section name="">
-                                <default-page>
-                                  <page size="224,316.8" header-offset="15" footer-offset="15" unit="mm">
-                                    <margins left="20" right="20" top="20" bottom="20" />
-                                  </page>
-                                </default-page>
-                              </section>
-                            </sections>
-                          </definition>
                           <content>
                             <paragraph>
                               <style numbering-type="None">
@@ -21061,10 +21088,13 @@ Qué se hace con el código de error?</comment>
                       <enumeration-item id="aaebc794e3a864e1bb7ed81d788f7131a651" cid="ENI069" name="BISOURCE" creation-date="07/13/2023 13:51:49" value="BiSource" />
                       <enumeration-item id="aeeaa834cfebe4e0fb7b8396668d0ccc5776" cid="ENI070" name="LOAD" creation-date="07/13/2023 13:51:53" value="Load" />
                       <enumeration-item id="a13f356d3e5f84478adc49dcaacb8e967768" cid="ENI071" name="METER" creation-date="07/13/2023 13:51:56" value="Meter" />
+                      <enumeration-item id="aeeb4a7fe6f74431a990a3abe582bc9da823" cid="ENI097" name="EPC" creation-date="09/15/2023 08:45:17" value="Epc" />
+                      <enumeration-item id="a8ee70b3b4edc4d649e7ceb68672cb9a4827" cid="ENI098" name="SOURCE_LOAD" creation-date="09/15/2023 08:45:17" value="Source-Load" />
                     </enumeration-items>
                   </item>
                   <item id="61c9ebb1964b4c4dba90840e930e2a13" cid="PKG084" type="package" name="mid_data_common" creation-date="08/17/2023 09:29:22" visibility="undefined" />
                   <item id="41cfd1a4ee6c4cc0b1031c4c2ccbf11b" cid="PROP1002" type="property" name="source" owner="di4071f10d508f446e98b101377f5fe8f56084" creation-date="09/11/2023 08:34:49" visibility="public" />
+                  <item id="2fedd3143c09449d996547439563132d" cid="C228" type="class" name="MidDataLinkC" owner="819629b727884935a142760424ff1214" creation-date="09/15/2023 08:48:00" />
                   <item id="dic8b6ea3e35bb4a869b26eb86954983ef9849" cid="C019" type="class" name="MidDataExtMeasC" style-class="Flat Yellow" owner="di00f88dfe437144ac9a3bd7e79794aaa79501" creation-date="07/06/2023 11:53:28" visibility="undefined">
                     <style class="Flat Yellow" />
                     <source-codes>
@@ -21178,10 +21208,15 @@ Qué se hace con el código de error?</comment>
                       <attribute id="a45a32bfada024f15ae039577c318a572676" cid="PROP737" name="device_type" creation-date="07/17/2023 13:05:06" property-ref="43a6949dc55c4d99bf9933996e317c2b" />
                       <attribute id="a9cc0f55f987e41d190e4e67abfd49f2976" cid="PROP738" name="iface_name" creation-date="07/17/2023 13:05:38" property-ref="5fbccb187a694f51afd947becfcdafd6" />
                       <attribute id="a315619581ffa40178821b4e17fcf2ca8870" cid="PROP756" name="mapping_names" creation-date="07/17/2023 13:29:09" property-ref="f3fba770882c46e5bba95a888fe6db68" />
+                      <attribute id="a9bdc1ed6272f4cfa9cd4b554223723a5264" cid="PROP1056" name="linkConf" creation-date="09/15/2023 08:54:32" property-ref="a17e97159c7c4fe4aefbb6d5e81ed5e2" />
                     </attributes>
                     <source-codes>
                       <source-code language="ActionScript" />
                     </source-codes>
+                  </item>
+                  <item id="a17e97159c7c4fe4aefbb6d5e81ed5e2" cid="PROP1056" type="property" name="linkConf" owner="2735a60811c246f4b641bc0e913434ae" creation-date="09/15/2023 08:54:32" visibility="public">
+                    <structural-feature type="MidDataLinkC" type-id="Class:2fedd3143c09449d996547439563132d" />
+                    <property />
                   </item>
                   <item id="dib91973ad3667430b9ebdf5a5fb8ab46e4013" cid="PROP739" type="property" name="manufacturer" creation-date="07/17/2023 12:53:01" visibility="public">
                     <structural-feature type="str" type-id="Python.str" />
@@ -21197,6 +21232,9 @@ Qué se hace con el código de error?</comment>
                     <attributes>
                       <attribute id="a3b55c36cace241d5ad5f072047e35c98556" cid="PROP828" name="capacity" creation-date="08/01/2023 12:14:57" property-ref="94115d4db1014ad0a7436dcce20869b2" />
                     </attributes>
+                    <source-codes>
+                      <source-code language="ActionScript" />
+                    </source-codes>
                   </item>
                   <item id="a4e0472571d1454caba8d288bacbc48f" cid="REL100" type="relationship" owner="fa1359913c3d45cabafb2f468593a8f6" creation-date="07/11/2023 15:31:13" from="di70ca4bf9f69841bd954db888945ebb578407" to="062db154a441474690c6b0a1f57b74c1" visibility="package">
                     <owned-items />
@@ -21284,10 +21322,7 @@ Qué se hace con el código de error?</comment>
                     <attributes>
                       <attribute id="a5b4c9d049de9417c9f102459e310caf1548" cid="PROP822" name="name" creation-date="08/01/2023 12:13:30" property-ref="c3754572d03f443f8d53ca9f80f008c3" />
                       <attribute id="af66efa8280d546ca977a47c98f7d3b52966" cid="PROP823" name="model" creation-date="08/01/2023 12:13:37" property-ref="b958f48944d443e2b5ae08f745739090" />
-                      <attribute id="a065d787a9e6f442f9f2348ef00ce7bf4581" cid="PROP824" name="volt_min" creation-date="08/01/2023 12:13:42" property-ref="722d9d08155c49f49e23614f71f7e412" />
-                      <attribute id="a4b62f39546654134b7b3304ff367c59d960" cid="PROP825" name="volt_max" creation-date="08/01/2023 12:13:52" property-ref="71e549cd67ac44f99a9d32a087073f6d" />
-                      <attribute id="a471a17a47a4040c7865c21dd9066088f578" cid="PROP826" name="curr_min" creation-date="08/01/2023 12:13:59" property-ref="b2907e5971e844a6ba4fc8a97308925a" />
-                      <attribute id="abcb1c459ebfd4e97afb1de1326d73571561" cid="PROP827" name="curr_max" creation-date="08/01/2023 12:14:02" property-ref="e10790e6db034627a060478ec43ca3c0" />
+                      <attribute id="a065d787a9e6f442f9f2348ef00ce7bf4581" cid="PROP824" name="pwr_range" creation-date="08/01/2023 12:13:42" property-ref="722d9d08155c49f49e23614f71f7e412" />
                     </attributes>
                     <source-codes>
                       <source-code language="ActionScript" />
@@ -21493,23 +21528,23 @@ Qué se hace con el código de error?</comment>
                 </abstract-items>
                 <layer id="5eed25200c16499a92fa9272ef63d257" name="Default" visible="true" enabled="true" locked="false">
                   <item id="819629b727884935a142760424ff1214" iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/17/2023 13:31:31" order-index="17" type="entity">
-                    <layout ax="110" ay="-140" awidth="740" aheight="890" x="110" y="-140" width="740" height="890" expanded="110,-140,740,890" collapsed="0,0,0,0" rotation-center="-87,-193" />
+                    <layout ax="110" ay="-140" awidth="710" aheight="980" x="110" y="-140" width="710" height="980" expanded="110,-140,710,980" collapsed="0,0,0,0" rotation-center="-72,-238" />
                     <package name-in-body="false" />
                   </item>
                   <item id="dic4db15b003a148eaa102155ce35cf0985698" iid="691f6eaa83b54ab39a3e17d4ec1fc616" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/11/2023 15:16:57" order-index="3" type="entity">
-                    <layout ax="130" ay="210" awidth="210" aheight="121" x="-110" y="1210" width="210" height="120" rotation-center="14,0.5" />
+                    <layout ax="140" ay="210" awidth="210" aheight="121" x="-100" y="1210" width="210" height="120" rotation-center="14,0.5" />
                   </item>
                   <item id="517330f7bb79441da84d9a7585e57f9e" iid="abb68528cd5741b0a236056c4f979328" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/11/2023 15:17:15" order-index="4" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="239" y1="31" x2="235" y2="210" start-border-pos="0.626322746276855" end-border-pos="0.125" start-local-pos="93.5" end-local-pos="105" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="244" y1="31" x2="245" y2="210" start-border-pos="0.626322746276855" end-border-pos="0.125" start-local-pos="93.5" end-local-pos="105" name-position="0,20">
                       <points>
-                        <point x="239" y="31" />
-                        <point x="235" y="210" />
+                        <point x="244" y="31" />
+                        <point x="245" y="210" />
                       </points>
                     </layout>
                     <relation from="ffc1f665ed3b457bb4539c7af334cb8f" from-iid="d13dbc0ad4da403c9c18249119dcbe19" to="dic4db15b003a148eaa102155ce35cf0985698" to-iid="691f6eaa83b54ab39a3e17d4ec1fc616" />
                   </item>
                   <item id="ffc1f665ed3b457bb4539c7af334cb8f" iid="d13dbc0ad4da403c9c18249119dcbe19" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/05/2023 13:14:30" order-index="0" type="entity">
-                    <layout ax="140" ay="-90" awidth="200" aheight="121" x="-100" y="910" width="200" height="120" rotation-center="-29.5,10.5" />
+                    <layout ax="145" ay="-90" awidth="200" aheight="121" x="-90" y="910" width="200" height="120" rotation-center="-29.5,10.5" />
                   </item>
                   <item id="di04826126ae7342d197787703ead1ba195698" iid="ed574ba32a324027815ee931b514b9e5" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" show-fields="true" creation-date="07/11/2023 15:18:17" order-index="5" type="entity">
                     <layout ax="512.6666" ay="290" awidth="188" aheight="35" x="1688.667" y="1260" width="140" height="160" />
@@ -21531,84 +21566,84 @@ Qué se hace con el código de error?</comment>
                     <class />
                   </item>
                   <item id="b4253042c32c4ea3b10d838d809028b1" iid="ec755d5e989745b38011ed5faa24c8dc" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/17/2023 13:07:14" order-index="16" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="446" y1="480" x2="560" y2="516" start-border-pos="0.375" end-border-pos="0.832614942528736" start-local-pos="70" end-local-pos="116" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="426" y1="489" x2="560" y2="516" start-border-pos="0.375" end-border-pos="0.854375" start-local-pos="70" end-local-pos="116" name-position="0,20">
                       <points>
-                        <point x="446" y="480" />
+                        <point x="426" y="489" />
                         <point x="560" y="516" />
                       </points>
                     </layout>
                     <relation from="di6cbbb7c79e704a6bb5b056ff9b06f96a6257" from-iid="6cd2a145dd8549e4b9872f6b66c26461" to="2735a60811c246f4b641bc0e913434ae" to-iid="a1950858d9fd4f1bb6e90baadea29347" to-field="a45a32bfada024f15ae039577c318a572676" />
                   </item>
                   <item id="di6712a74d0d4c42ffa2ab3632bc23dfc21416" iid="f9d76306e9ba4f73ae40334e07e08923" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" show-fields="true" creation-date="07/17/2023 12:52:53" order-index="14" type="entity">
-                    <layout ax="160" ay="610" awidth="230" aheight="117" x="160" y="610" width="230" height="167" rotation-center="-47,6" />
+                    <layout ax="140" ay="600" awidth="230" aheight="117" x="140" y="600" width="230" height="167" rotation-center="-47,6" />
                     <classifier />
                     <class />
                   </item>
                   <item id="di6cbbb7c79e704a6bb5b056ff9b06f96a6257" iid="6cd2a145dd8549e4b9872f6b66c26461" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="07/13/2023 13:51:38" order-index="9" type="entity">
-                    <layout ax="160" ay="410" awidth="286" aheight="140" x="1340" y="1385" width="286" height="140" rotation-center="-73,10" />
+                    <layout ax="140" ay="400" awidth="286" aheight="178" x="1320" y="1375" width="286" height="140" rotation-center="-73,10" />
                   </item>
                   <item id="2735a60811c246f4b641bc0e913434ae" iid="a1950858d9fd4f1bb6e90baadea29347" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" show-fields="true" creation-date="07/17/2023 12:52:53" order-index="14" type="entity">
-                    <layout ax="560" ay="400" awidth="230" aheight="174" x="1743" y="400" width="230" height="167" rotation-center="-47,6" />
+                    <layout ax="560" ay="400" awidth="230" aheight="200" x="1743" y="400" width="230" height="200" rotation-center="-47,-7" />
                     <classifier />
                     <class />
                   </item>
                   <item id="fa1359913c3d45cabafb2f468593a8f6" iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/17/2023 13:32:51" order-index="18" type="entity">
-                    <layout ax="920" ay="-140" awidth="1137" aheight="740" x="920" y="-140" width="1137" height="740" expanded="920,-140,1137,740" collapsed="0,0,0,0" rotation-center="105.6665,-53.5" />
+                    <layout ax="920" ay="-140" awidth="1170" aheight="740" x="920" y="-140" width="1170" height="740" expanded="920,-140,1170,740" collapsed="0,0,0,0" rotation-center="89.1665,-53.5" />
                     <package name-in-body="false" />
                   </item>
                   <item id="79bcbe8df74340f5a6a5e37c79608574" iid="027f367739b84c5d966b5ea62c88d9b1" creation-date="08/01/2023 12:06:02" order-index="26" type="entity">
-                    <layout ax="920" ay="670" awidth="472" aheight="524" x="920" y="670" width="448" height="530" expanded="110,960,472,524" collapsed="0,0,0,0" rotation-center="30,-160" />
+                    <layout ax="920" ay="670" awidth="524" aheight="402" x="920" y="670" width="570" height="530" expanded="920,670,524,402" collapsed="0,0,0,0" rotation-center="-19,-160" />
                     <package name-in-body="false" />
                   </item>
                   <item id="ee8706f0cdfb4277bd1a5b3f7b71acdf" iid="92e351752c71452f8bec219e2cf96299" container="79bcbe8df74340f5a6a5e37c79608574" container-iid="027f367739b84c5d966b5ea62c88d9b1" show-fields="true" creation-date="08/01/2023 12:12:28" order-index="27" type="entity">
-                    <layout ax="1110" ay="1010" awidth="200" aheight="160" x="1000" y="1300" width="200" height="160" rotation-center="-30,0" />
+                    <layout ax="1070" ay="950" awidth="210" aheight="98" x="1070" y="950" width="210" height="160" rotation-center="-35,0" />
                     <classifier />
                     <class />
                   </item>
                   <item id="di77395b1839df45a1a3f2e88a0a23322e7457" iid="155574d05d6f4746b392d415c85eb5be" container="79bcbe8df74340f5a6a5e37c79608574" container-iid="027f367739b84c5d966b5ea62c88d9b1" show-fields="true" creation-date="08/01/2023 12:14:16" order-index="28" type="entity">
-                    <layout ax="1200" ay="730" awidth="168" aheight="193" x="1900" y="960" width="140" height="160" />
+                    <layout ax="1200" ay="740" awidth="220" aheight="136" x="1200" y="740" width="220" height="160" rotation-center="-26,0" />
                     <classifier />
                     <class />
                   </item>
                   <item id="2ec4ef5b1f93432b9ce58d0e434da4c5" iid="af0dbb2c42344e548c2132acffb23e65" container="79bcbe8df74340f5a6a5e37c79608574" container-iid="027f367739b84c5d966b5ea62c88d9b1" show-fields="true" creation-date="08/01/2023 12:14:16" order-index="28" type="entity">
-                    <layout ax="960" ay="730" awidth="168" aheight="193" x="1660" y="960" width="140" height="160" />
+                    <layout ax="940" ay="740" awidth="220" aheight="136" x="940" y="740" width="220" height="160" rotation-center="-26,0" />
                     <classifier />
                     <class />
                   </item>
                   <item id="308fc55269174b409545b6c66125b0ab" iid="e7c90e0b63cf416093429fd513e79c5b" container="79bcbe8df74340f5a6a5e37c79608574" container-iid="027f367739b84c5d966b5ea62c88d9b1" creation-date="08/01/2023 12:16:14" order-index="29" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1044" y1="923" x2="1210" y2="1010" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="84" end-local-pos="70" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1050" y1="876" x2="1175" y2="950" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="84" end-local-pos="70" name-position="0,20">
                       <points>
-                        <point x="1044" y="923" />
-                        <point x="1210" y="1010" />
+                        <point x="1050" y="876" />
+                        <point x="1175" y="950" />
                       </points>
                     </layout>
                     <relation from="2ec4ef5b1f93432b9ce58d0e434da4c5" from-iid="af0dbb2c42344e548c2132acffb23e65" to="ee8706f0cdfb4277bd1a5b3f7b71acdf" to-iid="92e351752c71452f8bec219e2cf96299" />
                   </item>
                   <item id="8ef0f02c083b43518fd1f56b99261a76" iid="0205cd7c565d4d9eb7fa67a5b41cce7a" container="79bcbe8df74340f5a6a5e37c79608574" container-iid="027f367739b84c5d966b5ea62c88d9b1" creation-date="08/01/2023 12:16:20" order-index="30" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1284" y1="923" x2="1210" y2="1010" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="84" end-local-pos="70" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1310" y1="876" x2="1175" y2="950" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="84" end-local-pos="70" name-position="0,20">
                       <points>
-                        <point x="1284" y="923" />
-                        <point x="1210" y="1010" />
+                        <point x="1310" y="876" />
+                        <point x="1175" y="950" />
                       </points>
                     </layout>
                     <relation from="di77395b1839df45a1a3f2e88a0a23322e7457" from-iid="155574d05d6f4746b392d415c85eb5be" to="ee8706f0cdfb4277bd1a5b3f7b71acdf" to-iid="92e351752c71452f8bec219e2cf96299" />
                   </item>
                   <item id="61c9ebb1964b4c4dba90840e930e2a13" iid="54ea38c817b74f48ab1a903acbcec978" creation-date="08/17/2023 09:29:22" order-index="31" type="entity">
-                    <layout ax="1450" ay="670" awidth="800" aheight="250" x="1450" y="670" width="800" height="250" expanded="640,960,800,250" collapsed="0,0,0,0" rotation-center="-210,-20" />
+                    <layout ax="1520" ay="670" awidth="800" aheight="250" x="1520" y="670" width="800" height="250" expanded="1520,670,800,250" collapsed="0,0,0,0" rotation-center="-210,-20" />
                     <package name-in-body="false" />
                   </item>
                   <item id="dic8b6ea3e35bb4a869b26eb86954983ef9849" iid="c00a59a620964d1ca442ba4b668c2d40" container="61c9ebb1964b4c4dba90840e930e2a13" container-iid="54ea38c817b74f48ab1a903acbcec978" show-fields="true" creation-date="07/06/2023 11:53:28" order-index="2" type="entity">
-                    <layout ax="1480" ay="720" awidth="210" aheight="160" x="610" y="-200" width="210" height="160" rotation-center="-35,0" />
+                    <layout ax="1550" ay="720" awidth="210" aheight="160" x="610" y="-200" width="210" height="160" rotation-center="-35,0" />
                     <classifier />
                     <class />
                   </item>
                   <item id="e6ee8731d7be4a4fb03f6a1d8bf12c75" iid="2b2d6bc9d6474bce95d6c49285bd53b5" container="61c9ebb1964b4c4dba90840e930e2a13" container-iid="54ea38c817b74f48ab1a903acbcec978" show-tagged-values="true" show-fields="true" creation-date="07/06/2023 11:53:28" order-index="2" type="entity">
-                    <layout ax="1760" ay="730" awidth="210" aheight="136" x="90" y="-220" width="210" height="100" rotation-center="-35,-1" />
+                    <layout ax="1830" ay="730" awidth="210" aheight="136" x="90" y="-220" width="210" height="100" rotation-center="-35,-1" />
                     <classifier />
                     <class />
                   </item>
                   <item id="di4071f10d508f446e98b101377f5fe8f56084" iid="fd9a73a659554f6589da9a8d39f70573" container="61c9ebb1964b4c4dba90840e930e2a13" container-iid="54ea38c817b74f48ab1a903acbcec978" show-fields="true" creation-date="07/06/2023 11:53:28" order-index="2" type="entity">
-                    <layout ax="2020" ay="730" awidth="210" aheight="160" x="350" y="-220" width="210" height="160" rotation-center="-35,0" />
+                    <layout ax="2090" ay="730" awidth="210" aheight="160" x="350" y="-220" width="210" height="160" rotation-center="-35,0" />
                     <classifier />
                     <class />
                   </item>
@@ -21664,6 +21699,11 @@ Qué se hace con el código de error?</comment>
                   <item id="0c349928e3684e698259a31941d160a5" iid="e123d7bda1944e16a2f224a0f088cef4" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/13/2023 09:48:27" order-index="12" type="entity">
                     <layout ax="1807" ay="-40" awidth="220" aheight="160" x="1800" y="-50" width="220" height="160" rotation-center="-40,0" />
                   </item>
+                  <item id="2fedd3143c09449d996547439563132d" iid="2959226650424193a115498556217a11" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" show-fields="true" creation-date="09/15/2023 08:48:00" order-index="33" type="entity">
+                    <layout ax="630" ay="730" awidth="140" aheight="90" x="630" y="730" width="140" height="90" rotation-center="0,35" />
+                    <classifier />
+                    <class />
+                  </item>
                   <item id="907b776f1513458d95156eed9f085c20" iid="9ae192117c9c469588525e867f59fc33" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/13/2023 10:05:19" order-index="13" type="relation">
                     <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1807" y1="40" x2="1727" y2="57" start-border-pos="0.875" end-border-pos="0.458035714285714" start-local-pos="80" end-local-pos="117" name-position="0,20">
                       <points>
@@ -21674,13 +21714,34 @@ Qué se hace con el código de error?</comment>
                     <relation from="0c349928e3684e698259a31941d160a5" from-iid="e123d7bda1944e16a2f224a0f088cef4" to="810c85d8b38345d5aa14da3d0319735c" to-iid="5e9897cc1dda4b558ef34d3f69e21350" to-field="aa466bc4bb4784253a8a716acc5a7cb45510" />
                   </item>
                   <item id="38a36b0fcc474761960686c19c8eb7e0" iid="27b131cd9a02452fa24f4b2d3e5bdd1a" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="09/11/2023 14:08:59" order-index="32" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="true" auto-path="" x1="675" y1="574" x2="390" y2="688" start-border-pos="0.625" end-border-pos="0.417735042735043" start-local-pos="115" end-local-pos="78" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="true" auto-path="" x1="675" y1="600" x2="370" y2="678" start-border-pos="0.625" end-border-pos="0.417735042735043" start-local-pos="115" end-local-pos="78" name-position="0,20">
                       <points>
-                        <point x="675" y="574" />
-                        <point x="390" y="688" />
+                        <point x="675" y="600" />
+                        <point x="370" y="678" />
                       </points>
                     </layout>
                     <relation from="2735a60811c246f4b641bc0e913434ae" from-iid="a1950858d9fd4f1bb6e90baadea29347" to="di6712a74d0d4c42ffa2ab3632bc23dfc21416" to-iid="f9d76306e9ba4f73ae40334e07e08923" to-field="ab1dc96271ab64ccdbce190307005473c299" />
+                  </item>
+                  <item id="c19b1671ab1942d993711530a426d8a2" iid="2b9742fd958c4e0fa3971d60a747be8e" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="09/15/2023 08:53:10" order-index="34" type="entity">
+                    <layout ax="390" ay="740" awidth="200" aheight="60" x="390" y="740" width="200" height="60" rotation-center="-30,20" />
+                  </item>
+                  <item id="difc07ee8ffcde4f7a8d2fd9b94e962a2d7496" iid="f1befe77a1bf40e4ba6d959e1a828634" creation-date="09/15/2023 08:53:10" order-index="35" type="comment-connector">
+                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="590" y1="772" x2="630" y2="773" start-border-pos="0.384920756022135" end-border-pos="0.879629686143663" name-position="0,20">
+                      <points>
+                        <point x="590" y="772" />
+                        <point x="630" y="773" />
+                      </points>
+                    </layout>
+                    <relation from="c19b1671ab1942d993711530a426d8a2" from-iid="2b9742fd958c4e0fa3971d60a747be8e" to="2fedd3143c09449d996547439563132d" to-iid="2959226650424193a115498556217a11" />
+                  </item>
+                  <item id="440c779db2a948e99fd64702ec86d077" iid="0395022013d3480cafe171697bbdd7d9" container="819629b727884935a142760424ff1214" container-iid="be55cc4b557541b6b98888d9b2378c0b" creation-date="09/15/2023 08:54:48" order-index="36" type="relation">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="700" y1="730" x2="675" y2="600" start-border-pos="0.125" end-border-pos="0.625" start-local-pos="70" end-local-pos="115" name-position="0,20">
+                      <points>
+                        <point x="700" y="730" />
+                        <point x="675" y="600" />
+                      </points>
+                    </layout>
+                    <relation from="2fedd3143c09449d996547439563132d" from-iid="2959226650424193a115498556217a11" to="2735a60811c246f4b641bc0e913434ae" to-iid="a1950858d9fd4f1bb6e90baadea29347" />
                   </item>
                 </layer>
               </diagram>
@@ -28519,13 +28580,19 @@ Qué se hace con el código de error?</comment>
                     <owned-items />
                     <attributes>
                       <attribute id="a3eb8a98598ac4a2fb0d621fe5ea910ee996" cid="PROP830" name="man_core" creation-date="08/01/2023 12:19:31" property-ref="02f55f008aab44c4afe4633095f1b7db" />
+                      <attribute id="a7a61c2bdb6294d11aa0389f865fe74e4308" cid="PROP1048" name="__shd_gen_meas" creation-date="09/14/2023 14:48:21" property-ref="1589a07f22ab4f5f96b7051a1f18dc80" />
+                      <attribute id="a709c0bf070a54226b11e8050f5d687de0" cid="PROP1049" name="__shd_ext_meas" creation-date="09/14/2023 14:48:24" property-ref="53a5022c2eac42eca1482c56621172be" />
+                      <attribute id="a4ddeae3b2ff34511ac7decbdbb53364e505" cid="PROP1050" name="__shd_gen_meas" creation-date="09/14/2023 14:48:36" property-ref="2ea916c258134bee83c8cd49ecd259fd" />
                     </attributes>
                     <operations>
                       <operation id="obd72aa605b3d4884b1c67c8f04e63949339" cid="OP183" name="init_system" creation-date="09/05/2023 14:58:24" type="" type-id="" visibility="public" />
                       <operation id="oa56e743976f44e32b5705267980a6bf2546" cid="OP171" name="configSystem" creation-date="08/01/2023 11:48:29" type="" type-id="" visibility="public" />
                       <operation id="o4c80738be8f54a3c91992bf1d98a17fb19" cid="OP152" name="signal_handler" creation-date="07/31/2023 13:57:24" type="" type-id="" visibility="public" />
                       <operation id="oe5096e2ebd2d455e90b941a8de15ec41546" cid="OP172" name="checkSystemHealthAndRecover" creation-date="08/01/2023 11:49:01" type="" type-id="" visibility="public" />
+                      <operation id="oa3f2c00dcd4f4c6188dbd90e6622089e391" cid="OP211" name="check4NewExp" creation-date="09/15/2023 08:33:35" type="" type-id="" visibility="public" />
                       <operation id="o01e6f66e492848c1a1da3a24eda9eef0956" cid="OP178" name="heartbeat" creation-date="08/01/2023 12:25:47" type="" type-id="" visibility="public" />
+                      <operation id="o2cc72eb2aaf241b4920bd57f8826e8cb880" cid="OP209" name="stop" creation-date="09/15/2023 08:28:18" type="" type-id="" visibility="public" />
+                      <operation id="o0a253e0676414b5ea11271176a6565c0793" cid="OP210" name="run" creation-date="09/15/2023 08:28:44" type="" type-id="" visibility="public" />
                     </operations>
                     <source-codes>
                       <source-code language="ActionScript" />
@@ -28545,6 +28612,7 @@ Qué se hace con el código de error?</comment>
                       <source-code language="ActionScript" />
                     </source-codes>
                   </item>
+                  <item id="296541e627d645da813cac33f6dc4cdf" cid="PROP1051" type="property" name="alarmsChan" owner="dc402cd6f549403a8825fb99c1c923c8" creation-date="09/15/2023 08:31:36" visibility="public" />
                   <item id="aa1d99b5def1441bade0ac40336d03f2" cid="PKG076" type="package" name="app_man" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/31/2023 13:30:01" visibility="undefined">
                     <owned-items />
                   </item>
@@ -28555,9 +28623,9 @@ Qué se hace con el código de error?</comment>
                       <attribute id="ad775fba2fe374531a6e2544ad3d2db19242" cid="PROP790" name="profile" creation-date="07/31/2023 14:06:09" property-ref="4ba02d3e54fa4442818929e5020cfcc4" />
                       <attribute id="a5016e4d02044487db6386206ba4f2479972" cid="PROP818" name="expriment" creation-date="08/01/2023 12:01:47" property-ref="aa12941332dc49589f7fb33166be47d6" />
                       <attribute id="acd4ae36725cc4d5483a0e0d4de006dc4876" cid="PROP819" name="raisedAlarms" creation-date="08/01/2023 12:04:15" property-ref="a0174e3d157d4e5c9ff682bc4c266148" />
+                      <attribute id="ae2117992ccd9457792ee5bd22e546276233" cid="PROP1051" name="alarmsChan" creation-date="09/15/2023 08:31:36" property-ref="296541e627d645da813cac33f6dc4cdf" />
                     </attributes>
                     <operations>
-                      <operation id="o2ee48ddb3aa74ff09e8bbcc85eaa42cf306" cid="OP164" name="__check4NewExp" creation-date="07/31/2023 14:06:59" type="" type-id="" visibility="private" />
                       <operation id="o1dd9c0db9f824be49a948acc14449947168" cid="OP204" name="__prepareExperiment" creation-date="09/11/2023 08:43:13" type="" type-id="" visibility="private" />
                       <operation id="o46244dbc0a7946f2a4027833e31d0226737" cid="OP170" name="__performDiagnostics" creation-date="08/01/2023 09:21:53" type="" type-id="" visibility="private" />
                       <operation id="ofc5674ca43514c52a483f7c8ce3a33f8204" cid="OP179" name="__executeExperiment" creation-date="08/01/2023 12:26:23" type="" type-id="" visibility="private" />
@@ -28575,7 +28643,7 @@ Qué se hace con el código de error?</comment>
                 </abstract-items>
                 <layer id="b421410c28e046f0bd32c61090ea5b03" name="Default" visible="true" enabled="true" locked="false">
                   <item id="aa1d99b5def1441bade0ac40336d03f2" iid="7eb1b3a02f514cd380ac862a85643623" creation-date="07/31/2023 13:30:01" order-index="0" type="entity">
-                    <layout ax="120" ay="-10" awidth="1120" aheight="510" x="120" y="-10" width="1120" height="510" expanded="120,-10,1120,510" collapsed="0,0,0,0" rotation-center="-311,-28.5" />
+                    <layout ax="120" ay="-10" awidth="1120" aheight="620" x="120" y="-10" width="1120" height="620" expanded="120,-10,1120,620" collapsed="0,0,0,0" rotation-center="-311,-83.5" />
                     <package name-in-body="false" />
                   </item>
                   <item id="215764c0e1f443649a75701b5618dc40" iid="8b2032df2495482e933f5ad299611ae8" show-fields="true" creation-date="07/31/2023 13:45:38" order-index="185" type="entity">
@@ -28584,12 +28652,12 @@ Qué se hace con el código de error?</comment>
                     <class />
                   </item>
                   <item id="abb9d0f3eed74dfd8fbe58140d38e001" iid="591b840f625b40b2b3cf927f1fa34004" container="aa1d99b5def1441bade0ac40336d03f2" container-iid="7eb1b3a02f514cd380ac862a85643623" show-fields="true" creation-date="07/31/2023 13:51:40" order-index="188" type="entity">
-                    <layout ax="170" ay="60" awidth="660" aheight="306" x="170" y="60" width="660" height="210" rotation-center="-154,-18" />
+                    <layout ax="170" ay="60" awidth="660" aheight="420" x="170" y="60" width="660" height="210" rotation-center="-154,-18" />
                     <classifier />
                     <class />
                   </item>
                   <item id="di122015bdf4de4107b46b188346bf6c3f1003" iid="d798230ab84c4951af41ad457afcddf1" container="aa1d99b5def1441bade0ac40336d03f2" container-iid="7eb1b3a02f514cd380ac862a85643623" show-fields="true" creation-date="07/31/2023 13:51:40" order-index="188" type="entity">
-                    <layout ax="413" ay="440" awidth="174" aheight="35" x="410" y="440" width="140" height="160" />
+                    <layout ax="413" ay="560" awidth="174" aheight="35" x="410" y="560" width="140" height="160" />
                     <classifier show-attributes="false" />
                     <class show-operations="false" />
                   </item>
@@ -28608,10 +28676,10 @@ Qué se hace con el código de error?</comment>
                     <relation from="f545ec0aa3a148219c1c913f6727f38f" from-iid="e9bcd2651ecf44ed9701b4a8cbe1209f" to="215764c0e1f443649a75701b5618dc40" to-iid="8b2032df2495482e933f5ad299611ae8" />
                   </item>
                   <item id="47551e7a135745e3a5c10135f63286f2" iid="6b5ed9224cf04107a8d2d0c645703a32" container="aa1d99b5def1441bade0ac40336d03f2" container-iid="7eb1b3a02f514cd380ac862a85643623" creation-date="07/31/2023 13:52:26" order-index="189" type="relation">
-                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="500" y1="366" x2="500" y2="440" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="70" end-local-pos="87" name-position="0,20">
+                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="500" y1="480" x2="500" y2="560" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="70" end-local-pos="87" name-position="0,20">
                       <points>
-                        <point x="500" y="366" />
-                        <point x="500" y="440" />
+                        <point x="500" y="480" />
+                        <point x="500" y="560" />
                       </points>
                     </layout>
                     <relation from="abb9d0f3eed74dfd8fbe58140d38e001" from-iid="591b840f625b40b2b3cf927f1fa34004" to="di122015bdf4de4107b46b188346bf6c3f1003" to-iid="d798230ab84c4951af41ad457afcddf1" />
@@ -28622,10 +28690,10 @@ Qué se hace con el código de error?</comment>
                     <class />
                   </item>
                   <item id="e5a3ccf473a14a3f825d622699fc21a8" iid="14ed8cb3a2194b31b27a33ca3f8c4574" container="aa1d99b5def1441bade0ac40336d03f2" container-iid="7eb1b3a02f514cd380ac862a85643623" creation-date="08/01/2023 12:19:59" order-index="191" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="true" auto-path="" x1="1050" y1="180" x2="830" y2="100" start-border-pos="0.125" end-border-pos="0.283088235294118" start-local-pos="150" end-local-pos="40" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="true" auto-path="" x1="1050" y1="180" x2="830" y2="101" start-border-pos="0.125" end-border-pos="0.274107142857143" start-local-pos="150" end-local-pos="41" name-position="0,20">
                       <points>
                         <point x="1050" y="180" />
-                        <point x="830" y="100" />
+                        <point x="830" y="101" />
                       </points>
                     </layout>
                     <relation from="dc402cd6f549403a8825fb99c1c923c8" from-iid="46b275c46ed04d4a96705cb240733294" to="abb9d0f3eed74dfd8fbe58140d38e001" to-iid="591b840f625b40b2b3cf927f1fa34004" to-field="a3eb8a98598ac4a2fb0d621fe5ea910ee996" />
@@ -36299,7 +36367,7 @@ Qué se hace con el código de error?</comment>
           </diagram>
         </model>
       </sub-models>
-      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="0,-439" zoom="0.5">
+      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="488,-716" zoom="0.8">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -38188,7 +38256,7 @@ Qué se hace con el código de error?</comment>
           </item>
         </layer>
       </diagram>
-      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="546,495" zoom="0.9">
+      <diagram type="entity-relationship" id="p6f72df604ca34bbd904bc9be4df6a671_811923118" name="MasterDB" order-index="3" overview-order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="6,256" zoom="0.6">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -38205,7 +38273,7 @@ Qué se hace con el código de error?</comment>
           <version />
         </meta>
         <abstract-items>
-          <item id="di41f0868060304bb0ae4f70d2fea64cf56796" cid="ENT096" type="erd-entity" name="CompatibleDevices" creation-date="07/03/2023 09:52:44">
+          <item id="di41f0868060304bb0ae4f70d2fea64cf56796" cid="ENT096" type="erd-entity" name="LinkConfiguration" creation-date="07/03/2023 09:52:44">
             <entity description="" />
             <attributes>
               <attribute uid="a53ef465603a74faabc942d5d26fabea4193" cid="EA044" name="CompDevID" type="mediumint unsigned" type-id="MySql.mediumint unsigned" type-size="" foreign-key="true" primary-key="true" nullable="false" description="" default-value="" default-value-name="" auto-increment="false" creation-date="07/03/2023 11:15:30" />
