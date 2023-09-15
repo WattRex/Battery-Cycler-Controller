@@ -30,7 +30,7 @@ description ="Battery cycler control used to execute custom profile on multiple 
 #
 # This field corresponds to the "Description" metadata field:
 # https://packaging.python.org/specifications/core-metadata/#description-optional
-readme = "../README.md" # Optional
+readme = "README.md" # Optional
 
 # Specify which Python versions you support. In contrast to the
 # 'Programming Language' classifiers above, 'pip install' will check this
@@ -41,7 +41,7 @@ requires-python = ">=3.7"
 # This is either text indicating the license for the distribution, or a file
 # that contains the license
 # https://packaging.python.org/en/latest/specifications/core-metadata/#license
-license = {file = "../LICENSE.txt"}
+license = {file = "LICENSE.txt"}
 
 # This field adds keywords for your project which will appear on the
 # project page. What does your project relate to?
@@ -50,7 +50,7 @@ license = {file = "../LICENSE.txt"}
 # by commas, to be used to assist searching for the distribution in a
 # larger catalog.
 keywords= ["Embedded Systems", "Power Control", "Lithium Battery Cycler", "Battery",
-  "Industrial Battery", "SoH", "State of Health", "SoC", "State of Charge", 
+  "Industrial Battery", "SoH", "State of Health", "SoC", "State of Charge",
   "Redox Flow Vanadium", "Battery", "Cycler", "Battery Profiling"]  # Optional
 
 # This should be your name or the name of the organization who originally
@@ -167,7 +167,7 @@ dependencies = {file = ["requirements.txt"]}
 
 
 [tool.setuptools_scm]
-root = "../../"
+root = "../"
 write_to = "code/src/wattrex_battery_cycler/__version__.py"
 version_scheme="python-simplified-semver"
 normalize="True"
