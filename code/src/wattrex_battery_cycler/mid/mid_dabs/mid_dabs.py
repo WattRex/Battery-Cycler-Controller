@@ -5,7 +5,7 @@ the device and request info from it.
 """
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-from typing import List
+from typing import List, Dict
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -25,32 +25,27 @@ from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 
 #######################          MODULE IMPORTS          #######################
 from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataDeviceStatusC,\
-                MidDataLinkConfSerialC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
+                MidDataLinkConfC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
 #######################              ENUMS               #######################
-mapping_device: {'epc': {'ls_current': 'ls_curr'},
-                 'source': {},
-                 'load': {},
-                 'meter': {},
-                 'bisource': {}}
+
 #######################             CLASSES              #######################
 class MidDabsPwrMeterC:
     '''Instanciates an object enable to measure.
     '''
     def __init__(self, device: list [MidDataDeviceC]) -> None:
-        self.device_type = device[0].device_type if len(device) == 1 else MidDataDeviceTypeE.SOURCE_LOAD
+        self.device_type = device[0].device_type if len(device) == 1 else \
+                                                            MidDataDeviceTypeE.SOURCE_LOAD
         self.dev_id: List = [x.dev_id for x in device]
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         self.meter      : DrvBkDeviceC | None = None
-        link_conf = device[0].link_conf.__dict__
-        if isinstance(device[0].link_conf, MidDataLinkConfSerialC):
-            if link_conf['separator']=='\\n':
-                link_conf['separator'] = '\n'
+        if device[0].link_conf is not None:
+            link_conf = __prepare_link_conf(device[0].link_conf.__dict__)
         try:
             if self.device_type is MidDataDeviceTypeE.EPC:
-                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(link_conf['can_id']))
+                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(device[0].iface_name))
                 self.epc.open()
                 # TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
                 self.epc.set_periodic(ack_en = False,
@@ -59,10 +54,7 @@ class MidDabsPwrMeterC:
             elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
                 # TODO: Update SCPI not needing handler
                 self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
-                link_conf = device[1].link_conf.__dict__
-                if isinstance(device[1].link_conf, MidDataLinkConfSerialC):
-                    if link_conf['separator']=='\\n':
-                        link_conf['separator'] = '\n'
+                link_conf = __prepare_link_conf(device[1].link_conf.__dict__)
                 self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
             elif self.device_type is MidDataDeviceTypeE.BISOURCE:
                 self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
@@ -109,7 +101,7 @@ class MidDabsPwrMeterC:
             res: DrvBkDataC = self.meter.get_data()
             res = res.__dict__
             for key in res.keys():
-                ext_meas.__setattr__(list(ext_meas.__dict__.keys())[ext_att.index(key)],
+                setattr(ext_meas,list(ext_meas.__dict__.keys())[ext_att.index(key)],
                                      res[key])
         elif self.device_type is MidDataDeviceTypeE.EPC:
             msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
@@ -305,3 +297,64 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         except Exception as err:
             log.error(f"Error while disabling device: {err}")
             raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
+
+def __prepare_link_conf(link_conf: dict) -> dict:
+    """Convert link configuration types to correct ones.
+    Args:
+        link_conf (dict): [description]
+
+    Returns:
+        [dict]: [correct dictionary with the correct types]
+    """
+    map_link_conf: Dict[str, str] = {
+                    'timeout' : 'float',
+                    'write_timeout' : 'float',
+                    'baudrate' : 'int',
+                    'bytesize' : 'int',
+                    'stopbits' : 'int',
+                    'inter_byte_timeout' : 'float'
+                }
+    res = {}
+    for key in link_conf.keys():
+        if key in map_link_conf:
+            res[key] = __convert_data(link_conf[key], map_link_conf[key])
+        else:
+            # # Translation between parity specified by user and parity understable by python serial
+            if key == 'parity':
+                link_parity = link_conf[key].lower()
+                if 'odd' in link_parity:
+                    parity = 'O'
+                elif 'even' in link_parity:
+                    parity = 'E'
+                elif 'none' in link_parity:
+                    parity = 'N'
+                elif 'mark' in link_parity:
+                    parity = 'M'
+                elif 'space' in link_parity:
+                    parity = 'S'
+                else:
+                    log.error("Wrong value for parity")
+                    raise ValueError("Wrong value for parity")
+                res[key] = parity
+            if  key == 'separator' and link_conf[key]=='\\n':
+                res[key] = '\n'
+            else:
+                res[key] = link_conf[key]
+    return res
+
+def __convert_data(data:str, data_type: str):
+    """Convert string data to float or int
+
+    Args:
+        data (str): [data to convert]
+        data_type (str): [type to convert]
+
+    Returns:
+        [type]: [description]
+    """
+    res = None
+    if data_type == 'int':
+        res = int(data)
+    elif data_type =='float':
+        res = float(data)
+    return res
