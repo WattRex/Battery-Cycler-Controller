@@ -39,8 +39,8 @@ class MidDataGenMeasC:
     Class used to store generic power measures.
     '''
 
-    def __init__(self,pwr_mode: MidDataPwrModeE, voltage: int, current: int,
-        power: int) -> None:
+    def __init__(self,pwr_mode: MidDataPwrModeE = MidDataPwrModeE.DISABLE, voltage: int= 0,
+                 current: int= 0, power: int= 0) -> None:
         '''
         Initialize the instance with the given measures.
 
