@@ -20,3 +20,7 @@ __all__ = [
     'MidDataExtMeasC', 'MidDataGenMeasC', 'MidDataBatteryC', 'MidDataLithiumBatC',
     'MidDataRedoxBatC'
 ]
+
+import os
+import sys
+sys.path.append(os.getcwd()+'code/src/wattrex_battery_cycler/')
