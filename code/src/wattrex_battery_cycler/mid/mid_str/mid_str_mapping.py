@@ -53,6 +53,29 @@ map_dev_db: Dict[str, str] = {
     'UdevName': 'iface_name',
     'SN': 'serial_number'}
 
+map_batt_db: Dict[str, str] = {
+    'Name': 'name',
+    'Model': 'model'}
+
+map_batt_range_db: Dict[str, str] = {
+    'VoltMax': 'volt_max',
+    'VoltMin': 'volt_min',
+    'CurrMax': 'curr_max',
+    'CurrMin': 'curr_min'}
+
+map_profile_db: Dict[str, str] = {
+    'Name': 'volt_max',
+    'VoltMin': 'volt_min',
+    'CurrMax': 'curr_max',
+    'CurrMin': 'curr_min'}
+
+map_inst_db: Dict[str, str] = {
+    'InstrID': 'instr_id',
+    'Mode': 'mode',
+    'SetPoint': 'ref',
+    'LimitType': 'limit_type',
+    'LimitPoint': 'limit_ref'}
+
 #######################             CLASSES              #######################
 def remap_dict(data: dict, mapping: dict) -> dict:
     """Change the key names of the data dictionary with the names of the mapping dictionary.
