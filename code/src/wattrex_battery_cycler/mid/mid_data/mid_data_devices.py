@@ -101,37 +101,14 @@ class MidDataDeviceStatusC:
         '''
         return self.__status.name
 
-class MidDataLinkConfSerialC: #pylint: disable=too-many-instance-attributes
+class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
     '''
-    A class method that implements the MIDDataLinkConSerialf class .
+    A class method that implements the MIDDataLinkConf class .
     '''
     # pylint: disable=too-many-arguments
-    def __init__(self, separator: str, baudrate: int, bytesize: int,
-                parity: str,
-                stopbits: int, timeout: float, write_timeout: float,
-                inter_byte_timeout: float) -> None:
-        # Translation between parity specified by user and parity understable by python serial
-        if 'odd' in parity.lower():
-            parity = 'O'
-        elif 'even' in parity.lower():
-            parity = 'E'
-        elif 'none' in parity.lower():
-            parity = 'N'
-        elif 'mark' in parity.lower():
-            parity = 'M'
-        elif 'space' in parity.lower():
-            parity = 'S'
-        else:
-            log.error("Wrong value for parity")
-            raise ValueError("Wrong value for parity")
-        self.separator = separator
-        self.baudrate = baudrate
-        self.bytesize = bytesize
-        self.parity = parity
-        self.stopbits = stopbits
-        self.timeout = timeout
-        self.write_timeout = write_timeout
-        self.inter_byte_timeout = inter_byte_timeout
+    def __init__(self) -> None:
+        """Constructor of the class, the attributes will be create while running
+        """
 
 class MidDataDeviceC:
     '''
@@ -142,7 +119,7 @@ class MidDataDeviceC:
     def __init__(self, manufacturer : str| None= None, model :str| None= None,
                 serial_number : str| None= None, device_type : MidDataDeviceTypeE| None= None,
                 iface_name : str| None= None, mapping_names : Dict| None= None,
-                link_configuration: MidDataLinkConfSerialC|None = None) -> None:
+                link_configuration: MidDataLinkConfC|None = None) -> None:
         """Initialize the attributes of the device .
 
         Args:
@@ -161,4 +138,4 @@ class MidDataDeviceC:
         self.device_type : MidDataDeviceTypeE|None = device_type
         self.iface_name :str| None = iface_name
         self.mapping_names : Dict| None = mapping_names
-        self.link_conf: MidDataLinkConfSerialC|None = link_configuration
+        self.link_conf: MidDataLinkConfC|None = link_configuration

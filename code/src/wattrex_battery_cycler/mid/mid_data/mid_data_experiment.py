@@ -59,7 +59,7 @@ class MidDataCyclerStationC:
     Cycler station information.
     '''
     def __init__(self, cycler_id: int| None= None, name: str| None= None,
-                devices: List[MidDataDeviceC]| None= None, deprecated: bool = False):
+                devices: List[MidDataDeviceC]| None= None, deprecated: bool|None = None):
         '''
         Initialize CyclerStation instance with the given parameters.
 
@@ -72,7 +72,7 @@ class MidDataCyclerStationC:
         self.name : str| None = name
         self.cycler_id : int| None = cycler_id
         self.devices : List[MidDataDeviceC]| None = devices
-        self.deprecated: bool = deprecated
+        self.deprecated: bool|None = deprecated
 
 class MidDataInstructionC:
     '''
@@ -102,8 +102,9 @@ class MidDataExperimentC:
     '''
     Experiment relate information.
     '''
-    def __init__(self, exp_id : int, name : str, date_begin : datetime,
-                date_finish : datetime, status : MidDataExpStatusE):
+    def __init__(self, exp_id : int|None= None, name : str|None= None,
+                date_begin : datetime|None= None, date_finish : datetime|None= None,
+                status : MidDataExpStatusE|None= None):
         '''
         Initialize Experiment instance with the given parameters.
 
@@ -115,18 +116,18 @@ class MidDataExperimentC:
                 experiment is not finished, this value is None
             status (MidDataExpStatusE): Current status of the experiment
         '''
-        self.exp_id : int = exp_id
-        self.name : str = name
-        self.date_begin : datetime = date_begin
-        self.date_finish : datetime = date_finish
-        self.status : MidDataExpStatusE = status
+        self.exp_id : int|None = exp_id
+        self.name : str|None = name
+        self.date_begin : datetime|None = date_begin
+        self.date_finish : datetime|None = date_finish
+        self.status : MidDataExpStatusE|None = status
 
 class MidDataPwrRangeC:
     '''
     Power range that specify operational limits for voltage and current.
     '''
-    def __init__(self, volt_max : int, volt_min : int, curr_max : int,
-                curr_min : int):
+    def __init__(self, volt_max : int|None = None, volt_min : int|None = None,
+                curr_max : int|None = None, curr_min : int|None = None):
         '''
         Initialize the class .
 
@@ -136,10 +137,10 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
-        self.volt_max : int = volt_max
-        self.volt_min : int = volt_min
-        self.curr_max : int = curr_max
-        self.curr_min : int = curr_min
+        self.volt_max : int|None = volt_max
+        self.volt_min : int|None = volt_min
+        self.curr_max : int|None = curr_max
+        self.curr_min : int|None = curr_min
 
 
 class MidDataProfileC:
