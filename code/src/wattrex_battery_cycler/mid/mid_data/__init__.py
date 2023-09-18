@@ -4,6 +4,8 @@
 This file specifies what is going to be exported from this module.
 '''
 
+import os
+import sys
 from .mid_data_devices import MidDataDeviceStatusE, MidDataDeviceTypeE, MidDataDeviceStatusC, \
                     MidDataDeviceC, MidDataLinkConfC
 from .mid_data_experiment import MidDataPwrLimitE, MidDataPwrModeE, MidDataProfileC, MidDataAlarmC,\
@@ -20,7 +22,4 @@ __all__ = [
     'MidDataExtMeasC', 'MidDataGenMeasC', 'MidDataBatteryC', 'MidDataLithiumBatC',
     'MidDataRedoxBatC'
 ]
-
-import os
-import sys
 sys.path.append(os.getcwd()+'code/src/wattrex_battery_cycler/')

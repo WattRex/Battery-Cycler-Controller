@@ -110,15 +110,16 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
         """Constructor of the class, the attributes will be create while running
         """
 
-class MidDataDeviceC:
+class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
     '''
     A class method that implements the MIDDataDevice class .
     '''
 
     # pylint: disable=too-many-arguments
-    def __init__(self, dev_id: int|None = None manufacturer : str| None= None, model :str| None= None,
-                serial_number : str| None= None, device_type : MidDataDeviceTypeE| None= None,
-                iface_name : str| None= None, mapping_names : Dict| None= None,
+    def __init__(self, dev_id: int|None = None, manufacturer : str| None= None,
+                model :str| None= None, serial_number : str| None= None,
+                device_type : MidDataDeviceTypeE| None= None, iface_name : str| None= None,
+                mapping_names : Dict| None= None,
                 link_configuration: MidDataLinkConfC|None = None) -> None:
         """Initialize the attributes of the device .
 
