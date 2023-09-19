@@ -1,7 +1,7 @@
 ﻿-- Table Experiment --------------------------
 create table if not exists Experiment
 (
-    ExpID           mediumint       unsigned    not null    auto_increment,
+    ExpID           mediumint       unsigned    not null,
     Name            varchar(30)                 not null,
     Description     varchar(250)                not null,
     DateCreation    datetime                    not null,
