@@ -1,0 +1,5 @@
+FROM python:3.10-bullseye
+WORKDIR /cycler
+ADD ./cycler ./
+RUN pip install ./code/requirements.txt
+CMD ["python", "./code/src/wattrex_battery_cycler/run_cycler.py"]
