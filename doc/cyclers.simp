@@ -167,7 +167,7 @@
       </counter>
       <counter>
         <item-type type-id="property" type="Property" />
-        <value>1064</value>
+        <value>1068</value>
       </counter>
       <counter>
         <item-type type-id="drawing-polygon-path" type="Polygon Path" />
@@ -175,7 +175,7 @@
       </counter>
       <counter>
         <item-type type-id="class" type="Class" />
-        <value>230</value>
+        <value>231</value>
       </counter>
       <counter>
         <item-type type-id="data-type" type="Data Type" />
@@ -191,7 +191,7 @@
       </counter>
       <counter>
         <item-type type-id="realization" type="Realization" />
-        <value>26</value>
+        <value>27</value>
       </counter>
       <counter>
         <item-type type-id="generalization" type="Generalization" />
@@ -227,7 +227,7 @@
       </counter>
       <counter>
         <item-type type-id="reception" type="Reception" />
-        <value>73</value>
+        <value>448</value>
       </counter>
       <counter>
         <item-type type-id="artifact" type="Artifact" />
@@ -395,7 +395,7 @@
       </counter>
       <counter>
         <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.OperationField</type>
-        <value>217</value>
+        <value>218</value>
       </counter>
     </fields>
   </counters>
@@ -1808,31 +1808,6 @@
     </item>
     <item id="cd9dd9c295294ce7a12f7a1862b67b60" cid="PROP344" type="property" owner="baf57409538e4fa18390300af10e5912" creation-date="07/11/2023 11:37:17" visibility="private">
       <structural-feature type="DRV_EA_Device_c" type-id="Class:58095b9d072f4fd99c0f1be828becb82" />
-    </item>
-    <item id="f83edbc131fb4079a68d8c567ce7a1fa" cid="PROP1060" type="property" name="chan" owner="di2abc4496d4a140e9aae1b676856e66d13913" creation-date="09/18/2023 15:25:42" visibility="public">
-      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
-        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
-        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
-        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
-        <background type="solid" colors="#F2F2F2,#F2F2F2" />
-        <border color="#555555" width="2" />
-        <label-connector color="#80000000" dash-style="Dash" />
-        <alternate-styles>
-          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
-            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
-            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
-            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
-            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
-            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
-            <background type="solid" colors="#203D85,#203D85" />
-            <border color="#203D85" width="2" />
-            <label-connector color="#80000000" dash-style="Dash" />
-          </alternate-style>
-        </alternate-styles>
-      </style>
-      <structural-feature type="SysShdIpcChanC" type-id="Class:di501a818899fc45c4aac459cc63aa6eb17162" />
     </item>
     <item id="d486795fa9ec4cf5b9ac44e1e0f20c06" cid="ELEM002" type="timing-lifeline" name="TimingLifeline1" creation-date="07/17/2023 14:56:54">
       <states>
@@ -7807,6 +7782,31 @@ Qué se hace con el código de error?</comment>
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
+    <item id="di411c46b35a544202a41ad33f7645cc0d6615" cid="PROP1067" type="property" name="chan" owner="dibe91515433cb495da9a3a27bb44c9f7d6615" creation-date="09/18/2023 15:25:42" visibility="public">
+      <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+        <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
+        <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+        <text-style type="text" color="#555555" font="Segoe UI;9.75;" horizontal-alignment="left" />
+        <text-style type="tagged-value" color="#555555" font="Segoe UI;9.75;" />
+        <text-style type="stereotype" color="#555555" font="Segoe UI;9;I" />
+        <background type="solid" colors="#F2F2F2,#F2F2F2" />
+        <border color="#555555" width="2" dash-style="Solid" />
+        <label-connector color="#80000000" dash-style="Dash" />
+        <alternate-styles>
+          <alternate-style style-name="Alternate" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#322A2A2A" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
+            <text-style type="name" color="#E9E9E9" font="Segoe UI;11.25;B" />
+            <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
+            <text-style type="text" color="#E9E9E9" font="Segoe UI;9.75;" horizontal-alignment="left" />
+            <text-style type="tagged-value" color="#E9E9E9" font="Segoe UI;9.75;" />
+            <text-style type="stereotype" color="#E9E9E9" font="Segoe UI;9;I" />
+            <background type="solid" colors="#203D85,#203D85" />
+            <border color="#203D85" width="2" dash-style="Solid" />
+            <label-connector color="#80000000" dash-style="Dash" />
+          </alternate-style>
+        </alternate-styles>
+      </style>
+      <structural-feature type="SysShdIpcChanC" type-id="Class:di501a818899fc45c4aac459cc63aa6eb17162" />
+    </item>
     <item id="di924e45e906804e2fb0454dbab87b14b84955" cid="PROP120" type="property" name="sn" owner="dideb76258a8704f56ab70dcfb2aea79124955" creation-date="07/10/2023 09:09:08" visibility="private">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
@@ -10040,7 +10040,7 @@ Qué se hace con el código de error?</comment>
               </meta>
               <abstract-items />
               <sub-models />
-              <diagram type="uml-class" id="p7769f81280324311900a7034d7f7eb70_197655024" name="drv_can" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-154,-358" zoom="0.8">
+              <diagram type="uml-class" id="p7769f81280324311900a7034d7f7eb70_197655024" name="drv_can" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-22,-358" zoom="0.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -10052,7 +10052,7 @@ Qué se hace con el código de error?</comment>
                   </authors>
                   <description />
                   <creation-date>07/05/2023 12:28:45</creation-date>
-                  <change-date>09/19/2023 11:03:46</change-date>
+                  <change-date>09/20/2023 09:08:16</change-date>
                   <revision-count>0</revision-count>
                   <version />
                 </meta>
@@ -10081,6 +10081,26 @@ Qué se hace con el código de error?</comment>
                   </item>
                   <item id="c0d92ffc75f241288512a0c13a3ad772" cid="PKG014" type="package" name="drv_can_types" owner="dfe5954f6b024684aec35f27f78ad2a1" creation-date="07/05/2023 13:05:54" visibility="undefined">
                     <owned-items />
+                  </item>
+                  <item id="dibe91515433cb495da9a3a27bb44c9f7d6615" cid="C230" type="class" name="_CanActiveFilterC" owner="c0d92ffc75f241288512a0c13a3ad772" creation-date="07/05/2023 12:29:38" visibility="private">
+                    <owned-items />
+                    <attributes>
+                      <attribute id="a1713d959c06c4f63b7c5c7970210976b74" cid="PROP1067" name="chan" creation-date="09/18/2023 15:25:42" property-ref="di411c46b35a544202a41ad33f7645cc0d6615" />
+                    </attributes>
+                    <operations>
+                      <operation id="oa6818d691c174583a10686e337f8ba1c641" cid="OP091" name="match" creation-date="07/13/2023 15:44:44" type="" type-id="" visibility="public">
+                        <parameters>
+                          <parameter id="p53b37ee5a41542179f4c226698bf9437" name="add" type="int" type-id="Python.int" />
+                        </parameters>
+                        <source-codes>
+                          <source-code language="ActionScript" />
+                        </source-codes>
+                      </operation>
+                      <operation id="o2110ba991c7d4cd6996f7d06798e9481212" cid="OP217" name="close_chan" creation-date="09/20/2023 09:10:24" type="" type-id="" visibility="public" />
+                    </operations>
+                    <source-codes>
+                      <source-code language="ActionScript" />
+                    </source-codes>
                   </item>
                   <item id="c5befb3ad6f44ff1aa2af558c20bf3ae" cid="PKG057" type="package" name="drv_can" creation-date="07/13/2023 11:19:49" visibility="undefined" />
                   <item id="053ee309952d4f5d93c4875f9068311e" cid="C009" type="class" name="DrvCanNodeC" owner="di86f4fcc0a7d64ad59389d366a00b78056190" creation-date="07/05/2023 13:33:32" visibility="undefined">
@@ -10204,13 +10224,13 @@ Qué se hace con el código de error?</comment>
                       <source-code language="ActionScript" />
                     </source-codes>
                   </item>
+                  <item id="94b33a7c1a9e46bbb2c252e8a5ccb0ea" cid="REA026" type="realization" owner="c0d92ffc75f241288512a0c13a3ad772" creation-date="09/20/2023 09:08:16" from="dibe91515433cb495da9a3a27bb44c9f7d6615" to="di2abc4496d4a140e9aae1b676856e66d13913" visibility="package" />
                   <item id="di2abc4496d4a140e9aae1b676856e66d13913" cid="C008" type="class" name="DrvCanFilterC" owner="c0d92ffc75f241288512a0c13a3ad772" creation-date="07/05/2023 12:29:38" visibility="undefined">
                     <owned-items />
                     <attributes>
                       <attribute id="a61ca8c9010894ec8a6908fce9bbe46ea405" cid="PROP064" name="addr" creation-date="07/05/2023 13:07:38" property-ref="di10b32914f92940fabc53e5109de683e72441" />
                       <attribute id="a0284eb27244647818a32c288c99ea91e684" cid="PROP065" name="mask" creation-date="07/05/2023 13:07:42" property-ref="di25e82e92b83d4bc6992f3bbc7edb78362441" />
                       <attribute id="aa1ed05e186604f22afc92d0af306ae06853" cid="PROP067" name="chan_name" creation-date="07/05/2023 13:36:18" property-ref="f07f7781ed7d46298b0a9842383e1bea" />
-                      <attribute id="a1713d959c06c4f63b7c5c7970210976b74" cid="PROP1060" name="chan" creation-date="09/18/2023 15:25:42" property-ref="f83edbc131fb4079a68d8c567ce7a1fa" />
                     </attributes>
                     <operations>
                       <operation id="o817df431c8ac4b13baf8e604876ff580991" cid="OP062" name="DRV_CAN_Filter_c" creation-date="07/11/2023 09:28:17" type="" type-id="" visibility="public">
@@ -10223,14 +10243,6 @@ Qué se hace con el código de error?</comment>
                           <stereotype>create</stereotype>
                         </stereotypes>
                       </operation>
-                      <operation id="oa6818d691c174583a10686e337f8ba1c641" cid="OP091" name="match" creation-date="07/13/2023 15:44:44" type="" type-id="" visibility="public">
-                        <parameters>
-                          <parameter id="p53b37ee5a41542179f4c226698bf9437" name="add" type="int" type-id="Python.int" />
-                        </parameters>
-                        <source-codes>
-                          <source-code language="ActionScript" />
-                        </source-codes>
-                      </operation>
                     </operations>
                     <source-codes>
                       <source-code language="ActionScript" />
@@ -10239,11 +10251,11 @@ Qué se hace con el código de error?</comment>
                 </abstract-items>
                 <layer id="17ffb109480546d58a0f0a34cab1f958" name="Default" visible="true" enabled="true" locked="false">
                   <item id="dfe5954f6b024684aec35f27f78ad2a1" iid="359b8e4c336f47219ad03ee54a447694" creation-date="07/13/2023 11:19:49" order-index="7" type="entity">
-                    <layout ax="80" ay="-390" awidth="1420" aheight="700" x="80" y="-390" width="1420" height="650" expanded="80,-390,1420,700" collapsed="0,0,0,0" rotation-center="-528,-248" />
+                    <layout ax="80" ay="-390" awidth="1420" aheight="740" x="80" y="-390" width="1420" height="650" expanded="80,-390,1420,740" collapsed="0,0,0,0" rotation-center="-528,-248" />
                     <package name-in-body="false" />
                   </item>
                   <item id="c0d92ffc75f241288512a0c13a3ad772" iid="1dfb1b29c9c04631833653d0e5f261df" container="dfe5954f6b024684aec35f27f78ad2a1" container-iid="359b8e4c336f47219ad03ee54a447694" creation-date="07/05/2023 13:05:54" order-index="4" type="entity">
-                    <layout ax="130" ay="-310" awidth="780" aheight="410" x="130" y="-310" width="780" height="410" expanded="130,-310,780,410" collapsed="0,0,0,0" rotation-center="-15,-30" />
+                    <layout ax="130" ay="-310" awidth="780" aheight="636" x="130" y="-310" width="780" height="550" expanded="130,-310,780,636" collapsed="0,0,0,0" rotation-center="-15,-100" />
                     <package name-in-body="false" />
                   </item>
                   <item id="di86f4fcc0a7d64ad59389d366a00b78056190" iid="8d58f4f188274aba8572f6eda1359da9" container="dfe5954f6b024684aec35f27f78ad2a1" container-iid="359b8e4c336f47219ad03ee54a447694" creation-date="07/05/2023 13:05:54" order-index="5" type="entity">
@@ -10259,7 +10271,7 @@ Qué se hace con el código de error?</comment>
                     <layout ax="550" ay="-270" awidth="176" aheight="121" x="550" y="-270" width="210" height="110" rotation-center="-35,5.5" />
                   </item>
                   <item id="di2abc4496d4a140e9aae1b676856e66d13913" iid="c7ed2490d29542519e72e7641e260af4" container="c0d92ffc75f241288512a0c13a3ad772" container-iid="1dfb1b29c9c04631833653d0e5f261df" show-fields="true" creation-date="07/05/2023 12:29:38" order-index="1" type="entity">
-                    <layout ax="150" ay="-90" awidth="356" aheight="173" x="140" y="460" width="340" height="140" rotation-center="-43,17" />
+                    <layout ax="150" ay="-90" awidth="356" aheight="150" x="140" y="460" width="340" height="150" rotation-center="-43,28.5" />
                     <classifier />
                     <class />
                   </item>
@@ -10286,6 +10298,20 @@ Qué se hace con el código de error?</comment>
                     <layout ax="550" ay="-90" awidth="345" aheight="153" x="550" y="-90" width="260" height="80" rotation-center="-60,40" />
                     <classifier />
                     <class />
+                  </item>
+                  <item id="dibe91515433cb495da9a3a27bb44c9f7d6615" iid="a90b4038870e4e1591ee0504cbfb9f21" container="c0d92ffc75f241288512a0c13a3ad772" container-iid="1dfb1b29c9c04631833653d0e5f261df" show-fields="true" creation-date="07/05/2023 12:29:38" order-index="1" type="entity">
+                    <layout ax="150" ay="110" awidth="610" aheight="192" x="150" y="110" width="610" height="170" rotation-center="-170,23.5" />
+                    <classifier show-inherited-fields="true" />
+                    <class />
+                  </item>
+                  <item id="94b33a7c1a9e46bbb2c252e8a5ccb0ea" iid="d56b9eda4f974eab8721ba47fef2ad85" container="c0d92ffc75f241288512a0c13a3ad772" container-iid="1dfb1b29c9c04631833653d0e5f261df" creation-date="09/20/2023 09:08:16" order-index="10" type="relation">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="455" y1="110" x2="328" y2="60" start-border-pos="0.125" end-border-pos="0.625" start-local-pos="178" end-local-pos="178" name-position="0,20">
+                      <points>
+                        <point x="455" y="110" />
+                        <point x="328" y="60" />
+                      </points>
+                    </layout>
+                    <relation from="dibe91515433cb495da9a3a27bb44c9f7d6615" from-iid="a90b4038870e4e1591ee0504cbfb9f21" to="di2abc4496d4a140e9aae1b676856e66d13913" to-iid="c7ed2490d29542519e72e7641e260af4" />
                   </item>
                 </layer>
               </diagram>
@@ -28618,7 +28644,7 @@ Qué se hace con el código de error?</comment>
               </meta>
               <abstract-items />
               <sub-models />
-              <diagram type="uml-class" id="ped687e03db9d46cf8f07736a2f9b2eb0_648596384" name="app_man" order-index="1" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="0,-16" zoom="0.9">
+              <diagram type="uml-class" id="ped687e03db9d46cf8f07736a2f9b2eb0_648596384" name="app_man" order-index="1" uid="" name-style="" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-75,-60" zoom="0.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -31926,7 +31952,7 @@ Qué se hace con el código de error?</comment>
           </meta>
           <abstract-items />
           <sub-models />
-          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-308,-835" zoom="0.8">
+          <diagram type="uml-deployment" id="pee89b6869ef543f89a64f083fe1c29f3_565315035" name="Devops Platform" order-index="2" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-489,-709" zoom="0.6">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
