@@ -25,13 +25,6 @@ from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
 from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC #pylint: disable= relative-beyond-top-level
 
 #######################              ENUMS               #######################
-# getExpStatus
-# getExpProfileData
-# getExpBatteryData
-# modifyCurrentExp
-# writeNewAlarms
-# writeGenericMeasures
-# writeExtendedMeasures
 
 #######################             CLASSES              #######################
 TIMEOUT_CONNECTION = 10
@@ -73,20 +66,6 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         cycler_info = self.db_iface.get_cycler_station_info(self.cycler_station)
         self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                station= cycler_info))
-
-
-###################################### REMOVE FOLLOWING LINES ######################################
-        # self.is_recording_meas = False
-        # self.shared_meas = shared_measures
-        # self.shared_status = shared_status
-        # self.chan_APP_STR = chan_APP_STR
-
-        # # Create the conector used for database comunication
-        # local_status : MID_DABS_Status_c = self.shared_status.read()
-        # local_meas : MID_DABS_Measures_c = self.shared_meas.read()
-        # local_meas.elect.OperatingHours = self.db_iface.getOperatingHours(local_meas.bat_id)
-        # local_meas : MID_DABS_Measures_c = self.shared_meas.mergeIncludedTags(local_meas,
-        #                                       ['elect.OperatingHours'])
 
     def __receive_alarms(self) -> List[MidDataAlarmC]:
         alarms = []
