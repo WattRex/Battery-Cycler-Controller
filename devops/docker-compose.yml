@@ -48,6 +48,11 @@ services:
     depends_on:
       cache_db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "${MASTER_MYSQL_HOST}", "-u${MASTER_MYSQL_USER}", "-p${MASTER_MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   wattrex_cycler_cache_db:
