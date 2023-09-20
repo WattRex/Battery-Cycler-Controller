@@ -287,7 +287,7 @@
       </counter>
       <counter>
         <item-type type-id="general-transition" type="Transition" />
-        <value>414</value>
+        <value>448</value>
       </counter>
       <counter>
         <item-type type-id="transition" type="Protocol Transition" />
@@ -295,7 +295,7 @@
       </counter>
       <counter>
         <item-type type-id="choice" type="Choice" />
-        <value>23</value>
+        <value>24</value>
       </counter>
       <counter>
         <item-type type-id="composite-state" type="Composite State" />
@@ -30607,7 +30607,7 @@ Qué se hace con el código de error?</comment>
             <layer id="886157dfeeaa49c6a2c51509a2e0c784" name="Default" visible="true" enabled="true" locked="false" />
           </diagram>
         </model>
-        <model id="p2bea01753635461cb0987c27c40a3b51_921758731" name="StatusMachineDiagram" namespace="" order-index="10">
+        <model id="p2bea01753635461cb0987c27c40a3b51_921758731" name="StatusMachineDiagram" namespace="" order-index="10" expanded="true">
           <meta>
             <authors>
               <author> </author>
@@ -30633,7 +30633,7 @@ Qué se hace con el código de error?</comment>
               </meta>
               <abstract-items />
               <sub-models />
-              <diagram type="uml-statechart" id="p34b1712db8a449079d651b95d90d1baf_968454686" name="general" order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="224,-347" zoom="0.6">
+              <diagram type="uml-statechart" id="p34b1712db8a449079d651b95d90d1baf_968454686" name="general" order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="227,-360" zoom="0.6">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -30645,7 +30645,7 @@ Qué se hace con el código de error?</comment>
                   </authors>
                   <description />
                   <creation-date>08/01/2023 12:35:59</creation-date>
-                  <change-date>09/06/2023 15:16:47</change-date>
+                  <change-date>09/20/2023 12:08:06</change-date>
                   <revision-count>0</revision-count>
                   <version />
                 </meta>
@@ -30681,6 +30681,7 @@ Qué se hace con el código de error?</comment>
                       <trigger />
                     </transition>
                   </item>
+                  <item id="dib198399c42ca4517a5f2b3782577ea1b4320" cid="CH023" type="choice" name="Experiment finish status?" owner="a6e6804cd5074488a878d73316231e31" creation-date="09/06/2023 15:03:53" visibility="undefined" />
                   <item id="di37ecb69919ae41509d5787c7586634364120" cid="ST024" type="state" name="Reload SCPI Sniffer" owner="9459e866fd064fb1a9d21bc68f94ec9f" creation-date="09/05/2023 15:11:29" visibility="undefined">
                     <state composite="false" orthogonal="false" simple="false" submachine-state="false">
                       <state-invariant />
@@ -30720,6 +30721,11 @@ Qué se hace con el código de error?</comment>
                   </item>
                   <item id="997b8ad29ddb400e9e8c785495a81d79" cid="ELEM003" type="general-transition" owner="a6e6804cd5074488a878d73316231e31" creation-date="08/01/2023 12:38:30" from="959de114655d466eac7c3acbd99700c2" to="a1fd8e99aede4a39b40de7f7fc33465e" visibility="package">
                     <transition guard="" behaviourExpression="" />
+                  </item>
+                  <item id="di595557d15172478d9bcdd18f4fc92c053644" cid="ELEM447" type="general-transition" owner="a6e6804cd5074488a878d73316231e31" creation-date="09/06/2023 15:03:33" from="3c0c3117ddac4cc48445578aafd5c28d" to="bc1db8ba26a44d1db37ed675e0d54913" visibility="package">
+                    <transition guard="not finished &amp;&amp; no error" behaviourExpression="">
+                      <trigger />
+                    </transition>
                   </item>
                   <item id="4b08b320f25b48fd92c855f3ec6141c2" cid="ELEM100" type="general-transition" owner="a6e6804cd5074488a878d73316231e31" creation-date="08/01/2023 12:51:26" from="di3312842175f24c929ddff987a2c4a5a71107" to="014a40944c474b8097bb245a837af693" visibility="package">
                     <transition guard="CS ok" behaviourExpression="">
@@ -30762,7 +30768,7 @@ Qué se hace con el código de error?</comment>
                     <transition guard="" behaviourExpression="" />
                   </item>
                   <item id="di991d20e1989041c8a81d6628a5e69c644606" cid="CH012" type="choice" name="SCPI-Sniffer  working?" owner="9459e866fd064fb1a9d21bc68f94ec9f" creation-date="09/05/2023 15:04:25" visibility="undefined" />
-                  <item id="3c0c3117ddac4cc48445578aafd5c28d" cid="CH022" type="choice" name="Experiment finish status?" owner="a6e6804cd5074488a878d73316231e31" creation-date="09/06/2023 15:03:53" visibility="undefined" />
+                  <item id="3c0c3117ddac4cc48445578aafd5c28d" cid="CH022" type="choice" name="Experiment status?" owner="a6e6804cd5074488a878d73316231e31" creation-date="09/06/2023 15:03:53" visibility="undefined" />
                   <item id="di1a01cf0acbd34e65865146460527af824606" cid="ELEM342" type="general-transition" owner="9459e866fd064fb1a9d21bc68f94ec9f" creation-date="09/05/2023 15:09:11" from="dic418149ad5f4448baf86ac7eac8c87274606" to="di991d20e1989041c8a81d6628a5e69c644606" visibility="package">
                     <transition guard="" behaviourExpression="">
                       <trigger>Yes</trigger>
@@ -30894,7 +30900,7 @@ Qué se hace con el código de error?</comment>
                     <transition guard="" behaviourExpression="" />
                   </item>
                   <item id="39a3c3152ae742d09e6c0d338b478800" cid="ELEM411" type="general-transition" owner="a6e6804cd5074488a878d73316231e31" creation-date="09/06/2023 15:07:21" from="3c0c3117ddac4cc48445578aafd5c28d" to="dib0543c389f564dc79731d5156524ccf27435" visibility="package">
-                    <transition guard="no error || experiment error" behaviourExpression="">
+                    <transition guard="finished &amp;&amp; (no error || experiment error)" behaviourExpression="">
                       <trigger />
                     </transition>
                   </item>
@@ -30953,10 +30959,10 @@ Qué se hace con el código de error?</comment>
                     <relation from="3c0c3117ddac4cc48445578aafd5c28d" from-iid="7e672ce58dac474aaa6a0acc52e7c46c" to="dib0543c389f564dc79731d5156524ccf27435" to-iid="b7e61f8610c44f729a604f853b81d3f5" />
                   </item>
                   <item id="di075c99d82ea249cc966db607f99806da5633" iid="85e5b32a7bb6441294e6d9d0ea0c0b44" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="09/06/2023 15:03:33" order-index="25" type="relation">
-                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1750" y1="540" x2="2240" y2="515" start-border-pos="0.625" end-border-pos="0.875" start-local-pos="20" end-local-pos="25" name-position="0,20">
+                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1770" y1="510" x2="2240" y2="510" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="30" end-local-pos="25" name-position="0,20">
                       <points>
-                        <point x="1750" y="540" />
-                        <point x="2240" y="515" />
+                        <point x="1770" y="510" />
+                        <point x="2240" y="510" />
                       </points>
                     </layout>
                     <relation from="3c0c3117ddac4cc48445578aafd5c28d" from-iid="7e672ce58dac474aaa6a0acc52e7c46c" to="dib857b94821484cb9accd1c8c5f9054966766" to-iid="cc773b1417fe449b8d19179ecf153ffb" />
@@ -30965,9 +30971,9 @@ Qué se hace con el código de error?</comment>
                     <layout name-position="-20,40" name-anchor="right" auto-anchor="true" label-attached="false" ax="1730" ay="480" awidth="40" aheight="60" x="1730" y="480" width="40" height="60" />
                   </item>
                   <item id="b9fabdf273e74877a772cebcd2430047" iid="eabf4965c2614a3ba96afb4f6a6d2168" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="09/06/2023 15:03:33" order-index="25" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1408" y1="515" x2="1730" y2="510" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="25" end-local-pos="30" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1408" y1="510" x2="1730" y2="510" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="25" end-local-pos="30" name-position="0,20">
                       <points>
-                        <point x="1408" y="515" />
+                        <point x="1408" y="510" />
                         <point x="1730" y="510" />
                       </points>
                     </layout>
@@ -30984,13 +30990,13 @@ Qué se hace con el código de error?</comment>
                     <relation from="di1b613a494cd647c19ae083f5578c0c454909" from-iid="1803fed7a8dd4cf9a859231055567c00" to="dib0543c389f564dc79731d5156524ccf27435" to-iid="b7e61f8610c44f729a604f853b81d3f5" />
                   </item>
                   <item id="dib857b94821484cb9accd1c8c5f9054966766" iid="cc773b1417fe449b8d19179ecf153ffb" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="08/01/2023 12:58:30" order-index="15" type="entity">
-                    <layout ax="2240" ay="490" awidth="158" aheight="50" x="2240" y="490" width="100" height="50" expanded="2240,490,158,50" collapsed="0,0,0,0" />
+                    <layout ax="2240" ay="485" awidth="158" aheight="50" x="2240" y="490" width="100" height="50" expanded="2240,485,158,50" collapsed="0,0,0,0" />
                   </item>
                   <item id="666d6075e9034ba980506848ad8547ce" iid="1290eb0342094602a8e1706de02aada8" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="09/06/2023 15:02:02" order-index="23" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1329" y1="320" x2="1329" y2="490" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="79" end-local-pos="79" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1329" y1="320" x2="1329" y2="485" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="79" end-local-pos="79" name-position="0,20">
                       <points>
                         <point x="1329" y="320" />
-                        <point x="1329" y="490" />
+                        <point x="1329" y="485" />
                       </points>
                     </layout>
                     <relation from="ad506e976b014bc3a00ffb03f71a55e9" from-iid="27d092637f08436298170302db2e8fbd" to="bc1db8ba26a44d1db37ed675e0d54913" to-iid="9d4e52f701424adea2f83b49026a7ea4" />
@@ -31062,7 +31068,7 @@ Qué se hace con el código de error?</comment>
                     <layout ax="1546" ay="-170" awidth="200" aheight="50" x="1146" y="-80" width="100" height="50" expanded="1546,-170,200,50" collapsed="0,0,0,0" />
                   </item>
                   <item id="bc1db8ba26a44d1db37ed675e0d54913" iid="9d4e52f701424adea2f83b49026a7ea4" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="08/01/2023 12:58:30" order-index="15" type="entity">
-                    <layout ax="1250" ay="490" awidth="158" aheight="50" x="850" y="590" width="100" height="50" expanded="1250,490,158,50" collapsed="0,0,0,0" />
+                    <layout ax="1250" ay="485" awidth="158" aheight="50" x="850" y="590" width="100" height="50" expanded="1250,485,158,50" collapsed="0,0,0,0" />
                   </item>
                   <item id="92d0834cff9249c7898d939de46bf112" iid="594ac23ad8644548aea4228c25097edb" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="08/01/2023 12:57:34" order-index="14" type="relation">
                     <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1542" y1="225" x2="1408" y2="295" start-border-pos="0.875" end-border-pos="0.875" start-local-pos="30" end-local-pos="25" name-position="-50,-40">
@@ -31134,23 +31140,32 @@ Qué se hace con el código de error?</comment>
                     <layout name-position="0,10" name-anchor="bottom" auto-anchor="true" label-attached="false" ax="830.5" ay="-260" awidth="30" aheight="30" x="426" y="-170" width="25" height="25" />
                   </item>
                   <item id="dief3c517920b4488889124caf69fac9101205" iid="ef03c94eb5cf4e7295edb3fe83152e35" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="08/01/2023 12:51:26" order-index="9" type="relation">
-                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1666" y1="-280" x2="2319" y2="490" start-border-pos="0.375" end-border-pos="0.125" start-local-pos="30" end-local-pos="79" name-position="70,0" name-width="140">
+                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1666" y1="-280" x2="2319" y2="485" start-border-pos="0.375" end-border-pos="0.125" start-local-pos="30" end-local-pos="79" name-position="70,0" name-width="140">
                       <points>
                         <point x="1666" y="-280" />
                         <point x="2320" y="90" />
-                        <point x="2319" y="490" />
+                        <point x="2319" y="485" />
                       </points>
                     </layout>
                     <relation from="di3312842175f24c929ddff987a2c4a5a71107" from-iid="63496d49908445a6a7915f6ee9572d72" to="dib857b94821484cb9accd1c8c5f9054966766" to-iid="cc773b1417fe449b8d19179ecf153ffb" />
                   </item>
                   <item id="80f36217696d4232b2d6c9a513038d6e" iid="b6b4d26d52b043e793f641ec0ee9f5e8" container="a6e6804cd5074488a878d73316231e31" container-iid="3ead6d80825c408a81ba6adeb8edddad" creation-date="09/06/2023 15:16:47" order-index="30" type="relation">
-                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="false" auto-path="" x1="2319" y1="540" x2="2319" y2="620" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="79" name-position="0,20">
+                    <layout line-style="rounded-rectangular" lock-start-point="true" lock-to-fields="false" auto-path="" x1="2319" y1="535" x2="2319" y2="620" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="79" name-position="0,20">
                       <points>
-                        <point x="2319" y="540" />
+                        <point x="2319" y="535" />
                         <point x="2319" y="620" />
                       </points>
                     </layout>
                     <relation from="dib857b94821484cb9accd1c8c5f9054966766" from-iid="cc773b1417fe449b8d19179ecf153ffb" to="cb37ee8963c94ad7b18cb179caae159f" to-iid="d2c9285478234181a3c8b3c9e4abddeb" />
+                  </item>
+                  <item id="di595557d15172478d9bcdd18f4fc92c053644" iid="47495113d60f4930a6dc79a1b0a66944" creation-date="09/06/2023 15:03:33" order-index="25" type="relation">
+                    <layout line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1750" y1="540" x2="1329" y2="535" start-border-pos="0.625" end-border-pos="0.625" start-local-pos="20" end-local-pos="79" name-position="0,20">
+                      <points>
+                        <point x="1750" y="540" />
+                        <point x="1329" y="535" />
+                      </points>
+                    </layout>
+                    <relation from="3c0c3117ddac4cc48445578aafd5c28d" from-iid="7e672ce58dac474aaa6a0acc52e7c46c" to="bc1db8ba26a44d1db37ed675e0d54913" to-iid="9d4e52f701424adea2f83b49026a7ea4" />
                   </item>
                 </layer>
               </diagram>
@@ -31614,7 +31629,7 @@ Qué se hace con el código de error?</comment>
               </diagram>
             </model>
           </sub-models>
-          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="0,-38" zoom="0.8">
+          <diagram type="uml-statechart" id="p804a5573f5b649e488e57527a24de547_904275182" name="mid_pwr" order-index="2" overview-order-index="0" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-223,-59" zoom="0.6">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -31939,7 +31954,7 @@ Qué se hace con el código de error?</comment>
             </layer>
           </diagram>
         </model>
-        <model id="p76e4da4101884a4797f0d86dca004ef7_688257264" name="Devops" namespace="" order-index="11" expanded="true">
+        <model id="p76e4da4101884a4797f0d86dca004ef7_688257264" name="Devops" namespace="" order-index="11">
           <meta>
             <authors>
               <author> </author>
