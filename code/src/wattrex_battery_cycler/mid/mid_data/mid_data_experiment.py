@@ -137,11 +137,43 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
+        if ((volt_max is None and
+             (volt_min is not None or curr_max is not None or curr_min is not None))
+            or (volt_min is None and
+            (curr_max is not None or curr_min is not None or volt_max is not None))
+            or (curr_max is None and
+            (curr_min is not None or volt_max is not None or volt_min is not None))
+            or (curr_min is None and
+            (volt_max is not None or volt_min is not None or curr_max is not None))):
+            log.error("Invalid power range")
+            raise ValueError("Invalid power range")
+        elif (volt_max is not None and volt_min is not None and volt_max < volt_min):
+            log.error("Invalid voltage range")
+            raise ValueError("Invalid power range")
+        elif (curr_max is not None and curr_min is not None and curr_max < curr_min):
+            log.error("Invalid current range")
+            raise ValueError("Invalid power range")
         self.volt_max : int|None = volt_max
         self.volt_min : int|None = volt_min
         self.curr_max : int|None = curr_max
         self.curr_min : int|None = curr_min
 
+    def in_range(self, other) -> bool:
+        '''
+        Check if the current instance is less or equal than the other instance.
+
+        Args:
+            other (MidDataPwrRangeC): Instance to compare with
+
+        Returns:
+            bool: True if the current values are inside values of the other
+                instance, False otherwise
+        '''
+        res = False
+        if (self.volt_max <= other.volt_max and self.volt_min >= other.volt_min and
+            self.curr_max <= other.curr_max and self.curr_min >= other.curr_min):
+            res = True
+        return res
 
 class MidDataProfileC:
     '''
