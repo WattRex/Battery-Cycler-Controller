@@ -58,19 +58,19 @@ class MidDataCyclerStationC:
     '''
     Cycler station information.
     '''
-    def __init__(self, cycler_id: int| None= None, name: str| None= None,
+    def __init__(self, cs_id: int| None= None, name: str| None= None,
                 devices: List[MidDataDeviceC]| None= None, deprecated: bool|None = None):
         '''
         Initialize CyclerStation instance with the given parameters.
 
         Args:
             name (str): Name of the cycler station
-            cycler_id (str): ID of the cycler station
+            cs_id (str): ID of the cycler station
             devices (List[MidDataDeviceC]): List of devices included in the cycler station
             deprecated (bool, optional): Flag that indicates if the cycler station is deprecated
         '''
         self.name : str| None = name
-        self.cycler_id : int| None = cycler_id
+        self.cs_id : int| None = cs_id
         self.devices : List[MidDataDeviceC]| None = devices
         self.deprecated: bool|None = deprecated
 

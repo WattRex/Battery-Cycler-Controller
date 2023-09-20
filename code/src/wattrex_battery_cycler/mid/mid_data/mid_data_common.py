@@ -33,13 +33,14 @@ class MidDataAllStatusC:
         '''
         # Power device is the main device, the  status will be overwriten by the devices in use
         self.pwr_dev : MidDataDeviceStatusC| None = None
+        self.pwr_mode : MidDataPwrModeE| None = None
 
 class MidDataGenMeasC:
     '''
     Class used to store generic power measures.
     '''
 
-    def __init__(self,pwr_mode: MidDataPwrModeE = MidDataPwrModeE.DISABLE, voltage: int= 0,
+    def __init__(self, voltage: int= 0,
                  current: int= 0, power: int= 0) -> None:
         '''
         Initialize the instance with the given measures.
@@ -50,7 +51,6 @@ class MidDataGenMeasC:
             power (int): active power applied to the battery in a given instant
             timestamp (datetime): instante when the measures has been taken
         '''
-        self.pwr_mode : MidDataPwrModeE = pwr_mode
         self.voltage : int = voltage
         self.current : int = current
         self.power : int = power
