@@ -8,9 +8,9 @@ services:
     container_name: wattrex_cycler_cache_db
     restart: always
     ports:
-      - "3369:3306"
+      - "3366:3306"
     volumes:
-      - wattrex_cycler_cache_db:/var/lib/mysql:rw
+      - wattrex_cycler_cache_db_javi:/var/lib/mysql:rw
       - ../cache_db/createCacheTables.sql:/docker-entrypoint-initdb.d/createCacheTables.sql
     environment:
       TZ: Europe/Berlin
@@ -39,7 +39,7 @@ services:
   db_sync:
     build:
       context: ../db_sync
-      dockerfile: ./Dockerfile.db_sync
+      dockerfile: ../docker/Dockerfile.db_sync
     image: wattrex-cycler-db-sync
     container_name: wattrex_cycler_db_sync
     restart: always
@@ -55,6 +55,6 @@ services:
       retries: 10
 
 volumes:
-  wattrex_cycler_cache_db:
-    name: wattrex_cycler_cache_db
+  wattrex_cycler_cache_db_javi:
+    name: wattrex_cycler_cache_db_javi
     # external: true

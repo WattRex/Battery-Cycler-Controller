@@ -1,4 +1,4 @@
-can_sniffer>=0.1.0
+can_sniffer>=0.0.1
 system_logger_tool>=0.0.3
 system_shared_tool>=0.0.3
 bitarray>=2.8.1
