@@ -25,8 +25,8 @@ services:
 
   cycler:
     build:
-      context: .
-      dockerfile: Dockerfile.cycler
+      context: ../cycler
+      dockerfile: ./Dockerfile.cycler
     image: wattrex-cycler-node
     container_name: wattrex_cycler_node
     restart: no
@@ -38,8 +38,8 @@ services:
 
   db_sync:
     build:
-      context: .
-      dockerfile: Dockerfile.db_sync
+      context: ../db_sync
+      dockerfile: ./Dockerfile.db_sync
     image: wattrex-cycler-db-sync
     container_name: wattrex_cycler_db_sync
     restart: always
