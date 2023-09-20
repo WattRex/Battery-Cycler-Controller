@@ -12,11 +12,12 @@ arg1=$1
 arg2=$2
 
 initial_deploy () {
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
+    # docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db -d
 }
 
 instance_new_cycler () {
-    echo "a"
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 check_sniffer () {
@@ -49,7 +50,7 @@ case ${arg1} in
     "cycler")
         if [[ ${arg2} =~ $INT_RE ]]; then
             # echo "Cycler ${2}"
-            instance_new_cycler
+            instance_new_cycler "${arg2}"
         else
             echo "[ERROR] Invalid Cycler Station ID"
         fi

@@ -26,9 +26,9 @@ services:
   cycler:
     build:
       context: ../cycler
-      dockerfile: ./Dockerfile.cycler
+      dockerfile: ../docker/Dockerfile.cycler
     image: wattrex-cycler-node
-    container_name: wattrex_cycler_node
+    # container_name: wattrex_cycler_node
     restart: no
     env_file:
       - ../.cred.env
