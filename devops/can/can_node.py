@@ -7,6 +7,7 @@ from __future__ import annotations
 import sys
 import os
 #######################         GENsERIC IMPORTS          #######################
+from time import sleep
 from threading import Event
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
 from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, Logger
@@ -17,7 +18,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 from can_sniffer import DrvCanNodeC
-                            
+
 
 #######################            FUNCTIONS             #######################
 if __name__ == '__main__':
@@ -28,8 +29,9 @@ if __name__ == '__main__':
     can = DrvCanNodeC(tx_buffer_size= 150, working_flag=_working_can)
     try:
         can.start()
-        for x in range(10):
-            print(x)
+        while 1:
+            sleep(300)
+            print("Elapsed time: 5 minutes")
     except KeyboardInterrupt:
         _working_can.clear()
         # can_queue.terminate()
