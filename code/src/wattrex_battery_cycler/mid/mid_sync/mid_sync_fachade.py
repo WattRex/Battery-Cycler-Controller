@@ -38,12 +38,12 @@ class MidSyncFachadeC():
         log.info("Initializing DB Connection...")
         self._master_db: DrvDbSqlEngineC = master_db #Remote database
         self._cache_db:  DrvDbSqlEngineC = cache_db  #Local database
-        self._pushed_gen_meas: DrvDbGenericMeasureC     = None
-        self._pushed_ext_meas: DrvDbExtendedMeasureC    = None
-        self._pushed_status: DrvDbStatusC               = None
-        self._pushed_alarms: DrvDbAlarmC                = None
-        self._pushed_exps: DrvDbExperimentC             = None
-        self._id_gen_meas: int = None
+        # self._pushed_gen_meas: DrvDbCacheGenericMeasureC     = None
+        # self._pushed_ext_meas: DrvDbCacheGenericMeasureC    = None
+        # self._pushed_status: DrvDbCacheStatusC               = None
+        # self._pushed_alarms: DrvDbAlarmC                = None
+        # self._pushed_exps: DrvDbCacheExperimentC             = None
+        # self._id_gen_meas: int = None
 
         # print('\nCONEXION:')
         # print(self._master_db) #TODO: Checkear conexion
@@ -60,10 +60,22 @@ class MidSyncFachadeC():
             - None
         '''
         log.info("Pushing general measures...")
-        stmt = select([func.max(DrvDbGenericMeasureC.__dict__['ExpID']).label('numero_mas_alto')])
+        stmt = select([func.max(DrvDbCacheGenericMeasureC.__dict__['ExpID']).label('numero_mas_alto')])
         self._id_gen_meas = self._cache_db.session.execute(stmt).all()[0][0]
-        stmt = select(DrvDbGenericMeasureC)
-        self._pushed_gen_meas = self._cache_db.session.execute(stmt).all()
+        stmt = select(DrvDbCacheGenericMeasureC)
+        cache_meas  = self._cache_db.session.execute(stmt).all()
+        # self._pushed_gen_meas = []
+        #TODO: El expunge y el delete no tiene más sentido hacerlo cuando se confirme que se ha subido y guardado la medida en master??
+        for meas in cache_meas:
+            nueva_meas = DrvDbMasterGenericMeasureC()
+            nueva_meas.transform(meas[0])
+            # self._pushed_gen_meas.append(meas[0])
+            # self._cache_db.session.expunge(meas[0])
+            self._master_db.session.add(nueva_meas)
+            self._cache_db.session.delete(meas[0])
+
+        self._master_db.commit_changes() #TODO: si este commit no falla hago el otro
+        self._cache_db.commit_changes()
 
 
     def push_ext_meas(self) -> None:
@@ -76,8 +88,15 @@ class MidSyncFachadeC():
             - None
         '''
         log.info("Pushing external measures...")
-        stmt = select(DrvDbExtendedMeasureC).where(DrvDbExtendedMeasureC.__dict__['ExpID'] <= self._id_gen_meas)
-        self._pushed_ext_meas = self._cache_db.session.execute(stmt).all()
+        stmt = select(DrvDbCacheExtendedMeasureC)
+        cache_meas = self._cache_db.session.execute(stmt).all()
+        self._pushed_ext_meas = []
+
+        for m in cache_meas:
+            print(m[0])
+            m[0] : DrvDbCacheExtendedMeasureC
+            m[0].__class__ = DrvDbMasterExtendedMeasureC
+            self._pushed_ext_meas.append(m)
 
 
     def push_alarms(self) -> None:
@@ -104,7 +123,7 @@ class MidSyncFachadeC():
             - None
         '''
         log.info("Pushing status...")
-        stmt = select(DrvDbStatusC)
+        stmt = select(DrvDbCacheStatusC)
         self._pushed_status = self._cache_db.session.execute(stmt).all()
 
 
@@ -119,12 +138,12 @@ class MidSyncFachadeC():
         '''
         log.info("Updating experiment ID...") # pylint: disable=logging-fstring-interpolation
 
-        stmt = select(DrvDbExperimentC)
+        stmt = select(DrvDbCacheExperimentC)
         exp_master_db = self._master_db.session.execute(stmt).all()
         self._pushed_exps = self._cache_db.session.execute(stmt).all()
 
         for row_master_db in exp_master_db:
-            master: DrvDbExperimentC = row_master_db[0]
+            master: DrvDbCacheExperimentC = row_master_db[0]
             for pos, row_cache_db in enumerate(self._pushed_exps):
                 if master.ExpID == self._pushed_exps[pos][0].ExpID:
                     self._pushed_exps[pos][0].Name          = master.Name
@@ -175,13 +194,13 @@ class MidSyncFachadeC():
         '''
         log.info("Commiting changes...")
 
-        self._add_db(self._pushed_exps)     #ADD EXPERIMENTS
-        self._add_db(self._pushed_gen_meas) #ADD GENERIC MEAS
-        self._add_db(self._pushed_ext_meas) #ADD EXTEND MEAS
-        self._add_db(self._pushed_alarms)   #ADD ALARMS
-        self._add_db(self._pushed_status)   #ADD STATUS
+        # self._add_db(self._pushed_exps)     #ADD EXPERIMENTS
+        # self._add_db(self._pushed_gen_meas) #ADD GENERIC MEAS
+        # self._add_db(self._pushed_ext_meas) #ADD EXTEND MEAS
+        # self._add_db(self._pushed_alarms)   #ADD ALARMS
+        # self._add_db(self._pushed_status)   #ADD STATUS
         self._master_db.commit_changes()
-        self._delete_pushed_data()
+        # self._delete_pushed_data()
 
 
         # try:
@@ -212,5 +231,6 @@ class MidSyncFachadeC():
     def _add_db(self, dates: list) -> None:
         if isinstance(dates, list):
             for row in dates:
-                self._cache_db.session.expunge(row[0])
-                self._master_db.session.merge(row[0])
+                pass
+                # self._cache_db.session.expunge(row[0])
+                # self._master_db.session.merge(row[0])
