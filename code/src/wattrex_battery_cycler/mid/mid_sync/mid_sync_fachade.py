@@ -38,12 +38,10 @@ class MidSyncFachadeC():
         log.info("Initializing DB Connection...")
         self._master_db: DrvDbSqlEngineC = master_db #Remote database
         self._cache_db:  DrvDbSqlEngineC = cache_db  #Local database
-        # self._pushed_gen_meas: DrvDbCacheGenericMeasureC     = None
-        # self._pushed_ext_meas: DrvDbCacheGenericMeasureC    = None
-        # self._pushed_status: DrvDbCacheStatusC               = None
-        # self._pushed_alarms: DrvDbAlarmC                = None
-        # self._pushed_exps: DrvDbCacheExperimentC             = None
-        # self._id_gen_meas: int = None
+        self._pushed_gen_meas: list = []
+        self._pushed_ext_meas: list = []
+        self._pushed_status: list   = []
+        self._pushed_alarms: list   = []
 
         # print('\nCONEXION:')
         # print(self._master_db) #TODO: Checkear conexion
@@ -60,23 +58,15 @@ class MidSyncFachadeC():
             - None
         '''
         log.info("Pushing general measures...")
-        stmt = select([func.max(DrvDbCacheGenericMeasureC.__dict__['ExpID']).label('numero_mas_alto')])
-        self._id_gen_meas = self._cache_db.session.execute(stmt).all()[0][0]
         stmt = select(DrvDbCacheGenericMeasureC)
         cache_meas  = self._cache_db.session.execute(stmt).all()
-        # self._pushed_gen_meas = []
-        #TODO: El expunge y el delete no tiene más sentido hacerlo cuando se confirme que se ha subido y guardado la medida en master??
+        self._pushed_gen_meas = []
         for meas in cache_meas:
-            nueva_meas = DrvDbMasterGenericMeasureC()
-            nueva_meas.transform(meas[0])
-            # self._pushed_gen_meas.append(meas[0])
-            # self._cache_db.session.expunge(meas[0])
-            self._master_db.session.add(nueva_meas)
-            self._cache_db.session.delete(meas[0])
-
-        self._master_db.commit_changes() #TODO: si este commit no falla hago el otro
-        self._cache_db.commit_changes()
-
+            meas_add = DrvDbMasterGenericMeasureC()
+            meas_add.transform(meas[0])
+            self._master_db.session.add(meas_add)
+            self._pushed_gen_meas.append(meas[0])
+        self._master_db.commit_changes()
 
     def push_ext_meas(self) -> None:
         '''Push the measures to the database.
@@ -91,12 +81,12 @@ class MidSyncFachadeC():
         stmt = select(DrvDbCacheExtendedMeasureC)
         cache_meas = self._cache_db.session.execute(stmt).all()
         self._pushed_ext_meas = []
-
-        for m in cache_meas:
-            print(m[0])
-            m[0] : DrvDbCacheExtendedMeasureC
-            m[0].__class__ = DrvDbMasterExtendedMeasureC
-            self._pushed_ext_meas.append(m)
+        for meas in cache_meas:
+            meas_add = DrvDbMasterExtendedMeasureC()
+            meas_add.transform(meas[0])
+            self._master_db.session.add(meas_add)
+            self._pushed_ext_meas.append(meas[0])
+        self._master_db.commit_changes()
 
 
     def push_alarms(self) -> None:
@@ -110,7 +100,13 @@ class MidSyncFachadeC():
         '''
         log.info("Pushing alarms...")
         stmt = select(DrvDbAlarmC)
-        self._pushed_alarms = self._cache_db.session.execute(stmt).all()
+        cache_meas = self._cache_db.session.execute(stmt).all()
+        self._pushed_alarms = []
+        for meas in cache_meas:
+            self._cache_db.session.expunge(meas[0])
+            self._master_db.session.merge(meas[0])
+            self._pushed_alarms.append(meas[0])
+        self._master_db.commit_changes()
 
 
     def push_status(self) -> None:
@@ -124,7 +120,13 @@ class MidSyncFachadeC():
         '''
         log.info("Pushing status...")
         stmt = select(DrvDbCacheStatusC)
-        self._pushed_status = self._cache_db.session.execute(stmt).all()
+        cache_meas = self._cache_db.session.execute(stmt).all()
+        self._pushed_status = []
+        for meas in cache_meas:
+            self._cache_db.session.expunge(meas[0])
+            self._master_db.session.merge(meas[0])
+            self._pushed_status.append(meas[0])
+        self._master_db.commit_changes()
 
 
     def update_experiments(self) -> None:
@@ -165,24 +167,6 @@ class MidSyncFachadeC():
         log.info("Updating last connection.")
 
 
-    def _delete_pushed_data(self) -> None:
-        ''' Deleting sent data
-        Args:
-            - None
-        Returns:
-            - None
-        Raises:
-            - None
-        '''
-        log.info("Deleting sent data.")
-        self._pushed_gen_meas   = None
-        self._pushed_ext_meas   = None
-        self._pushed_status     = None
-        self._pushed_alarms     = None
-        self._pushed_exps       = None
-        self._id_gen_meas       = None
-
-
     def commit(self) -> None:
         '''Confirm the changes made to the indicated database.
         Args:
@@ -194,13 +178,15 @@ class MidSyncFachadeC():
         '''
         log.info("Commiting changes...")
 
-        # self._add_db(self._pushed_exps)     #ADD EXPERIMENTS
-        # self._add_db(self._pushed_gen_meas) #ADD GENERIC MEAS
-        # self._add_db(self._pushed_ext_meas) #ADD EXTEND MEAS
-        # self._add_db(self._pushed_alarms)   #ADD ALARMS
-        # self._add_db(self._pushed_status)   #ADD STATUS
-        self._master_db.commit_changes()
-        # self._delete_pushed_data()
+        for meas in [self._pushed_alarms, self._pushed_status, self._pushed_ext_meas, self._pushed_gen_meas]:
+            for m in meas:
+                self._cache_db.session.delete(m)
+            self._cache_db.commit_changes()
+
+        self._pushed_gen_meas   = []
+        self._pushed_ext_meas   = []
+        self._pushed_status     = []
+        self._pushed_alarms     = []
 
 
         # try:
@@ -226,11 +212,3 @@ class MidSyncFachadeC():
         #             log.info("Resetting cache done.")
         #         except Exception as err: # pylint: disable=broad-except
         #             log.error(f"Error while reseting cache: {err}") # pylint: disable=logging-fstring-interpolation
-
-
-    def _add_db(self, dates: list) -> None:
-        if isinstance(dates, list):
-            for row in dates:
-                pass
-                # self._cache_db.session.expunge(row[0])
-                # self._master_db.session.merge(row[0])

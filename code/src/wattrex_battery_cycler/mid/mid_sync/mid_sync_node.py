@@ -67,10 +67,10 @@ class MidSyncNodeC(SysShdNodeC): #TODO: No reconode el SysShdNodeC
         Raises:
             - None
         '''
-        log.info(f"Processing iteration for experiment ID: {self.current_exp_id} ...") # pylint: disable=logging-fstring-interpolation
+        log.info("Processing iteration for experiment...") # pylint: disable=logging-fstring-interpolation
         self.fachade.push_gen_meas()
         self.fachade.push_ext_meas()
-        self.fachade.update_experiments()
+        # self.fachade.update_experiments()
         self.fachade.push_alarms()
         self.fachade.push_status()
         self.fachade.commit()
