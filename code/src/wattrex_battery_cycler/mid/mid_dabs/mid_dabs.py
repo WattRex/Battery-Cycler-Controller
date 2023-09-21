@@ -113,7 +113,7 @@ class MidDabsPwrMeterC:
             gen_meas.voltage = msg_elect_meas.ls_voltage
             gen_meas.current = msg_elect_meas.ls_current
             gen_meas.power   = msg_elect_meas.ls_power
-            ext_meas.pwr_mode = msg_mode.mode
+            status.pwr_mode = msg_mode.mode
             if 'body_temp' in ext_att:
                 ext_meas.body_temp = msg_temp_meas.temp_body
             if 'anod_temp' in ext_att:
