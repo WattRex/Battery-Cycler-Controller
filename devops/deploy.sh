@@ -16,7 +16,7 @@ initial_deploy () {
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
     
     check_sniffer "can"
-    check_sniffer scpi
+    check_sniffer "scpi"
 }
 
 instance_new_cycler () {
@@ -24,6 +24,7 @@ instance_new_cycler () {
     check_sniffer "scpi"
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
+
 stop_active_cycler () {
     echo "Stopping container..."
     docker stop wattrex_cycler_node_${1}
