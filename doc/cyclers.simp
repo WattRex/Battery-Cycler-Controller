@@ -131,11 +131,11 @@
       </counter>
       <counter>
         <item-type type-id="comment" type="Comment" />
-        <value>54</value>
+        <value>55</value>
       </counter>
       <counter>
         <item-type type-id="comment-connector" type="Comment Connector" />
-        <value>46</value>
+        <value>47</value>
       </counter>
       <counter>
         <item-type type-id="erd-relationship" type="Relationship" />
@@ -167,7 +167,7 @@
       </counter>
       <counter>
         <item-type type-id="property" type="Property" />
-        <value>1099</value>
+        <value>1101</value>
       </counter>
       <counter>
         <item-type type-id="drawing-polygon-path" type="Polygon Path" />
@@ -1673,6 +1673,7 @@
       </style>
       <structural-feature type="int" type-id="Python.int" />
     </item>
+    <item id="di61af3c3e77ee4ed4bcb3a0c18d5161ea3035" cid="CN046" type="comment-connector" creation-date="09/25/2023 12:37:25" from="e1e4d301a4e340f696249cf62736671f" to="di02d224e9ef3f49c990d6344a24c56e1c8827" />
     <item id="93ccfd8c05f1456ab3fac35fcf66b71c" cid="RQI024" type="uml-required-interface-end" creation-date="08/30/2023 12:05:43">
       <required-interface interface-ref="f6e244eb555547618a8ae1b4771132d2" />
     </item>
@@ -2703,6 +2704,9 @@ y: is the firmware version. 1, 2, 3...</comment>
       </stereotype-instances>
       <component />
     </item>
+    <item id="e1e4d301a4e340f696249cf62736671f" cid="CMT054" type="comment" name="Comment" creation-date="09/25/2023 12:37:25">
+      <comment>Read device properties and store it on device_id and firmware_version</comment>
+    </item>
     <item id="df9f251cdff04b3fba70f5f7b6d5e0bd" cid="RQI032" type="uml-required-interface-end" style-class="Flat Green" creation-date="08/30/2023 12:07:13">
       <style class="Flat Green" />
       <required-interface interface-ref="3638c8cb529249e9a3c5f93d55384cc3" />
@@ -3125,9 +3129,6 @@ y: is the firmware version. 1, 2, 3...</comment>
     <item id="di409ce6b6e75a4a0e974551d6da73dbf85921" cid="ELEM431" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
-    </item>
-    <item id="490c0e03fca44f0fa3ba0da26323d114" cid="CMT023" type="comment" name="Comment" creation-date="08/24/2023 09:43:30">
-      <comment>Publish to Pytest</comment>
     </item>
     <item id="dia59459eae6bc49b487d4d46979dae83c5104" cid="PROP765" type="property" name="message" owner="di7415774319a642cfa1e938ac21fd86176576" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/17/2023 13:20:10" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -8268,7 +8269,6 @@ Qué se hace con el código de error?</comment>
         </alternate-styles>
       </style>
     </item>
-    <item id="di5ce481b4f3cb4586a77f4e817896072a5785" cid="CN022" type="comment-connector" creation-date="08/24/2023 09:43:30" from="490c0e03fca44f0fa3ba0da26323d114" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" />
     <item id="di96cdb89db69e4fac846e6ed7e13085ee8552" cid="ELEM175" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
       <drawing />
       <drawing-shape type="Rectangle" />
@@ -13324,7 +13324,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-5053,2347" zoom="0.9">
+              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-3898,1604" zoom="0.7">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -20551,7 +20551,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 <abstract-items />
                 <layer id="fb5ecdf30a81449baad4f893b2e96bec" name="Default" visible="true" enabled="true" locked="false" />
               </diagram>
-              <diagram type="uml-class" id="p5a48023789204adcafbfffcd6b248827_431424445" name="drv_flow" order-index="11" overview-order-index="8" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-3823,-1573" zoom="0.9">
+              <diagram type="uml-class" id="p5a48023789204adcafbfffcd6b248827_431424445" name="drv_flow" order-index="11" overview-order-index="8" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-4178,-1573" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -20563,7 +20563,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                   </authors>
                   <description />
                   <creation-date>09/06/2023 14:39:16</creation-date>
-                  <change-date>09/21/2023 14:17:13</change-date>
+                  <change-date>09/25/2023 12:37:25</change-date>
                   <revision-count>0</revision-count>
                   <version />
                 </meta>
@@ -20581,6 +20581,11 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     </source-codes>
                   </item>
                   <item id="di02d224e9ef3f49c990d6344a24c56e1c8827" cid="C221" type="class" name="DrvFlowDeviceC" owner="dide66246f472a4c33977ba9e1c2c826ce8827" creation-date="07/11/2023 12:06:55" visibility="undefined">
+                    <owned-items />
+                    <attributes>
+                      <attribute id="ae6b597db5ee8440990003c68b9b2e1381" cid="PROP1099" name="device_id" creation-date="09/25/2023 12:24:16" property-ref="9481ff31100d46f89b751254d426e7cd" />
+                      <attribute id="a8a988af5d46a4e6daaed16ea1fb405c080" cid="PROP1100" name="firmware_version" creation-date="09/25/2023 12:24:26" property-ref="54c8156d46b74b97afe7780cd0880857" />
+                    </attributes>
                     <operations>
                       <operation id="o619a1f821e65435798d7b867eff14aaf314" cid="OP184" name="DrvFlowDeviceC" creation-date="09/06/2023 14:42:26" type="" type-id="" visibility="public">
                         <parameters>
@@ -20593,7 +20598,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                           <source-code language="ActionScript" />
                         </source-codes>
                       </operation>
-                      <operation id="o4986677142074820992082d5e1c9e953673" cid="OP073" name="__read_device_properties" creation-date="07/11/2023 13:44:48" type="DrvEaPropertiesC" type-id="Class:di552ff51f0de44c8d9e5d8d894ba0a7fe5430" visibility="private" />
+                      <operation id="o4986677142074820992082d5e1c9e953673" cid="OP073" name="__read_device_properties" creation-date="07/11/2023 13:44:48" type="" type-id="" visibility="private" />
                       <operation id="o28bd945bddeb45bd8961a67dcb97926c904" cid="OP077" name="get_meas" creation-date="07/11/2023 13:46:26" type="DrvFlowDataC" type-id="Class:di08392e50a8d2432d8d7a164388ace4298827" visibility="public">
                         <source-codes>
                           <source-code language="ActionScript" />
@@ -20773,6 +20778,9 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <structural-feature type="int" type-id="Python.int" />
                   </item>
                   <item id="dif50e1f8adfdf41889045b5be56ba430f7355" cid="PROP945" type="property" creation-date="07/11/2023 13:42:25" visibility="undefined" />
+                  <item id="54c8156d46b74b97afe7780cd0880857" cid="PROP1100" type="property" name="firmware_version" owner="di02d224e9ef3f49c990d6344a24c56e1c8827" creation-date="09/25/2023 12:24:26" visibility="public">
+                    <structural-feature type="int" type-id="Python.int" />
+                  </item>
                   <item id="die6ec5717a61b42eda4c78014994df1287355" cid="PROP948" type="property" owner="di62d043d25c9c4f90a536097336e886f98827" creation-date="07/11/2023 13:42:34" visibility="undefined">
                     <structural-feature type="DrvFlowDeviceC" type-id="Class:di02d224e9ef3f49c990d6344a24c56e1c8827" />
                   </item>
@@ -20941,6 +20949,9 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                   </item>
                   <item id="di4962fee5697d43c2aa087a83a862195c7355" cid="PROP946" type="property" creation-date="07/11/2023 13:42:25" visibility="undefined">
                     <structural-feature type="DrvEaDeviceC" type-id="Class:969ede89770640988867a47fc8b4d02a" />
+                  </item>
+                  <item id="9481ff31100d46f89b751254d426e7cd" cid="PROP1099" type="property" name="device_id" owner="di02d224e9ef3f49c990d6344a24c56e1c8827" creation-date="09/25/2023 12:24:16" visibility="public">
+                    <structural-feature type="int" type-id="Python.int" />
                   </item>
                   <item id="dide66246f472a4c33977ba9e1c2c826ce8827" cid="PKG102" type="package" name="drv_flow" creation-date="07/10/2023 10:48:12" visibility="undefined">
                     <owned-items />
@@ -21118,7 +21129,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 </abstract-items>
                 <layer id="db610aa2ac6c4b9abb6ae9d4678bc3a2" name="Default" visible="true" enabled="true" locked="false">
                   <item id="dide66246f472a4c33977ba9e1c2c826ce8827" iid="92c87a1a99404737a8e734d94906bb73" creation-date="07/10/2023 10:48:12" order-index="38" type="entity">
-                    <layout ax="-4140" ay="-1640" awidth="1037" aheight="364" x="-4040" y="-1640" width="960" height="470" expanded="-4140,-1640,1037,364" collapsed="0,0,0,0" rotation-center="2965.5,907" />
+                    <layout ax="-4140" ay="-1640" awidth="1037" aheight="430" x="-4040" y="-1640" width="960" height="430" expanded="-4140,-1640,1037,430" collapsed="0,0,0,0" rotation-center="2965.5,874" />
                     <package name-in-body="false" />
                   </item>
                   <item id="di08392e50a8d2432d8d7a164388ace4298827" iid="c57088c49c844909962817e71af8b310" container="dide66246f472a4c33977ba9e1c2c826ce8827" container-iid="92c87a1a99404737a8e734d94906bb73" show-fields="true" creation-date="07/10/2023 14:26:12" order-index="60" type="entity">
@@ -21127,33 +21138,45 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="di02d224e9ef3f49c990d6344a24c56e1c8827" iid="958c6b8b0bf94ba2884015af7b8ff217" container="dide66246f472a4c33977ba9e1c2c826ce8827" container-iid="92c87a1a99404737a8e734d94906bb73" show-fields="true" creation-date="07/11/2023 12:06:55" order-index="75" type="entity">
-                    <layout ax="-4100" ay="-1580" awidth="460" aheight="130" x="-4100" y="-1580" width="460" height="130" rotation-center="-115,108" />
+                    <layout ax="-4100" ay="-1580" awidth="460" aheight="173" x="-4100" y="-1580" width="460" height="130" rotation-center="-115,108" />
                     <classifier />
                     <class />
                   </item>
                   <item id="6380a7d460c344df9043bc06a2db3377" iid="53ad8f264220449ea4f8dce1be704acd" container="dide66246f472a4c33977ba9e1c2c826ce8827" container-iid="92c87a1a99404737a8e734d94906bb73" creation-date="09/06/2023 14:46:44" order-index="78" type="entity">
-                    <layout ax="-4100" ay="-1390" awidth="230" aheight="90" x="-4100" y="-1390" width="230" height="90" rotation-center="-45,35" />
+                    <layout ax="-4100" ay="-1320" awidth="230" aheight="90" x="-4100" y="-1320" width="230" height="90" rotation-center="-45,35" />
                   </item>
                   <item id="di62d043d25c9c4f90a536097336e886f98827" iid="709005c7f1fe449a87ab8d59ab35439b" container="dide66246f472a4c33977ba9e1c2c826ce8827" container-iid="92c87a1a99404737a8e734d94906bb73" creation-date="07/11/2023 13:42:34" order-index="77" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="-3480" y1="-1515" x2="-3640" y2="-1515" start-border-pos="0.875" end-border-pos="0.374352331606218" start-local-pos="135" end-local-pos="96" name-position="0,20" name-width="50">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="-3480" y1="-1515" x2="-3640" y2="-1494" start-border-pos="0.875" end-border-pos="0.374352331606218" start-local-pos="135" end-local-pos="96" name-position="0,20" name-width="50">
                       <points>
                         <point x="-3480" y="-1515" />
-                        <point x="-3640" y="-1515" />
+                        <point x="-3640" y="-1494" />
                       </points>
                     </layout>
                     <relation from="di08392e50a8d2432d8d7a164388ace4298827" from-iid="c57088c49c844909962817e71af8b310" to="di02d224e9ef3f49c990d6344a24c56e1c8827" to-iid="958c6b8b0bf94ba2884015af7b8ff217" />
                   </item>
                   <item id="0940ce0be43243789e8fb3ef704732b9" iid="9eedb99a5949419a939630c525687196" creation-date="09/21/2023 14:16:53" order-index="79" type="entity">
-                    <layout ax="-4140" ay="-1210" awidth="306" aheight="75" x="-4140" y="-1210" width="225" height="60" rotation-center="-42.5,20" />
+                    <layout ax="-4140" ay="-1110" awidth="306" aheight="75" x="-4140" y="-1110" width="225" height="60" rotation-center="-42.5,20" />
                   </item>
                   <item id="di9df1b07a29114addb69d504e2b0a78421854" iid="452d31e1843f418cae56ce5e1806e82d" creation-date="09/21/2023 14:16:53" order-index="80" type="comment-connector">
-                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="-3987" y1="-1210" x2="-3986" y2="-1300" start-border-pos="0.125358830869587" end-border-pos="0.625565503991169" name-position="0,20">
+                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="-3987" y1="-1110" x2="-3985" y2="-1230" start-border-pos="0.125305774165135" end-border-pos="0.62548191236413" name-position="0,20">
                       <points>
-                        <point x="-3987" y="-1210" />
-                        <point x="-3986" y="-1300" />
+                        <point x="-3987" y="-1110" />
+                        <point x="-3985" y="-1230" />
                       </points>
                     </layout>
                     <relation from="0940ce0be43243789e8fb3ef704732b9" from-iid="9eedb99a5949419a939630c525687196" to="6380a7d460c344df9043bc06a2db3377" to-iid="53ad8f264220449ea4f8dce1be704acd" />
+                  </item>
+                  <item id="e1e4d301a4e340f696249cf62736671f" iid="b8df335849a3464db82568daa8be4511" creation-date="09/25/2023 12:37:25" order-index="81" type="entity">
+                    <layout ax="-4440" ay="-1510" awidth="230" aheight="50" x="-4440" y="-1510" width="230" height="50" rotation-center="45,25" />
+                  </item>
+                  <item id="di61af3c3e77ee4ed4bcb3a0c18d5161ea3035" iid="270b1a61e7ea4cee9ce1bdcba98800ff" creation-date="09/25/2023 12:37:25" order-index="82" type="comment-connector">
+                    <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="-4210" y1="-1487" x2="-4100" y2="-1489" start-border-pos="0.363626098632812" end-border-pos="0.869148210293985" name-position="0,20">
+                      <points>
+                        <point x="-4210" y="-1487" />
+                        <point x="-4100" y="-1489" />
+                      </points>
+                    </layout>
+                    <relation from="e1e4d301a4e340f696249cf62736671f" from-iid="b8df335849a3464db82568daa8be4511" to="di02d224e9ef3f49c990d6344a24c56e1c8827" to-iid="958c6b8b0bf94ba2884015af7b8ff217" />
                   </item>
                 </layer>
               </diagram>
@@ -36080,7 +36103,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
               </item>
             </layer>
           </diagram>
-          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="1682,-465" zoom="0.6">
+          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="2084,-156" zoom="0.7">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
@@ -36092,7 +36115,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
               </authors>
               <description />
               <creation-date>08/24/2023 09:17:45</creation-date>
-              <change-date>08/28/2023 15:07:43</change-date>
+              <change-date>09/25/2023 12:36:17</change-date>
               <revision-count>0</revision-count>
               <version />
             </meta>
@@ -36510,7 +36533,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 </stereotype-instances>
                 <artifact filename="" />
               </item>
-              <item id="di87dfa886f9eb4b689402f6e2bbb2504b4849" cid="CPT123" type="component" name="Publish package to Pypi" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
+              <item id="di87dfa886f9eb4b689402f6e2bbb2504b4849" cid="CPT123" type="component" name="Publish package to Test Pypi" owner="430fbc9a54af42638b01fe266a9c38ce" creation-date="08/24/2023 08:23:08" visibility="undefined">
                 <stereotypes>
                   <stereotype name="process" />
                 </stereotypes>
@@ -36701,7 +36724,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 <relation from="di96cf8c60383e4100a92b7f20a42316198078" from-iid="762f5af2ab3646d99d1427432cccd26f" to="dib31d6a5ee65745fe877743a490ab71168078" to-iid="e7b89666899a4f22819ed3c549947b6f" />
               </item>
               <item id="di308c5a39d9c947cbb53f7d85769286084849" iid="04708f0e1024466aa08343943460ac02" creation-date="08/24/2023 08:19:57" order-index="80" type="entity">
-                <layout ax="3280" ay="-580" awidth="1410" aheight="530" x="3280" y="-580" width="1360" height="530" expanded="3280,-580,1410,530" collapsed="0,0,0,0" rotation-center="32.5,-223" />
+                <layout ax="3280" ay="-580" awidth="1360" aheight="530" x="3280" y="-580" width="1360" height="530" expanded="3280,-580,1360,530" collapsed="0,0,0,0" rotation-center="14.5,-223" />
               </item>
               <item id="di1b1f7b3df6c647488437f1cd206c25a64849" iid="c98f4d45813b4a73b0680c1171540ee7" container="di308c5a39d9c947cbb53f7d85769286084849" container-iid="04708f0e1024466aa08343943460ac02" creation-date="08/24/2023 08:34:56" order-index="138" type="entity">
                 <layout name-position="0,30" ax="3230" ay="-330" awidth="100" aheight="30" x="3390" y="-340" width="100" height="30" />
@@ -36841,9 +36864,6 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 </layout>
                 <relation from="dibe9214d33c664d3bb7a4aeb07bf4245f5510" from-iid="f963ed64fb984d148170d50b35cf5de1" to="430fbc9a54af42638b01fe266a9c38ce" to-iid="39574add96304d17b76172a1bc852026" />
               </item>
-              <item id="490c0e03fca44f0fa3ba0da26323d114" iid="904f8ceae9234f1790a5f5d525a07a02" creation-date="08/24/2023 09:43:30" order-index="150" type="entity">
-                <layout ax="4760" ay="-200" awidth="112" aheight="23" x="4760" y="-200" width="140" height="100" />
-              </item>
               <item id="di9f4f319c1ee54247915111d129be05b14849" iid="1f02a0fa49d24b01b4aa8a0d23e4b511" container="di207cdf5af5c64bb89209c75487feba5e2638" container-iid="24cce10024cb48cea8a633715e757089" creation-date="08/24/2023 09:08:11" order-index="145" type="relation">
                 <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="4110" y1="555" x2="4180" y2="555" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="250" end-local-pos="250" name-position="0,20">
                   <points>
@@ -36852,15 +36872,6 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                   </points>
                 </layout>
                 <relation from="di4182a35240644b7a9e97062d565549c24849" from-iid="224cfae0e8f84799a2a12a245c204b52" to="dib51fa6b1fe164c919fee3c0b55a28dc18078" to-iid="4fa71aefed604aa78a96e21cf55c861a" />
-              </item>
-              <item id="di5ce481b4f3cb4586a77f4e817896072a5785" iid="98ced336547d464da121b65e9c86cd90" creation-date="08/24/2023 09:43:30" order-index="151" type="comment-connector">
-                <layout line-style="oblique" lock-to-fields="false" auto-path="" x1="4760" y1="-188" x2="4550" y2="-190" start-border-pos="0.873243083124575" end-border-pos="0.376227331161499" name-position="0,20">
-                  <points>
-                    <point x="4760" y="-188" />
-                    <point x="4550" y="-190" />
-                  </points>
-                </layout>
-                <relation from="490c0e03fca44f0fa3ba0da26323d114" from-iid="904f8ceae9234f1790a5f5d525a07a02" to="di87dfa886f9eb4b689402f6e2bbb2504b4849" to-iid="0fe6a2351c744c05a8f97ae847774206" />
               </item>
               <item id="di1e98d85f939d4f0da03edb5b2336a26c6570" iid="eed9be4e39b04ca7940aa28272c706ab" container="di207cdf5af5c64bb89209c75487feba5e2638" container-iid="24cce10024cb48cea8a633715e757089" creation-date="07/17/2023 09:28:26" order-index="35" type="entity">
                 <layout ax="3620" ay="160" awidth="270" aheight="52" x="3620" y="260" width="130" height="50" expanded="3620,160,270,52" collapsed="0,0,0,0" rotation-center="-22.5,1" />
@@ -37116,7 +37127,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
           </diagram>
         </model>
       </sub-models>
-      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="327,102" zoom="1.2">
+      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-331,-462" zoom="0.5">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
