@@ -1541,7 +1541,7 @@
           </alternate-style>
         </alternate-styles>
       </style>
-      <structural-feature type="DrvCanCmdTypeE" type-id="Class:362e6b83fe564d3ca7de2ca9e6d4aa77" />
+      <structural-feature type="DrvScpiCmdTypeE" type-id="Class:di0447fb9fcc9e4a099affa855cfa6b3601772" />
     </item>
     <item id="60b4e2666556403eba08e87401033ee3" cid="PROP1045" type="property" name="battery" owner="di4d32d8cf0f884052a562834bae1a159e4772" creation-date="09/12/2023 09:58:09" visibility="public">
       <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -10739,7 +10739,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="p6826bddac30a4332858103893149c399_798782746" name="drv_uEpc" order-index="2" overview-order-index="0" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-440,-1261" zoom="0.7">
+              <diagram type="uml-class" id="p6826bddac30a4332858103893149c399_798782746" name="drv_epc" order-index="2" overview-order-index="0" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-472,-1334" zoom="0.8">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -13324,7 +13324,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-3898,1604" zoom="0.7">
+              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-4672,2273" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -14030,8 +14030,8 @@ Qué se hace con el código de error?</comment>
                   </item>
                   <item id="di5f22ada1c49d4c77b57e002ea4c8490c3366" cid="C032" type="class" name="DrvScpiHandlerC" owner="29391aacca5d4a60b4e37e5bae9c93c6" change-tracking-state="changed" creation-date="03/03/2022 12:32:21" visibility="undefined">
                     <tagged-values>
-                      <tagged-value id="tva09cdc39acd64fdfb2a7602e662d887f" name="namespace" type="text" multiple="false" hidden="false" value="" />
-                      <tagged-value id="tveabbf4b054c2492b901b37b16f914990" name="ReverseEngineered" type="text" multiple="false" hidden="true" value="DRV_EA_PSB_c" />
+                      <tagged-value id="tv9e75c7aea24f49cda3ee7da57b67ddd5" name="namespace" type="text" multiple="false" hidden="false" value="" />
+                      <tagged-value id="tv76a2e18c5fec46a59716afee6d924780" name="ReverseEngineered" type="text" multiple="false" hidden="true" value="DRV_EA_PSB_c" />
                     </tagged-values>
                     <owned-items />
                     <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -14092,7 +14092,7 @@ Qué se hace con el código de error?</comment>
                       </operation>
                       <operation id="o471a207ef1a44c5db11c520079ec3a33492" cid="OP011" name="read_device_info" creation-date="03/03/2022 12:32:21" type="str" type-id="Python.str" multiplicity="1..*" visibility="public">
                         <documentations>
-                          <doc id="43e6bd4e38154289afb81b37da3a1946">
+                          <doc id="59ad625319c14aee9877503af4134b47">
                             <text>
                               <default>
                                 <style font-name="Segoe UI" font-size="11.25">
@@ -14167,7 +14167,7 @@ Qué se hace con el código de error?</comment>
                         <parameters>
                           <parameter id="p4fdfed8fdbf646458e4d41cd444f1e07" name="msg" type="String" type-id="String" direction="In">
                             <documentations>
-                              <doc id="fcfb0069edb14ac597e2bb59faf07ee6">
+                              <doc id="8f340775af46444286bc36a1632bfa3f">
                                 <text>
                                   <default>
                                     <style font-name="Segoe UI" font-size="11.25">
@@ -14214,16 +14214,11 @@ Qué se hace con el código de error?</comment>
                           </parameter>
                         </parameters>
                       </operation>
-                      <operation id="offedf12cdc5b4f7fa213d317b9068f45568" cid="OP111" name="receive_msg" creation-date="03/31/2022 09:54:17" type="str" type-id="Python.str" visibility="public">
-                        <source-codes>
-                          <source-code language="ActionScript" />
-                        </source-codes>
-                      </operation>
-                      <operation id="ocb410e5b7f6b4063b52c2f4cd4d46d40567" cid="OP109" name="send_and_read" creation-date="03/31/2022 09:54:17" type="" type-id="" visibility="public">
+                      <operation id="ocb410e5b7f6b4063b52c2f4cd4d46d40567" cid="OP109" name="send_and_read" creation-date="03/31/2022 09:54:17" type="str" type-id="Python.str" multiplicity="0..*" visibility="public">
                         <parameters>
                           <parameter id="p001557942152459ba7392906df14ea67" name="msg" type="String" type-id="String" direction="In">
                             <documentations>
-                              <doc id="ed9ff6fc5dd34566a441e190757c85f0">
+                              <doc id="067c9d997ea947bc99d33891790708ae">
                                 <text>
                                   <default>
                                     <style font-name="Segoe UI" font-size="11.25">
@@ -14263,10 +14258,13 @@ Qué se hace con el código de error?</comment>
                             </documentations>
                           </parameter>
                         </parameters>
+                        <source-codes>
+                          <source-code language="ActionScript" />
+                        </source-codes>
                       </operation>
                       <operation id="od9c227934a0142dab73394975bd29249492" cid="OP020" name="close" creation-date="03/03/2022 12:32:21" type="" type-id="" visibility="public">
                         <documentations>
-                          <doc id="1736005dc1dd478bad69dc7de56f714f">
+                          <doc id="0bbf55bc15b34ba780f83e79a42aeb85">
                             <text>
                               <default>
                                 <style font-name="Segoe UI" font-size="11.25">
@@ -14479,11 +14477,14 @@ Qué se hace con el código de error?</comment>
                           <parameter id="pe33ec1cefc414180ad8b8e1e4fe1643e" name="data_type" type="DrvScpiCmdTypeE" type-id="Class:di0447fb9fcc9e4a099affa855cfa6b3601772" />
                           <parameter id="p00be8f76a03041cebdbdb4947bd32bec" name="port" type="str" type-id="Python.str" />
                           <parameter id="p1e99b717725f44f989e9f3316fa7f6a8" name="payload" type="str" type-id="Python.str" />
-                          <parameter id="pc93ee48196db4bacadfa637894b6bf5b" name="payload" type="DrvScpiHandlerC" type-id="Class:di5f22ada1c49d4c77b57e002ea4c8490c3366" />
+                          <parameter id="pc93ee48196db4bacadfa637894b6bf5b" name="payload" type="DrvScpiSerialConfC" type-id="Class:di4a517313ea6d445ea050059658433bef3849" direction="In" />
                         </parameters>
                         <stereotypes>
                           <stereotype>create</stereotype>
                         </stereotypes>
+                        <source-codes>
+                          <source-code language="ActionScript" />
+                        </source-codes>
                       </operation>
                     </operations>
                     <source-codes>
@@ -14617,11 +14618,11 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="did80f8c4e88a4477c9df9918c22e713f31772" iid="3e929ad572cb4f00bef4f5248f80c1f9" creation-date="07/05/2023 13:05:54" order-index="5" type="entity">
-                    <layout ax="-4420" ay="3140" awidth="409" aheight="324" x="-4420" y="3140" width="400" height="340" expanded="-4420,3140,409,324" collapsed="0,0,0,0" rotation-center="-33,-13.5" />
+                    <layout ax="-4420" ay="3140" awidth="580" aheight="324" x="-4420" y="3140" width="580" height="340" expanded="-4420,3140,580,324" collapsed="0,0,0,0" rotation-center="-118.5,-13.5" />
                     <package name-in-body="false" />
                   </item>
                   <item id="di4e105ae017614cf98e789c9da29141d61772" iid="b923ac5728874040ae481654e40a812a" container="did80f8c4e88a4477c9df9918c22e713f31772" container-iid="3e929ad572cb4f00bef4f5248f80c1f9" show-fields="true" creation-date="07/05/2023 13:33:32" order-index="6" type="entity">
-                    <layout ax="-4400" ay="3190" awidth="365" aheight="250" x="-3460" y="2710" width="360" height="250" rotation-center="-23.5,-25.5" />
+                    <layout ax="-4400" ay="3190" awidth="510" aheight="250" x="-3460" y="2710" width="510" height="250" rotation-center="-96,-25.5" />
                     <classifier />
                     <class />
                   </item>
@@ -14655,7 +14656,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <relation from="di0447fb9fcc9e4a099affa855cfa6b3601772" from-iid="f21024183f6a45deae7703fe3820cdc6" to="dia2aa20e5c42941bdb38013dba4733bd81772" to-iid="61acdfbb6168481c9125dcc61007369d" />
                   </item>
                   <item id="bc697cd77b754c9e8c264dc4fe9e62df" iid="eb2660d556034bb096ca8715853e973e" creation-date="09/25/2023 11:05:54" order-index="100" type="entity">
-                    <layout ax="-4200" ay="2500" awidth="490" aheight="110" x="-4200" y="2500" width="490" height="100" rotation-center="-95,0" />
+                    <layout ax="-4200" ay="2540" awidth="490" aheight="110" x="-4200" y="2540" width="490" height="100" rotation-center="-95,0" />
                   </item>
                   <item id="5d3637328c9e4a26b23edcaeddf5543f" iid="fa2107aec97a4fb894d97ae1f2a259d1" container="29391aacca5d4a60b4e37e5bae9c93c6" container-iid="a064e1604bfc403f984c43ea20d5371b" creation-date="07/10/2023 15:18:38" order-index="98" type="relation">
                     <layout line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="-4781" y1="3223" x2="-4781" y2="3303" start-border-pos="0.625" end-border-pos="0.125" start-local-pos="175" end-local-pos="95" name-position="0,20">
@@ -14677,10 +14678,10 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="di6a225e87d72b491a9f54c5f6d25473b45712" iid="79316adf21754d14aa93ec6f8496f73f" creation-date="09/25/2023 11:08:15" order-index="101" type="comment-connector">
-                    <layout line-style="oblique" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="-3955" y1="2730" x2="-3955" y2="2610" start-border-pos="0.125" end-border-pos="0.625" start-local-pos="200" end-local-pos="205" name-position="0,20">
+                    <layout line-style="oblique" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="-3955" y1="2730" x2="-3955" y2="2650" start-border-pos="0.125" end-border-pos="0.625" start-local-pos="200" end-local-pos="205" name-position="0,20">
                       <points>
                         <point x="-3955" y="2730" />
-                        <point x="-3955" y="2610" />
+                        <point x="-3955" y="2650" />
                       </points>
                     </layout>
                     <relation from="dia2aa20e5c42941bdb38013dba4733bd81772" from-iid="61acdfbb6168481c9125dcc61007369d" to="bc697cd77b754c9e8c264dc4fe9e62df" to-iid="eb2660d556034bb096ca8715853e973e" />
@@ -20551,7 +20552,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 <abstract-items />
                 <layer id="fb5ecdf30a81449baad4f893b2e96bec" name="Default" visible="true" enabled="true" locked="false" />
               </diagram>
-              <diagram type="uml-class" id="p5a48023789204adcafbfffcd6b248827_431424445" name="drv_flow" order-index="11" overview-order-index="8" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-4178,-1573" zoom="0.9">
+              <diagram type="uml-class" id="p5a48023789204adcafbfffcd6b248827_431424445" name="drv_flow" order-index="11" overview-order-index="8" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-3462,-1369" zoom="0.7">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -21181,7 +21182,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                 </layer>
               </diagram>
             </model>
-            <model id="p273d18e67005479f8af6dea9fcf70606_204378940" name="mid" namespace="" order-index="1" expanded="true">
+            <model id="p273d18e67005479f8af6dea9fcf70606_204378940" name="mid" namespace="" order-index="1">
               <meta>
                 <authors>
                   <author> </author>
@@ -32573,7 +32574,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
             </layer>
           </diagram>
         </model>
-        <model id="p76e4da4101884a4797f0d86dca004ef7_688257264" name="Devops" namespace="" order-index="11" expanded="true">
+        <model id="p76e4da4101884a4797f0d86dca004ef7_688257264" name="Devops" namespace="" order-index="11">
           <meta>
             <authors>
               <author> </author>
@@ -36103,7 +36104,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
               </item>
             </layer>
           </diagram>
-          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="2084,-156" zoom="0.7">
+          <diagram type="uml-deployment" id="p42bf89f6db29492fa1d43af019d93514_424690482" name="Devops Process" order-index="1" overview-order-index="4" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="2084,-66" zoom="0.7">
             <style>
               <background-color index="1" color="#FFFFFFFF" />
               <background-color index="2" color="#FFFFFFFF" />
