@@ -8,7 +8,7 @@ on:
                 "mid_pwr", "app_diag", "app_man" ]
 
 env:
-  pacakge-name: wattrex-battery-cycler-controller
+  pacakge_name: wattrex-battery-cycler-controller
 
 jobs:
 
@@ -16,11 +16,11 @@ jobs:
     name: QA and Build battery controller on push
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: ${pacakge-name}
+      package-name: ${pacakge_name}
       python-version: "3.10"
 
   publish-package:
-    name: Publish ${pacakge-name} package to Test PyPi
+    name: Publish ${pacakge_name} package to Test PyPi
     needs: build-package
     runs-on: ubuntu-latest
     environment: development
@@ -32,22 +32,16 @@ jobs:
           #     python-version: ["3.11"]
 
     steps:
-      - name: Set environment variable
-        id: vars
-        run: |
-          echo "PACKAGE_NAME=${pacakge-name}" >> $GITHUB_ENV
-        shell: bash
-
       - name: Print vars
         run: |
-          echo "${{ env.PACKAGE_NAME }}/dist/"
+          echo "${ pacakge_name }/dist/"
         shell: bash
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name:  "${{ env.PACKAGE_NAME }}"
-          path: "${{ env.PACKAGE_NAME }}/dist/"
+          name:  "${pacakge_name}"
+          path: "${pacakge_name}/dist/"
 
       - name: Publish package to Test PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
@@ -55,5 +49,5 @@ jobs:
           verbose: true
           user: __token__
           password: ${{ secrets.PYPI_TEST_API_TOKEN }}
-          repository-url: https://test.pypi.org/projects/wattrex-battery-cycler-controller
-          packages-dir: "${{ env.PACKAGE_NAME }}/dist/"
+          repository-url: https://test.pypi.org/projects/${pacakge_name}
+          packages-dir: "${pacakge_name}/dist/"
