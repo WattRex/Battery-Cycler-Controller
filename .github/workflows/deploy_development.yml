@@ -16,7 +16,7 @@ jobs:
     name: QA and Build battery controller on push
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: "${PACKAGE_NAME}"
+      package-name: "wattrex-battery-cycler-controller"
       python-version: "3.10"
 
   publish-package:
@@ -32,9 +32,10 @@ jobs:
           #     python-version: ["3.11"]
 
     steps:
-      - name: Print vars
+      - name: Set environment variable
         run: |
-          echo "${ pacakge_name }/dist/"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
+          echo "${{ env.PACKAGE_NAME }}/dist/"
         shell: bash
 
       - name: Download a single artifact
