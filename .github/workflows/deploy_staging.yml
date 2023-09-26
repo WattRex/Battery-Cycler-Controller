@@ -1,10 +1,13 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deployment of battery cycler controller to development environment
+name: Deployment of battery cycler controller to staging environment
 
 on:
-  push:
-    branches: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
+  pull_request_review:
+    types: [submited]
+    pull_request:
+      base:
+        ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
 
 env:
