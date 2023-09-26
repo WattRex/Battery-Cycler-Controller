@@ -8,7 +8,7 @@ on:
                 "mid_pwr", "app_diag", "app_man" ]
 
 env:
-  PACKAGE_NAME: wattrex_battery_cycler_controller
+  PACKAGE_NAME: wattrex-battery-cycler-controller
 
 jobs:
 
@@ -16,7 +16,7 @@ jobs:
     name: QA and Build battery controller on push
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: $PACKAGE_NAME
+      package-name: "${PACKAGE_NAME}"
       python-version: "3.10"
 
   publish-package:
