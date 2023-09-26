@@ -28,13 +28,15 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          tags: myimage:latest
-          outputs: type=docker,dest=/tmp/myimage.tar
+          file: ./devops/docker/Dockerfile.cycler
+          tags: wattrex-cycler:latest
+          outputs: type=docker,dest=/tmp/wattrex-cycler.tar
+          push: false
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: myimage
-          path: /tmp/myimage.tar
+          name: wattrex-cycler
+          path: /tmp/wattrex-cycler.tar
 
   # build-package:
   #   name: QA and Build battery controller on push
