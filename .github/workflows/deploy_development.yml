@@ -38,6 +38,11 @@ jobs:
           echo "PACKAGE_NAME=${pacakge-name}" >> $GITHUB_ENV
         shell: bash
 
+      - name: Print vars
+        run: |
+          echo "${{ env.PACKAGE_NAME }}/dist/"
+        shell: bash
+
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
@@ -47,6 +52,7 @@ jobs:
       - name: Publish package to Test PyPI
         uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
         with:
+          verbose: true
           user: __token__
           password: ${{ secrets.PYPI_TEST_API_TOKEN }}
           repository-url: https://test.pypi.org/projects/wattrex-battery-cycler-controller
