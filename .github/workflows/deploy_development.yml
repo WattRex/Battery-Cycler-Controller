@@ -45,7 +45,7 @@ jobs:
           path: "${{ env.PACKAGE_NAME }}/dist/"
 
       - name: Publish package to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.8.10
+        uses: pypa/gh-action-pypi-publish@b7f401de30cb6434a1e19f805ff006643653240e #realse/v1.8.10
         with:
           verbose: true
           user: __token__
