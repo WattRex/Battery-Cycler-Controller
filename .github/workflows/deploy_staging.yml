@@ -49,6 +49,7 @@ jobs:
 
   launch-real-bat:
     name: Launch cycler controller in real environment
+    needs: build-docker-image
     uses: ./.github/workflows/staging_deploy_real_bat.yml
 
   # use:
