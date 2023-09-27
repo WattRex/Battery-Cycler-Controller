@@ -49,7 +49,7 @@ jobs:
 
   launch-real-bat:
     name: Launch cycler controller in real environment
-    uses: ./.github/workflows/staging/deploy_real_bat.yml
+    uses: ./.github/workflows/staging/staging_deploy_real_bat.yml
 
   # use:
   #   runs-on: ubuntu-latest
