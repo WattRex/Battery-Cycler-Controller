@@ -3,6 +3,9 @@
 name: Deployment of battery cycler controller to real environment
 
 on: workflow_call
+
+env:
+  ENV_CRED_TO_DEPLOY: ${{ secrets.ENV_CRED_TO_DEPLOY }}
         
 jobs:
   launch-real-bat:
@@ -13,7 +16,7 @@ jobs:
         run: |
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
-          echo "GITHUB_SECRETS: ${{ secrets.ENV_CRED_TO_DEPLOY }}"
+          echo "$ENV_CRED_TO_DEPLOY" > /tmp/devops/.cred.env
       - name: Download docker image artifact
         uses: actions/download-artifact@v3
         with:
