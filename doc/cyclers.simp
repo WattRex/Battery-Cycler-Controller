@@ -1176,7 +1176,7 @@
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="ae09f4eac1704ab88d6acffdaef69829" cid="PROP1183" type="property" name="__num_attempts_read" owner="di5f22ada1c49d4c77b57e002ea4c8490c3366" creation-date="09/27/2023 08:52:20" visibility="private">
+    <item id="ae09f4eac1704ab88d6acffdaef69829" cid="PROP1183" type="property" name="num_attempts_read" owner="di5f22ada1c49d4c77b57e002ea4c8490c3366" creation-date="09/27/2023 08:52:20" visibility="public">
       <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -5244,7 +5244,7 @@ y: is the firmware version. 1, 2, 3...</comment>
     <item id="6505ff3ce8d84579a11d154160bffc95" cid="ELEM353" type="uml-required-interface-connector" style-class="Flat Green" creation-date="08/30/2023 12:07:13" from="dic5683a83035544e8be89ee91f80e017a2711" to="df9f251cdff04b3fba70f5f7b6d5e0bd">
       <style class="Flat Green" />
     </item>
-    <item id="55d4358aa9aa458e914eb14cb6cd889d" cid="PROP1182" type="property" name="__wait_4_response" owner="di5f22ada1c49d4c77b57e002ea4c8490c3366" creation-date="09/27/2023 08:51:35" visibility="private">
+    <item id="55d4358aa9aa458e914eb14cb6cd889d" cid="PROP1182" type="property" name="wait_4_response" owner="di5f22ada1c49d4c77b57e002ea4c8490c3366" creation-date="09/27/2023 08:51:35" visibility="public">
       <style style-name="Default" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
         <text-style type="name" color="#555555" font="Segoe UI;11.25;B" />
         <text-style type="part-header" color="#1E1E1E" font="Verdana;9;I" />
@@ -14037,8 +14037,8 @@ Qué se hace con el código de error?</comment>
                   </item>
                   <item id="di5f22ada1c49d4c77b57e002ea4c8490c3366" cid="C032" type="class" name="DrvScpiHandlerC" owner="29391aacca5d4a60b4e37e5bae9c93c6" change-tracking-state="changed" creation-date="03/03/2022 12:32:21" visibility="undefined">
                     <tagged-values>
-                      <tagged-value id="tvb79ceebdff214e5b8713363d0fbdb122" name="namespace" type="text" multiple="false" hidden="false" value="" />
-                      <tagged-value id="tvd1d3aad16a2a46e2b64d898e8824c225" name="ReverseEngineered" type="text" multiple="false" hidden="true" value="DRV_EA_PSB_c" />
+                      <tagged-value id="tv41df45371ef54bdeb1c4fd68eb883adb" name="namespace" type="text" multiple="false" hidden="false" value="" />
+                      <tagged-value id="tv70e6a3a217094625abd3791b0fe1a374" name="ReverseEngineered" type="text" multiple="false" hidden="true" value="DRV_EA_PSB_c" />
                     </tagged-values>
                     <owned-items />
                     <style style-name="Custom Style" shadow-type="smooth" shadow-offset="2,2" shadow-visible="true" shadow-color="#3A555555" shadow-radius="8" wrap-name-text="true" wrap-other-text="true" padding="2" margin="1" glow-color="#FFFFFF" accuracy="0.9">
@@ -14066,10 +14066,10 @@ Qué se hace con el código de error?</comment>
                     <attributes>
                       <attribute id="a443be613f0cd4531b25196ea466d8649492" cid="PROP135" name="__serial" creation-date="03/03/2022 12:32:21" property-ref="dic9b4984c88654aa79346cf611b7313bb9496" />
                       <attribute id="aceb118aab77a4dc4afaee512629686cf376" cid="PROP300" name="__separator" creation-date="07/10/2023 15:24:53" property-ref="bc6dc554a6f74c1196c362db8a72ae8b" />
-                      <attribute id="a2b95830315d24aa38086198ea1268ec8205" cid="PROP1182" name="__wait_4_response" creation-date="09/27/2023 08:51:35" property-ref="55d4358aa9aa458e914eb14cb6cd889d" />
-                      <attribute id="a8d47718dfc98439fab0d22d45d3acbd9613" cid="PROP1183" name="__num_attempts_read" creation-date="09/27/2023 08:52:20" property-ref="ae09f4eac1704ab88d6acffdaef69829" />
                       <attribute id="a9225b5d2b7224e7dafa47e5e8fb8ce65882" cid="PROP1094" name="__rx_chan" creation-date="09/25/2023 11:11:27" property-ref="9ee812a06a47443a878d563b0c153bef" />
                       <attribute id="a9098b145782945b590f7b9ebd1ae97fa155" cid="PROP1098" name="status" creation-date="09/25/2023 11:40:55" property-ref="bf062ccf95b9410b92ae5fb68b1e158e" />
+                      <attribute id="a2b95830315d24aa38086198ea1268ec8205" cid="PROP1182" name="wait_4_response" creation-date="09/27/2023 08:51:35" property-ref="55d4358aa9aa458e914eb14cb6cd889d" />
+                      <attribute id="a8d47718dfc98439fab0d22d45d3acbd9613" cid="PROP1183" name="num_attempts_read" creation-date="09/27/2023 08:52:20" property-ref="ae09f4eac1704ab88d6acffdaef69829" />
                     </attributes>
                     <operations>
                       <operation id="o490a4f5daaac4728ac9153474824337f545" cid="OP037" name="DrvScpiHandlerC" creation-date="07/10/2023 11:21:55" type="" type-id="" visibility="public">
@@ -14103,7 +14103,7 @@ Qué se hace con el código de error?</comment>
                         <parameters>
                           <parameter id="p4fdfed8fdbf646458e4d41cd444f1e07" name="msg" type="String" type-id="Uml.String" direction="In">
                             <documentations>
-                              <doc id="cce47fbb71c749c193edb173760aea6b">
+                              <doc id="6d911e6a3b2f4e4c9c3d19d27c728f01">
                                 <text>
                                   <default>
                                     <style font-name="Segoe UI" font-size="11.25">
@@ -14157,7 +14157,7 @@ Qué se hace con el código de error?</comment>
                       </operation>
                       <operation id="od9c227934a0142dab73394975bd29249492" cid="OP020" name="close" creation-date="03/03/2022 12:32:21" type="" type-id="" visibility="public">
                         <documentations>
-                          <doc id="b122fa2628c74c1bb86b4539dd29bbd7">
+                          <doc id="9b25603773a348baba62e67bda0bd07a">
                             <text>
                               <default>
                                 <style font-name="Segoe UI" font-size="11.25">
