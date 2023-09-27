@@ -5,7 +5,9 @@ name: Deployment of battery cycler controller to real environment
 on: workflow_call
         
 jobs:
-  runs-on: ubuntu-latest
+  launch-real-bat:
+    name: Launch cycler controller in real environment
+    runs-on: ubuntu-latest
     steps:
       - name: Test to get var and secrets
         run: |
