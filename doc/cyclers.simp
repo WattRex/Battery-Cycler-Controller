@@ -13842,7 +13842,7 @@ Qué se hace con el código de error?</comment>
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-5047,2264" zoom="0.9">
+              <diagram type="uml-class" id="peb210792864f42a8893c6d0b0ca43514_357604700" name="drv_scpi" order-index="8" overview-order-index="3" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-5041,2444" zoom="0.9">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -14099,82 +14099,9 @@ Qué se hace con el código de error?</comment>
                           <source-code language="ActionScript" />
                         </source-codes>
                       </operation>
-                      <operation id="o471a207ef1a44c5db11c520079ec3a33492" cid="OP011" name="read_device_info" creation-date="03/03/2022 12:32:21" type="str" type-id="Python.str" multiplicity="1..*" visibility="public">
-                        <documentations>
-                          <doc id="e0dec65e3fb8441a8a76b507f62fef74">
-                            <text>
-                              <default>
-                                <style font-name="Segoe UI" font-size="11.25">
-                                  <text>
-                                    <solid-brush color="#FF000000" />
-                                  </text>
-                                </style>
-                              </default>
-                              <styles />
-                              <content>
-                                <paragraph>
-                                  <style numbering-type="None">
-                                    <numbering name="" multi-level="false">
-                                      <numbering-level type="None" level="0" format="{0}." />
-                                    </numbering>
-                                  </style>
-                                  <p>
-                                    <t>Read </t>
-                                  </p>
-                                  <p>
-                                    <t>information </t>
-                                  </p>
-                                  <p>
-                                    <t>and </t>
-                                  </p>
-                                  <p>
-                                    <t>power </t>
-                                  </p>
-                                  <p>
-                                    <t>limits </t>
-                                  </p>
-                                  <p>
-                                    <t>of </t>
-                                  </p>
-                                  <p>
-                                    <t>the </t>
-                                  </p>
-                                  <p>
-                                    <t>device.
-</t>
-                                  </p>
-                                </paragraph>
-                              </content>
-                            </text>
-                          </doc>
-                        </documentations>
-                        <source-codes>
-                          <source-code language="Python">                                                                                
-        self.sendMsg('*IDN?')
-        identity = _getResponseSplit(self._serial, ', ')
-        self.sendMsg('SYSTem:NOMinal:CURRent?')
-        maxCurrentLimit = float(_getResponseSplit(self._serial, ' ')[0])
-        self.sendMsg('SYSTem:NOMinal:VOLTage?')
-        maxVoltageLimit = float(_getResponseSplit(self._serial, ' ')[0])
-        self.sendMsg('SYSTem:NOMinal:POWer?')
-        maxPowerLimit = float(_getResponseSplit(self._serial, ' ')[0])
-        properties = {
-            'model': identity[1],
-            'serialNumber': identity[2],
-            'maxCurrentLimit': maxCurrentLimit,
-            'maxVoltageLimit': maxVoltageLimit,
-            'maxPowerLimit': maxPowerLimit,
-            'actualMode': None,
-            'actualLevel': None
-            }
-        return properties
-
-</source-code>
-                        </source-codes>
-                      </operation>
-                      <operation id="o7fe8cf262f3b4ffbabd8d9e67cef3aa1568" cid="OP110" name="send_msg" creation-date="03/31/2022 09:54:17" type="" type-id="" visibility="public">
+                      <operation id="o7fe8cf262f3b4ffbabd8d9e67cef3aa1568" cid="OP110" name="send" creation-date="03/31/2022 09:54:17" type="" type-id="" visibility="public">
                         <parameters>
-                          <parameter id="p4fdfed8fdbf646458e4d41cd444f1e07" name="msg" type="String" type-id="String" direction="In">
+                          <parameter id="p4fdfed8fdbf646458e4d41cd444f1e07" name="msg" type="String" type-id="Uml.String" direction="In">
                             <documentations>
                               <doc id="cce47fbb71c749c193edb173760aea6b">
                                 <text>
@@ -14223,50 +14150,7 @@ Qué se hace con el código de error?</comment>
                           </parameter>
                         </parameters>
                       </operation>
-                      <operation id="ocb410e5b7f6b4063b52c2f4cd4d46d40567" cid="OP109" name="send_and_read" creation-date="03/31/2022 09:54:17" type="str" type-id="Python.str" multiplicity="0..*" visibility="public">
-                        <parameters>
-                          <parameter id="p001557942152459ba7392906df14ea67" name="msg" type="String" type-id="String" direction="In">
-                            <documentations>
-                              <doc id="6936dd7881d94739accc6abf15bd6b7e">
-                                <text>
-                                  <default>
-                                    <style font-name="Segoe UI" font-size="11.25">
-                                      <text>
-                                        <solid-brush color="#FF000000" />
-                                      </text>
-                                    </style>
-                                  </default>
-                                  <styles />
-                                  <content>
-                                    <paragraph>
-                                      <style numbering-type="None">
-                                        <numbering name="" multi-level="false">
-                                          <numbering-level type="None" level="0" format="{0}." />
-                                        </numbering>
-                                      </style>
-                                      <p>
-                                        <t>Message </t>
-                                      </p>
-                                      <p>
-                                        <t>sent </t>
-                                      </p>
-                                      <p>
-                                        <t>to </t>
-                                      </p>
-                                      <p>
-                                        <t>the </t>
-                                      </p>
-                                      <p>
-                                        <t>device.
-</t>
-                                      </p>
-                                    </paragraph>
-                                  </content>
-                                </text>
-                              </doc>
-                            </documentations>
-                          </parameter>
-                        </parameters>
+                      <operation id="ocb410e5b7f6b4063b52c2f4cd4d46d40567" cid="OP109" name="read" creation-date="03/31/2022 09:54:17" type="" type-id="" visibility="public">
                         <source-codes>
                           <source-code language="ActionScript" />
                         </source-codes>
@@ -14376,7 +14260,7 @@ Qué se hace con el código de error?</comment>
                           <parameter id="p940ace522ff846efaa1c2f742d865cf0" name="cmd" type="DrvScpiCmdDataC" type-id="Class:dia2aa20e5c42941bdb38013dba4733bd81772" direction="In" />
                         </parameters>
                       </operation>
-                      <operation id="o1c665c44b18e4febb333fc41c330086211" cid="OP225" name="__receive_command" creation-date="09/25/2023 11:20:47" type="" type-id="" visibility="private" />
+                      <operation id="o1c665c44b18e4febb333fc41c330086211" cid="OP225" name="__receive_response" creation-date="09/25/2023 11:20:47" type="" type-id="" visibility="private" />
                       <operation id="ob4303301e1f44dd5bf364b7373e5f1b4156" cid="OP227" name="DrvScpiNodeC" creation-date="09/25/2023 14:52:01" type="" type-id="" visibility="public">
                         <parameters>
                           <parameter id="pf459fc407a2248e7a8b700b6022e0e55" name="txScpi" type="str" type-id="Python.str">
