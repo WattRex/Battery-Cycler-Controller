@@ -1,0 +1,37 @@
+# This workflow will deploy in development environment the cycler controller module 
+
+name: Deployment of battery cycler controller to real environment
+
+on: workflow_call
+        
+jobs:
+  runs-on: ubuntu-latest
+    steps:
+      - name: Test to get var and secrets
+        run: |
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
+          echo "GITHUB_SECRETS: ${{ secrets.ENV_CRED_TO_DEPLOY }}"
+      - name: Download docker image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wattrex-cycler
+          path: /tmp
+      - name: Download zip devops artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wattrex-cycler-devops
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/wattrex-cycler.tar
+          docker image ls -a
+          ls -lAh /tmp
+      - name: Unzip devops
+        run: |
+          tar -xvf /tmp/wattrex-cycler-devops.tar -C /tmp
+          ls -lAh /tmp
+      - name: Execute deploy script
+        run: |
+          chmod +x /tmp/devops/deploy.sh
+          /tmp/devops/deploy.sh
