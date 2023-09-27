@@ -49,7 +49,7 @@ jobs:
 
   launch-real-bat:
     name: Launch cycler controller in real environment
-    uses: wattrex/priv_cycler/.github/workflows/deploy_real_bat.yml@develop
+    uses: wattrex/priv_cycler/.github/workflows/deploy_real_bat.yml@main
 
   # use:
   #   runs-on: ubuntu-latest
