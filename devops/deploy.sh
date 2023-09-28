@@ -12,16 +12,17 @@ arg1=$1
 arg2=$2
 
 initial_deploy () {
+    force-stop
     sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
     
     check_sniffer "can"
-    check_sniffer "scpi"
+    # check_sniffer "scpi"
 }
 
 instance_new_cycler () {
     check_sniffer "can"
-    check_sniffer "scpi"
+    # check_sniffer "scpi"
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
@@ -58,6 +59,12 @@ check_sniffer () {
             echo "Scpi sniffer is working"
         fi
     fi
+}
+
+force_stop () {
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} down
+    sudo systemctl stop can_sniffer.service
+    # sudo systemctl stop scpi_sniffer.service
 }
 
 
@@ -110,9 +117,7 @@ case ${arg1} in
         ;;
     "force-stop")
         # echo "Stop all"
-        docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} down
-        sudo systemctl stop can_sniffer.service
-        sudo systemctl stop scpi_sniffer.service
+        force_stop
         ;;
     *)
         echo "[ERROR] Invalid command type: ${arg1}"
