@@ -2,4 +2,4 @@ FROM python:3.10-bullseye
 WORKDIR /cycler
 ADD ./code ./code
 RUN pip install -r ./code/requirements.txt
-CMD ["python", "./code/run_cycler.py"]
+CMD ["python", "./code/tests/run_cycler.py"]
