@@ -31,6 +31,7 @@ jobs:
         with:
           name: wattrex-cycler-devops
           path: /tmp/wattrex-cycler-devops.tar
+          retention-days: 3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and export
@@ -46,6 +47,7 @@ jobs:
         with:
           name: wattrex-cycler
           path: /tmp/wattrex-cycler.tar
+          retention-days: 3
 
   launch-real-bat:
     name: Launch cycler controller in real environment

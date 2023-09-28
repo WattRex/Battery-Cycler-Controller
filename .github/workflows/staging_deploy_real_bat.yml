@@ -38,7 +38,7 @@ jobs:
           ls -lAh /tmp
       - name: Set secrets to deploy
         run: |
-          echo "$ENV_CRED_TO_DEPLOY" > /tmp/devops/.cred.env
+          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/devops/.cred.env
       - name: Execute deploy script
         run: |
           chmod +x /tmp/devops/deploy.sh
