@@ -20,24 +20,19 @@ jobs:
       - name: Download zip devops and docker image artifacts
         uses: actions/download-artifact@v3
         with:
-          # name: wattrex-cycler-devops
           path: /tmp
-      # - name: Download docker image artifact
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: wattrex-cycler
-      #     path: /tmp
-      # - name: Load docker image
-      #   run: |
-      #     docker load --input /tmp/wattrex-cycler/wattrex-cycler.tar
-      #     docker image ls -a
-      #     ls -lAh /tmp
+      - name: Load docker image
+        run: |
+          docker load --input /tmp/wattrex-cycler/wattrex-cycler.tar
+          docker image ls -a
+          ls -lAh /tmp
       - name: Unzip devops
         run: |
           tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
           ls -lAh /tmp
       - name: Set secrets to deploy
         run: |
+          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/devops/.cred.env
           cat /tmp/devops/.cred.env
       - name: Execute deploy script
         run: |
