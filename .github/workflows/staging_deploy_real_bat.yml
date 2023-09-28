@@ -20,13 +20,13 @@ jobs:
       - name: Download zip devops artifact
         uses: actions/download-artifact@v3
         with:
-          name: wattrex-cycler-devops
+          # name: wattrex-cycler-devops
           path: /tmp
-      - name: Download docker image artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: wattrex-cycler
-          path: /tmp
+      # - name: Download docker image artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: wattrex-cycler
+      #     path: /tmp
       - name: Load image
         run: |
           docker load --input /tmp/wattrex-cycler.tar
