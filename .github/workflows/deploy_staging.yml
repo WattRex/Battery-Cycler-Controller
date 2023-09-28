@@ -41,11 +41,11 @@ jobs:
           tags: wattrex-cycler:latest
           outputs: type=docker,dest=/tmp/wattrex-cycler.tar
           push: false
-      - name: Upload docker image artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: wattrex-cycler
-          path: /tmp/wattrex-cycler.tar
+      # - name: Upload docker image artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: wattrex-cycler
+      #     path: /tmp/wattrex-cycler.tar
 
   launch-real-bat:
     name: Launch cycler controller in real environment

@@ -17,11 +17,11 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      - name: Download docker image artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: wattrex-cycler
-          path: /tmp
+      # - name: Download docker image artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: wattrex-cycler
+      #     path: /tmp
       - name: Download zip devops artifact
         uses: actions/download-artifact@v3
         with:
