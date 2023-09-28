@@ -133,6 +133,8 @@ class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
             mapping_names (Dict, optional): [description]. Defaults to None.
             link_configuration (MidDataLinkConfSerialC, optional): [description]. Defaults to None.
         """
+        if device_type is not None:
+            device_type = MidDataDeviceTypeE(device_type)
         self.dev_id : int|None = dev_id
         self.manufacturer : str| None= manufacturer
         self.model : str| None = model

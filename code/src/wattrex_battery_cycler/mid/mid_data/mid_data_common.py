@@ -41,7 +41,7 @@ class MidDataGenMeasC:
     '''
 
     def __init__(self, voltage: int= 0,
-                 current: int= 0, power: int= 0, inst_id: int|None = None) -> None:
+                 current: int= 0, power: int= 0, instr_id: int|None = None) -> None:
         '''
         Initialize the instance with the given measures.
 
@@ -54,7 +54,7 @@ class MidDataGenMeasC:
         self.voltage : int = voltage
         self.current : int = current
         self.power : int = power
-        self.inst_id : int|None = inst_id
+        self.instr_id : int|None = instr_id
 
 class MidDataExtMeasC:
     '''
