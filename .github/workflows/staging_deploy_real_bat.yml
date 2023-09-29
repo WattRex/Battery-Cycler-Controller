@@ -25,7 +25,7 @@ jobs:
           pwd
       - name: Build cycler docker image
         run: |
-          docker build -t wattrex-cycler-node:latest -f ./devops/docker/Dockerfile.cycler .
+          docker build -t wattrex-cycler-node:latest --network=host -f ./devops/docker/Dockerfile.cycler .
           docker image ls -a
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
