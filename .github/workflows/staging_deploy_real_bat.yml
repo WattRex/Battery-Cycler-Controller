@@ -13,7 +13,7 @@ jobs:
     runs-on: [self-hosted, linux, ARM64, plc]
     steps:
       - name: Checkout
-          uses: actions/checkout@v4
+        uses: actions/checkout@v4
       - name: Test to get var and secrets
         run: |
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
