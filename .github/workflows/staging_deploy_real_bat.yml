@@ -17,20 +17,36 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      - name: Download zip devops and docker image artifacts
-        uses: actions/download-artifact@v3
+      - name: Checkout
+          uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and export
+        uses: docker/build-push-action@v5
         with:
-          path: /tmp
+          context: .
+          file: ./devops/docker/Dockerfile.cycler
+          tags: wattrex-cycler:latest
+          outputs: type=docker,dest=/tmp/wattrex-cycler-local.tar
+          push: false
+      # - name: Download zip devops and docker image artifacts
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     path: /tmp
       - name: Load docker image
         run: |
-          docker load --input /tmp/wattrex-cycler/wattrex-cycler.tar
-          rm -f /tmp/wattrex-cycler/wattrex-cycler.tar
+          docker load --input /tmp/wattrex-cycler-local.tar
+          rm -f /tmp/wattrex-cycler-local.tar
           docker image ls -a
           ls -lAh /tmp
-      - name: Unzip devops
+      # - name: Unzip devops
+      #   run: |
+      #     tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
+      #     rm -f /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar
+      #     ls -lAh /tmp
+      - name: Copy devops
         run: |
-          tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
-          rm -f /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar
+          cp -r ./devops /tmp/devops
           ls -lAh /tmp
       - name: Set secrets to deploy
         run: |
