@@ -23,7 +23,10 @@ jobs:
         run: |
           ls -lAh ./
           pwd
-      
+      - name: Build cycler docker image
+        run: |
+          docker build -t wattrex-cycler-node:latest -f ./devops/docker/Dockerfile.cycler .
+          docker image ls -a
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
       # - name: Build and export
@@ -38,12 +41,12 @@ jobs:
       #   uses: actions/download-artifact@v3
       #   with:
       #     path: /tmp
-      - name: Load docker image
-        run: |
-          docker load --input /tmp/wattrex-cycler-local.tar
-          rm -f /tmp/wattrex-cycler-local.tar
-          docker image ls -a
-          ls -lAh /tmp
+      # - name: Load docker image
+      #   run: |
+      #     docker load --input /tmp/wattrex-cycler-local.tar
+      #     rm -f /tmp/wattrex-cycler-local.tar
+      #     docker image ls -a
+      #     ls -lAh /tmp
       # - name: Unzip devops
       #   run: |
       #     tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
