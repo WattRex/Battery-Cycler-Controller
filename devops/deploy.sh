@@ -13,7 +13,7 @@ arg2=$2
 
 initial_deploy () {
     force-stop
-    python3 -m pip install can-sniffer
+    sudo python3 -m pip install can-sniffer
     # python3 -m pip install scpi-sniffer
     sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d

@@ -63,7 +63,7 @@ jobs:
       - name: Clean up
         run: |
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
-          sudo rm -rf /tmp/wattrex-cycler-staging/devops
+          sudo rm -rf /tmp/wattrex-cycler-staging/
           docker image prune -f
           docker images -a
           ls -lAh /tmp
