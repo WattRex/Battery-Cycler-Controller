@@ -46,7 +46,7 @@ jobs:
       #     ls -lAh /tmp
       - name: Copy repository content
         run: |
-          cp -r ./ /tmp/wattrex-cycler-staging
+          rsync -av --progress ./ /tmp/wattrex-cycler-staging --exclude ./.git
           ls -lAh /tmp/wattrex-cycler-staging
       - name: Set secrets to deploy
         run: |
