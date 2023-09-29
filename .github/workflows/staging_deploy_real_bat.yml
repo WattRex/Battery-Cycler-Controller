@@ -12,13 +12,13 @@ jobs:
     name: Launch cycler controller in real environment
     runs-on: [self-hosted, linux, ARM64, plc]
     steps:
+      - name: Checkout
+          uses: actions/checkout@v4
       - name: Test to get var and secrets
         run: |
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      - name: Checkout
-          uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and export
