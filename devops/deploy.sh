@@ -67,6 +67,8 @@ force_stop () {
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} down
     sudo systemctl stop can_sniffer.service
     # sudo systemctl stop scpi_sniffer.service
+    sudo systemctl disable can_sniffer.service
+    # sudo systemctl disable scpi_sniffer.service
 }
 
 

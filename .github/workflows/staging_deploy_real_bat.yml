@@ -24,11 +24,13 @@ jobs:
       - name: Load docker image
         run: |
           docker load --input /tmp/wattrex-cycler/wattrex-cycler.tar
+          rm -f /tmp/wattrex-cycler/wattrex-cycler.tar
           docker image ls -a
           ls -lAh /tmp
       - name: Unzip devops
         run: |
           tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
+          rm -f /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar
           ls -lAh /tmp
       - name: Set secrets to deploy
         run: |
