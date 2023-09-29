@@ -19,14 +19,6 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      - name: ls check
-        run: |
-          ls -lAh ./
-          pwd
-      - name: Build cycler docker image
-        run: |
-          docker build -t wattrex-cycler-node:latest --network=host -f ./devops/docker/Dockerfile.cycler .
-          docker image ls -a
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
       # - name: Build and export
@@ -52,21 +44,26 @@ jobs:
       #     tar -xvf /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar -C /tmp
       #     rm -f /tmp/wattrex-cycler-devops/wattrex-cycler-devops.tar
       #     ls -lAh /tmp
-      - name: Copy devops
+      - name: Copy repository content
         run: |
-          cp -r ./devops /tmp/devops
-          ls -lAh /tmp
+          cp -r ./ /tmp/wattrex-cycler-staging
+          ls -lAh /tmp/wattrex-cycler-staging
       - name: Set secrets to deploy
         run: |
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/devops/.cred.env
-          cat /tmp/devops/.cred.env
+          cat /tmp/wattrex-cycler-staging/devops/.cred.env
+      - name: Build cycler docker image
+        run: |
+          docker build -t wattrex-cycler-node:latest --network=host -f /tmp/wattrex-cycler-staging/devops/docker/Dockerfile.cycler /tmp/wattrex-cycler-staging/
+          docker image ls -a
       - name: Execute deploy script
         run: |
-          chmod +x /tmp/devops/deploy.sh
-          /tmp/devops/deploy.sh
+          chmod +x /tmp/wattrex-cycler-staging/devops/deploy.sh
+          /tmp/wattrex-cycler-staging/devops/deploy.sh
       - name: Clean up
         run: |
-          /tmp/devops/deploy.sh force-stop
-          rm -rf /tmp/devops
+          /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
+          rm -rf /tmp/wattrex-cycler-staging/devops
           docker image prune -f
+          docker images -a
           ls -lAh /tmp
