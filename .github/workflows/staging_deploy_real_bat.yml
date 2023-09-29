@@ -64,3 +64,9 @@ jobs:
         run: |
           chmod +x /tmp/devops/deploy.sh
           /tmp/devops/deploy.sh
+      - name: Clean up
+        run: |
+          /tmp/devops/deploy.sh force-stop
+          rm -rf /tmp/devops
+          docker image prune -f
+          ls -lAh /tmp
