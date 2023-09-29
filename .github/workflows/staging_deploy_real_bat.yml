@@ -50,7 +50,7 @@ jobs:
           ls -lAh /tmp/wattrex-cycler-staging
       - name: Set secrets to deploy
         run: |
-          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/devops/.cred.env
+          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.env
           cat /tmp/wattrex-cycler-staging/devops/.cred.env
       - name: Build cycler docker image
         run: |
@@ -63,7 +63,7 @@ jobs:
       - name: Clean up
         run: |
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
-          rm -rf /tmp/wattrex-cycler-staging/devops
+          sudo rm -rf /tmp/wattrex-cycler-staging/devops
           docker image prune -f
           docker images -a
           ls -lAh /tmp
