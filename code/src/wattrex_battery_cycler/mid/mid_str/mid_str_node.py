@@ -18,7 +18,8 @@ log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
 from system_config_tool import sys_conf_read_config_params
-from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC
+from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC,
+                        SysShdNodeStatusE)
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
 from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
@@ -27,7 +28,7 @@ from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataA
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-TIMEOUT_CONNECTION = 500
+TIMEOUT_CONNECTION = 5
 ### THREAD ###
 class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     """This class will create a node that communicates with the databases reading and writing data.
@@ -121,6 +122,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         """
         self.db_iface.close_db_connection()
         self.working_flag.clear()
+        self.status = SysShdNodeStatusE.STOP
         log.critical(f"Stopping {current_thread().getName()} node")
 
     def process_iteration(self) -> None:
@@ -160,10 +162,13 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
                          f"Database connection will be restarted. {exc}"))
+            self.status = SysShdNodeStatusE.COMM_ERROR
             self.db_iface.reset_db_connection()
         except ConnectionError as exc:
+            self.status = SysShdNodeStatusE.COMM_ERROR
             log.critical(exc)
         except Exception as exc:
+            self.status = SysShdNodeStatusE.INTERNAL_ERROR
             log.critical(f"Unexpected error in MID_STR_Node_c thread.\n{exc}")
             # self.stop()
 
