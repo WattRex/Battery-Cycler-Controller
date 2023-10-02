@@ -27,7 +27,7 @@ from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataA
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-TIMEOUT_CONNECTION = 10
+TIMEOUT_CONNECTION = 500
 ### THREAD ###
 class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     """This class will create a node that communicates with the databases reading and writing data.
@@ -92,8 +92,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                                                             cycler_station_id= self.cycler_station)
             self.__actual_exp_id = exp_info.exp_id
             log.debug("Sending new experiment to APP_MANAGER")
-            self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_DATA, exp= exp_info,
-                                battery= battery_info, profile= profile_info))
+            self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_DATA,
+                    experiment= exp_info, battery= battery_info, profile= profile_info))
         elif command.cmd_type == MidStrReqCmdE.GET_EXP_STATUS:
             exp_status = self.db_iface.get_exp_status(exp_id= self.__actual_exp_id)
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_STATUS,
@@ -120,6 +120,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         """Stop the node if it is not already closed .
         """
         self.db_iface.close_db_connection()
+        self.working_flag.clear()
         log.critical(f"Stopping {current_thread().getName()} node")
 
     def process_iteration(self) -> None:
@@ -129,26 +130,33 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             # Syncronising shared data
             self.sync_shd_data()
             # Receive and write alarms
-            alarms = self.__receive_alarms()
-            self.db_iface.write_new_alarm(alarms= alarms, exp_id= self.__actual_exp_id)
-            log.debug("+++++ After write alarams in db_iface object +++++")
+            alarms: List[MidDataAlarmC] = self.__receive_alarms()
+            if len(alarms)>0:
+                self.db_iface.write_new_alarm(alarms= alarms, exp_id= self.__actual_exp_id)
+                alarms.clear()
+            # log.debug("+++++ After write alarams in db_iface object +++++")
             ### Write measures and status changes
-            self.db_iface.write_generic_measures(gen_meas= self.__gen_meas,
-                                                exp_id= self.__actual_exp_id)
-            self.db_iface.write_extended_measures(ext_meas= self.__ext_meas,
-                                                exp_id= self.__actual_exp_id)
-            self.db_iface.write_status_changes(all_status= self.__all_status,
-                                                exp_id= self.__actual_exp_id)
+            if self.__gen_meas.instr_id is not None:
+                self.db_iface.write_generic_measures(gen_meas= self.__gen_meas,
+                                                    exp_id= self.__actual_exp_id)
+                log.critical("TEST COMMITING CHANGES")
+                self.db_iface.commit_changes()
+                self.db_iface.write_extended_measures(ext_meas= self.__ext_meas,
+                                                    exp_id= self.__actual_exp_id)
+                self.db_iface.write_status_changes(all_status= self.__all_status,
+                                                    exp_id= self.__actual_exp_id)
             if not self.str_reqs.is_empty():
                 # Ignore warning as receive_data return an object,
                 # which in this case must be of type DrvCanCmdDataC
                 command : MidStrCmdDataC = self.str_reqs.receive_data() # type: ignore
+                self.str_reqs.delete_until_last()
                 log.debug(f"Command to apply: {command.cmd_type.name}")
                 self.__apply_command(command)
-            log.debug("+++++ Before commit changes in db_iface +++++")
+            # log.debug("+++++ Before commit changes in db_iface +++++")
             # TIMEOUT added to detect if database connection was ended
-            func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes())
-            log.debug("+++++ After commit changes in db_iface +++++")
+            #-------------------------------------------------------------------- self.db_iface.commit_changes()
+            # func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes())
+            # log.debug("+++++ After commit changes in db_iface +++++")
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
                          f"Database connection will be restarted. {exc}"))
@@ -157,6 +165,6 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             log.critical(exc)
         except Exception as exc:
             log.critical(f"Unexpected error in MID_STR_Node_c thread.\n{exc}")
-            self.stop()
+            # self.stop()
 
 #######################            FUNCTIONS             #######################
