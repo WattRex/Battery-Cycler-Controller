@@ -38791,7 +38791,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
           </diagram>
         </model>
       </sub-models>
-      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="19,-360" zoom="0.8">
+      <diagram type="uml-component" id="pe588d84103e54abb931e30f5a3c4129f_157848642" name="DataFlow" order-index="1" uid="" name-style="" auto-routed-paths="false" default-line-style="default" view-location="-157,-358" zoom="0.6">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
