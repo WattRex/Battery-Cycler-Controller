@@ -11,24 +11,27 @@ from datetime import datetime
 from typing import List
 
 #######################       THIRD PARTY IMPORTS        #######################
-from sqlalchemy import select, update, insert, join, text
+from sqlalchemy import select, update, insert
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import sys_log_logger_get_module_logger
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_driver_db import DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBatteryC, DrvDbProfileC, \
-                        DrvDbCyclerStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC, \
-                        DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheStatusC,\
-                        DrvDbTypeE, DrvDbUsedDeviceC, DrvDbCompatibleDeviceC, DrvDbDeviceTypeE
+from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBatteryC, 
+        DrvDbProfileC, DrvDbCyclerStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC,
+        DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheStatusC, DrvDbTypeE,
+        DrvDbUsedDeviceC, DrvDbCompatibleDeviceC, DrvDbDeviceTypeE, DrvDbLinkConfigurationC,
+        DrvDbCacheExperimentC)
 
 #######################          MODULE IMPORTS          #######################
-from .mid_str_mapping import mapping_alarm, mapping_status, mapping_gen_meas, map_inst_db,\
-                            remap_dict, map_cs_db, map_dev_db, map_batt_range_db, map_batt_db
-from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC,\
-                MidDataExpStatusE, MidDataProfileC, MidDataBatteryC, MidDataDeviceC,\
-                MidDataExperimentC, MidDataCyclerStationC, MidDataInstructionC\
+from .mid_str_mapping import (mapping_alarm, mapping_status, mapping_gen_meas, map_inst_db,
+        map_cs_db, map_dev_db, map_batt_range_db, map_batt_db, mapping_experiment, map_instr_modes,
+        map_instr_limit_modes, remap_dict)
+from ..mid_data import (MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC,
+            MidDataExpStatusE, MidDataProfileC, MidDataBatteryC, MidDataDeviceC, MidDataDeviceTypeE,
+            MidDataExperimentC, MidDataCyclerStationC, MidDataInstructionC, MidDataPwrRangeC,
+            MidDataPwrModeE, MidDataPwrLimitE)
 
 #######################              ENUMS               #######################
 #
@@ -64,54 +67,68 @@ class MidStrFacadeC:
                                                             config_file= cache_file)
         self.meas_id: int = 0
 
-    def get_start_queued_exp(self, cycler_station_id) -> MidDataExperimentC:
+    def get_start_queued_exp(self, cycler_station_id: int) -> MidDataExperimentC:
         '''
         Get the oldest queued experiment, assigned to the cycler station where this 
         cycler would be running, and change its status to RUNNING in database.
         '''
         ## TODO: NOT WELL REVIEW, PROBABLY NOT WORKING AS EXPECTED, CHECK WHAT RETURNS EXACTLY
         self.meas_id = 0
-        exp = {}
-        battery = {}
-        profile = {}
+        exp = None
+        battery = None
+        profile = None
         try:
             stmt =  select(DrvDbMasterExperimentC)\
-                        .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED)\
+                        .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value)\
                         .where(DrvDbMasterExperimentC.CSID == cycler_station_id)\
                         .order_by(DrvDbMasterExperimentC.DateCreation.asc())
-            result = self.__master_db.session.execute(stmt).first()
-            if result is None:
+            exp_result = self.__master_db.session.execute(stmt).first()[0]
+            if exp_result is None:
                 raise MidStrDbElementNotFoundErrorC(("No experiment found for cycler station "
                                                     f"with ID: {cycler_station_id}"))
-            exp : DrvDbMasterExperimentC = result[0]
-            # Get battery info
-            stmt =  select(DrvDbBatteryC)\
-                        .where(DrvDbBatteryC.BatID == exp.BatID)
-            result = self.__master_db.session.execute(stmt).first()
-            if result is None:
-                raise MidStrDbElementNotFoundErrorC(("No battery found with ID: {exp.BatID}"))
-            battery = result[0]
-            # Get profile info
-            stmt =  select(DrvDbProfileC)\
-                        .where(DrvDbProfileC.ProfID == exp.ProfID)
-            result = self.__master_db.session.execute(stmt).first()
-            if result is None:
-                raise MidStrDbElementNotFoundErrorC(("No profile found with ID: {exp.ProfID}"))
-            profile = result[0]
+            exp : MidDataExperimentC = MidDataExperimentC()
+            for db_name, att_name in mapping_experiment.items():
+                setattr(exp, att_name, getattr(exp_result,db_name))
 
-            # Change experiment status to running and update begin datetime
-            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp.ExpID)\
-                        .values(Status=DrvDbExpStatusE.RUNNING, DateBegin=datetime.utcnow())
-            self.__cache_db.session.execute(stmt)
+            # Get battery info
+            battery = self.get_exp_battery_data(exp.exp_id)
+            # Get profile info
+            profile = self.get_exp_profile_data(exp.exp_id)
+            try:
+                # Change experiment status to running and update begin datetime
+                # log.debug(exp_result_dict)
+                # exp_dict= {'ExpID': exp.exp_id, 'CSID': cycler_station_id, 'Name': exp.name,
+                #     'BatID': exp_result.BatID, 'ProfID': exp_result.ProfID,
+                #     'Description': exp_result.Description, 'Status': DrvDbExpStatusE.RUNNING.value,
+                #     'DateBegin': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                #     'DateCreation': exp_result.DateCreation}
+                exp_dict= {'ExpID': 1, 'CSID': 1, 'Name': 'Pruebas 1', 'BatID': 2, 'ProfID': 1,
+               'Description': 'Pruebas manager1', 'Status': 'RUNNING',
+               'DateBegin': '2023-09-27 10:18:38',
+               'DateCreation': datetime(2023, 9, 20, 14, 0, 9)}
+                a = DrvDbCacheExperimentC(**exp_dict)
+                self.__cache_db.session.add(a)
+                log.critical(f"DEBUG COMMIT {a.__dict__}")
+                # stmt = insert(DrvDbCacheExperimentC).values(ExpID= exp.exp_id, Name= exp.name,
+                #     Status= DrvDbExpStatusE.RUNNING.value, CSID= cycler_station_id,
+                #     DateBegin= datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                #     DateCreation= exp_result.DateCreation)
+                # log.critical(f"Statement: {stmt.inline()}")
+                # self.__cache_db.session.execute(stmt)
+                self.commit_changes()
+            except Exception as err:
+                log.error(f"Error updating experiment in cache {err}")
+                # raise RuntimeError(f"Error updating experiment in cache {err}")
         except Exception as err: #pylint: disable=broad-except
             # TODO: not catch own raised exceptions
             # print(err)
             # print("Error on GetQueuedExperimentById. Performing rollback...")
             # self.session.rollback()
-            pass
+            log.error(f"Error fetching experiment {err}")
+            # raise RuntimeError(f"Error fetching experiment {err}")
         finally:
-            return MidDataExperimentC(**exp.__dict__), MidDataBatteryC(**battery.__dict__),\
-                        MidDataProfileC(**profile.__dict__)
+            log.debug(f"Experiment fetched: {exp.__dict__}, {battery.__dict__}, {profile.__dict__}")
+            return exp, battery, profile
 
     ## All methods that get information will gather the info from the master db
     def get_exp_status(self, exp_id: int) -> MidDataExpStatusE:
@@ -143,17 +160,34 @@ class MidStrFacadeC:
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Profile with id {result.ProfID} not found')
         profile = MidDataProfileC(name= result.Name)
+        profile_range = MidDataPwrRangeC(curr_max= result.CurrMax, curr_min= result.CurrMin,
+                                         volt_max= result.VoltMax, volt_min= result.VoltMin)
+        profile.range = profile_range
         instructions= []
         stmt = select(DrvDbInstructionC).where(DrvDbInstructionC.ProfID == result.ProfID)
-        result = self.__master_db.session.execute(stmt).all()[0]
+        result = self.__master_db.session.execute(stmt).all()
         if result is None:
             raise MidStrDbElementNotFoundErrorC((f'Instructions for profile {result.ProfID} '
                                                  'not found'))
-        for inst_res in result:
-            instruction = MidDataInstructionC()
-            for db_name, att_name in map_inst_db.items():
-                setattr(instruction, att_name, getattr(inst_res,db_name))
-            instructions.append(instruction)
+        try:
+            for inst_res in result:
+                inst_res:DrvDbInstructionC = inst_res[0]
+                instruction = MidDataInstructionC()
+                for db_name, att_name in map_inst_db.items():
+                    if att_name == 'mode':
+                        setattr(instruction, att_name,
+                                MidDataPwrModeE(map_instr_modes[getattr(inst_res,db_name)]))
+                    elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_type':
+                        setattr(instruction, att_name,
+                                MidDataPwrLimitE(map_instr_limit_modes[getattr(inst_res,db_name)]))
+                    elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_ref':
+                        setattr(instruction, att_name, getattr(inst_res,db_name))
+                    else:
+                        setattr(instruction, att_name, getattr(inst_res,db_name))
+                instructions.append(instruction)
+        except Exception as err:
+            log.error(f"Error fetching instructions {err}")
+            raise RuntimeError(f"Error fetching instructions {err}")
         profile.instructions = instructions
         return profile
 
@@ -168,6 +202,10 @@ class MidStrFacadeC:
         result = self.__master_db.session.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
+        stmt = select(DrvDbBatteryC).where(DrvDbBatteryC.BatID == result.BatID)
+        result = self.__master_db.session.execute(stmt).one()[0]
+        if result is None:
+            raise MidStrDbElementNotFoundErrorC(f'Battery with id {result.BatID} not found')
         battery = MidDataBatteryC()
         for db_name, att_name in map_batt_db.items():
             setattr(battery, att_name, getattr(result,db_name))
@@ -184,10 +222,12 @@ class MidStrFacadeC:
         """
         ## Get cycler station info
         stmt = select(DrvDbCyclerStationC).where(DrvDbCyclerStationC.CSID == cycler_id)
-        result = self.__master_db.session.execute(stmt).one()[0]
+        result = self.__master_db.session.execute(stmt).one()
+        # log.debug(result)
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Cycler station with id {cycler_id} not found')
-        log.debug(f"Cycler station with id {cycler_id} found, {result.__dict__}")
+        result = result[0]
+        # log.debug(f"Cycler station with id {cycler_id} found, {result.__dict__}")
         cycler_station = MidDataCyclerStationC()
         for key,value in map_cs_db.items():
             setattr(cycler_station, value, getattr(result,key))
@@ -195,27 +235,48 @@ class MidStrFacadeC:
         stmt = select(DrvDbUsedDeviceC, DrvDbCompatibleDeviceC).join(DrvDbCompatibleDeviceC,
             DrvDbUsedDeviceC.CompDevID == DrvDbCompatibleDeviceC.CompDevID).where(
                 DrvDbUsedDeviceC.CSID == result.CSID)
-        result = self.__master_db.session.execute(stmt).all()[0]
+        result = self.__master_db.session.execute(stmt).all()
         devices= []
-        for dev_res in result:
-            log.debug(f"Device found, {dev_res.__dict__}")
+        # log.debug(result)
+        for devices_res in result:
+            used_dev_res = devices_res[0]
+            comp_dev_res = devices_res[1]
             device = MidDataDeviceC()
+            ## TODO: FILL CORRECTLY THE MAPPING NAMES ATTRIBUTE GET INFO FROM DB 
+            device.mapping_names = {'hs_voltage': 'HIGH_SIDE_VOLTAGE', 'temp_body': 'TEMP_1',
+                'temp_anod': 'TEMP_2', 'temp_amb': 'TEMP_3'}
             for db_name, att_name in map_dev_db.items():
-                setattr(device, att_name, getattr(dev_res,db_name))
-            if dev_res.DeviceType is not DrvDbDeviceTypeE.EPC:
+                if att_name == "device_type":
+                    # log.debug(f"device type: {MidDataDeviceTypeE(getattr(comp_dev_res,db_name))}")
+                    setattr(device, att_name, MidDataDeviceTypeE(getattr(comp_dev_res,db_name)))
+                elif db_name in used_dev_res.__dict__:
+                    setattr(device, att_name, getattr(used_dev_res,db_name))
+                else:
+                    setattr(device, att_name, getattr(comp_dev_res,db_name))
+            if comp_dev_res.DeviceType is not DrvDbDeviceTypeE.EPC.value:
                 ## Get link configuration if needed
-                stmt = select(DrvDbLinkConfC).where(DrvDbLinkConfC.CompDevID == dev_res.CompDevID)
-                result = self.__master_db.session.execute(stmt).all()[0]
+                stmt = select(DrvDbLinkConfigurationC).where(
+                    DrvDbLinkConfigurationC.CompDevID == used_dev_res.CompDevID)
+                result = self.__master_db.session.execute(stmt).all()
                 if result is None:
                     raise MidStrDbElementNotFoundErrorC((f'Link configuration for device '
-                                                        f'{dev_res.CompDevID} not found'))
+                                                        f'{comp_dev_res.CompDevID} not found'))
                 link_conf = MidDataLinkConfC()
-                for db_name, att_name in map_link_conf_db.items():
-                    setattr(link_conf, att_name, getattr(result,db_name))
-                device.link_conf = link_conf            
+                for res in result:
+                    res: DrvDbLinkConfigurationC = res[0]
+                    print("res: ", res.__dict__)
+                    att_name:str = res.Property.lower()
+                    att_value = str(res.Value)
+                    if att_value.isdecimal():
+                        att_value = int(att_value)
+                    elif len(att_value.rsplit('.'))<=2:
+                        att_value = float(att_value)
+                    setattr(link_conf, att_name, att_value)
+                device.link_conf = link_conf
+            # log.debug(f"Device created, {device.__dict__}")
             devices.append(device)
-        log.critical(f"Cycler station object, {cycler_station.__dict__}")
         cycler_station.devices= devices
+        log.debug(f"Cycler station object, {cycler_station.__dict__}")
         return cycler_station
 
     ## All methods that write information will write the info into the cache db
@@ -252,7 +313,7 @@ class MidStrFacadeC:
         Args:
             gen_meas (MidDataGenMeasC): [description]
         """
-        
+
         stmt = insert(DrvDbCacheGenericMeasureC).values(Timestamp= datetime.now(), ExpID = exp_id,
                         MeasID= self.meas_id, **remap_dict(gen_meas.__dict__, mapping_gen_meas))
         self.__cache_db.session.execute(stmt)
