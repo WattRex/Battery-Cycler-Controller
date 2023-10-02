@@ -20,8 +20,8 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_data import MidDataProfileC, MidDataExpStatusE, MidDataBatteryC,\
-            MidDataExperimentC, MidDataCyclerStationC #pylint: disable= relative-beyond-top-level
+from ..mid_data import (MidDataProfileC, MidDataExpStatusE, MidDataBatteryC,
+            MidDataExperimentC, MidDataCyclerStationC) #pylint: disable= relative-beyond-top-level
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -49,22 +49,23 @@ class MidStrCmdDataC:
     """Class that wrapp the messages send through the queue, containing the request and returns.
     """
     def __init__(self, cmd_type: MidStrDataCmdE|MidStrDataCmdE, #pylint: disable= too-many-arguments
-                exp_status: MidDataExpStatusE|None= None, exp: MidDataExperimentC|None= None,
+                exp_status: MidDataExpStatusE|None= None, experiment: MidDataExperimentC|None= None,
                 profile: MidDataProfileC|None= None, battery: MidDataBatteryC|None= None,
                 station: MidDataCyclerStationC|None= None):
         self.cmd_type = cmd_type
         if cmd_type is MidStrDataCmdE.EXP_DATA:
-            if exp is None or profile is None or battery is None:
+            if experiment is None or profile is None or battery is None:
                 raise ValueError(("Experiment, profile and battery must be "
                                   "provided when cmd_type is EXP_DATA"))
-            self.exp = exp
+            self.experiment = experiment
             self.profile = profile
             self.battery = battery
         elif cmd_type is MidStrDataCmdE.CS_DATA:
             if station is None:
                 raise ValueError("station must be provided when cmd_type is CS_DATA")
             self.station = station
-        elif cmd_type is MidStrDataCmdE.EXP_STATUS:
+        elif cmd_type is MidStrDataCmdE.EXP_STATUS or cmd_type is MidStrReqCmdE.SET_EXP_STATUS:
             if exp_status is None:
-                raise ValueError("exp_status must be provided when cmd_type is EXP_STATUS")
+                raise ValueError(("exp_status must be provided when cmd_type is "
+                                 "EXP_STATUS or SET_EXP_STATUS"))
             self.exp_status = exp_status
