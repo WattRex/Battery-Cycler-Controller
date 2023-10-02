@@ -86,15 +86,15 @@ class MidDabsPwrMeterC:
 
     def __update_source_load_status(self, status: MidDataAllStatusC):
         if status.source.value > 0 :
-            status.pwr_device = status.source
+            status.pwr_dev = status.source
         elif status.load.value > 0:
-            status.pwr_device = status.load
+            status.pwr_dev = status.load
         elif status.source.value < 0:
-            status.pwr_device = status.source
+            status.pwr_dev = status.source
         elif status.load.value < 0:
-            status.pwr_device = status.load
+            status.pwr_dev = status.load
         else:
-            status.pwr_device = status.source
+            status.pwr_dev = status.source
 
     def update(self, gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
                status: MidDataAllStatusC) -> None:
@@ -106,7 +106,7 @@ class MidDabsPwrMeterC:
         for dev_type, dev_id in zip(self.device_type, self.dev_id):
             if dev_type is MidDataDeviceTypeE.BISOURCE:
                 res: DrvEaDataC = self.bisource.get_data()
-                status.pwr_device = MidDataDeviceStatusC(error= res.status.error_code,
+                status.pwr_dev = MidDataDeviceStatusC(error= res.status.error_code,
                                                         dev_id= dev_id)
             elif dev_type is MidDataDeviceTypeE.SOURCE:
                 res: DrvEaDataC = self.source.get_data()
@@ -126,7 +126,7 @@ class MidDabsPwrMeterC:
                 msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
                 msg_mode: DrvEpcDataC  = self.epc.get_mode()
                 epc_status = self.epc.get_status()
-                status.pwr_device = MidDataDeviceStatusC(error= epc_status.error_code,
+                status.pwr_dev = MidDataDeviceStatusC(error= epc_status.error_code,
                                                         dev_id= dev_id)
                 gen_meas.voltage = msg_elect_meas.ls_voltage
                 gen_meas.current = msg_elect_meas.ls_current
