@@ -24,44 +24,62 @@ from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_data import MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataDeviceStatusC,\
-                MidDataLinkConfC, MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC
+from ..mid_data import (MidDataDeviceTypeE, MidDataDeviceC, MidDataPwrLimitE, MidDataDeviceStatusC,
+                MidDataExtMeasC, MidDataGenMeasC, MidDataAllStatusC)
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
+# TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
+class _ConstantsC:
+    PERIOD_ELECT_MEAS   = 5 # value *10ms
+    PERIOD_TEMP_MEAS    = 5 # value *10ms
 class MidDabsPwrMeterC:
     '''Instanciates an object enable to measure.
     '''
     def __init__(self, device: list [MidDataDeviceC]) -> None:
-        self.device_type = device[0].device_type if len(device) == 1 else \
-                                                            MidDataDeviceTypeE.SOURCE_LOAD
+        self.device_type = [x.device_type for x in device]
+        # device[0].device_type if len(device) == 1 else MidDataDeviceTypeE.SOURCE_LOAD
         self.dev_id: List = [x.dev_id for x in device]
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         self.meter      : DrvBkDeviceC | None = None
-        if device[0].link_conf is not None:
-            link_conf = __prepare_link_conf(device[0].link_conf.__dict__)
+        # if device[0].link_conf is not None:
+        #     link_conf = __prepare_link_conf(device[0].link_conf.__dict__)
         try:
-            if self.device_type is MidDataDeviceTypeE.EPC:
-                self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=int(device[0].iface_name))
-                self.epc.open()
-                # TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
-                self.epc.set_periodic(ack_en = False,
-                     elect_en = True, elect_period = 1000,
-                     temp_en = True, temp_period = 1000)
-            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
-                # TODO: Update SCPI not needing handler
-                self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
-                link_conf = __prepare_link_conf(device[1].link_conf.__dict__)
-                self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
-            elif self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
-            elif self.device_type is MidDataDeviceTypeE.METER:
-                self.meter : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**link_conf))
-            else:
-                log.error("The dessire device doesn't have values in yaml file")
+            for dev in device:
+                if dev.device_type is MidDataDeviceTypeE.EPC:
+                    dev_id= 0
+                    if isinstance(dev.iface_name, str):
+                        dev_id = int(dev.iface_name,16)
+                    else:
+                        dev_id = int(dev.iface_name)
+                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev_id)
+                    self.epc.open()
+                    self.mapping_epc = dev.mapping_names
+                    self.epc.set_periodic(ack_en = False,
+                        elect_en = True, elect_period = _ConstantsC.PERIOD_ELECT_MEAS,
+                        temp_en = True, temp_period = _ConstantsC.PERIOD_TEMP_MEAS)
+                elif dev.device_type is MidDataDeviceTypeE.SOURCE:
+                    link_conf = __prepare_link_conf(dev.link_conf.__dict__)
+                    self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
+                    self.mapping_source = dev.mapping_names
+                elif dev.device_type is MidDataDeviceTypeE.LOAD:
+                    # TODO: Update SCPI not needing handler
+                    link_conf = __prepare_link_conf(dev.link_conf.__dict__)
+                    self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
+                    self.mapping_load = dev.mapping_names
+                elif self.device_type is MidDataDeviceTypeE.BISOURCE:
+                    link_conf = __prepare_link_conf(dev.link_conf.__dict__)
+                    self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
+                    self.mapping_bisource = dev.mapping_names
+                elif self.device_type is MidDataDeviceTypeE.METER:
+                    link_conf = __prepare_link_conf(dev.link_conf.__dict__)
+                    self.meter : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**link_conf))
+                    self.mapping_meter = dev.mapping_names
+                else:
+                    log.error(f"The dessire device doesn't have type {self.device_type}")
         except Exception as error:
             log.error(error)
             raise error
@@ -81,60 +99,72 @@ class MidDabsPwrMeterC:
     def update(self, gen_meas: MidDataGenMeasC, ext_meas: MidDataExtMeasC,
                status: MidDataAllStatusC) -> None:
         """Update the data from the hardware sendind the corresponding messages.
-        Update the variables that
+        Update the variables of the class with the data received from the device.
+        Depending on the device type, the data will be updated in a way or another.
         """
         res = None
-        ext_att = [x.lower() for x in ext_meas.__dict__.keys()]
-        if self.device_type is MidDataDeviceTypeE.BISOURCE:
-            res: DrvEaDataC = self.bisource.get_data()
-            status.pwr_device = MidDataDeviceStatusC(error= res.status.error_code,
-                                                    dev_id= self.dev_id[0])
-        elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
-            res: DrvEaDataC = self.source.get_data()
-            status.source = MidDataDeviceStatusC(error= res.status.error_code,
-                                            dev_id= self.dev_id[0])
-            res: DrvRsDataC = self.load.get_data()
-            status.load = MidDataDeviceStatusC(error= res.status.error_code,
-                                            dev_id= self.dev_id[0])
+        for dev_type, dev_id in zip(self.device_type, self.dev_id):
+            if dev_type is MidDataDeviceTypeE.BISOURCE:
+                res: DrvEaDataC = self.bisource.get_data()
+                status.pwr_device = MidDataDeviceStatusC(error= res.status.error_code,
+                                                        dev_id= dev_id)
+            elif dev_type is MidDataDeviceTypeE.SOURCE:
+                res: DrvEaDataC = self.source.get_data()
+                status.source = MidDataDeviceStatusC(error= res.status.error_code,
+                                                dev_id= dev_id)
+            elif dev_type is MidDataDeviceTypeE.LOAD:
+                res: DrvRsDataC = self.load.get_data()
+                status.load = MidDataDeviceStatusC(error= res.status.error_code,
+                                                dev_id= dev_id)
+            elif dev_type is MidDataDeviceTypeE.METER:
+                res: DrvBkDataC = self.meter.get_data()
+                res = res.__dict__
+                for att_name in self.mapping_meter:
+                    setattr(ext_meas,att_name, getattr(res, att_name))
+            elif dev_type is MidDataDeviceTypeE.EPC:
+                msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
+                msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
+                msg_mode: DrvEpcDataC  = self.epc.get_mode()
+                epc_status = self.epc.get_status()
+                status.pwr_device = MidDataDeviceStatusC(error= epc_status.error_code,
+                                                        dev_id= dev_id)
+                gen_meas.voltage = msg_elect_meas.ls_voltage
+                gen_meas.current = msg_elect_meas.ls_current
+                gen_meas.power   = msg_elect_meas.ls_power
+                status.pwr_mode = msg_mode.mode
+                # ext_meas.hs_voltage = msg_elect_meas.hs_voltage
+                for key in self.mapping_epc.keys():
+                    if key == 'hs_voltage':
+                        setattr(ext_meas, self.mapping_epc[key],
+                                getattr(msg_elect_meas, key))
+                    elif key == 'temp_body':
+                        setattr(ext_meas, self.mapping_epc[key],
+                                getattr(msg_temp_meas, key))
+                    elif key == 'temp_anod':
+                        setattr(ext_meas, self.mapping_epc[key],
+                                getattr(msg_temp_meas, key))
+                    elif key == 'temp_amb':
+                        setattr(ext_meas, self.mapping_epc[key],
+                                getattr(msg_temp_meas, key))
+        if (MidDataDeviceTypeE.SOURCE in self.device_type and
+            MidDataDeviceTypeE.LOAD in self.device_type):
             self.__update_source_load_status(status= status)
-        elif self.device_type is MidDataDeviceTypeE.METER:
-            res: DrvBkDataC = self.meter.get_data()
-            res = res.__dict__
-            for key in res.keys():
-                setattr(ext_meas,list(ext_meas.__dict__.keys())[ext_att.index(key)],
-                                     res[key])
-        elif self.device_type is MidDataDeviceTypeE.EPC:
-            msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
-            msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
-            msg_mode: DrvEpcDataC  = self.epc.get_mode()
-            epc_status = self.epc.get_status()
-            status.pwr_device = MidDataDeviceStatusC(error= epc_status.error_code,
-                                                    dev_id= self.dev_id[0])
-            gen_meas.voltage = msg_elect_meas.ls_voltage
-            gen_meas.current = msg_elect_meas.ls_current
-            gen_meas.power   = msg_elect_meas.ls_power
-            status.pwr_mode = msg_mode.mode
-            if 'body_temp' in ext_att:
-                ext_meas.body_temp = msg_temp_meas.temp_body
-            if 'anod_temp' in ext_att:
-                ext_meas.anod_temp = msg_temp_meas.temp_anod
-            if 'amb_temp' in ext_att:
-                ext_meas.amb_temp = msg_temp_meas.temp_amb
-            ext_meas.hs_voltage = msg_elect_meas.hs_voltage
 
     def close(self):
         """Close connection in serial with the device"""
         try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
-                self.bisource.close()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
-                self.source.close()
-                self.load.close()
-            elif self.device_type is MidDataDeviceTypeE.EPC:
-                self.epc.close()
-            else:
-                log.error("The device can not be close")
-                raise ValueError("The device can not be close")
+            for dev in self.device_type:
+                if dev is MidDataDeviceTypeE.BISOURCE:
+                    self.bisource.close()
+                elif dev is MidDataDeviceTypeE.SOURCE:
+                    self.source.close()
+                elif dev is MidDataDeviceTypeE.LOAD:
+                    self.load.close()
+                elif dev is MidDataDeviceTypeE.EPC:
+                    self.epc.close()
+                else:
+                    log.error("The device can not be close")
+                    raise ValueError("The device can not be close")
         except Exception as err:
             log.error(f"Error while closing device: {err}")
             raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
@@ -142,7 +172,7 @@ class MidDabsPwrMeterC:
 class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
-    def _init__(self, device: MidDataDeviceC)->None:
+    def _init__(self, device: List[MidDataDeviceC])->None:
         super().__init__(device)
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
@@ -155,9 +185,10 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                             is mA]
         """
         try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+            if MidDataDeviceTypeE.BISOURCE in self.device_type:
                 self.bisource.set_cv_mode(volt_ref, limit_ref)
-            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+            elif (MidDataDeviceTypeE.SOURCE in self.device_type and
+                MidDataDeviceTypeE.LOAD in self.device_type):
                 if limit_ref>0:
                     self.load.disable()
                     self.source.set_cv_mode(volt_ref, limit_ref)
@@ -165,7 +196,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                     # TODO: upgrade DrvRs to write limits when setting modes
                     self.source.disable()
                     self.load.set_cv_mode(volt_ref)
-            elif self.device_type is MidDataDeviceTypeE.EPC:
+            elif MidDataDeviceTypeE.EPC in self.device_type:
                 self.epc.set_cv_mode(volt_ref,limit_type, limit_ref)
             else:
                 log.error("The device is not able to change between modes.")
@@ -184,9 +215,10 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                             is mV]
         """
         try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+            if MidDataDeviceTypeE.BISOURCE in self.device_type:
                 self.bisource.set_cc_mode(current_ref, limit_ref)
-            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+            elif (MidDataDeviceTypeE.SOURCE in self.device_type and
+                MidDataDeviceTypeE.LOAD in self.device_type):
                 if current_ref>0:
                     self.load.disable()
                     self.source.set_cc_mode(current_ref, limit_ref)
@@ -194,7 +226,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                     # TODO: upgrade DrvRs to write limits when setting modes
                     self.source.disable()
                     self.load.set_cc_mode(current_ref)
-            elif self.device_type is MidDataDeviceTypeE.EPC:
+            elif MidDataDeviceTypeE.EPC in self.device_type:
+                log.warning("Setting cc mode in epc")
                 self.epc.set_cc_mode(current_ref,limit_type, limit_ref)
             else:
                 log.error("The device is not able to change between modes.")
@@ -212,7 +245,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            if self.device_type is MidDataDeviceTypeE.EPC:
+            if MidDataDeviceTypeE.EPC in self.device_type:
                 self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
             else:
                 log.error('This device is incompatible with power control mode')
@@ -225,7 +258,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         To set the wait mode in epc must write argument time_ref = number_in_ms
         """
         try:
-            if self.device_type is MidDataDeviceTypeE.EPC:
+            if MidDataDeviceTypeE.EPC in self.device_type:
                 self.epc.set_wait_mode(limit_ref = time_ref)
             else:
                 self.disable()
@@ -245,7 +278,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
             temp (tuple, optional): [max_value, min_value]. Defaults to None.
         """
-        if self.device_type is MidDataDeviceTypeE.EPC:
+        if MidDataDeviceTypeE.EPC in self.device_type:
             if isinstance(ls_curr, tuple):
                 try:
                     self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
@@ -283,12 +316,13 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """Disable the devices.
         """
         try:
-            if self.device_type is MidDataDeviceTypeE.BISOURCE:
+            if MidDataDeviceTypeE.BISOURCE in self.device_type:
                 self.bisource.disable()
-            elif self.device_type is MidDataDeviceTypeE.SOURCE_LOAD:
+            elif (MidDataDeviceTypeE.SOURCE in self.device_type and
+                MidDataDeviceTypeE.LOAD in self.device_type):
                 self.source.disable()
                 self.load.disable()
-            elif self.device_type is MidDataDeviceTypeE.EPC:
+            elif MidDataDeviceTypeE.EPC in self.device_type:
                 log.info("Disabling epc")
                 self.epc.disable()
             else:
@@ -319,7 +353,7 @@ def __prepare_link_conf(link_conf: dict) -> dict:
         if key in map_link_conf:
             res[key] = __convert_data(link_conf[key], map_link_conf[key])
         else:
-            # # Translation between parity specified by user and parity understable by python serial
+            # Translation between parity specified by user and parity understable by python serial
             if key == 'parity':
                 link_parity = link_conf[key].lower()
                 if 'odd' in link_parity:
