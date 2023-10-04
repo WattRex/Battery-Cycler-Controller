@@ -144,7 +144,7 @@ class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
         self.iface_name :str| None = iface_name
         self.mapping_names : Dict| None = mapping_names
         self.link_conf: MidDataLinkConfC|None = link_configuration
-    
+
 class MidDataCyclerStationC:
     '''
     Cycler station information.
