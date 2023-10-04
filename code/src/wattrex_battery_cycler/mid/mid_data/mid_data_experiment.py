@@ -137,7 +137,7 @@ class MidDataPwrRangeC:
         self.curr_max : int|None = curr_max
         self.curr_min : int|None = curr_min
 
-    def in_range(self, other) -> bool:
+    def in_range(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
         '''
         Check if the current instance is less or equal than the other instance.
 
@@ -149,8 +149,8 @@ class MidDataPwrRangeC:
                 instance, False otherwise
         '''
         res = False
-        if (self.volt_max <= other.volt_max and self.volt_min >= other.volt_min and
-            self.curr_max <= other.curr_max and self.curr_min >= other.curr_min):
+        if (self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min and
+            self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
             res = True
         return res
 
