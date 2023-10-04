@@ -22,7 +22,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBat
         DrvDbProfileC, DrvDbCyclerStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC,
         DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheStatusC, DrvDbTypeE,
         DrvDbUsedDeviceC, DrvDbCompatibleDeviceC, DrvDbDeviceTypeE, DrvDbLinkConfigurationC,
-        DrvDbCacheExperimentC)
+        DrvDbCacheExperimentC, DrvDbDetectedDeviceC)
 
 #######################          MODULE IMPORTS          #######################
 from .mid_str_mapping import (mapping_alarm, mapping_status, mapping_gen_meas, map_inst_db,
@@ -232,31 +232,45 @@ class MidStrFacadeC:
         for key,value in map_cs_db.items():
             setattr(cycler_station, value, getattr(result,key))
         ## Get devices used in the cycler station
-        stmt = select(DrvDbUsedDeviceC, DrvDbCompatibleDeviceC).join(DrvDbCompatibleDeviceC,
-            DrvDbUsedDeviceC.CompDevID == DrvDbCompatibleDeviceC.CompDevID).where(
-                DrvDbUsedDeviceC.CSID == result.CSID)
+        stmt = select(DrvDbUsedDeviceC).where(DrvDbUsedDeviceC.CSID == cycler_id)
         result = self.__master_db.session.execute(stmt).all()
+        log.debug(result)
         devices= []
-        # log.debug(result)
-        for devices_res in result:
-            used_dev_res = devices_res[0]
-            comp_dev_res = devices_res[1]
+        for res_dev in result:
+            res_dev: DrvDbUsedDeviceC = res_dev[0]
+            stmt = select(DrvDbDetectedDeviceC, DrvDbCompatibleDeviceC).join(DrvDbCompatibleDeviceC,
+                DrvDbDetectedDeviceC.CompDevID == DrvDbCompatibleDeviceC.CompDevID).where(
+                    DrvDbDetectedDeviceC.DevID == res_dev.DevID)
+            result = self.__master_db.session.execute(stmt).one()
+            detected_dev_res = result[0]
+            comp_dev_res = result[1]
             device = MidDataDeviceC()
-            ## TODO: FILL CORRECTLY THE MAPPING NAMES ATTRIBUTE GET INFO FROM DB 
-            device.mapping_names = {'hs_voltage': 'HIGH_SIDE_VOLTAGE', 'temp_body': 'TEMP_1',
-                'temp_anod': 'TEMP_2', 'temp_amb': 'TEMP_3'}
             for db_name, att_name in map_dev_db.items():
                 if att_name == "device_type":
                     # log.debug(f"device type: {MidDataDeviceTypeE(getattr(comp_dev_res,db_name))}")
                     setattr(device, att_name, MidDataDeviceTypeE(getattr(comp_dev_res,db_name)))
-                elif db_name in used_dev_res.__dict__:
-                    setattr(device, att_name, getattr(used_dev_res,db_name))
+                elif db_name in detected_dev_res.__dict__:
+                    setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
                     setattr(device, att_name, getattr(comp_dev_res,db_name))
+            stmt = select(DrvDbUsedMeasuresC).where(DrvDbUsedMeasuresC.DevID == res_dev.DevID and
+                                                    DrvDbUsedMeasuresC.CSID == cycler_id)
+            ext_meas_res = master_db.session.execute(stmt).all()
+            for ext_meas in ext_meas_res:
+                ext_meas: DrvDbUsedMeasuresC = ext_meas[0]
+                stmt = select(DrvDbAvailableMeasuresC).where(
+                    DrvDbAvailableMeasuresC.MeasType == ext_meas.MeasType and
+                    DrvDbAvailableMeasuresC.CompDevID == comp_dev_res.CompDevID)
+                available_meas = master_db.session.execute(stmt).one()
+                available_meas: DrvDbAvailableMeasuresC = available_meas[0]
+                if ext_meas.CustomName is None:
+                    device.mapping_names[available_meas.MeasName] = available_meas.MeasName
+                else:
+                    device.mapping_nammes[available_meas.MeasName] = ext_meas.CustomName
             if comp_dev_res.DeviceType is not DrvDbDeviceTypeE.EPC.value:
                 ## Get link configuration if needed
                 stmt = select(DrvDbLinkConfigurationC).where(
-                    DrvDbLinkConfigurationC.CompDevID == used_dev_res.CompDevID)
+                    DrvDbLinkConfigurationC.CompDevID == detected_dev_res.CompDevID)
                 result = self.__master_db.session.execute(stmt).all()
                 if result is None:
                     raise MidStrDbElementNotFoundErrorC((f'Link configuration for device '
