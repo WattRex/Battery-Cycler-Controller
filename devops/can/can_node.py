@@ -28,7 +28,7 @@ if __name__ == '__main__':
     #Create the thread for CAN
     can = DrvCanNodeC(tx_buffer_size= 150, working_flag=_working_can)
     try:
-        can.start()
+        can.run()
         while 1:
             sleep(300)
             print("Elapsed time: 5 minutes")

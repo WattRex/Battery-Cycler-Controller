@@ -8,8 +8,8 @@ CYCLER_DOCKERFILE=Dockerfile.cycler
 DB_SYNC_DOCKERFILE=Dockerfile.db_sync
 INT_RE='^[0-9]+$'
 
-arg1=$1
-arg2=$2
+ARG1=$1
+ARG2=$2
 
 initial_deploy () {
     force-stop
@@ -38,7 +38,7 @@ stop_active_cycler () {
 }
 
 check_sniffer () {
-    if [[ ${arg2} = "can" ]] || [[ ${1} = "can" ]]; then
+    if [[ ${ARG2} = "can" ]] || [[ ${1} = "can" ]]; then
         service can_sniffer status > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up can sniffer"
@@ -50,7 +50,7 @@ check_sniffer () {
         fi
     fi
 
-    if [[ ${arg2} = "scpi" ]] || [[ ${1} = "scpi" ]]; then
+    if [[ ${ARG2} = "scpi" ]] || [[ ${1} = "scpi" ]]; then
         service scpi_sniffer status > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up scpi sniffer"
@@ -74,49 +74,52 @@ force_stop () {
 
 # MAIN
 if ! [ -f "${SCRIPT_DIR}/${ENV_FILE}" ]; then
-    echo "[ERROR] .cred.env file not found"
+    >&2 echo "[ERROR] .cred.env file not found"
     exit 2
 fi
 
 if ! [ -d "${SCRIPT_DIR}/${DOCKER_FOLDER}" ]; then
-    echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER} folder not found"
+    >&2 echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER} folder not found"
     exit 2
 else
     if ! [ -f "${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE}" ]; then
-        echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} file not found"
+        >&2 echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} file not found"
         exit 2
     fi
 fi
 
-case ${arg1} in
+case ${ARG1} in
     "")
         # echo "Initial Deploy"
         initial_deploy
         ;;
     "cycler")
-        if [[ ${arg2} =~ $INT_RE ]]; then
+        if [[ ${ARG2} =~ $INT_RE ]]; then
             # echo "Cycler ${2}"
-            instance_new_cycler "${arg2}"
+            instance_new_cycler "${ARG2}"
         else
-            echo "[ERROR] Invalid Cycler Station ID"
+            >&2 echo "[ERROR] Invalid Cycler Station ID"
+            exit 3
         fi
         ;;
     "sniffer")
         # echo "Check Sniffer"
-        if [[ "${arg2}" = "can" ]] || [[ "${arg2}" = "scpi" ]]; then
+        if [[ "${ARG2}" = "can" ]] || [[ "${ARG2}" = "scpi" ]]; then
             # echo "Cycler ${2}"
-            check_sniffer "${arg2}"
+            check_sniffer "${ARG2}"
         else
-            echo "[ERROR] Invalid sniffer"
+            >&2 echo "[ERROR] Invalid sniffer"
+            exit 3
         fi 
         ;;
     "stop-cycler")
-        # echo "Stop cycler ${arg2}"
-        if [[ ${arg2} =~ $INT_RE ]]; then
+        # echo "Stop cycler ${ARG2}"
+        if [[ ${ARG2} =~ $INT_RE ]]; then
             # echo "Cycler ${2}"
-            stop_active_cycler "${arg2}"
+            stop_active_cycler "${ARG2}"
         else
-            echo "[ERROR] Invalid Cycler Station ID"
+            >&2 echo "[ERROR] Invalid Cycler Station ID"
+            exit 3
         fi
         ;;
     "force-stop")
@@ -124,7 +127,7 @@ case ${arg1} in
         force_stop
         ;;
     *)
-        echo "[ERROR] Invalid command type: ${arg1}"
+        >&2 echo "[ERROR] Invalid command type: ${ARG1}"
         exit 3
         ;;
 esac

@@ -9,8 +9,6 @@ on:
       base:
         ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
-  # push:
-  #   branches: [ "workflow_devops" ]
 
 env:
   PACKAGE_NAME: wattrex-battery-cycler-controller
