@@ -116,22 +116,15 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
-        if ((volt_max is None and #pylint: disable=too-many-boolean-expressions
-             (volt_min is not None or curr_max is not None or curr_min is not None))
-            or (volt_min is None and
-            (curr_max is not None or curr_min is not None or volt_max is not None))
-            or (curr_max is None and
-            (curr_min is not None or volt_max is not None or volt_min is not None))
-            or (curr_min is None and
-            (volt_max is not None or volt_min is not None or curr_max is not None))):
+        if volt_max is None or volt_min is None or curr_max is None or curr_min is None:
             log.error("Invalid power range")
             raise ValueError("Invalid power range")
-        if (volt_max is not None and volt_min is not None and volt_max < volt_min):
+        if volt_max < volt_min:
             log.error("Invalid voltage range")
-            raise ValueError("Invalid power range")
-        if (curr_max is not None and curr_min is not None and curr_max < curr_min):
+            raise ValueError("Invalid voltage range")
+        if curr_max < curr_min:
             log.error("Invalid current range")
-            raise ValueError("Invalid power range")
+            raise ValueError("Invalid current range")
         self.volt_max : int|None = volt_max
         self.volt_min : int|None = volt_min
         self.curr_max : int|None = curr_max

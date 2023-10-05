@@ -106,9 +106,17 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
     A class method that implements the MIDDataLinkConf class .
     '''
     # pylint: disable=too-many-arguments
-    def __init__(self) -> None:
-        """Constructor of the class, the attributes will be create while running
+    def __init__(self, **kargs) -> None:
+        """Constructor of the class, the attributes will be initialized while running
         """
+        accepted_attributes = {'baudrate': int, 'parity': str, 'stopbits': int , 'bytesize': int,
+                    'timeout':float, 'write_timeout': float, 'inter_byte_timeout':float, 'separator':str}
+        for key, value in kargs.items():
+            key = key.lower()
+            if key in accepted_attributes:
+                if not  isinstance(value, accepted_attributes[key]):
+                    value = accepted_attributes[key](value)
+                setattr(self, key, value)
 
 class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
     '''
