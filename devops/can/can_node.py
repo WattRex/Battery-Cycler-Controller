@@ -29,13 +29,7 @@ if __name__ == '__main__':
     can = DrvCanNodeC(tx_buffer_size= 150, working_flag=_working_can)
     try:
         can.run()
-        while 1:
-            sleep(300)
-            print("Elapsed time: 5 minutes")
     except KeyboardInterrupt:
         _working_can.clear()
-        # can_queue.terminate()
-        # rx_queue.terminate()
-        can.join()
-        log.info('closing everything')
+        log.info('CAN node stopped')
         sys.exit(0)
