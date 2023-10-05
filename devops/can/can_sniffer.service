@@ -1,0 +1,31 @@
+[Unit]
+#Service's description
+Description=can_sniffer
+#Service that has to be started before this one is started
+After=multi-user.target
+#Max number of retries in a specified time interval
+StartLimitBurst=3
+#Time interval
+StartLimitIntervalSec=15
+
+[Service]
+#Type of service
+Type=simple
+#Restart policy
+Restart=always
+#Restart service after 3 seconds if it crashes
+RestartSec=3
+
+#Instructions executed before the service execution
+ExecStartPre=/usr/sbin/ip link set down can0
+ExecStartPre=/usr/sbin/ip link set up txqueuelen 100000 can0 type can bitrate 125000
+
+#Main service execution
+ExecStart=/usr/bin/python3 ${R_PATH}/can_node.py
+
+#Instructions executed after the service execution
+ExecStopPost=/usr/sbin/ip link set down can0
+ExecStopPost=echo "Can-sniffer service main execution ended."
+
+[Install]
+WantedBy=multi-user.target
