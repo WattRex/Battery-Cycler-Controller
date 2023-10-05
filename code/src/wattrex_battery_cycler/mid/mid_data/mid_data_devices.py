@@ -110,7 +110,7 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
         """Constructor of the class, the attributes will be initialized while running
         """
         accepted_attributes = {'baudrate': int, 'parity': str, 'stopbits': int , 'bytesize': int,
-                    'timeout':float, 'write_timeout': float, 'inter_byte_timeout':float, 'separator':str}
+            'timeout':float, 'write_timeout': float, 'inter_byte_timeout':float, 'separator':str}
         for key, value in kargs.items():
             key = key.lower()
             if key in accepted_attributes:
