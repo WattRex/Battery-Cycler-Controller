@@ -116,6 +116,23 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
             if key in accepted_attributes:
                 if not  isinstance(value, accepted_attributes[key]):
                     value = accepted_attributes[key](value)
+                if key == 'parity':
+                    value = value.lower()
+                    if 'odd' in value:
+                        value = 'O'
+                    elif 'even' in value:
+                        value = 'E'
+                    elif 'none' in value:
+                        value = 'N'
+                    elif 'mark' in value:
+                        value = 'M'
+                    elif 'space' in value:
+                        value = 'S'
+                else:
+                    log.error("Wrong value for parity")
+                    raise ValueError("Wrong value for parity")
+                if  key == 'separator' and value =='\\n':
+                    value = '\n'
                 setattr(self, key, value)
 
 class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
