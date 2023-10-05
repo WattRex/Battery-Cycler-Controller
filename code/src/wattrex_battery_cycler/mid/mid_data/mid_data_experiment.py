@@ -116,7 +116,10 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
-        if volt_max is None or volt_min is None or curr_max is None or curr_min is None:
+        if ((volt_max is not None and volt_min is None) or #pylint: disable=too-many-boolean-expressions
+            (volt_max is None and volt_min is not None) or
+            (curr_max is not None and curr_min is None) or
+            (curr_max is None and curr_min is not None)):
             log.error("Invalid power range")
             raise ValueError("Invalid power range")
         if volt_max < volt_min:
@@ -142,8 +145,20 @@ class MidDataPwrRangeC:
                 instance, False otherwise
         '''
         res = False
-        if (self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min and
+        if ((self.volt_max is None and self.curr_max is None) or
+            (aux_pwr_range.volt_max is None and aux_pwr_range.curr_max is None)):
+            log.error("Invalid power range")
+            raise ValueError("Invalid power range")
+        if (self.volt_max is not None and self.curr_max is None and
+            self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min):
+            res = True
+        elif (self.volt_max is None and self.curr_max is not None and
             self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
+            res = True
+        elif (self.volt_max <= aux_pwr_range.volt_max and
+            self.volt_min >= aux_pwr_range.volt_min and
+            self.curr_max <= aux_pwr_range.curr_max and
+            self.curr_min >= aux_pwr_range.curr_min):
             res = True
         return res
 
