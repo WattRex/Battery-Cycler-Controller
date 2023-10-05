@@ -3934,7 +3934,7 @@ y: is the firmware version. 1, 2, 3...</comment>
       <drawing />
       <drawing-shape type="Rectangle" />
     </item>
-    <item id="d9d812f4aaf1458faa2d24a6889cc3f0" cid="PROP400" type="property" owner="a4e0472571d1454caba8d288bacbc48f" creation-date="07/11/2023 15:31:13" visibility="private">
+    <item id="d9d812f4aaf1458faa2d24a6889cc3f0" cid="PROP400" type="property" owner="a4e0472571d1454caba8d288bacbc48f" creation-date="07/11/2023 15:31:13" visibility="undefined">
       <structural-feature type="MidDataProfileC" type-id="Class:062db154a441474690c6b0a1f57b74c1" />
     </item>
     <item id="3fb08006a0744ca59220e8e4764e32b1" cid="ELEM003" type="parameter" name="development" creation-date="09/29/2023 11:49:39" visibility="undefined">
@@ -7643,7 +7643,7 @@ y: is the firmware version. 1, 2, 3...</comment>
     <item id="b68f9237e8d34fb2ab01d32dfbfd9b38" cid="ELEM003" type="parameter" name="staging" creation-date="08/28/2023 13:21:10" visibility="undefined">
       <parameter />
     </item>
-    <item id="4a73e2ef3a5e4935b02b9b877f9c41af" cid="PROP785" type="property" owner="46f3d8d8c331477e8505c03968864ff9" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/31/2023 13:19:54" visibility="private">
+    <item id="4a73e2ef3a5e4935b02b9b877f9c41af" cid="PROP785" type="property" owner="46f3d8d8c331477e8505c03968864ff9" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/31/2023 13:19:54" visibility="undefined">
       <structural-feature multiplicity="0..*" type="MidDataProfileC" type-id="Class:062db154a441474690c6b0a1f57b74c1" />
     </item>
     <item id="di260e4f43dfe245bbb996d66f646705032156" cid="ELEM483" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
@@ -9129,7 +9129,7 @@ Qué se hace con el código de error?</comment>
     <item id="0b5eb0c14a9c449a85188687944c0675" cid="ELEM354" type="uml-required-interface-connector" style-class="Flat Green" creation-date="08/30/2023 12:07:19" from="di5d948f6adb1440159750cd6d4d963ca65611" to="85d40c8287b54b5798c34fc90916c6a1">
       <style class="Flat Green" />
     </item>
-    <item id="96648e3e56804420b9d2bf43d8852164" cid="PROP784" type="property" owner="46f3d8d8c331477e8505c03968864ff9" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/31/2023 13:19:54" visibility="private">
+    <item id="96648e3e56804420b9d2bf43d8852164" cid="PROP784" type="property" owner="46f3d8d8c331477e8505c03968864ff9" creator="CDoZfQE0eoPT0twKUywpA6bcSVmND/ES1wvVTUIWqr7nDuuw" creation-date="07/31/2023 13:19:54" visibility="undefined">
       <structural-feature type="MidDataInstructionC" type-id="Class:d8919b2da14e4f8aae65c57461b079b6" />
     </item>
     <item id="diabbc5bb054eb4355aefc3f7802485a871863" cid="ELEM245" type="drawing-shape" name="SimpleShape1" change-tracking-state="added" creation-date="09/02/2022 09:34:43">
@@ -24403,7 +24403,7 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                   </item>
                 </layer>
               </diagram>
-              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="1649,842" zoom="1.2">
+              <diagram type="uml-class" id="pd5a43159fab845609fbe9514f878f755_689720381" name="mid_data" order-index="1" overview-order-index="4" uid="" name-style="" show-super-elements-names="true" show-inherited-fields="true" auto-routed-paths="false" default-line-style="default" show-frame="false" view-location="-71,-68" zoom="1.2">
                 <style>
                   <background-color index="1" color="#FFFFFFFF" />
                   <background-color index="2" color="#FFFFFFFF" />
@@ -25255,9 +25255,9 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <relation from="0cc2927e8ece4bb6a9f775b4efd0923c" from-iid="cf4a068180664104ba8a9ac49139a3b7" to="dic8b6ea3e35bb4a869b26eb86954983ef9849" to-iid="c00a59a620964d1ca442ba4b668c2d40" />
                   </item>
                   <item id="46f3d8d8c331477e8505c03968864ff9" iid="ecf3941cd9a545868a8936376edecb7d" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/31/2023 13:19:54" order-index="25" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1367" y1="50" x2="1475" y2="50" start-border-pos="0.375730991363525" end-border-pos="0.907863849765258" start-local-pos="86" end-local-pos="78" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="1367" y1="58" x2="1475" y2="50" start-border-pos="0.375730991363525" end-border-pos="0.907863849765258" start-local-pos="86" end-local-pos="78" name-position="0,20">
                       <points>
-                        <point x="1367" y="50" />
+                        <point x="1367" y="58" />
                         <point x="1475" y="50" />
                       </points>
                     </layout>
@@ -25275,16 +25275,16 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="a4e0472571d1454caba8d288bacbc48f" iid="55ba66cbb633406e9b8a0f71bc0313f9" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/11/2023 15:31:13" order-index="10" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1332" y1="368" x2="1475" y2="78" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="77" end-local-pos="80" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" lock-start-point="true" lock-end-point="true" lock-to-fields="false" auto-path="" x1="1332" y1="406" x2="1475" y2="78" start-border-pos="0.375" end-border-pos="0.875" start-local-pos="77" end-local-pos="80" name-position="0,20">
                       <points>
-                        <point x="1332" y="368" />
+                        <point x="1332" y="406" />
                         <point x="1475" y="78" />
                       </points>
                     </layout>
                     <relation from="di70ca4bf9f69841bd954db888945ebb578407" from-iid="8f381ba7e81740c385b5fd747cc0b6d3" to="062db154a441474690c6b0a1f57b74c1" to-iid="31cf283d1c584dd0b99a11bef443f8d7" />
                   </item>
                   <item id="di70ca4bf9f69841bd954db888945ebb578407" iid="8f381ba7e81740c385b5fd747cc0b6d3" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" show-fields="true" creation-date="07/11/2023 15:29:17" order-index="9" type="entity">
-                    <layout ax="957" ay="225" awidth="375" aheight="285" x="957" y="225" width="375" height="285" rotation-center="-15,-57" />
+                    <layout ax="957" ay="262" awidth="375" aheight="289" x="957" y="262" width="375" height="289" rotation-center="-15,-59" />
                     <classifier />
                     <class />
                   </item>
@@ -25294,12 +25294,12 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="d8919b2da14e4f8aae65c57461b079b6" iid="8e321fadba434f2a9d7361cb32b92632" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" show-fields="true" creation-date="07/11/2023 15:28:21" order-index="7" type="entity">
-                    <layout ax="957" ay="-90" awidth="410" aheight="279" x="1220" y="-90" width="410" height="279" rotation-center="-65.5,-4" />
+                    <layout ax="957" ay="-90" awidth="410" aheight="295" x="1220" y="-90" width="410" height="295" rotation-center="-65.5,-12" />
                     <classifier />
                     <class />
                   </item>
                   <item id="810c85d8b38345d5aa14da3d0319735c" iid="5e9897cc1dda4b558ef34d3f69e21350" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" show-fields="true" creation-date="07/13/2023 09:45:41" order-index="11" type="entity">
-                    <layout ax="1882" ay="-75" awidth="459" aheight="264" x="1882" y="-75" width="459" height="264" rotation-center="-159.5,-52" />
+                    <layout ax="1882" ay="-75" awidth="476" aheight="280" x="1882" y="-75" width="476" height="280" rotation-center="-168,-60" />
                     <classifier />
                     <class />
                   </item>
@@ -25312,10 +25312,10 @@ data_type=RESP, port, status : DrvScpiStatusE, payload : [Python.str, Python.int
                     <class />
                   </item>
                   <item id="907b776f1513458d95156eed9f085c20" iid="9ae192117c9c469588525e867f59fc33" container="fa1359913c3d45cabafb2f468593a8f6" container-iid="d803e581de9c4466b5166f61e43e7cdc" creation-date="07/13/2023 10:05:19" order-index="13" type="relation">
-                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="2389" y1="221" x2="2341" y2="117" start-border-pos="0.125" end-border-pos="0.432291666666667" start-local-pos="110" end-local-pos="192" name-position="0,20">
+                    <layout start-role-position="25,15" end-role-position="25,-15" start-multiplicity-position="25,-15" end-multiplicity-position="25,15" line-style="rounded-rectangular" start-auto-side="false" lock-start-point="true" lock-end-point="true" lock-to-fields="true" auto-path="" x1="2389" y1="221" x2="2358" y2="118" start-border-pos="0.125" end-border-pos="0.421875" start-local-pos="110" end-local-pos="193" name-position="0,20">
                       <points>
                         <point x="2389" y="221" />
-                        <point x="2341" y="117" />
+                        <point x="2358" y="118" />
                       </points>
                     </layout>
                     <relation from="0c349928e3684e698259a31941d160a5" from-iid="e123d7bda1944e16a2f224a0f088cef4" to="810c85d8b38345d5aa14da3d0319735c" to-iid="5e9897cc1dda4b558ef34d3f69e21350" to-field="aa466bc4bb4784253a8a716acc5a7cb45510" />
