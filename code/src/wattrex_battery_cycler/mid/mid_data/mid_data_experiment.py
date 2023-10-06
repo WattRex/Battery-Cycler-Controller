@@ -116,10 +116,8 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
-        self.__volt_max : int|None = volt_max
-        self.__volt_min : int|None = volt_min
-        self.__curr_max : int|None = curr_max
-        self.__curr_min : int|None = curr_min
+        self.fill_voltage(volt_max, volt_min)
+        self.fill_current(curr_max, curr_min)
 
     def fill_voltage(self, volt_max : int, volt_min : int) -> None:
         '''
@@ -129,13 +127,17 @@ class MidDataPwrRangeC:
             volt_max (int): Maximum voltage
             volt_min (int): Minimum voltage
         '''
-        if ((volt_max is not None and volt_min is None) or #pylint: disable=too-many-boolean-expressions
-            (volt_max is None and volt_min is not None)):
-            log.error("Invalid power range")
-            raise ValueError("Invalid power range")
-        if volt_max < volt_min:
-            log.error("Invalid voltage range")
-            raise ValueError("Invalid voltage range")
+        error_detected = True
+        if volt_max is None and volt_min is None:
+            error_detected = False
+        elif volt_max is not None and volt_min is not None:
+            if volt_max > volt_min:
+                error_detected = False
+        if error_detected:
+            msg = "Invalid voltage range"
+            log.error(msg)
+            raise ValueError(msg)
+
         self.__volt_max = volt_max
         self.__volt_min = volt_min
 
@@ -147,13 +149,17 @@ class MidDataPwrRangeC:
             curr_max (int): Maximum current
             curr_min (int): Minimum current
         '''
-        if ((curr_max is not None and curr_min is None) or
-            (curr_max is None and curr_min is not None)):
-            log.error("Invalid power range")
-            raise ValueError("Invalid power range")
-        if curr_max < curr_min:
-            log.error("Invalid current range")
-            raise ValueError("Invalid current range")
+        error_detected = True
+        if curr_max is None and curr_min is None:
+            error_detected = False
+        elif curr_max is not None and curr_min is not None:
+            if curr_max > curr_min:
+                error_detected = False
+        if error_detected:
+            msg = "Invalid current range"
+            log.error(msg)
+            raise ValueError(msg)
+
         self.__curr_max = curr_max
         self.__curr_min = curr_min
 
