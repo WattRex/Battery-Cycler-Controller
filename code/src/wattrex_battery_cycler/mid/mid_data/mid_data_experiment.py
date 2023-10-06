@@ -116,22 +116,86 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
+        self.__volt_max : int|None = volt_max
+        self.__volt_min : int|None = volt_min
+        self.__curr_max : int|None = curr_max
+        self.__curr_min : int|None = curr_min
+    
+    def fill_voltage(self, volt_max : int, volt_min : int) -> None:
+        '''
+        Fill voltage limits.
+
+        Args:
+            volt_max (int): Maximum voltage
+            volt_min (int): Minimum voltage
+        '''
         if ((volt_max is not None and volt_min is None) or #pylint: disable=too-many-boolean-expressions
-            (volt_max is None and volt_min is not None) or
-            (curr_max is not None and curr_min is None) or
-            (curr_max is None and curr_min is not None)):
+            (volt_max is None and volt_min is not None)):
             log.error("Invalid power range")
             raise ValueError("Invalid power range")
         if volt_max < volt_min:
             log.error("Invalid voltage range")
             raise ValueError("Invalid voltage range")
+        self.__volt_max = volt_max
+        self.__volt_min = volt_min
+
+    def fill_current(self, curr_max : int, curr_min : int) -> None:
+        '''
+        Fill current limits.
+
+        Args:
+            curr_max (int): Maximum current
+            curr_min (int): Minimum current
+        '''
+        if ((curr_max is not None and curr_min is None) or
+            (curr_max is None and curr_min is not None)):
+            log.error("Invalid power range")
+            raise ValueError("Invalid power range")
         if curr_max < curr_min:
             log.error("Invalid current range")
             raise ValueError("Invalid current range")
-        self.volt_max : int|None = volt_max
-        self.volt_min : int|None = volt_min
-        self.curr_max : int|None = curr_max
-        self.curr_min : int|None = curr_min
+        self.__curr_max = curr_max
+        self.__curr_min = curr_min
+
+    @property
+    def curr_max(self) -> int|None:
+        '''
+        Get max current.
+
+        Returns:
+            int: Max Current
+        '''
+        return self.__curr_max
+    
+    @property
+    def curr_min(self) -> int|None:
+        '''
+        Get min current.
+
+        Returns:
+            int: Min Current
+        '''
+        return self.__curr_min
+    
+    @property
+    def volt_max(self) -> int|None:
+        '''
+        Get max voltage.
+
+        Returns:
+            int: Max Voltage
+        '''
+        return self.__volt_max
+    
+    @property
+    def volt_min(self) -> int|None:
+        '''
+        Get min voltage.
+
+        Returns:
+            int: Min Voltage
+        '''
+        return self.__volt_min
 
     def in_range(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
         '''
@@ -149,10 +213,10 @@ class MidDataPwrRangeC:
             (aux_pwr_range.volt_max is None and aux_pwr_range.curr_max is None)):
             log.error("Invalid power range")
             raise ValueError("Invalid power range")
-        if (self.volt_max is not None and self.curr_max is None and
+        if (self.curr_max is None and
             self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min):
             res = True
-        elif (self.volt_max is None and self.curr_max is not None and
+        elif (self.volt_max is None and
             self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
             res = True
         elif (self.volt_max <= aux_pwr_range.volt_max and
