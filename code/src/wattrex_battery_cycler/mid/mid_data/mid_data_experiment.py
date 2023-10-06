@@ -120,7 +120,7 @@ class MidDataPwrRangeC:
         self.__volt_min : int|None = volt_min
         self.__curr_max : int|None = curr_max
         self.__curr_min : int|None = curr_min
-    
+
     def fill_voltage(self, volt_max : int, volt_min : int) -> None:
         '''
         Fill voltage limits.
@@ -166,7 +166,7 @@ class MidDataPwrRangeC:
             int: Max Current
         '''
         return self.__curr_max
-    
+
     @property
     def curr_min(self) -> int|None:
         '''
@@ -176,7 +176,7 @@ class MidDataPwrRangeC:
             int: Min Current
         '''
         return self.__curr_min
-    
+
     @property
     def volt_max(self) -> int|None:
         '''
@@ -186,7 +186,7 @@ class MidDataPwrRangeC:
             int: Max Voltage
         '''
         return self.__volt_max
-    
+
     @property
     def volt_min(self) -> int|None:
         '''
