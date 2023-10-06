@@ -20,7 +20,6 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-from .mid_data_devices import MidDataDeviceC
 #######################              ENUMS               #######################
 
 class MidDataExpStatusE(Enum):
@@ -54,26 +53,6 @@ class MidDataPwrLimitE(Enum):
 
 
 #######################             CLASSES              #######################
-class MidDataCyclerStationC:
-    '''
-    Cycler station information.
-    '''
-    def __init__(self, cycler_id: int| None= None, name: str| None= None,
-                devices: List[MidDataDeviceC]| None= None, deprecated: bool|None = None):
-        '''
-        Initialize CyclerStation instance with the given parameters.
-
-        Args:
-            name (str): Name of the cycler station
-            cycler_id (str): ID of the cycler station
-            devices (List[MidDataDeviceC]): List of devices included in the cycler station
-            deprecated (bool, optional): Flag that indicates if the cycler station is deprecated
-        '''
-        self.name : str| None = name
-        self.cycler_id : int| None = cycler_id
-        self.devices : List[MidDataDeviceC]| None = devices
-        self.deprecated: bool|None = deprecated
-
 class MidDataInstructionC:
     '''
     Instruction to applied on experiments.
@@ -137,11 +116,126 @@ class MidDataPwrRangeC:
             curr_max (int): [description]
             curr_min (int): [description]
         '''
-        self.volt_max : int|None = volt_max
-        self.volt_min : int|None = volt_min
-        self.curr_max : int|None = curr_max
-        self.curr_min : int|None = curr_min
+        self.fill_voltage(volt_max, volt_min)
+        self.fill_current(curr_max, curr_min)
 
+    def fill_voltage(self, volt_max : int, volt_min : int) -> None:
+        '''
+        Fill voltage limits.
+
+        Args:
+            volt_max (int): Maximum voltage
+            volt_min (int): Minimum voltage
+        '''
+        error_detected = True
+        if volt_max is None and volt_min is None:
+            error_detected = False
+        elif volt_max is not None and volt_min is not None:
+            if volt_max > volt_min:
+                error_detected = False
+        if error_detected:
+            msg = "Invalid voltage range"
+            log.error(msg)
+            raise ValueError(msg)
+
+        self.__volt_max = volt_max
+        self.__volt_min = volt_min
+
+    def fill_current(self, curr_max : int, curr_min : int) -> None:
+        '''
+        Fill current limits.
+
+        Args:
+            curr_max (int): Maximum current
+            curr_min (int): Minimum current
+        '''
+        error_detected = True
+        if curr_max is None and curr_min is None:
+            error_detected = False
+        elif curr_max is not None and curr_min is not None:
+            if curr_max > curr_min:
+                error_detected = False
+        if error_detected:
+            msg = "Invalid current range"
+            log.error(msg)
+            raise ValueError(msg)
+
+        self.__curr_max = curr_max
+        self.__curr_min = curr_min
+
+    @property
+    def curr_max(self) -> int|None:
+        '''
+        Get max current.
+
+        Returns:
+            int: Max Current
+        '''
+        return self.__curr_max
+
+    @property
+    def curr_min(self) -> int|None:
+        '''
+        Get min current.
+
+        Returns:
+            int: Min Current
+        '''
+        return self.__curr_min
+
+    @property
+    def volt_max(self) -> int|None:
+        '''
+        Get max voltage.
+
+        Returns:
+            int: Max Voltage
+        '''
+        return self.__volt_max
+
+    @property
+    def volt_min(self) -> int|None:
+        '''
+        Get min voltage.
+
+        Returns:
+            int: Min Voltage
+        '''
+        return self.__volt_min
+
+    def in_range_voltage(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
+        '''
+        Check if the actual instance is less or equal than the other instance.
+
+        Args:
+            other (MidDataPwrRangeC): Instance to compare with
+
+        Returns:
+            bool: True if the voltage values are inside values of the other
+                instance, False otherwise
+        '''
+        res = False
+        if (self.volt_max is not None and aux_pwr_range.volt_max is not None and
+            self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min):
+            res = True
+        return res
+
+    def in_range_current(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
+        '''
+        Check if the actual instance is less or equal than the other instance.
+
+        Args:
+            other (MidDataPwrRangeC): Instance to compare with
+
+        Returns:
+            bool: True if the current values are inside values of the other
+                instance, False otherwise
+        '''
+        res = False
+        if (self.curr_max is not None and aux_pwr_range.curr_max is not None and
+            self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
+            res = True
+        return res
 
 class MidDataProfileC:
     '''

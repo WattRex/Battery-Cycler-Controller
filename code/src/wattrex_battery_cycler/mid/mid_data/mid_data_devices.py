@@ -6,7 +6,7 @@ Definition of MID DATA devices used on battery cycler.
 from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
-from typing import Dict
+from typing import Dict, List
 
 #######################       THIRD PARTY IMPORTS        #######################
 from enum import Enum
@@ -40,7 +40,7 @@ class MidDataDeviceTypeE(Enum):
     LOAD        = "Load"
     METER       = "Meter"
     EPC         = 'Epc'
-    SOURCE_LOAD = "Source-Load"
+
 #######################             CLASSES              #######################
 
 class MidDataDeviceStatusC:
@@ -106,19 +106,45 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
     A class method that implements the MIDDataLinkConf class .
     '''
     # pylint: disable=too-many-arguments
-    def __init__(self) -> None:
-        """Constructor of the class, the attributes will be create while running
+    def __init__(self, **kargs) -> None:
+        """Constructor of the class, the attributes will be initialized while running
         """
+        accepted_attributes = {'baudrate': int, 'parity': str, 'stopbits': int , 'bytesize': int,
+            'timeout':float, 'write_timeout': float, 'inter_byte_timeout':float, 'separator':str}
+        for key, value in kargs.items():
+            key = key.lower()
+            if key in accepted_attributes:
+                if not  isinstance(value, accepted_attributes[key]):
+                    value = accepted_attributes[key](value)
+                if key == 'parity':
+                    value = value.lower()
+                    if 'odd' in value:
+                        value = 'O'
+                    elif 'even' in value:
+                        value = 'E'
+                    elif 'none' in value:
+                        value = 'N'
+                    elif 'mark' in value:
+                        value = 'M'
+                    elif 'space' in value:
+                        value = 'S'
+                    else:
+                        log.error("Wrong value for parity")
+                        raise ValueError("Wrong value for parity")
+                if  key == 'separator' and value =='\\n':
+                    value = '\n'
+                setattr(self, key, value)
 
-class MidDataDeviceC:
+class MidDataDeviceC: # pylint: disable=too-many-instance-attributes
     '''
     A class method that implements the MIDDataDevice class .
     '''
 
     # pylint: disable=too-many-arguments
-    def __init__(self, manufacturer : str| None= None, model :str| None= None,
-                serial_number : str| None= None, device_type : MidDataDeviceTypeE| None= None,
-                iface_name : str| None= None, mapping_names : Dict| None= None,
+    def __init__(self, dev_id: int|None = None, manufacturer : str| None= None,
+                model :str| None= None, serial_number : str| None= None,
+                device_type : MidDataDeviceTypeE| None= None, iface_name : str| None= None,
+                mapping_names : Dict| None= None,
                 link_configuration: MidDataLinkConfC|None = None) -> None:
         """Initialize the attributes of the device .
 
@@ -132,6 +158,10 @@ class MidDataDeviceC:
             mapping_names (Dict, optional): [description]. Defaults to None.
             link_configuration (MidDataLinkConfSerialC, optional): [description]. Defaults to None.
         """
+        ## Check if is initialized to none
+        if device_type is not None:
+            device_type = MidDataDeviceTypeE(device_type)
+        self.dev_id : int|None = dev_id
         self.manufacturer : str| None= manufacturer
         self.model : str| None = model
         self.serial_number : str| None = serial_number
@@ -139,3 +169,23 @@ class MidDataDeviceC:
         self.iface_name :str| None = iface_name
         self.mapping_names : Dict| None = mapping_names
         self.link_conf: MidDataLinkConfC|None = link_configuration
+
+class MidDataCyclerStationC:
+    '''
+    Cycler station information.
+    '''
+    def __init__(self, cs_id: int| None= None, name: str| None= None,
+                devices: List[MidDataDeviceC]| None= None, deprecated: bool|None = None):
+        '''
+        Initialize CyclerStation instance with the given parameters.
+
+        Args:
+            name (str): Name of the cycler station
+            cs_id (str): ID of the cycler station
+            devices (List[MidDataDeviceC]): List of devices included in the cycler station
+            deprecated (bool, optional): Flag that indicates if the cycler station is deprecated
+        '''
+        self.name : str| None = name
+        self.cs_id : int| None = cs_id
+        self.devices : List[MidDataDeviceC]| None = devices
+        self.deprecated: bool|None = deprecated
