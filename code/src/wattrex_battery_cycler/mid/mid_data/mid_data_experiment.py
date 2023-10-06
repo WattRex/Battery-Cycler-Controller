@@ -203,9 +203,26 @@ class MidDataPwrRangeC:
         '''
         return self.__volt_min
 
-    def in_range(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
+    def in_range_voltage(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
         '''
-        Check if the current instance is less or equal than the other instance.
+        Check if the actual instance is less or equal than the other instance.
+
+        Args:
+            other (MidDataPwrRangeC): Instance to compare with
+
+        Returns:
+            bool: True if the voltage values are inside values of the other
+                instance, False otherwise
+        '''
+        res = False
+        if (self.volt_max is not None and aux_pwr_range.volt_max is not None and
+            self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min):
+            res = True
+        return res
+
+    def in_range_current(self, aux_pwr_range: MidDataPwrRangeC) -> bool:
+        '''
+        Check if the actual instance is less or equal than the other instance.
 
         Args:
             other (MidDataPwrRangeC): Instance to compare with
@@ -215,20 +232,8 @@ class MidDataPwrRangeC:
                 instance, False otherwise
         '''
         res = False
-        if ((self.volt_max is None and self.curr_max is None) or
-            (aux_pwr_range.volt_max is None and aux_pwr_range.curr_max is None)):
-            log.error("Invalid power range")
-            raise ValueError("Invalid power range")
-        if (self.curr_max is None and
-            self.volt_max <= aux_pwr_range.volt_max and self.volt_min >= aux_pwr_range.volt_min):
-            res = True
-        elif (self.volt_max is None and
+        if (self.curr_max is not None and aux_pwr_range.curr_max is not None and
             self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
-            res = True
-        elif (self.volt_max <= aux_pwr_range.volt_max and
-            self.volt_min >= aux_pwr_range.volt_min and
-            self.curr_max <= aux_pwr_range.curr_max and
-            self.curr_min >= aux_pwr_range.curr_min):
             res = True
         return res
 
