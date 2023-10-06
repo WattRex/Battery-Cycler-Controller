@@ -128,9 +128,9 @@ class MidDataLinkConfC: #pylint: disable=too-many-instance-attributes
                         value = 'M'
                     elif 'space' in value:
                         value = 'S'
-                else:
-                    log.error("Wrong value for parity")
-                    raise ValueError("Wrong value for parity")
+                    else:
+                        log.error("Wrong value for parity")
+                        raise ValueError("Wrong value for parity")
                 if  key == 'separator' and value =='\\n':
                     value = '\n'
                 setattr(self, key, value)
