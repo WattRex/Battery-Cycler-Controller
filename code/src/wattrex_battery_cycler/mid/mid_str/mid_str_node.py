@@ -48,8 +48,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         '''
         super().__init__(name, cycle_period, working_flag, str_params)
         log.info(f"Initializing {name} node...")
-        self.cycle_period = cycle_period
-        self.working_flag = working_flag
+        # self.cycle_period = cycle_period
+        # self.working_flag = working_flag
         self.cycler_station = cycler_station
         self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file)
         self.str_reqs: SysShdChanC = str_reqs
@@ -58,23 +58,18 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
-        self.__all_status: MidDataAllStatusC = MidDataAllStatusC()
-        self.__gen_meas: MidDataGenMeasC = MidDataGenMeasC(0,0,0,0)
-        self.__ext_meas: MidDataExtMeasC = MidDataExtMeasC()
         self.__actual_exp_id: int = -1
-
+        self.__new_raised_alarms: List[MidDataAlarmC] = []
         ## Once it has been initilizated all atributes ask for the cycler station info
         cycler_info = self.db_iface.get_cycler_station_info(self.cycler_station)
         self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                station= cycler_info))
 
-    def __receive_alarms(self) -> List[MidDataAlarmC]:
-        alarms = []
+    def __receive_alarms(self) -> None:
         alarm = self.str_alarms.receive_data_unblocking()
         while alarm is not None:
-            alarms.append(alarm)
+            self.__new_raised_alarms.append(alarm)
             alarm = self.str_alarms.receive_data_unblocking()
-        return alarms
 
     def __apply_command(self, command : MidStrCmdDataC) -> None:
         '''Apply a command to the Storage node.
@@ -113,9 +108,9 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def sync_shd_data(self) -> None:
         '''Update local data
         '''
-        self.__all_status: MidDataAllStatusC = self.globlal_all_status.read()
-        self.__gen_meas: MidDataGenMeasC     = self.globlal_gen_meas.read()
-        self.__ext_meas: MidDataExtMeasC     = self.globlal_ext_meas.read()
+        self.db_iface.all_status: MidDataAllStatusC = self.globlal_all_status.read()
+        self.db_iface.gen_meas: MidDataGenMeasC     = self.globlal_gen_meas.read()
+        self.db_iface.ext_meas: MidDataExtMeasC     = self.globlal_ext_meas.read()
 
     def stop(self) -> None:
         """Stop the node if it is not already closed .
@@ -138,15 +133,13 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 alarms.clear()
             # log.debug("+++++ After write alarams in db_iface object +++++")
             ### Write measures and status changes
-            if self.__gen_meas.instr_id is not None:
-                self.db_iface.write_generic_measures(gen_meas= self.__gen_meas,
-                                                    exp_id= self.__actual_exp_id)
+            
+            if self.db_iface.gen_meas.instr_id is not None:
+                self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
                 log.critical("TEST COMMITING CHANGES")
                 self.db_iface.commit_changes()
-                self.db_iface.write_extended_measures(ext_meas= self.__ext_meas,
-                                                    exp_id= self.__actual_exp_id)
-                self.db_iface.write_status_changes(all_status= self.__all_status,
-                                                    exp_id= self.__actual_exp_id)
+                self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
+                self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
             if not self.str_reqs.is_empty():
                 # Ignore warning as receive_data return an object,
                 # which in this case must be of type DrvCanCmdDataC
@@ -156,8 +149,11 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 self.__apply_command(command)
             # log.debug("+++++ Before commit changes in db_iface +++++")
             # TIMEOUT added to detect if database connection was ended
-            #-------------------------------------------------------------------- self.db_iface.commit_changes()
-            # func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes())
+            # self.db_iface.commit_changes()
+            try:
+                func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes)
+            except Exception as err:
+                log.warning(f"func timeout error {type(err)}")
             # log.debug("+++++ After commit changes in db_iface +++++")
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
