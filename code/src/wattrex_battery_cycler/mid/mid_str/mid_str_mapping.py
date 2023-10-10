@@ -80,16 +80,16 @@ mapping_instr_limit_modes: Dict[str, int] = {
     'POWER'   : 3}
 
 #######################             CLASSES              #######################
-def remapping_dict(data: dict, mapping: dict) -> dict:
-    """Change the key names of the data dictionary with the names of the mapping dictionary.
-    Args:
-        data (dict): [description]
-        mapping (dict): [description]
+# def remapping_dict(data: dict, mapping: dict) -> dict:
+#     """Change the key names of the data dictionary with the names of the mapping dictionary.
+#     Args:
+#         data (dict): [description]
+#         mapping (dict): [description]
 
-    Returns:
-        dict: [description]
-    """
-    log.debug(f"Remapping data {data} with mapping keys: {mapping}")
-    aux = {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}
-    log.debug(f"Returning: {aux}")
-    return {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}
+#     Returns:
+#         dict: [description]
+#     """
+#     log.debug(f"Remapping data {data} with mapping keys: {mapping}")
+#     aux = {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}
+#     log.debug(f"Returning: {aux}")
+#     return {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}

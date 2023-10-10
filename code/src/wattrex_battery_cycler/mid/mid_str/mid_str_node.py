@@ -48,10 +48,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         '''
         super().__init__(name, cycle_period, working_flag, str_params)
         log.info(f"Initializing {name} node...")
-        # self.cycle_period = cycle_period
-        # self.working_flag = working_flag
-        self.cycler_station = cycler_station
-        self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file)
+        self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file,
+                                      cyclerstation_id= cycler_station)
         self.str_reqs: SysShdChanC = str_reqs
         self.str_data: SysShdChanC = str_data
         self.str_alarms: SysShdChanC = str_alarms
@@ -61,7 +59,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.__actual_exp_id: int = -1
         self.__new_raised_alarms: List[MidDataAlarmC] = []
         ## Once it has been initilizated all atributes ask for the cycler station info
-        cycler_info = self.db_iface.get_cycler_station_info(self.cycler_station)
+        cycler_info = self.db_iface.get_cycler_station_info()
         self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                station= cycler_info))
 
@@ -84,8 +82,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         #Check which type of command has been received and matchs the payload type
         if command.cmd_type == MidStrReqCmdE.GET_NEW_EXP:
             log.info('Getting new experiment info from database')
-            exp_info, battery_info, profile_info = self.db_iface.get_start_queued_exp(
-                                                            cycler_station_id= self.cycler_station)
+            exp_info, battery_info, profile_info = self.db_iface.get_start_queued_exp()
             self.__actual_exp_id = exp_info.exp_id
             log.debug("Sending new experiment to APP_MANAGER")
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_DATA,
@@ -95,7 +92,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_STATUS,
                                                    exp_status= exp_status))
         elif command.cmd_type == MidStrReqCmdE.GET_CS:
-            cycler_info = self.db_iface.get_cycler_station_info(cycler_id= self.cycler_station)
+            cycler_info = self.db_iface.get_cycler_station_info()
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                    station= cycler_info))
         elif command.cmd_type == MidStrReqCmdE.SET_EXP_STATUS and command.exp_status is not None:
@@ -127,10 +124,12 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             # Syncronising shared data
             self.sync_shd_data()
             # Receive and write alarms
-            alarms: List[MidDataAlarmC] = self.__receive_alarms()
-            if len(alarms)>0:
-                self.db_iface.write_new_alarm(alarms= alarms, exp_id= self.__actual_exp_id)
-                alarms.clear()
+            self.__receive_alarms()
+
+            if len(self.__new_raised_alarms)>0:
+                self.db_iface.write_new_alarm(alarms= self.__new_raised_alarms,
+                                              exp_id= self.__actual_exp_id)
+                self.__new_raised_alarms.clear()
             # log.debug("+++++ After write alarams in db_iface object +++++")
             ### Write measures and status changes
             
