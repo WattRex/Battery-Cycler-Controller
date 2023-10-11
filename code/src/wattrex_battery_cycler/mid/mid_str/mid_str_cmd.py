@@ -20,8 +20,8 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_data import (MidDataProfileC, MidDataExpStatusE, MidDataBatteryC,
-            MidDataExperimentC, MidDataCyclerStationC) #pylint: disable= relative-beyond-top-level
+from ..mid_data import (MidDataProfileC, MidDataExpStatusE, MidDataBatteryC, #pylint: disable= relative-beyond-top-level
+            MidDataExperimentC, MidDataCyclerStationC)
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################

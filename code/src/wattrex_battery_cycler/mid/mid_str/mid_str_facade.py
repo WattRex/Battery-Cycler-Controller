@@ -1,5 +1,4 @@
 #!/usr/bin/python3len
-## TODO: COMMENT CODE TO KNOW WHAT IS BEING DONE IN EACH FUNCTION
 '''
 Definition of MID STR Facade where database connection methods are defined.
 '''
@@ -8,27 +7,28 @@ from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
 from datetime import datetime
-from typing import List
+from typing import List, Tuple
 
 #######################       THIRD PARTY IMPORTS        #######################
-from sqlalchemy import select, update, insert
+from sqlalchemy import select, update
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import sys_log_logger_get_module_logger
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBatteryC, 
+from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBatteryC,
         DrvDbProfileC, DrvDbCyclerStationC, DrvDbInstructionC, DrvDbExpStatusE, DrvDbAlarmC,
         DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheStatusC, DrvDbTypeE,
         DrvDbUsedDeviceC, DrvDbCompatibleDeviceC, DrvDbDeviceTypeE, DrvDbLinkConfigurationC,
-        DrvDbCacheExperimentC, DrvDbDetectedDeviceC, DrvDbUsedMeasuresC, DrvDbAvailableMeasuresC)
+        DrvDbCacheExperimentC, DrvDbDetectedDeviceC, DrvDbUsedMeasuresC, DrvDbAvailableMeasuresC,
+        transform_experiment_db)
 
 #######################          MODULE IMPORTS          #######################
 from .mid_str_mapping import (mapping_alarm, mapping_status, mapping_gen_meas, mapping_instr_db,
         mapping_cs_db, mapping_dev_db, mapping_batt_db, mapping_experiment, mapping_instr_modes,
         mapping_instr_limit_modes)
-from ..mid_data import (MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC,
+from ..mid_data import (MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC, #pylint: disable= relative-beyond-top-level
             MidDataExpStatusE, MidDataProfileC, MidDataBatteryC, MidDataDeviceC, MidDataDeviceTypeE,
             MidDataExperimentC, MidDataCyclerStationC, MidDataInstructionC, MidDataPwrRangeC,
             MidDataPwrModeE, MidDataPwrLimitE, MidDataLinkConfC)
@@ -63,7 +63,7 @@ class MidStrFacadeC:
         self.ext_meas: MidDataExtMeasC = MidDataExtMeasC()
         self.meas_id: int = 0
 
-    def get_start_queued_exp(self) -> MidDataExperimentC:
+    def get_start_queued_exp(self) -> Tuple[MidDataExperimentC, MidDataBatteryC, MidDataProfileC]:
         '''
         Get the oldest queued experiment, assigned to the cycler station where this 
         cycler would be running, and change its status to RUNNING in database.
@@ -82,36 +82,27 @@ class MidStrFacadeC:
                 raise MidStrDbElementNotFoundErrorC(("No experiment found for cycler station "
                                                     f"with ID: {self.cs_id}"))
             exp : MidDataExperimentC = MidDataExperimentC()
-            try:
-                for db_name, att_name in mapping_experiment.items():
-                    setattr(exp, att_name, getattr(exp_result,db_name))
-            except: 
-                log.error("Error MAPPING experiment")
+            for db_name, att_name in mapping_experiment.items():
+                setattr(exp, att_name, getattr(exp_result,db_name))
 
             # Get battery info
-            battery = self.get_exp_battery_data(exp.exp_id)
+            battery = self.__get_exp_battery_data(exp.exp_id)
             # Get profile info
-            profile = self.get_exp_profile_data(exp.exp_id)
+            profile = self.__get_exp_profile_data(exp.exp_id)
             # Change experiment status to running and update begin datetime
             exp_db = DrvDbCacheExperimentC()
-            exp_db.ExpID = exp.exp_id
-            exp_db.Description = exp_result.Description
+            transform_experiment_db(source= exp_result, target = exp_db)
             exp_db.Status = DrvDbExpStatusE.RUNNING.value
             exp_db.DateBegin = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
-            exp_db.DateCreation = exp_result.DateCreation
-            exp_db.CSID = self.cs_id
-            exp_db.BatID = exp_result.BatID
-            exp_db.ProfID = exp_result.ProfID
-            exp_db.Name = exp.name
             self.__cache_db.session.add(exp_db)
             ## TODO: USE ONLY FOR TEST AFTER TEST REMOVE
             self.commit_changes()
 
         except Exception as err: #pylint: disable=broad-except
             log.error(f"Error fetching experiment {err}")
-        finally:
-            log.debug(f"Experiment fetched: {exp.__dict__}, {battery.__dict__}, {profile.__dict__}")
-            return exp, battery, profile
+
+        log.debug(f"Experiment fetched: {exp.__dict__}, {battery.__dict__}, {profile.__dict__}")
+        return exp, battery, profile
 
     ## All methods that get information will gather the info from the master db
     def get_exp_status(self, exp_id: int) -> MidDataExpStatusE:
@@ -127,7 +118,7 @@ class MidStrFacadeC:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
         return MidDataExpStatusE(result)
 
-    def get_exp_profile_data(self,exp_id: int) -> MidDataProfileC:
+    def __get_exp_profile_data(self,exp_id: int) -> MidDataProfileC:
         """AI is creating summary for get_exp_profile_data
         Args:
             exp_id (int): [description]
@@ -162,7 +153,7 @@ class MidStrFacadeC:
                                 MidDataPwrModeE(mapping_instr_modes[getattr(inst_res,db_name)]))
                     elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_type':
                         setattr(instruction, att_name,
-                                MidDataPwrLimitE(mapping_instr_limit_modes[getattr(inst_res,db_name)]))
+                            MidDataPwrLimitE(mapping_instr_limit_modes[getattr(inst_res,db_name)]))
                     elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_ref':
                         setattr(instruction, att_name, getattr(inst_res,db_name))
                     else:
@@ -174,7 +165,7 @@ class MidStrFacadeC:
         profile.instructions = instructions
         return profile
 
-    def get_exp_battery_data(self, exp_id: int) -> MidDataBatteryC:
+    def __get_exp_battery_data(self, exp_id: int) -> MidDataBatteryC:
         """Get the mid - data of an experiment .
         Args:
             exp_id (int): [description]
@@ -198,7 +189,7 @@ class MidStrFacadeC:
         battery.elec_ranges = bat_range
         return battery
 
-    def get_cycler_station_info(self) -> MidDataCyclerStationC:
+    def get_cycler_station_info(self) -> MidDataCyclerStationC: #pylint: disable= too-many-locals
         """Returns the name and name of the cycle station for the experiment .
         Returns:
             [MidDataCyclerStationC]: [description]
@@ -291,9 +282,6 @@ class MidStrFacadeC:
             alarm (List[MidDataAlarmC]): [description]
         """
         for alarm in alarms:
-            # stmt = insert(DrvDbAlarmC).values(Timestamp= datetime.now(), ExpID = exp_id,
-            #                                   **remapping_dict(alarm.__dict__,mapping_alarm))
-            # self.__cache_db.session.execute(stmt)
             alarm_db = DrvDbAlarmC()
             alarm_db.Timestamp = datetime.now()
             alarm_db.ExpID = exp_id

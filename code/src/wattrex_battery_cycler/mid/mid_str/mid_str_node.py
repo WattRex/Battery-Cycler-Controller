@@ -17,7 +17,6 @@ from system_logger_tool import sys_log_logger_get_module_logger
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from system_config_tool import sys_conf_read_config_params
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC,
                         SysShdNodeStatusE)
 #######################          MODULE IMPORTS          #######################
@@ -115,7 +114,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.db_iface.close_db_connection()
         self.working_flag.clear()
         self.status = SysShdNodeStatusE.STOP
-        log.critical(f"Stopping {current_thread().getName()} node")
+        log.critical(f"Stopping {current_thread().name} node")
 
     def process_iteration(self) -> None:
         """AI is creating summary for process_iteration
@@ -132,7 +131,6 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 self.__new_raised_alarms.clear()
             # log.debug("+++++ After write alarams in db_iface object +++++")
             ### Write measures and status changes
-            
             if self.db_iface.gen_meas.instr_id is not None:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
                 log.critical("TEST COMMITING CHANGES")
