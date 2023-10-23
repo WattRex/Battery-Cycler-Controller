@@ -20,7 +20,7 @@ jobs:
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
       package-name: ${{ env.PACKAGE_NAME }}
-      package-path: "cycler_datatypes"
+      package-path: "code/cycler_datatypes"
       python-version: "3.10"
 
   publish-package:
