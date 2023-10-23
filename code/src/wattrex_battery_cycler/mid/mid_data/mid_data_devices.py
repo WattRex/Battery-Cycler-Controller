@@ -6,7 +6,12 @@ Definition of MID DATA devices used on battery cycler.
 from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
+from os import getenv
 from typing import Dict, List
+from socket import gethostname, gethostbyname
+from datetime import datetime
+from uuid import getnode
+from json import dumps
 
 #######################       THIRD PARTY IMPORTS        #######################
 from enum import Enum
@@ -189,3 +194,37 @@ class MidDataCyclerStationC:
         self.cs_id : int| None = cs_id
         self.devices : List[MidDataDeviceC]| None = devices
         self.deprecated: bool|None = deprecated
+
+class MidDataCuC:
+    '''
+    Computational Unit information.
+    '''
+    def __init__(self):
+        '''
+        Initialize CU instance with the given parameters.
+
+        Args:
+            name (str): Name of the CU
+            cu_id (str): ID of the CU
+            devices (List[MidDataDeviceC]): List of devices included in the CU
+            deprecated (bool, optional): Flag that indicates if the CU is deprecated
+        '''
+
+        self.user : str = getenv('USER', '')
+        self.host_name : str = gethostname()
+        self.ip : str = gethostbyname(self.host_name)
+        self.port : int = 0
+        self.mac : str = hex(getnode())
+        self.last_connection : datetime = datetime.now()
+
+    def to_json(self):
+        '''
+        Convert the object to a json string.
+        '''
+        return dumps(self, default=lambda o: self._try(o), sort_keys=True, indent=0, separators=(',',':')).replace('\n', '')
+
+    def _try(self, o):
+        try:
+            return o.__dict__
+        except Exception:
+            return str(o)
