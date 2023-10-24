@@ -5,9 +5,6 @@ name: Deployment of battery cycler controller datatypes to Pypi
 on:
   pull_request_review:
     types: [submited]
-    pull_request:
-      head:
-        ref: [ "cycler_datatypes" ]
 
 env:
   PACKAGE_NAME: wattrex-battery-cycler-controller-datatypes
