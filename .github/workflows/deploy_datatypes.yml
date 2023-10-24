@@ -4,10 +4,10 @@ name: Deployment of battery cycler controller datatypes to Pypi
 
 on:
   pull_request_review:
-    types: [submited]
-    pull_request:
-      base:
-        ref: [ "cycler_datatypes" ]
+    # types: [submited]
+    # pull_request:
+    #   base:
+    #     ref: [ "cycler_datatypes" ]
 
 env:
   PACKAGE_NAME: wattrex-battery-cycler-controller-datatypes
@@ -20,8 +20,9 @@ jobs:
     steps:
       - name: Hello World
         run: |
-          echo "Hello world"
-          echo "This is a sample test"
+          echo ${{ github.event_name }}
+          echo ${{ github.event.types }}
+          echo ${{ github.event.pull_request.base.ref }}
 
   build-package-on-pull-request:
     name: QA and Build battery controller datatypes on pull request
