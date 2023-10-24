@@ -30,7 +30,8 @@ from wattrex_driver_mqtt import DrvMqttDriverC
 
 #######################            FUNCTIONS             #######################
 class EmulateCuC:
-
+    ''' Emulate a CU
+    '''
     def __init__(self, cu_id = 1) -> None:
         self.cu_id = cu_id
         self.mqtt = DrvMqttDriverC(error_callback=self.error_callback, cred_path='.cred.mqtt.yaml')
