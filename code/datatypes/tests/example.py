@@ -30,7 +30,7 @@ from wattrex_driver_mqtt import DrvMqttDriverC
 
 #######################            FUNCTIONS             #######################
 class EmulateCuC:
-    ''' Emulate a CU. It will publish a heartbeat every second
+    ''' Emulate a CU. It will publish a heartbeat every second.
     '''
     def __init__(self, cu_id = 1) -> None:
         self.cu_id = cu_id
