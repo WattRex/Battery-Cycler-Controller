@@ -154,7 +154,8 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
             iface_name (str, optional): [Name needed to communicate,in case of serial will be the
               port while in can will be the can id]. Defaults to None.
             mapping_names (Dict, optional): [description]. Defaults to None.
-            link_configuration (CyclerDataLinkConfSerialC, optional): [description]. Defaults to None.
+            link_configuration (CyclerDataLinkConfSerialC, optional): [description]. Defaults to
+              None.
         """
         ## Check if is initialized to none
         if device_type is not None:
