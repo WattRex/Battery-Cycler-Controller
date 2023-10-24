@@ -139,21 +139,25 @@ class CuManagerNodeC(SysShdNodeC):
         Args:
             msg_data (MidDataCuC): Message data
         '''
-        log.critical(msg_data)
-        log.critical(json.loads(msg_data))
         msg_data = json.loads(msg_data)
-        if msg_data['mac'] == MidDataCuC().mac:
-            self.cu_id = msg_data['cu_id']
-            log.info('Cu_id received from mqtt: %s', self.cu_id)
+        if 'type' in msg_data:
+            log.critical(msg_data)
+            log.critical(json.loads(msg_data))
+            if msg_data['mac'] == MidDataCuC().mac:
+                self.cu_id = msg_data['cu_id']
+                log.info('Cu_id received from mqtt: %s', self.cu_id)
+            else:
+                log.info('Cu_id received from mqtt but is not for this CU: %s', msg_data['cu_id'])
         else:
-            log.info('Cu_id received from mqtt but is not for this CU: %s', msg_data['cu_id'])
+            raise RuntimeWarning("No type defined in msg received from '/inform_reg' suscribed topic")
 
 
     def sync_shd_data(self) -> None:
         pass
 
     def process_iteration(self) -> None:
-        pass
+        log.error("a")
+        sleep(0.8)
 
     def stop(self) -> None:
         pass
@@ -164,5 +168,5 @@ class CuManagerNodeC(SysShdNodeC):
 if __name__ == '__main__':
     working_flag_event : threading.Event = threading.Event()
     working_flag_event.set()
-    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1)
+    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1000)
     cu_manager_node.run()

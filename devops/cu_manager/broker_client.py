@@ -41,7 +41,7 @@ class BrokerClientC():
                                                     cred_path='.cred.yaml')
         self.__detect_cb : Callable = detect_callback
         self.__launch_cb : Callable = launch_callback
-        self.mqtt.subscribe(topic='/cu_id_assigned', callback=cu_id_msg_callback)
+        self.mqtt.subscribe(topic='/inform_reg', callback=cu_id_msg_callback)
 
     def process_launch(self) -> None:
         pass
