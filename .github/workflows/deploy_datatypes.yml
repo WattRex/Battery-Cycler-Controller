@@ -14,6 +14,15 @@ env:
 
 jobs:
 
+  sample-test:
+    runs-on: ubuntu-latest
+    name: Sample test
+    steps:
+      - name: Hello World
+        run: |
+          echo "Hello world"
+          echo "This is a sample test"
+
   build-package-on-pull-request:
     name: QA and Build battery controller datatypes on pull request
     if: ${{ github.event_name == 'pull_request_review' }} && ${{ github.event.review.state == 'approved' }} && ${{ github.event.pull_request.base.ref == 'cycler_datatypes' }}
