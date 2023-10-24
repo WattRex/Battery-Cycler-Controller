@@ -21,7 +21,9 @@ jobs:
       - name: Hello World
         run: |
           echo ${{ github.event_name }}
-          echo ${{ github.event.types }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.ref_name }}
+          echo ${{ github.event.pull_request.head.ref }}
           echo ${{ github.event.pull_request.base.ref }}
 
   build-package-on-pull-request:
