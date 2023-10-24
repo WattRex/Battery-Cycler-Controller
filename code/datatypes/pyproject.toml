@@ -156,6 +156,6 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 root = "../../"
-write_to = "code/cycler_datatypes/src/cycler_datatypes/__version__.py"
+write_to = "code/datatypes/src/__version__.py"
 version_scheme="python-simplified-semver"
 normalize="True"
