@@ -36,7 +36,7 @@ class CommDataCuC:
     '''
 
     def __init__(self, msg_type : CommDataRegisterTypeE, mac : int, user : str,
-            ip : str, port : int, hostname : str, cu_id : int = None):
+            ip : str, port : int, hostname : str, cu_id : int = 0):
         # pylint: disable=too-many-arguments
         # pylint: disable=invalid-name
         '''
@@ -59,6 +59,16 @@ class CommDataCuC:
         self.hostname = hostname
         self.cu_id = cu_id
 
+    def __str__(self) -> str:
+        '''
+        Return a string with the data of the CU.
+
+        Returns:
+            str: string with the data of the CU.
+        '''
+        return f'CU info: \nCU_ID: {self.cu_id}\nMAC: {self.mac}\nUser: {self.user}\n\
+            Hostname: {self.hostname}\nIP: {self.ip}\nPort: {self.port}\nMsg Type: {self.msg_type}'
+
 
 class CommDataHeartbeatC:
     '''
@@ -74,6 +84,15 @@ class CommDataHeartbeatC:
         '''
         self.cu_id = cu_id
         self.timestamp = datetime.utcnow()
+    
+    def __str__(self) -> str:
+        '''
+        Return a string with the data of the Heartbeat.
+
+        Returns:
+            str: string with the data of the Heartbeat.
+        '''
+        return f'Heartbeat info: \nCU_ID: {self.cu_id}\nTimestamp: {self.timestamp}'
 
 class CommDataDeviceC:
     '''
@@ -95,5 +114,15 @@ class CommDataDeviceC:
         self.comp_dev_id = comp_dev_id
         self.serial_number = serial_number
         self.link_name = link_name
+    
+    def __str__(self) -> str:
+        '''
+        Return a string with the data of the Device.
+
+        Returns:
+            str: string with the data of the Device.
+        '''
+        return f'Device info: \nCU_ID: {self.cu_id}\nComp_dev_id: {self.comp_dev_id}\n\
+            SN: {self.serial_number}\nLink name: {self.link_name}'
 
 #######################            FUNCTIONS             #######################
