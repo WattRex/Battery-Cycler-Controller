@@ -19,4 +19,4 @@ import sys
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-sys.path.append(os.getcwd()+'/code/src/wattrex_battery_cycler/')
+sys.path.append(os.getcwd()+'/code/datatypes/src/comm_data/')

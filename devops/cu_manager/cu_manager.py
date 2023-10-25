@@ -5,12 +5,13 @@ Cu Manager
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
-import subprocess
-import threading
-from os import path
-from typing import List
-from time import sleep
+from datetime import datetime
 import json
+from os import path
+import subprocess
+from time import sleep
+import threading
+from typing import List, Dict
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -25,13 +26,14 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 #######################          MODULE IMPORTS          #######################
 import context
 from broker_client import BrokerClientC
+from register import get_cu_info
 
 #######################          PROJECT IMPORTS         #######################
+from comm_data import CommDataCuC
 from system_shared_tool import SysShdIpcChanC, SysShdNodeC
-from mid.mid_data import MidDataCuC, MidDataDeviceC, MidDataDeviceTypeE, MidDataLinkConfC
 
 #######################              ENUMS               #######################
-SECONDS_TO_WAIT_FOR_CU_ID = 60
+
 #######################             CLASSES              #######################
 
 class CuManagerNodeC(SysShdNodeC):
@@ -43,13 +45,17 @@ class CuManagerNodeC(SysShdNodeC):
         '''
         super().__init__(name='cu_manager_node', cycle_period=cycle_period, working_flag=working_flag)
         self.heartbeat_queue : SysShdIpcChanC = SysShdIpcChanC(name='heartbeat_queue')
-        self.active_cs : dict = {} #{cs_id : last_connection}
+        self.active_cs : Dict[int, datetime] = {} # {cs_id : last_connection}
         self.client_mqtt : BrokerClientC = BrokerClientC(error_callback=self.on_mqtt_error,
+                                                         inform_reg_cb=self.inform_reg_cb
                                                          launch_callback=self.launch_cs,
                                                          detect_callback=self.detect_devices,
                                                          cu_id_msg_callback=self.on_register_answer)
         # self.sync_node : MidSyncNoceC = MidSyncNoceC()
-        self.working_flag_sync : threading.Event = working_flag
+        self.working_flag_sync : threading.Event = threading.Event()
+        self.working_flag_sync.set()
+
+        self.working_flag = working_flag
         self.cycle_period : int = cycle_period
 
         self.cu_id = None
@@ -57,8 +63,16 @@ class CuManagerNodeC(SysShdNodeC):
             with open('./devops/cu_manager/.cu_id', 'r', encoding='utf-8') as cu_id_file:
                 self.cu_id = int(cu_id_file.read())
         else:
+            self.registered = threading.Event()
+            self.registered.clear()
             self.register_cu()
 
+    def on_mqtt_error(self) -> None:
+        '''
+        Callback function executed from the Broker Client when an error is detected
+        '''
+        log.critical('MQTT Error')
+        # TODO: implement error handling
 
     def process_heartbeat(self) -> None:
         pass
@@ -70,50 +84,28 @@ class CuManagerNodeC(SysShdNodeC):
         '''
         Register the CU in the broker to get from it an id.
         '''
-        self.client_mqtt.publish_cu_info(MidDataCuC())
-        for _ in range(SECONDS_TO_WAIT_FOR_CU_ID*10):
-            if self.cu_id is not None:
-                break
-            self.client_mqtt.mqtt.process_data()
+        cu_info = get_cu_info()
+        self.client_mqtt.publish_cu_info(cu_info())
+
+        while not self.registered.is_set():
+            self.client_mqtt.process_iteration()
             sleep(0.1)
 
-        if self.cu_id is None:
-            log.critical('No CU_ID assigned')
-            raise RuntimeError('No CU_ID assigned')
 
-        log.info('CU_ID assigned: %s', self.cu_id)
-        with open('./devops/cu_manager/.cu_id', 'w', encoding='utf-8') as cu_id_file:
-            cu_id_file.write(str(self.cu_id))
+    def inform_reg_cb(self, data) -> None:
+        if isinstance(data, CommDataCuC):
+            self.cu_id = data.cu_id
+            log.info(f'CU_ID assigned: {self.cu_id}')
+            with open('./devops/cu_manager/.cu_id', 'w', encoding='utf-8') as cu_id_file:
+                cu_id_file.write(str(self.cu_id))
+            self.registered.set()
+            log.info(f"Device registered with CU_ID: {data.cu_id}")
+        else:
+            log.error("Error receiving CU_ID from broker")
 
-
-    def detect_devices(self) -> List[MidDataDeviceC]:
-        '''Detect the devices that are currently connected to the device.
-
-        Returns:
-            List[MidDataDeviceC]: List of devices connected to the device that are detected and 
-            which type has been previously defined.
-        '''
-
-        test_detected_device = MidDataDeviceC(dev_id=1,
-                                                            manufacturer='test',
-                                                            model='test',
-                                                            serial_number='test',
-                                                            device_type=MidDataDeviceTypeE.EPC,
-                                                            iface_name='test',
-                                                            mapping_names={'test':'test'},
-                                                            link_configuration=MidDataLinkConfC(
-                                                                baudrate=9600,
-                                                                parity='N',
-                                                                stopbits=1,
-                                                                bytesize=8,
-                                                                timeout=0.1,
-                                                                write_timeout=0.1,
-                                                                inter_byte_timeout=0.1,
-                                                                separator='\n'))
-        return [test_detected_device]
 
     def launch_cs(self, mqtt_msg) -> None:
-        '''Callback function executed from the Broker Client when a message is received from the 
+        '''Callback function executed from the Broker Client when a message is received from the
         broker in the CU_ID/launch/ topic.
 
         Args:
@@ -124,43 +116,12 @@ class CuManagerNodeC(SysShdNodeC):
                                     stdout=subprocess.PIPE,
                                     universal_newlines=True,
                                     check=False)
-            log.info(result.stdout)
+            log.info(result.stdout) # TODO: sure? Is can be the all the output of cycler
 
-    def on_mqtt_error(self) -> None:
-        ''' Callback function executed from the Broker Client when an error is detected
-        '''
-        log.critical('MQTT Error')
-
-    def on_register_answer(self, msg_data) -> None:
-        '''
-        Callback function executed from the Broker Client when 
-        a message is received from the mqtt broker
-
-        Args:
-            msg_data (MidDataCuC): Message data
-        '''
-        msg_data = json.loads(msg_data)
-        if 'type' in msg_data:
-            log.critical(msg_data)
-            log.critical(json.loads(msg_data))
-            if msg_data['mac'] == MidDataCuC().mac:
-                self.cu_id = msg_data['cu_id']
-                log.info('Cu_id received from mqtt: %s', self.cu_id)
-            else:
-                log.info('Cu_id received from mqtt but is not for this CU: %s', msg_data['cu_id'])
-        else:
-            raise RuntimeWarning("No type defined in msg received from '/inform_reg' suscribed topic")
-
-
-    def sync_shd_data(self) -> None:
-        pass
 
     def process_iteration(self) -> None:
+        self.client_mqtt.process_iteration()
         log.error("a")
-        sleep(0.8)
-
-    def stop(self) -> None:
-        pass
 
 
 #######################            FUNCTIONS             #######################
