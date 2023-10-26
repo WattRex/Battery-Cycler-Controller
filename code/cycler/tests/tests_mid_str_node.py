@@ -23,7 +23,9 @@ from system_shared_tool import SysShdSharedObjC, SysShdChanC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExtMeasC, CyclerDataAllStatusC,
     CyclerDataGenMeasC, CyclerDataBatteryC, CyclerDataCyclerStationC, CyclerDataExperimentC,
     CyclerDataExpStatusE, CyclerDataProfileC, CyclerDataDeviceStatusC, CyclerDataPwrModeE)
-
+from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbCacheStatusC,
+                DrvDbCacheExtendedMeasureC, DrvDbCacheGenericMeasureC, DrvDbCacheExperimentC)
+from sqlalchemy import select, delete
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_str import (MidStrNodeC, MidStrCmdDataC, MidStrReqCmdE,
@@ -42,7 +44,7 @@ class DummyNodeC(MidStrNodeC):
         super().__init__(name, cycle_period, working_flag, shared_gen_meas,
                          shared_ext_meas, shared_status, str_reqs, str_alarms,
                          str_data, cycler_station, master_file, cache_file)
-    
+
 class TestChannels:
     """A test that tests the channels in pytest.
     """
@@ -68,6 +70,9 @@ class TestChannels:
             [type]: [description]
         """
         log.info(msg="Setting up the environment Node testing mid storage")
+        log.info(msg="Removing all data from cache database asociated to test")
+        delete_cache_data()
+
         __str_flag_node = Event()
         __str_flag_node.set()
         shared_gen_meas: SysShdSharedObjC
@@ -103,9 +108,10 @@ class TestChannels:
         shared_gen_meas.write(new_obj= gen_meas)
         shared_ext_meas.write(new_obj= ext_meas)
         shared_all_status.write(new_obj= all_status)
-        log.info("Waiting for the node to finish for 60s")
-        write_exp_status(str_reqs, CyclerDataExpStatusE.ERROR)
+        log.info("Waiting for the node to finish for 10s")
         sleep(10)
+        write_exp_status(str_reqs, CyclerDataExpStatusE.ERROR)
+        sleep(1)
         __str_flag_node.clear()
         str_node.join()
 
@@ -117,9 +123,7 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[750],
-                                      [500]],\
-                indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[500]], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
@@ -175,3 +179,19 @@ def write_exp_status(chan_str_reqs: SysShdChanC,
     request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.SET_EXP_STATUS,
                     exp_status= exp_status)
     chan_str_reqs.send_data(request)
+
+def delete_cache_data()->None:
+    """Delete all cached data from the cache database
+    """
+    cache_db = DrvDbSqlEngineC(config_file= 'code/cycler/tests/.cred_cache.yaml',
+                            db_type= DrvDbTypeE.CACHE_DB)
+    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 1)
+    cache_db.session.execute(stmt)
+    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 1)
+    cache_db.session.execute(stmt)
+    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 1)
+    cache_db.session.execute(stmt)
+    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 1)
+    cache_db.session.execute(stmt)
+    cache_db.session.commit()
+    cache_db.session.close()

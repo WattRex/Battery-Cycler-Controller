@@ -262,8 +262,12 @@ class MidStrFacadeC:
         Args:
             exp_status (CyclerDataExpStatusE): [description]
         """
-        stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
-            values(Timestamp= datetime.now(), Status = exp_status.value)
+        if exp_status == CyclerDataExpStatusE.ERROR or exp_status == CyclerDataExpStatusE.FINISHED:
+            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
+                values(DateFinish= datetime.now(), Status = exp_status.value)
+        else:
+            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
+                values(Status = exp_status.value)
         self.__cache_db.session.execute(stmt)
 
     def write_status_changes(self, exp_id: int) -> None:

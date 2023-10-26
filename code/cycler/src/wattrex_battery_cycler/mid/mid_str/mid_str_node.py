@@ -148,11 +148,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 self.__apply_command(command)
             # log.debug("+++++ Before commit changes in db_iface +++++")
             # TIMEOUT added to detect if database connection was ended
-            # self.db_iface.commit_changes()
-            try:
-                func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes)
-            except Exception as err:
-                log.warning(f"func timeout error {type(err)}")
+            func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes)
             # log.debug("+++++ After commit changes in db_iface +++++")
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
