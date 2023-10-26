@@ -24,14 +24,16 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBat
         DrvDbCacheExperimentC, DrvDbDetectedDeviceC, DrvDbUsedMeasuresC, DrvDbAvailableMeasuresC,
         transform_experiment_db)
 
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
+            CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataExpStatusE, CyclerDataProfileC,
+            CyclerDataBatteryC, CyclerDataDeviceC, CyclerDataDeviceTypeE, CyclerDataExperimentC,
+            CyclerDataCyclerStationC, CyclerDataInstructionC, CyclerDataPwrRangeC,
+            CyclerDataPwrModeE, CyclerDataPwrLimitE, CyclerDataLinkConfC)
+
 #######################          MODULE IMPORTS          #######################
 from .mid_str_mapping import (mapping_alarm, mapping_status, mapping_gen_meas, mapping_instr_db,
         mapping_cs_db, mapping_dev_db, mapping_batt_db, mapping_experiment, mapping_instr_modes,
         mapping_instr_limit_modes)
-from ..mid_data import (MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC, #pylint: disable= relative-beyond-top-level
-            MidDataExpStatusE, MidDataProfileC, MidDataBatteryC, MidDataDeviceC, MidDataDeviceTypeE,
-            MidDataExperimentC, MidDataCyclerStationC, MidDataInstructionC, MidDataPwrRangeC,
-            MidDataPwrModeE, MidDataPwrLimitE, MidDataLinkConfC)
 
 #######################              ENUMS               #######################
 
@@ -58,12 +60,13 @@ class MidStrFacadeC:
                                                             config_file= master_file)
         self.__cache_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.CACHE_DB,
                                                             config_file= cache_file)
-        self.all_status: MidDataAllStatusC = MidDataAllStatusC()
-        self.gen_meas: MidDataGenMeasC = MidDataGenMeasC()
-        self.ext_meas: MidDataExtMeasC = MidDataExtMeasC()
+        self.all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
+        self.gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
+        self.ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
         self.meas_id: int = 0
 
-    def get_start_queued_exp(self) -> Tuple[MidDataExperimentC, MidDataBatteryC, MidDataProfileC]:
+    def get_start_queued_exp(self) -> Tuple[CyclerDataExperimentC, CyclerDataBatteryC,
+                                            CyclerDataProfileC]:
         '''
         Get the oldest queued experiment, assigned to the cycler station where this 
         cycler would be running, and change its status to RUNNING in database.
@@ -81,7 +84,7 @@ class MidStrFacadeC:
             if exp_result is None:
                 raise MidStrDbElementNotFoundErrorC(("No experiment found for cycler station "
                                                     f"with ID: {self.cs_id}"))
-            exp : MidDataExperimentC = MidDataExperimentC()
+            exp : CyclerDataExperimentC = CyclerDataExperimentC()
             for db_name, att_name in mapping_experiment.items():
                 setattr(exp, att_name, getattr(exp_result,db_name))
 
@@ -95,8 +98,6 @@ class MidStrFacadeC:
             exp_db.Status = DrvDbExpStatusE.RUNNING.value
             exp_db.DateBegin = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
             self.__cache_db.session.add(exp_db)
-            ## TODO: USE ONLY FOR TEST AFTER TEST REMOVE
-            self.commit_changes()
 
         except Exception as err: #pylint: disable=broad-except
             log.error(f"Error fetching experiment {err}")
@@ -105,25 +106,25 @@ class MidStrFacadeC:
         return exp, battery, profile
 
     ## All methods that get information will gather the info from the master db
-    def get_exp_status(self, exp_id: int) -> MidDataExpStatusE:
+    def get_exp_status(self, exp_id: int) -> CyclerDataExpStatusE:
         """Returns the experiment status .
         Args:
             exp_id (int): [description]
         Returns:
-            MidDataExpStatusE: [description]
+            CyclerDataExpStatusE: [description]
         """
         stmt = select(DrvDbMasterExperimentC.Status).where(DrvDbMasterExperimentC.ExpID == exp_id)
         result: DrvDbExpStatusE = self.__master_db.session.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
-        return MidDataExpStatusE(result)
+        return CyclerDataExpStatusE(result)
 
-    def __get_exp_profile_data(self,exp_id: int) -> MidDataProfileC:
+    def __get_exp_profile_data(self,exp_id: int) -> CyclerDataProfileC:
         """AI is creating summary for get_exp_profile_data
         Args:
             exp_id (int): [description]
         Returns:
-            MidDataProfileC: [description]
+            CyclerDataProfileC: [description]
         """
         stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
         result = self.__master_db.session.execute(stmt).one()[0]
@@ -133,8 +134,8 @@ class MidStrFacadeC:
         result = self.__master_db.session.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Profile with id {result.ProfID} not found')
-        profile = MidDataProfileC(name= result.Name)
-        profile_range = MidDataPwrRangeC(curr_max= result.CurrMax, curr_min= result.CurrMin,
+        profile = CyclerDataProfileC(name= result.Name)
+        profile_range = CyclerDataPwrRangeC(curr_max= result.CurrMax, curr_min= result.CurrMin,
                                          volt_max= result.VoltMax, volt_min= result.VoltMin)
         profile.range = profile_range
         instructions= []
@@ -146,31 +147,32 @@ class MidStrFacadeC:
         try:
             for inst_res in result:
                 inst_res:DrvDbInstructionC = inst_res[0]
-                instruction = MidDataInstructionC()
+                instruction = CyclerDataInstructionC()
                 for db_name, att_name in mapping_instr_db.items():
                     if att_name == 'mode':
                         setattr(instruction, att_name,
-                                MidDataPwrModeE(mapping_instr_modes[getattr(inst_res,db_name)]))
-                    elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_type':
+                                CyclerDataPwrModeE(mapping_instr_modes[getattr(inst_res,db_name)]))
+                    elif instruction.mode != CyclerDataPwrModeE.WAIT and att_name == 'limit_type':
                         setattr(instruction, att_name,
-                            MidDataPwrLimitE(mapping_instr_limit_modes[getattr(inst_res,db_name)]))
-                    elif instruction.mode != MidDataPwrModeE.WAIT and att_name == 'limit_ref':
+                            CyclerDataPwrLimitE(mapping_instr_limit_modes[getattr(inst_res,db_name)]
+                                                ))
+                    elif instruction.mode != CyclerDataPwrModeE.WAIT and att_name == 'limit_ref':
                         setattr(instruction, att_name, getattr(inst_res,db_name))
                     else:
                         setattr(instruction, att_name, getattr(inst_res,db_name))
                 instructions.append(instruction)
         except Exception as err:
             log.error(f"Error fetching instructions {err}")
-            raise RuntimeError(f"Error fetching instructions {err}")
+            raise RuntimeError(f"Error fetching instructions {err}") from err
         profile.instructions = instructions
         return profile
 
-    def __get_exp_battery_data(self, exp_id: int) -> MidDataBatteryC:
+    def __get_exp_battery_data(self, exp_id: int) -> CyclerDataBatteryC:
         """Get the mid - data of an experiment .
         Args:
             exp_id (int): [description]
         Returns:
-            MidDataBatteryC: [description]
+            CyclerDataBatteryC: [description]
         """
         stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == exp_id)
         result = self.__master_db.session.execute(stmt).one()[0]
@@ -180,19 +182,19 @@ class MidStrFacadeC:
         result = self.__master_db.session.execute(stmt).one()[0]
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Battery with id {result.BatID} not found')
-        battery = MidDataBatteryC()
+        battery = CyclerDataBatteryC()
         for db_name, att_name in mapping_batt_db.items():
             setattr(battery, att_name, getattr(result,db_name))
-        bat_range = MidDataPwrRangeC()
+        bat_range = CyclerDataPwrRangeC()
         bat_range.fill_current(result.CurrMax, result.CurrMin)
         bat_range.fill_voltage(result.VoltMax, result.VoltMin)
         battery.elec_ranges = bat_range
         return battery
 
-    def get_cycler_station_info(self) -> MidDataCyclerStationC: #pylint: disable= too-many-locals
+    def get_cycler_station_info(self) -> CyclerDataCyclerStationC: #pylint: disable= too-many-locals
         """Returns the name and name of the cycle station for the experiment .
         Returns:
-            [MidDataCyclerStationC]: [description]
+            [CyclerDataCyclerStationC]: [description]
         """
         ## Get cycler station info
         stmt = select(DrvDbCyclerStationC).where(DrvDbCyclerStationC.CSID == self.cs_id)
@@ -200,7 +202,7 @@ class MidStrFacadeC:
         if result is None:
             raise MidStrDbElementNotFoundErrorC(f'Cycler station with id {self.cs_id} not found')
         result = result[0]
-        cycler_station = MidDataCyclerStationC()
+        cycler_station = CyclerDataCyclerStationC()
         for key,value in mapping_cs_db.items():
             setattr(cycler_station, value, getattr(result,key))
         ## Get devices used in the cycler station
@@ -217,10 +219,10 @@ class MidStrFacadeC:
             result = self.__master_db.session.execute(stmt).one()
             detected_dev_res = result[0]
             comp_dev_res = result[1]
-            device = MidDataDeviceC(mapping_names={})
+            device = CyclerDataDeviceC(mapping_names={})
             for db_name, att_name in mapping_dev_db.items():
                 if att_name == "device_type":
-                    setattr(device, att_name, MidDataDeviceTypeE(getattr(comp_dev_res,db_name)))
+                    setattr(device, att_name, CyclerDataDeviceTypeE(getattr(comp_dev_res,db_name)))
                 elif db_name in detected_dev_res.__dict__:
                     setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
@@ -248,17 +250,17 @@ class MidStrFacadeC:
                 for res in result:
                     res: DrvDbLinkConfigurationC = res[0]
                     link_conf[res.Property.lower()] = str(res.Value)
-                device.link_conf = MidDataLinkConfC(**link_conf)
+                device.link_conf = CyclerDataLinkConfC(**link_conf)
             devices.append(device)
         cycler_station.devices= devices
         log.debug(f"Cycler station object, {cycler_station.__dict__}")
         return cycler_station
 
     ## All methods that write information will write the info into the cache db
-    def modify_current_exp(self, exp_status: MidDataExpStatusE, exp_id: int) -> None:
+    def modify_current_exp(self, exp_status: CyclerDataExpStatusE, exp_id: int) -> None:
         """Modify the current experiment status .
         Args:
-            exp_status (MidDataExpStatusE): [description]
+            exp_status (CyclerDataExpStatusE): [description]
         """
         stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
             values(Timestamp= datetime.now(), Status = exp_status.value)
@@ -267,7 +269,7 @@ class MidStrFacadeC:
     def write_status_changes(self, exp_id: int) -> None:
         """Write the status changes into the cache db .
         Args:
-            new_status (MidDataAllStatusC): [description]
+            new_status (CyclerDataAllStatusC): [description]
         """
         status = DrvDbCacheStatusC()
         status.Timestamp = datetime.now()
@@ -276,10 +278,10 @@ class MidStrFacadeC:
             setattr(status, db_name, getattr(self.all_status.pwr_dev, att_name))
         self.__cache_db.session.add(status)
 
-    def write_new_alarm(self, alarms: List[MidDataAlarmC], exp_id: int) -> None:
+    def write_new_alarm(self, alarms: List[CyclerDataAlarmC], exp_id: int) -> None:
         """Write an alarm into the cache db .
         Args:
-            alarm (List[MidDataAlarmC]): [description]
+            alarm (List[CyclerDataAlarmC]): [description]
         """
         for alarm in alarms:
             alarm_db = DrvDbAlarmC()
@@ -292,27 +294,24 @@ class MidStrFacadeC:
     def write_generic_measures(self, exp_id: int) -> None:
         """Write the generic measures into the cache db .
         Args:
-            gen_meas (MidDataGenMeasC): [description]
+            gen_meas (CyclerDataGenMeasC): [description]
         """
         try:
             gen_meas = DrvDbCacheGenericMeasureC()
             gen_meas.Timestamp = datetime.now()
             gen_meas.ExpID = exp_id
             gen_meas.MeasID = self.meas_id
-            gen_meas.PwrMode = self.all_status.pwr_mode.name
+            gen_meas.PowerMode = self.all_status.pwr_mode.name
             for db_name, att_name in mapping_gen_meas.items():
                 setattr(gen_meas, db_name, getattr(self.gen_meas, att_name))
             self.__cache_db.session.add(gen_meas)
-            self.meas_id += 1
-            ## TODO: USE ONLY FOR TEST AFTER TEST REMOVE
-            self.commit_changes()
         except Exception as err:
             log.warning(err)
 
     def write_extended_measures(self, exp_id: int) -> None:
         """Write the extended measures into the cache db .
         Args:
-            ext_meas (MidDataExtMeasC): [description]
+            ext_meas (CyclerDataExtMeasC): [description]
         """
         try:
             for key in self.ext_meas.__dict__:
@@ -322,8 +321,6 @@ class MidStrFacadeC:
                 ext_meas.MeasID = self.meas_id
                 ext_meas.Value = getattr(self.ext_meas,key)
                 self.__cache_db.session.add(ext_meas)
-                ## TODO: USE ONLY FOR TEST AFTER TEST REMOVE
-                self.commit_changes()
         except AttributeError as err:
             log.error(f"Could not write extended measures into the cache db {err}")
 

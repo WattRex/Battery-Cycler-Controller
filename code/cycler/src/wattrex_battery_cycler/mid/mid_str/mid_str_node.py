@@ -19,10 +19,11 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          PROJECT IMPORTS         #######################
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC,
                         SysShdNodeStatusE)
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
+                                              CyclerDataExtMeasC, CyclerDataAllStatusC)
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
 from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
-from ..mid_data import MidDataAlarmC, MidDataGenMeasC, MidDataExtMeasC, MidDataAllStatusC #pylint: disable= relative-beyond-top-level
 
 #######################              ENUMS               #######################
 
@@ -48,7 +49,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         super().__init__(name, cycle_period, working_flag, str_params)
         log.info(f"Initializing {name} node...")
         self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file,
-                                      cyclerstation_id= cycler_station)
+                                      cycler_station_id= cycler_station)
         self.str_reqs: SysShdChanC = str_reqs
         self.str_data: SysShdChanC = str_data
         self.str_alarms: SysShdChanC = str_alarms
@@ -56,7 +57,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
         self.__actual_exp_id: int = -1
-        self.__new_raised_alarms: List[MidDataAlarmC] = []
+        self.__new_raised_alarms: List[CyclerDataAlarmC] = []
         ## Once it has been initilizated all atributes ask for the cycler station info
         cycler_info = self.db_iface.get_cycler_station_info()
         self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
@@ -104,9 +105,9 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def sync_shd_data(self) -> None:
         '''Update local data
         '''
-        self.db_iface.all_status: MidDataAllStatusC = self.globlal_all_status.read()
-        self.db_iface.gen_meas: MidDataGenMeasC     = self.globlal_gen_meas.read()
-        self.db_iface.ext_meas: MidDataExtMeasC     = self.globlal_ext_meas.read()
+        self.db_iface.all_status: CyclerDataAllStatusC = self.globlal_all_status.read()
+        self.db_iface.gen_meas: CyclerDataGenMeasC     = self.globlal_gen_meas.read()
+        self.db_iface.ext_meas: CyclerDataExtMeasC     = self.globlal_ext_meas.read()
 
     def stop(self) -> None:
         """Stop the node if it is not already closed .
@@ -137,6 +138,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 self.db_iface.commit_changes()
                 self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
+                self.db_iface.meas_id += 1
             if not self.str_reqs.is_empty():
                 # Ignore warning as receive_data return an object,
                 # which in this case must be of type DrvCanCmdDataC

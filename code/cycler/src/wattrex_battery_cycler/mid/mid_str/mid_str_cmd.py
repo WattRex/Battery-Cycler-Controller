@@ -20,8 +20,8 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_data import (MidDataProfileC, MidDataExpStatusE, MidDataBatteryC, #pylint: disable= relative-beyond-top-level
-            MidDataExperimentC, MidDataCyclerStationC)
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataProfileC, CyclerDataExpStatusE,
+            CyclerDataBatteryC, CyclerDataExperimentC, CyclerDataCyclerStationC)
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -49,9 +49,10 @@ class MidStrCmdDataC:
     """Class that wrapp the messages send through the queue, containing the request and returns.
     """
     def __init__(self, cmd_type: MidStrDataCmdE|MidStrDataCmdE, #pylint: disable= too-many-arguments
-                exp_status: MidDataExpStatusE|None= None, experiment: MidDataExperimentC|None= None,
-                profile: MidDataProfileC|None= None, battery: MidDataBatteryC|None= None,
-                station: MidDataCyclerStationC|None= None):
+                exp_status: CyclerDataExpStatusE|None= None,
+                experiment: CyclerDataExperimentC|None= None,
+                profile: CyclerDataProfileC|None= None, battery: CyclerDataBatteryC|None= None,
+                station: CyclerDataCyclerStationC|None= None):
         self.cmd_type = cmd_type
         if cmd_type is MidStrDataCmdE.EXP_DATA:
             if experiment is None or profile is None or battery is None:

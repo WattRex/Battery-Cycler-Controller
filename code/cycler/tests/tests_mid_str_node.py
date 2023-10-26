@@ -16,18 +16,18 @@ from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
-main_logger = SysLogLoggerC(file_log_levels="code/log_config.yaml")
+main_logger = SysLogLoggerC(file_log_levels="code/cycler/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_str")
 from system_shared_tool import SysShdSharedObjC, SysShdChanC
 #######################       THIRD PARTY IMPORTS        #######################
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExtMeasC, CyclerDataAllStatusC,
+    CyclerDataGenMeasC, CyclerDataBatteryC, CyclerDataCyclerStationC, CyclerDataExperimentC,
+    CyclerDataExpStatusE, CyclerDataProfileC, CyclerDataDeviceStatusC, CyclerDataPwrModeE)
 
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.getcwd()+'/code/')
+sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_str import (MidStrNodeC, MidStrCmdDataC, MidStrReqCmdE,
                                                     MidStrDataCmdE)
-from src.wattrex_battery_cycler.mid.mid_data import (MidDataExtMeasC, MidDataAllStatusC,
-    MidDataGenMeasC, MidDataBatteryC, MidDataCyclerStationC, MidDataExperimentC,
-    MidDataExpStatusE, MidDataProfileC, MidDataDeviceStatusC, MidDataPwrModeE)
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -75,15 +75,15 @@ class TestChannels:
         str_reqs: SysShdChanC = SysShdChanC()
         str_alarms: SysShdChanC = SysShdChanC()
         str_data: SysShdChanC = SysShdChanC()
-        shared_gen_meas = SysShdSharedObjC(shared_obj=MidDataGenMeasC())
-        shared_ext_meas = SysShdSharedObjC(shared_obj=MidDataExtMeasC())
-        shared_all_status = SysShdSharedObjC(shared_obj=MidDataAllStatusC())
+        shared_gen_meas = SysShdSharedObjC(shared_obj=CyclerDataGenMeasC())
+        shared_ext_meas = SysShdSharedObjC(shared_obj=CyclerDataExtMeasC())
+        shared_all_status = SysShdSharedObjC(shared_obj=CyclerDataAllStatusC())
         str_node = MidStrNodeC(name= 'dummyNode', cycle_period=request.param[0],
                         working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= 2, master_file= 'code/tests/.cred_master.yaml',
-                        cache_file= 'code/tests/.cred_cache.yaml')
+                        cycler_station= 2, master_file= 'code/cycler/tests/.cred_master.yaml',
+                        cache_file= 'code/cycler/tests/.cred_cache.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")
@@ -92,11 +92,11 @@ class TestChannels:
         log.info(f"New battery retrieved {battery.__dict__}")
         log.info(f"New profile retrieved {profile.__dict__}")
         log.info("Uploading random measures to shared objects to test the node")
-        all_status = MidDataAllStatusC()
-        all_status.pwr_mode= MidDataPwrModeE.WAIT
-        all_status.pwr_dev= MidDataDeviceStatusC(0,2)
-        gen_meas = MidDataGenMeasC(voltage= 1000, current= 34, power= 0, instr_id = 1)
-        ext_meas = MidDataExtMeasC()
+        all_status = CyclerDataAllStatusC()
+        all_status.pwr_mode= CyclerDataPwrModeE.WAIT
+        all_status.pwr_dev= CyclerDataDeviceStatusC(0,2)
+        gen_meas = CyclerDataGenMeasC(voltage= 1000, current= 34, power= 0, instr_id = 1)
+        ext_meas = CyclerDataExtMeasC()
         ext_meas.hs_voltage_1 = 3000
         ext_meas.temp_body_2 = 211
         ext_meas.temp_amb_3 = -115
@@ -104,8 +104,8 @@ class TestChannels:
         shared_ext_meas.write(new_obj= ext_meas)
         shared_all_status.write(new_obj= all_status)
         log.info("Waiting for the node to finish for 60s")
-        write_exp_status(str_reqs, MidDataExpStatusE.ERROR)
-        sleep(60)
+        write_exp_status(str_reqs, CyclerDataExpStatusE.ERROR)
+        sleep(10)
         __str_flag_node.clear()
         str_node.join()
 
@@ -131,11 +131,11 @@ class TestChannels:
 
 #######################            FUNCTIONS             #######################
 
-def get_cs_info(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> MidDataCyclerStationC:
+def get_cs_info(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> CyclerDataCyclerStationC:
     """Get the cycler station info from the database
 
     Returns:
-        MidDataCyclerStationC: Cycler station info
+        CyclerDataCyclerStationC: Cycler station info
     """
     request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.GET_CS)
     chan_str_reqs.send_data(request)
@@ -146,14 +146,14 @@ def get_cs_info(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> MidDa
     return response.station
 
 def fetch_new_exp(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> \
-            Tuple[MidDataExperimentC, MidDataBatteryC, MidDataProfileC]:
+            Tuple[CyclerDataExperimentC, CyclerDataBatteryC, CyclerDataProfileC]:
     """AI is creating summary for fetch_new_exp
 
     Raises:
         ValueError: [description]
 
     Returns:
-        Tuple[MidDataExperimentC, MidDataBatteryC, MidDataProfileC]: [description]
+        Tuple[CyclerDataExperimentC, CyclerDataBatteryC, CyclerDataProfileC]: [description]
     """
     log.debug("Checking for new experiments")
     request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.GET_NEW_EXP)
@@ -166,11 +166,11 @@ def fetch_new_exp(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> \
     return response.experiment, response.battery, response.profile
 
 def write_exp_status(chan_str_reqs: SysShdChanC,
-                        exp_status: MidDataExpStatusE) -> None:
+                        exp_status: CyclerDataExpStatusE) -> None:
     """Write the experiment status in the shared memory
 
     Args:
-        exp_status (MidDataExpStatusE): Experiment status
+        exp_status (CyclerDataExpStatusE): Experiment status
     """
     request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.SET_EXP_STATUS,
                     exp_status= exp_status)

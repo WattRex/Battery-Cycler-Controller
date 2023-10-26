@@ -1,0 +1,6 @@
+wattrex-battery-cycler-datatype>=0.0.3
+system-config-tool>=0.0.4
+system-logger-tool>=0.0.3
+system-shared-tool>=0.2.11
+wattrex-driver-db>=0.0.9
+func_timeout>=4.3.5
