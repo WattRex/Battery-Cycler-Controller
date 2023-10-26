@@ -5,6 +5,9 @@ Script that gather info from system used to register de computational unit
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
+from os import getenv
+from uuid import getnode
+from socket import socket, AF_INET, SOCK_DGRAM, gethostname
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -29,11 +32,30 @@ from wattrex_battery_cycler_datatypes.comm_data import CommDataCuC, CommDataRegi
 
 def get_cu_info() -> CommDataCuC:
     """
-    Function that gather info from system used to register de computational unit
+    Function that gather info from system used to register the computational unit
     """
-    # TODO: implement this function
-    cu_info = CommDataCuC(msg_type=CommDataRegisterTypeE.REQUEST,\
-        mac='dc:a6:32:61:68:14', user='plc', ip='192.168.0.80',\
-        port=1883, hostname="plc", cu_id=1)
+    cu_info = CommDataCuC(msg_type=CommDataRegisterTypeE.DISCOVER,\
+        mac=getnode(), user=getenv('USER', ''), ip=__get_local_ip(),\
+        port=22, hostname=gethostname())
 
     return cu_info
+
+
+def __get_local_ip() -> str:
+    """
+    Function that returns the local ip
+    """
+    s = socket(AF_INET, SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('192.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+
+if __name__ == "__main__":
+    log.info(get_cu_info())
