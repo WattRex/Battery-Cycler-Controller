@@ -17,7 +17,7 @@ log = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 from .cycler_data_experiment import CyclerDataPwrModeE
-from .cycler_data_devices import CyclerDataDeviceStatusC
+from .cycler_data_device import CyclerDataDeviceStatusC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################

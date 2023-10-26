@@ -84,7 +84,7 @@ class CommDataHeartbeatC:
         '''
         self.cu_id = cu_id
         self.timestamp = datetime.utcnow()
-    
+
     def __str__(self) -> str:
         '''
         Return a string with the data of the Heartbeat.
@@ -114,7 +114,7 @@ class CommDataDeviceC:
         self.comp_dev_id = comp_dev_id
         self.serial_number = serial_number
         self.link_name = link_name
-    
+
     def __str__(self) -> str:
         '''
         Return a string with the data of the Device.
