@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """
-Script that gather info from system used to register de computational unit
+Cu Manager
 """
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
+from typing import List
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -16,25 +17,20 @@ if __name__ == '__main__':
     cycler_logger = SysLogLoggerC(file_log_levels='./log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
-#######################          PROJECT IMPORTS         #######################
-from comm_data import CommDataCuC, CommDataRegisterTypeE
-
 #######################          MODULE IMPORTS          #######################
-import context
+
+#######################          PROJECT IMPORTS         #######################
+from wattrex_battery_cycler_datatypes.comm_data import CommDataDeviceC
 
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
 
-#######################            FUNCTIONS             #######################
+class DetectorC:
+    def __init__(self) -> None:
+        pass
 
-def get_cu_info() -> CommDataCuC:
-    """
-    Function that gather info from system used to register de computational unit
-    """
-    # TODO: implement this function
-    cu_info = CommDataCuC(msg_type=CommDataRegisterTypeE.REQUEST,\
-        mac='dc:a6:32:61:68:14', user='plc', ip='192.168.0.80',\
-        port=1883, hostname="plc", cu_id=1)
-
-    return cu_info
+    def process_detection(self) -> List[CommDataDeviceC]:
+        # TODO: implement this
+        dev = CommDataDeviceC(cu_id=1, comp_dev_id=1, serial_number=1, link_name="ACM0")
+        return [dev]

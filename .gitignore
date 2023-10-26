@@ -3,6 +3,7 @@
 
 ### Project specific ###
 # Project specific 
+*.cu_id
 config.*
 *.ini
 *.cred.*
