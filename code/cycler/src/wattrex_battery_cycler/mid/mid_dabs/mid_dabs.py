@@ -35,20 +35,17 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE,
 class _ConstantsC:
     PERIOD_ELECT_MEAS   = 5 # value *10ms
     PERIOD_TEMP_MEAS    = 5 # value *10ms
-class MidDabsPwrMeterC:
+class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure.
     '''
     def __init__(self, device: list [CyclerDataDeviceC]) -> None:
         self.device_type = [x.device_type for x in device]
-        # device[0].device_type if len(device) == 1 else CyclerDataDeviceTypeE.SOURCE_LOAD
         self.dev_id: List = [x.dev_id for x in device]
         self.bisource   : DrvEaDeviceC | None = None
         self.source     : DrvEaDeviceC | None = None
         self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         self.meter      : DrvBkDeviceC | None = None
-        # if device[0].link_conf is not None:
-        #     link_conf = __prepare_link_conf(device[0].link_conf.__dict__)
         try:
             for dev in device:
                 if dev.device_type is CyclerDataDeviceTypeE.EPC:
@@ -99,7 +96,7 @@ class MidDabsPwrMeterC:
             status.pwr_dev = status.source
 
     def update(self, gen_meas: CyclerDataGenMeasC, ext_meas: CyclerDataExtMeasC,
-               status: CyclerDataAllStatusC) -> None:
+               status: CyclerDataAllStatusC) -> None: #pylint: disable= too-many-branches
         """Update the data from the hardware sendind the corresponding messages.
         Update the variables of the class with the data received from the device.
         Depending on the device type, the data will be updated in a way or another.
@@ -134,20 +131,20 @@ class MidDabsPwrMeterC:
                 gen_meas.current = msg_elect_meas.ls_current
                 gen_meas.power   = msg_elect_meas.ls_power
                 status.pwr_mode = msg_mode.mode
-                # ext_meas.hs_voltage = msg_elect_meas.hs_voltage
-                for key in self.mapping_epc.keys():
-                    if key == 'hs_voltage':
-                        setattr(ext_meas, self.mapping_epc[key],
-                                getattr(msg_elect_meas, key))
-                    elif key == 'temp_body':
-                        setattr(ext_meas, self.mapping_epc[key],
-                                getattr(msg_temp_meas, key))
-                    elif key == 'temp_anod':
-                        setattr(ext_meas, self.mapping_epc[key],
-                                getattr(msg_temp_meas, key))
-                    elif key == 'temp_amb':
-                        setattr(ext_meas, self.mapping_epc[key],
-                                getattr(msg_temp_meas, key))
+                if self.mapping_epc is not None:
+                    for key in self.mapping_epc.keys():
+                        if key == 'hs_voltage':
+                            setattr(ext_meas, self.mapping_epc[key],
+                                    getattr(msg_elect_meas, key))
+                        elif key == 'temp_body':
+                            setattr(ext_meas, self.mapping_epc[key],
+                                    getattr(msg_temp_meas, key))
+                        elif key == 'temp_anod':
+                            setattr(ext_meas, self.mapping_epc[key],
+                                    getattr(msg_temp_meas, key))
+                        elif key == 'temp_amb':
+                            setattr(ext_meas, self.mapping_epc[key],
+                                    getattr(msg_temp_meas, key))
         if (CyclerDataDeviceTypeE.SOURCE in self.device_type and
             CyclerDataDeviceTypeE.LOAD in self.device_type):
             self.__update_source_load_status(status= status)
