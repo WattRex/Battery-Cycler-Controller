@@ -5,8 +5,10 @@ Data used for communication protocol between cu and master nodes
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
+import os
+import sys
 from time import sleep
-from pickle import dumps, loads
+from pickle import dumps
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -19,7 +21,8 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-from comm_data import CommDataHeartbeatC
+sys.path.append(os.getcwd()+'/code/datatypes/src/')
+from wattrex_battery_cycler_datatypes.comm_data import CommDataHeartbeatC
 
 #######################          PROJECT IMPORTS         #######################
 from wattrex_driver_mqtt import DrvMqttDriverC
@@ -30,16 +33,32 @@ from wattrex_driver_mqtt import DrvMqttDriverC
 
 #######################            FUNCTIONS             #######################
 class EmulateCuC:
-    ''' Emulate a CU. It will publish a heartbeat every second
+    '''
+    Emulate a CU. It will publish a heartbeat every second.
     '''
     def __init__(self, cu_id = 1) -> None:
+        '''
+        Initialize the CU.
+
+        Args:
+            cu_id (int, optional): The ID of the CU. Defaults to 1.
+        '''
         self.cu_id = cu_id
         self.mqtt = DrvMqttDriverC(error_callback=self.error_callback, cred_path='.cred.mqtt.yaml')
 
     def error_callback(self, data) -> None:
+        '''
+        Callback function for errors.
+        
+        Args:
+            data (str): The error message.
+        '''
         log.error(f'Error in Broker Client: {data}')
 
     def run_heartbeat(self) -> None:
+        '''
+        Publish a heartbeat every second.
+        '''
         hb_topic = f'/{self.cu_id}/heartbeat/'
         log.warning(f'Publishing heartbeat to {hb_topic}')
         hb = CommDataHeartbeatC(cu_id=self.cu_id)
