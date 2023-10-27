@@ -14,19 +14,34 @@ from time import time, sleep
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
-from system_config_tool import sys_conf_read_config_params
-main_logger = SysLogLoggerC(file_log_levels="code/log_config.yaml")
+main_logger = SysLogLoggerC(file_log_levels="code/cycler/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_dabs")
 from system_shared_tool import SysShdSharedObjC
 #######################       THIRD PARTY IMPORTS        #######################
 from can_sniffer import DrvCanNodeC
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
+                CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataAllStatusC)
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.getcwd()+'/code/')
+sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_meas import MidMeasNodeC
-from src.wattrex_battery_cycler.mid.mid_data import MidDataDeviceC, MidDataDeviceTypeE, \
-                                                    MidDataLinkConfSerialC, \
-                                                    MidDataLinkConfCanC, MidDataGenMeasC, \
-                                                    MidDataExtMeasC, MidDataAllStatusC
+
+#######################              CLASS               #######################
+conf_param = {
+    "EPC": {
+        "dev_id": 17,
+        "device_type": "EPC",
+        "iface_name": 17,
+        "manufacturer": "abc",
+        "model" : "123", 
+        "serial_number" : "12311",
+        "mapping_names" : {
+            "hs_voltage": "hs_voltage",
+            "temp_body": "temperatura_1",
+            "temp_anod": "temperatura_2",
+            "temp_amb": "temperatura_ambiente"
+        },
+    }
+}
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -53,17 +68,16 @@ class TestChannels:
         Yields:
             [type]: [description]
         """
-        conf_param = sys_conf_read_config_params('code/tests/'+request.param[0])
-        devices: List[MidDataDeviceC] = []
+        devices: List[CyclerDataDeviceC] = []
         if {'SOURCE','LOAD'} <= conf_param.keys():
             conf_param_dev1, conf_param_dev2 = conf_param.values()
             for conf in [conf_param_dev1, conf_param_dev2]:
                 if conf['device_type'].lower() is ('source','load'):
-                    conf['device_type'] = MidDataDeviceTypeE(conf['device_type'])
-                    conf['link_configuration'] = MidDataLinkConfSerialC(
+                    conf['device_type'] = CyclerDataDeviceTypeE(conf['device_type'])
+                    conf['link_configuration'] = CyclerDataLinkConfC(
                         **conf['link_configuration'])
-            devices: List[MidDataDeviceC] = [MidDataDeviceC(**conf_param_dev1),
-                                    MidDataDeviceC(**conf_param_dev2)]
+            devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param_dev1),
+                                    CyclerDataDeviceC(**conf_param_dev2)]
         else:
             conf_param = conf_param[next(iter(conf_param))]
             if conf_param['device_type'].lower() == 'epc':
@@ -72,22 +86,19 @@ class TestChannels:
                 can = DrvCanNodeC(tx_buffer_size= 100, working_flag = _can_working_flag)
                 can.start()
                 sleep(2)
-                conf_param['device_type'] = MidDataDeviceTypeE(conf_param['device_type'])
-                conf_param['link_configuration'] = MidDataLinkConfCanC(
-                    **conf_param['link_configuration'])
+                conf_param['device_type'] = CyclerDataDeviceTypeE(conf_param['device_type'])
             else:
-                conf_param['device_type'] = MidDataDeviceTypeE(conf_param['device_type'])
-                conf_param['link_configuration'] = MidDataLinkConfSerialC(
+                conf_param['device_type'] = CyclerDataDeviceTypeE(conf_param['device_type'])
+                conf_param['link_configuration'] = CyclerDataLinkConfC(
                     **conf_param['link_configuration'])
-            devices: List[MidDataDeviceC] = [MidDataDeviceC(**conf_param)]
+            devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param)]
         _meas_working_flag = Event()
         _meas_working_flag.set()
-        gen_meas: SysShdSharedObjC = SysShdSharedObjC(
-                        MidDataGenMeasC(current=0, voltage=0, power=0))
-        ext_meas: SysShdSharedObjC = SysShdSharedObjC(MidDataExtMeasC())
-        all_status: SysShdSharedObjC = SysShdSharedObjC(MidDataAllStatusC())
+        gen_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataGenMeasC())
+        ext_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataExtMeasC())
+        all_status: SysShdSharedObjC = SysShdSharedObjC(CyclerDataAllStatusC())
         mid_meas_node = MidMeasNodeC(shared_gen_meas = gen_meas, shared_ext_meas = ext_meas,
-                                     shared_status = all_status, cycle_period = 0.5,
+                                     shared_status = all_status, cycle_period = 500,
                                      working_flag = _meas_working_flag, devices = devices)
         try:
             mid_meas_node.start()
@@ -96,9 +107,10 @@ class TestChannels:
                 tic = time()
                 log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
                 log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage}mV")
-                if all_status.read().epc_status.error_code != 0:
-                    log.error((f"Reading error {all_status.read().epc_status.name}, "
-                              f"code: {all_status.read().epc_status.error_code}"))
+                log.info(f"Measuring: external measures =  {ext_meas.read().__dict__}")
+                if all_status.read().pwr_dev.error_code != 0:
+                    log.error((f"Reading error {all_status.read().pwr_dev.name}, "
+                              f"code: {all_status.read().pwr_dev.error_code}"))
                 # log.error(f"Reading error")
                 while time()-tic <= 1:
                     pass
