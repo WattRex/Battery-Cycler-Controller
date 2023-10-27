@@ -30,6 +30,9 @@ class CommDataRegisterTypeE(Enum):
 
 
 class CommDataMnCmdTypeE(Enum):
+    '''
+    Define the message types allowed on protocol used to send commands among services of master node
+    '''
     LAUNCH = 1
     INF_DEV = 2
     REQ_DETECT = 3
