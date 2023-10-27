@@ -29,7 +29,13 @@ class CommDataRegisterTypeE(Enum):
     ACK = 3
 
 
-#######################             CLASSES              #######################
+class CommDataMnCmdTypeE(Enum):
+    LAUNCH = 1
+    INF_DEV = 2
+    REQ_DETECT = 3
+
+
+######################             CLASSES              #######################
 class CommDataCuC:
     '''
     Class used to store data of a computational unit (CU).
@@ -124,5 +130,27 @@ class CommDataDeviceC:
         '''
         return f'Device info: \nCU_ID: {self.cu_id}\nComp_dev_id: {self.comp_dev_id}\n\
             SN: {self.serial_number}\nLink name: {self.link_name}'
+
+
+class CommDataMnCmdDataC:
+    '''
+    Class used to store data of a command sent among sevices of master node.
+    '''
+    def __init__(self, cmd_type : CommDataMnCmdTypeE, cu_id : int, **kwargs) -> None:
+        if isinstance(cmd_type, CommDataMnCmdTypeE):
+            self.cmd_type = cmd_type
+            self.cu_id = cu_id
+            if cmd_type is CommDataMnCmdTypeE.LAUNCH:
+                if 'cs_id' in kwargs:
+                    self.cs_id = kwargs['cs_id']
+                else:
+                    raise ValueError('Missing argument cs_id')
+            elif cmd_type is CommDataMnCmdTypeE.INF_DEV:
+                if 'devices' in kwargs:
+                    self.devices = kwargs['devices']
+                else:
+                    raise ValueError('Missing argument devices')
+        else:
+            raise TypeError(f'cmd_type must be of type CommDataMnCmdTypeE, not {type(cmd_type)}')
 
 #######################            FUNCTIONS             #######################
