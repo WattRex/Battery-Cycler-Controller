@@ -95,8 +95,8 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         else:
             status.pwr_dev = status.source
 
-    def update(self, gen_meas: CyclerDataGenMeasC, ext_meas: CyclerDataExtMeasC,
-               status: CyclerDataAllStatusC) -> None: #pylint: disable= too-many-branches
+    def update(self, gen_meas: CyclerDataGenMeasC, ext_meas: CyclerDataExtMeasC,#pylint: disable= too-many-branches
+               status: CyclerDataAllStatusC) -> None:
         """Update the data from the hardware sendind the corresponding messages.
         Update the variables of the class with the data received from the device.
         Depending on the device type, the data will be updated in a way or another.
