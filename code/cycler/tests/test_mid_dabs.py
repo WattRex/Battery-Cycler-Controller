@@ -24,11 +24,13 @@ from can_sniffer import DrvCanNodeC
 from scpi_sniffer import DrvScpiHandlerC
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/')
-from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsEpcDevC, MidDabsPwrDevC
-from src.wattrex_battery_cycler.mid.mid_data import MidDataDeviceC, MidDataDeviceTypeE, \
-                                                    MidDataPwrLimitE, MidDataLinkConfSerialC, \
-                                                    MidDataLinkConfCanC, MidDataGenMeasC, \
-                                                    MidDataExtMeasC, MidDataAllStatusC
+from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
+                                    CyclerDataPwrLimitE, CyclerDataLinkConfC, CyclerDataGenMeasC,
+                                        CyclerDataExtMeasC, CyclerDataAllStatusC)
+
+dev_conf = {'epc': 17,
+            'source': {'port': '/dev/ttyUSB1', 'baudrate': 115200, 'timeout': 0.1}}
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -57,7 +59,7 @@ class TestChannels:
         """
         log.info(msg="Setup environment for test mid dabs test")
         dev_file = request.param[0]
-        dev_conf = sys_conf_read_config_params(dev_file)
+        # dev_conf = sys_conf_read_config_params(dev_file)
         # Instantiate can node
         tx_queue = SysShdChanC(10000)
         _working_can = Event()
@@ -66,14 +68,13 @@ class TestChannels:
         can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can)
         can.start()
         # Instantiate MidDabsEpcDeviceC
-        test_dev1_info = MidDataDeviceC('a', 'b', 'c',
-                                        MidDataDeviceTypeE.EPC, 'd', {'e': 0},
-                                        MidDataLinkConfCanC(**dev_conf['epc']))
+        test_dev1_info = CyclerDataDeviceC(dev_id= dev_conf['epc'], model = 'b', manufacturer= 'c',
+                                        device_type= CyclerDataDeviceTypeE.EPC)
         epc = MidDabsPwrDevC(device=[test_dev1_info])
         log.info("Can started and epc instantiate")
-        gen_meas = MidDataGenMeasC(dt.now(), 0, 0, 0)
-        ext_meas = MidDataExtMeasC()
-        status = MidDataAllStatusC()
+        gen_meas = CyclerDataGenMeasC(dt.now(), 0, 0, 0)
+        ext_meas = CyclerDataExtMeasC()
+        status = CyclerDataAllStatusC()
 
         try:
             epc.set_wait_mode(time_ref = 30000)
@@ -82,18 +83,20 @@ class TestChannels:
         for i in range(0,5):
             gen_meas.timestamp = dt.now()
             epc.update(gen_meas, ext_meas, status)
-            log.info(f"Set wait mode and measuring: {gen_meas.voltage}mV and {gen_meas.current}mA")
-            log.info(f"Set wait mode and measuring: {ext_meas.pwr_mode.name} and {ext_meas.hs_voltage}mV")
-            if ext_meas.pwr_mode.value == 0 and i != 1:
+            log.info((f"Set wait mode and measuring: {gen_meas.voltage}mV "
+                      f"and {gen_meas.current}mA"))
+            log.info((f"Set wait mode and measuring: {status.pwr_mode.name} "
+                     f"and {ext_meas.hs_voltage}mV"))
+            if status.pwr_mode.value == 0 and i != 1:
                 log.info("Correctly set wait mode")
                 break
             sleep(1)
         epc.disable()
         epc.close()
         log.info("Starting test for ea source")
-        test_dev2_info = MidDataDeviceC('a', 'b', 'c',
-                                    MidDataDeviceTypeE.SOURCE, 'd', {'e': 0},
-                                    MidDataLinkConfSerialC(**dev_conf['source']))
+        test_dev2_info = CyclerDataDeviceC(iface_name = dev_conf['source']['port'] , model = 'b',
+                                    manufacturer = 'c', device_type= CyclerDataDeviceTypeE.SOURCE,
+                                    link_configuration= CyclerDataLinkConfC(**dev_conf['source']))
         ea_source = MidDabsPwrDevC(test_dev2_info, tx_queue)
 
         ea_source.set_cv_mode(5000, 500)
