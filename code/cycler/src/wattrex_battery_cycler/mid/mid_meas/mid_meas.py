@@ -47,17 +47,17 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
-        self._all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
-        self._gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC(voltage= 0, current= 0, power= 0)
-        self._ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
+        self.__all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
+        self.__gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC(voltage= 0, current= 0, power= 0)
+        self.__ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
 
     def sync_shd_data(self) -> None:
-        '''Update 
+        '''Update
         '''
         try:
-            self.globlal_all_status.write(self._all_status)
-            self.globlal_gen_meas.write(self._gen_meas)
-            self.globlal_ext_meas.write(self._ext_meas)
+            self.globlal_all_status.write(self.__all_status)
+            self.globlal_gen_meas.write(self.__gen_meas)
+            self.globlal_ext_meas.write(self.__ext_meas)
         except SysShdErrorC as err:
             log.error(f"Failed to sync shared data: {err}")
 
@@ -65,7 +65,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         """Processes a single iteration.
         """
         # Update the measurements and status of the devices.
-        self.devices.update(self._gen_meas, self._ext_meas, self._all_status)
+        self.devices.update(self.__gen_meas, self.__ext_meas, self.__all_status)
         # Sync the shared data with the updated data.
         self.sync_shd_data()
 
