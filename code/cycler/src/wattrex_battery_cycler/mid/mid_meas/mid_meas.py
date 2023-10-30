@@ -40,7 +40,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         '''
         Initialize the thread node used to update measurements from devices.
         '''
-        super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag, 
+        super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
                         node_params= meas_params)
         self.working_flag = working_flag
         self.devices: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)

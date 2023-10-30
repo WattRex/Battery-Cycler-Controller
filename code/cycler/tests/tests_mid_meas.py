@@ -26,22 +26,6 @@ sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_meas import MidMeasNodeC
 
 #######################              CLASS               #######################
-conf_param = {
-    "EPC": {
-        "dev_id": 17,
-        "device_type": "EPC",
-        "iface_name": 17,
-        "manufacturer": "abc",
-        "model" : "123", 
-        "serial_number" : "12311",
-        "mapping_names" : {
-            "hs_voltage": "hs_voltage",
-            "temp_body": "temperatura_1",
-            "temp_anod": "temperatura_2",
-            "temp_amb": "temperatura_ambiente"
-        },
-    }
-}
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -68,9 +52,51 @@ class TestChannels:
         Yields:
             [type]: [description]
         """
+        log.info(msg=f"Setting up the environment for {request[0]}")
+        conf_param = {
+            "EPC": {
+                "dev_id": 17,
+                "device_type": "Epc",
+                "iface_name": 17,
+                "manufacturer": "abc",
+                "model" : "123",
+                "serial_number" : "12311",
+                "mapping_names" : {
+                    "hs_voltage": "hs_voltage",
+                    "temp_body": "temperatura_1",
+                    "temp_anod": "temperatura_2",
+                    "temp_amb": "temperatura_ambiente"
+                },
+            },
+            "SOURCE": {
+                "dev_id": 18,
+                "device_type": "Source",
+                "iface_name": '/dev/ttyUSB0',
+                "manufacturer": "abc",
+                "model" : "123",
+                "serial_number" : "12311",
+                "mapping_names" : {
+                    "voltage": "voltage_Source",
+                    "current": "current_Source",
+                },
+            },
+            "LOAD": {
+                "dev_id": 19,
+                "device_type": "Load",
+                "iface_name": '/dev/ttyUSB1',
+                "manufacturer": "abc",
+                "model" : "123",
+                "serial_number" : "12311",
+                "mapping_names" : {
+                    "voltage": "voltage_Load",
+                    "current": "current_Load",
+                },
+            }
+        }
         devices: List[CyclerDataDeviceC] = []
-        if {'SOURCE','LOAD'} <= conf_param.keys():
-            conf_param_dev1, conf_param_dev2 = conf_param.values()
+        if set(['SOURCE','LOAD']).issubset(request):
+            conf_param_dev1 = conf_param['SOURCE']
+            conf_param_dev2 = conf_param['LOAD']
             for conf in [conf_param_dev1, conf_param_dev2]:
                 if conf['device_type'].lower() is ('source','load'):
                     conf['device_type'] = CyclerDataDeviceTypeE(conf['device_type'])
@@ -78,7 +104,7 @@ class TestChannels:
                         **conf['link_configuration'])
             devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param_dev1),
                                     CyclerDataDeviceC(**conf_param_dev2)]
-        else:
+        elif {'EPC'} <= conf_param.keys():
             conf_param = conf_param[next(iter(conf_param))]
             if conf_param['device_type'].lower() == 'epc':
                 _can_working_flag = Event()
@@ -111,7 +137,6 @@ class TestChannels:
                 if all_status.read().pwr_dev.error_code != 0:
                     log.error((f"Reading error {all_status.read().pwr_dev.name}, "
                               f"code: {all_status.read().pwr_dev.error_code}"))
-                # log.error(f"Reading error")
                 while time()-tic <= 1:
                     pass
                 i+=1
@@ -130,7 +155,7 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [['test_meas_epc.json']],
+    @mark.parametrize("set_environ", [['EPC']],
                       indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
