@@ -75,8 +75,8 @@ class CommDataCuC:
         Returns:
             str: string with the data of the CU.
         '''
-        return f'CU info: \nCU_ID: {self.cu_id}\nMAC: {self.mac}\nUser: {self.user}\n\
-            Hostname: {self.hostname}\nIP: {self.ip}\nPort: {self.port}\nMsg Type: {self.msg_type}'
+        return f'CU info: \nCU_ID: {self.cu_id}\nMAC: {self.mac}\nUser: {self.user}\n' + \
+            'Hostname: {self.hostname}\nIP: {self.ip}\nPort: {self.port}\nMsg Type: {self.msg_type}'
 
 
 class CommDataHeartbeatC:
@@ -131,8 +131,8 @@ class CommDataDeviceC:
         Returns:
             str: string with the data of the Device.
         '''
-        return f'Device info: \nCU_ID: {self.cu_id}\nComp_dev_id: {self.comp_dev_id}\n\
-            SN: {self.serial_number}\nLink name: {self.link_name}'
+        return f'Device info: \nCU_ID: {self.cu_id}\nComp_dev_id: {self.comp_dev_id}\n' + \
+            'SN: {self.serial_number}\nLink name: {self.link_name}'
 
 
 class CommDataMnCmdDataC:
