@@ -52,7 +52,7 @@ class TestChannels:
         Yields:
             [type]: [description]
         """
-        log.info(msg=f"Setting up the environment for {request[0]}")
+        log.info(msg=f"Setting up the environment for {request}")
         conf_param = {
             "EPC": {
                 "dev_id": 17,
