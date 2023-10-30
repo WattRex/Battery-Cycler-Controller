@@ -13,16 +13,14 @@ from threading import Event
 from signal import signal, SIGINT
 from time import sleep
 from pytest import fixture, mark
-from datetime import datetime as dt
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
-# from system_config_tool import sys_conf_read_config_params
 main_logger = SysLogLoggerC(file_log_levels="code/cycler/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_dabs")
 from system_shared_tool import SysShdChanC
 #######################       THIRD PARTY IMPORTS        #######################
 from can_sniffer import DrvCanNodeC
-from scpi_sniffer import DrvScpiHandlerC
+# from scpi_sniffer import DrvScpiHandlerC
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC
@@ -62,10 +60,7 @@ class TestChannels:
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # run(['sudo', 'ip', 'link', 'set', 'up', 'txqueuelen', '10000', 'can0', 'type', 'can',
         #     'bitrate', '125000'], stdout=PIPE, stderr=PIPE)
-        dev_file = request.param[0]
-        # dev_conf = sys_conf_read_config_params(dev_file)
         # Instantiate can node
-        tx_queue = SysShdChanC(10000)
         _working_can = Event()
         _working_can.set()
         #Create the thread for CAN
@@ -75,7 +70,7 @@ class TestChannels:
         test_dev1_info = CyclerDataDeviceC(dev_id= dev_conf['epc'], model = 'b', manufacturer= 'c',
                                         device_type= CyclerDataDeviceTypeE.EPC,
                                         iface_name= dev_conf['epc'],
-                                        mapping_names= {'hs_voltage': 'hs_voltage'})
+                                        mapping_names= {'hs_voltage': 1})
         epc = MidDabsPwrDevC(device=[test_dev1_info])
         log.info("Can started and epc instantiate")
         gen_meas = CyclerDataGenMeasC()
@@ -91,7 +86,7 @@ class TestChannels:
             log.info((f"Set wait mode and measuring: {gen_meas.voltage}mV "
                       f"and {gen_meas.current}mA"))
             log.info((f"Set wait mode and measuring: {status.pwr_mode.name} "
-                     f"and {ext_meas.hs_voltage}mV"))
+                     f"and {ext_meas.hs_voltage_1}mV"))
             if status.pwr_mode.value == 0 and i != 1:
                 log.info("Correctly set wait mode")
                 break
