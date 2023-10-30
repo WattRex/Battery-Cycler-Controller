@@ -35,6 +35,7 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE,
 class _ConstantsC:
     PERIOD_ELECT_MEAS   = 5 # value *10ms
     PERIOD_TEMP_MEAS    = 5 # value *10ms
+
 class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure.
     '''
