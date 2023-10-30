@@ -20,7 +20,9 @@ log = sys_log_logger_get_module_logger(__name__)
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC,
                         SysShdNodeStatusE)
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
-                                              CyclerDataExtMeasC, CyclerDataAllStatusC)
+                                              CyclerDataExtMeasC, CyclerDataAllStatusC,
+                                              CyclerDataCyclerStationC)
+
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
 from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
@@ -59,7 +61,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.__actual_exp_id: int = -1
         self.__new_raised_alarms: List[CyclerDataAlarmC] = []
         ## Once it has been initilizated all atributes ask for the cycler station info
-        cycler_info = self.db_iface.get_cycler_station_info()
+        cycler_info: CyclerDataCyclerStationC = self.db_iface.get_cycler_station_info()
         self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                station= cycler_info))
 
@@ -70,7 +72,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             alarm = self.str_alarms.receive_data_unblocking()
 
     def __apply_command(self, command : MidStrCmdDataC) -> None:
-        '''Apply a command to the Storage node.
+        '''
+        Apply a command to the Storage node.
 
         Args:
             command (DrvCanCmdDataC): Data to process, does not know if its for the channel or
@@ -135,6 +138,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             if self.db_iface.gen_meas.instr_id is not None:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
                 log.critical("TEST COMMITING CHANGES")
+                # NOTE: improve store for future versions, it must work with only one commit
                 self.db_iface.commit_changes()
                 self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
