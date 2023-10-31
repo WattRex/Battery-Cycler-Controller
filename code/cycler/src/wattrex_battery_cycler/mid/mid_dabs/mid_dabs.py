@@ -48,7 +48,7 @@ class MidDabsExtraMeterC:
         if device.device_type is CyclerDataDeviceTypeE.BMS:
             self.__device : DrvBmsDeviceC = DrvBmsDeviceC(dev_id= device.dev_id,
                                     can_id= device.iface_name)
-        # elif device.device_type is CyclerDataDeviceTypeE.METER:
+        # elif device.device_type is CyclerDataDeviceTypeE.BK:
         #     link_conf = __prepare_link_conf(device.link_conf.__dict__)
         #     self.__device : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**link_conf))
 
