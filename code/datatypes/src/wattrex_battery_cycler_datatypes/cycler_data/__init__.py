@@ -10,7 +10,8 @@ from .cycler_data_device import (CyclerDataDeviceC, CyclerDataDeviceStatusC,
 from .cycler_data_experiment import (CyclerDataPwrLimitE, CyclerDataPwrModeE, CyclerDataProfileC,
                 CyclerDataAlarmC, CyclerDataPwrRangeC, CyclerDataExperimentC, CyclerDataExpStatusE,
                 CyclerDataInstructionC)
-from .cycler_data_common import CyclerDataAllStatusC, CyclerDataExtMeasC, CyclerDataGenMeasC
+from .cycler_data_common import (CyclerDataAllStatusC, CyclerDataExtMeasC, CyclerDataGenMeasC,
+                                CyclerDataMergeTagsC)
 from .cycler_data_battery import CyclerDataBatteryC, CyclerDataLithiumBatC, CyclerDataRedoxBatC
 
 __all__ = [
@@ -19,5 +20,5 @@ __all__ = [
     'CyclerDataPwrRangeC', 'CyclerDataAlarmC', 'CyclerDataExperimentC', 'CyclerDataExpStatusE',
     'CyclerDataInstructionC', 'CyclerDataCyclerStationC', 'CyclerDataProfileC',
     'CyclerDataAllStatusC', 'CyclerDataExtMeasC', 'CyclerDataGenMeasC', 'CyclerDataBatteryC',
-    'CyclerDataLithiumBatC', 'CyclerDataRedoxBatC'
+    'CyclerDataLithiumBatC', 'CyclerDataRedoxBatC', 'CyclerDataMergeTagsC'
 ]

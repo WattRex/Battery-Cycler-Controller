@@ -153,6 +153,8 @@ class CommDataMnCmdDataC:
                     self.devices = kwargs['devices']
                 else:
                     raise ValueError('Missing argument devices')
+            elif cmd_type is CommDataMnCmdTypeE.REQ_DETECT:
+                pass
         else:
             raise TypeError(f'cmd_type must be of type CommDataMnCmdTypeE, not {type(cmd_type)}')
 

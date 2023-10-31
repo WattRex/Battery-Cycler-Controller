@@ -36,8 +36,9 @@ class CyclerDataDeviceTypeE(Enum):
     SOURCE      = "Source"
     BISOURCE    = "BiSource"
     LOAD        = "Load"
-    METER       = "Meter"
     EPC         = 'Epc'
+    BMS         = "Bms"
+    BK          = "Bk"
 
 #######################             CLASSES              #######################
 
