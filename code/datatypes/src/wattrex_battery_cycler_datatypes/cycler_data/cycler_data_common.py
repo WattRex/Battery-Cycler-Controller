@@ -5,7 +5,7 @@ Definition of MID DATA devices used on battery cycler.
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
-
+from typing import List
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
@@ -65,3 +65,12 @@ class CyclerDataExtMeasC:
         '''
         Initialize the with the specified extended measures.
         '''
+
+class CyclerDataMergeTagsC:
+    """Class to describe which attributes should be included or excluded when mergin shared objects.
+    """
+    def __init__(self, status_attrs: List[str], gen_meas_attrs: List[str],
+                 ext_meas_attrs: List[str]) -> None:
+        self.status_attrs : List[str] = status_attrs
+        self.gen_meas_attrs : List[str] = gen_meas_attrs
+        self.ext_meas_attrs : List[str] = ext_meas_attrs
