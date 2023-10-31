@@ -16,10 +16,10 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataGenMeasC,
-                                                          CyclerDataExtMeasC, CyclerDataAllStatusC)
+                                CyclerDataDeviceTypeE, CyclerDataExtMeasC, CyclerDataAllStatusC)
 
 #######################          MODULE IMPORTS          #######################
-from ..mid_dabs import MidDabsPwrMeterC #pylint: disable= relative-beyond-top-level
+from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
 #######################          PROJECT IMPORTS         #######################
 
 #######################              ENUMS               #######################
@@ -43,20 +43,25 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
                         node_params= meas_params)
         self.working_flag = working_flag
+        self.extra_dev: List[MidDabsExtraMeterC] = []
+        for dev in devices:
+            if dev.device_type in (CyclerDataDeviceTypeE.METER, CyclerDataDeviceTypeE.BMS):
+                self.extra_dev.append(MidDabsExtraMeterC(dev))
+                devices.remove(dev)
         self.devices: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
-        self._all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
-        self._gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC(voltage= 0, current= 0, power= 0)
-        self._ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
+        self._all_status: CyclerDataAllStatusC = self.globlal_all_status.read()
+        self._gen_meas: CyclerDataGenMeasC = self.globlal_gen_meas.read()
+        self._ext_meas: CyclerDataExtMeasC = self.globlal_ext_meas.read()
 
     def sync_shd_data(self) -> None:
         '''Update 
         '''
         try:
-            self.globlal_all_status.write(self._all_status)
-            self.globlal_gen_meas.write(self._gen_meas)
+            self.globlal_all_status.merge_exclude_tags(self._all_status, exclude_tags = [])
+            self.globlal_gen_meas.merge_exclude_tags(self._gen_meas, exclude_tags = ['instr_id'])
             self.globlal_ext_meas.write(self._ext_meas)
         except SysShdErrorC as err:
             log.error(f"Failed to sync shared data: {err}")
@@ -66,6 +71,9 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         """
         # Update the measurements and status of the devices.
         self.devices.update(self._gen_meas, self._ext_meas, self._all_status)
+        # Update the measurements and status of the extra devices.
+        for dev in self.extra_dev:
+            dev.update(self._ext_meas)
         # Sync the shared data with the updated data.
         self.sync_shd_data()
 
