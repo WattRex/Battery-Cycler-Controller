@@ -23,7 +23,7 @@ from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
 from wattrex_driver_bms import DrvBmsDeviceC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE, CyclerDataDeviceC,
                                 CyclerDataPwrLimitE, CyclerDataDeviceStatusC, CyclerDataExtMeasC,
-                                CyclerDataGenMeasC, CyclerDataAllStatusC, CyclerDataDeviceStatusE)
+                                CyclerDataGenMeasC, CyclerDataAllStatusC)
 
 #######################          PROJECT IMPORTS         #######################
 
@@ -42,7 +42,7 @@ class MidDabsExtraMeterC:
     def __init__(self, device: CyclerDataDeviceC) -> None:
         ## TODO: Añadir o no a all status para monitorizar el estado
         ## Device id will be needed for status device monitoring
-        # self.__dev_id: List = device.dev_id
+        self.__dev_id: List = device.dev_id
         self.__device    :  DrvBmsDeviceC |None = None # DrvBkDeviceC |
         self.__mapping_attr = device.mapping_names
         if device.device_type is CyclerDataDeviceTypeE.BMS:
@@ -183,8 +183,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                 # elif dev is CyclerDataDeviceTypeE.LOAD:
                 #     self.load.close()
                 else:
-                    log.error("The device can not be close")
-                    raise ValueError("The device can not be close")
+                    log.warning("The device can not be close")
         except Exception as err:
             log.error(f"Error while closing device: {err}")
             raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
@@ -219,8 +218,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             #         self.source.disable()
             #         self.load.set_cv_mode(volt_ref)
             else:
-                log.error("The device is not able to change between modes.")
-                raise ValueError("The device is not able to change between modes")
+                log.warning("This device is not able to change to CV mode.")
         except Exception as err:
             log.error(f"Error while setting cv mode: {err}")
             raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
@@ -236,7 +234,6 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """
         try:
             if CyclerDataDeviceTypeE.EPC in self.device_type:
-                log.warning("Setting cc mode in epc")
                 self.epc.set_cc_mode(current_ref, limit_type, limit_ref)
             # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:
             #     self.bisource.set_cc_mode(current_ref, limit_ref)
@@ -250,8 +247,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             #         self.source.disable()
             #         self.load.set_cc_mode(current_ref)
             else:
-                log.error("The device is not able to change between modes.")
-                raise ValueError("The device is not able to change between modes")
+                log.warning("This device is not able to change to CC modes.")
         except Exception as err:
             log.error(f"Error while setting cc mode: {err}")
             raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
@@ -268,7 +264,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             if CyclerDataDeviceTypeE.EPC in self.device_type:
                 self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
             else:
-                log.error('This device is incompatible with power control mode')
+                log.warning('This device is incompatible with power control mode')
         except Exception as err:
             log.error(f"Error while setting cp mode: {err}")
             raise Exception("Error while setting cp mode") from err #pylint: disable= broad-exception-raised
@@ -300,35 +296,15 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """
         if CyclerDataDeviceTypeE.EPC in self.device_type:
             if isinstance(ls_curr, tuple):
-                try:
-                    self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
-                except Exception as err:
-                    log.error(f"Error while setting ls current limit: {err}")
-                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+                self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
             if isinstance(ls_volt, tuple):
-                try:
-                    self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
-                except Exception as err:
-                    log.error(f"Error while setting ls current limit: {err}")
-                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+                self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
             if isinstance(ls_pwr, tuple):
-                try:
-                    self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
-                except Exception as err:
-                    log.error(f"Error while setting ls current limit: {err}")
-                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+                self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
             if isinstance(hs_volt, tuple):
-                try:
-                    self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
-                except Exception as err:
-                    log.error(f"Error while setting ls current limit: {err}")
-                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+                self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
             if isinstance(temp, tuple):
-                try:
-                    self.epc.set_temp_limit(temp[0], temp[1])
-                except Exception as err:
-                    log.error(f"Error while setting ls current limit: {err}")
-                    raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+                self.epc.set_temp_limit(temp[0], temp[1])
         else:
             log.error("The limits can not be change in this device")
 
