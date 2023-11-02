@@ -5,7 +5,7 @@ the device and request info from it.
 """
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-from typing import List, Dict
+from typing import List #, Dict
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -33,13 +33,13 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE,
 
 #######################             CLASSES              #######################
 # TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
-_PERIOD_ELECT_MEAS   = 5 # value *10ms
-_PERIOD_TEMP_MEAS    = 5 # value *10ms
+_PERIOD_ELECT_MEAS   = 25 # value *10ms
+_PERIOD_TEMP_MEAS    = 25 # value *10ms
 
 class MidDabsExtraMeterC:
     """Instanciates an objects that are only able to measures.
     """
-    def __init(self, device: CyclerDataDeviceC) -> None:
+    def __init__(self, device: CyclerDataDeviceC) -> None:
         ## TODO: Añadir o no a all status para monitorizar el estado
         ## Device id will be needed for status device monitoring
         # self.__dev_id: List = device.dev_id
@@ -49,8 +49,8 @@ class MidDabsExtraMeterC:
             self.__device : DrvBmsDeviceC = DrvBmsDeviceC(dev_id= device.dev_id,
                                     can_id= device.iface_name)
         # elif device.device_type is CyclerDataDeviceTypeE.BK:
-        #     link_conf = __prepare_link_conf(device.link_conf.__dict__)
-        #     self.__device : DrvBkDeviceC = DrvBkDeviceC(DrvScpiHandlerC(**link_conf))
+        #     self.__device : DrvBkDeviceC = DrvBkDeviceC(
+        #                                       DrvScpiHandlerC(device.link_conf.__dict__))
 
     def update(self, ext_meas: CyclerDataExtMeasC) -> None:
         """Update the external measurements from bms or bk data.
@@ -64,8 +64,16 @@ class MidDabsExtraMeterC:
         #                                         dev_id= dev_id)
         if self.__mapping_attr is not None:
             for key in self.__mapping_attr.keys():
-                setattr(ext_meas, key+'_'+self.__mapping_attr[key],
+                setattr(ext_meas, key+'_'+str(self.__mapping_attr[key]),
                         getattr(res, key))
+
+    def close(self):
+        """Close connection with the device"""
+        try:
+            self.__device.close()
+        except Exception as err:
+            log.error(f"Error while closing device: {err}")
+            raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
 
 class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure but are also power devices.
@@ -93,17 +101,17 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                         elect_en = True, elect_period = _PERIOD_ELECT_MEAS,
                         temp_en = True, temp_period = _PERIOD_TEMP_MEAS)
                 # elif dev.device_type is CyclerDataDeviceTypeE.SOURCE:
-                #     link_conf = __prepare_link_conf(dev.link_conf.__dict__)
-                #     self.source : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
+                #     self.source : DrvEaDeviceC = DrvEaDeviceC(
+                #                               DrvScpiHandlerC(device.link_conf.__dict__))
                 #     self.mapping_source = dev.mapping_names
                 # elif dev.device_type is CyclerDataDeviceTypeE.LOAD:
                 #     # TODO: Update SCPI not needing handler
-                #     link_conf = __prepare_link_conf(dev.link_conf.__dict__)
-                #     self.load : DrvRsDeviceC = DrvRsDeviceC(DrvScpiHandlerC(**link_conf))
+                #     self.load : DrvRsDeviceC = DrvRsDeviceC(
+                #                               DrvScpiHandlerC(device.link_conf.__dict__))
                 #     self.mapping_load = dev.mapping_names
                 # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
-                #     link_conf = __prepare_link_conf(dev.link_conf.__dict__)
-                #     self.bisource : DrvEaDeviceC = DrvEaDeviceC(DrvScpiHandlerC(**link_conf))
+                #     self.bisource : DrvEaDeviceC = DrvEaDeviceC(
+                #                               DrvScpiHandlerC(device.link_conf.__dict__))
                 #     self.mapping_bisource = dev.mapping_names
                 else:
                     log.error(f"The dessire device doesn't have type {self.device_type}")
@@ -141,10 +149,10 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                 if self.mapping_epc is not None:
                     for key in self.mapping_epc.keys():
                         if 'temp' in key:
-                            setattr(ext_meas, key+'_'+self.mapping_epc[key],
+                            setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
                                     getattr(msg_temp_meas, key))
                         else:
-                            setattr(ext_meas, key+'_'+self.mapping_epc[key],
+                            setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
                                     getattr(msg_elect_meas, key))
             # elif dev_type is CyclerDataDeviceTypeE.BISOURCE:
             #     res: DrvEaDataC = self.bisource.get_data()

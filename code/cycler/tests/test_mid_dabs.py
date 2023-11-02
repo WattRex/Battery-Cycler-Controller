@@ -11,7 +11,7 @@ from subprocess import run, PIPE
 #######################         GENERIC IMPORTS          #######################
 from threading import Event
 from signal import signal, SIGINT
-from time import sleep
+from time import sleep, time
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
@@ -23,13 +23,14 @@ from can_sniffer import DrvCanNodeC
 # from scpi_sniffer import DrvScpiHandlerC
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
-from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC
+from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC, MidDabsExtraMeterC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
                                     CyclerDataLinkConfC, CyclerDataGenMeasC,
                                         CyclerDataExtMeasC, CyclerDataAllStatusC)
 
-dev_conf = {'epc': '0x11',
-            'source': {'port': '/dev/ttyUSB1', 'baudrate': 115200, 'timeout': 0.1}}
+dev_conf = {'epc': '0x14',
+            'source': {'port': '/dev/ttyUSB1', 'baudrate': 115200, 'timeout': 0.1},
+            'bms': 4}
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -45,6 +46,10 @@ class TestChannels:
             frame ([type]): [description]
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
+        self.epc.close()
+        self.bms.close()
+        sleep(1)
+        self.can.stop()
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):
@@ -64,35 +69,57 @@ class TestChannels:
         _working_can = Event()
         _working_can.set()
         #Create the thread for CAN
-        can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can)
-        can.start()
+        self.can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can, cycle_period= 30)
+        self.can.start()
+
         # Instantiate MidDabsEpcDeviceC
+        ######################################### EPC ##############################################
         test_dev1_info = CyclerDataDeviceC(dev_id= dev_conf['epc'], model = 'b', manufacturer= 'c',
                                         device_type= CyclerDataDeviceTypeE.EPC,
                                         iface_name= dev_conf['epc'],
                                         mapping_names= {'hs_voltage': 1})
-        epc = MidDabsPwrDevC(device=[test_dev1_info])
+        self.epc = MidDabsPwrDevC(device=[test_dev1_info])
         log.info("Can started and epc instantiate")
         gen_meas = CyclerDataGenMeasC()
         ext_meas = CyclerDataExtMeasC()
         status = CyclerDataAllStatusC()
-
-        try:
-            epc.set_wait_mode(time_ref = 30000)
-        except Exception as exc:
-            raise AssertionError("Error while trying to set wait mode for 30s") from exc
-        for i in range(0,5):
-            epc.update(gen_meas, ext_meas, status)
+        self.epc.update(gen_meas, ext_meas, status)
+        self.epc.set_wait_mode(time_ref = 3000)
+        next_time = time() + 5
+        while time() < next_time:
+            time_1 = time()
+            self.epc.update(gen_meas, ext_meas, status)
+            log.warning(f"Time to update: {time() - time_1}")
             log.info((f"Set wait mode and measuring: {gen_meas.voltage}mV "
                       f"and {gen_meas.current}mA"))
-            log.info((f"Set wait mode and measuring: {status.pwr_mode.name} "
-                     f"and {ext_meas.hs_voltage_1}mV"))
-            if status.pwr_mode.value == 0 and i != 1:
-                log.info("Correctly set wait mode")
-                break
-            sleep(1)
-        epc.disable()
-        epc.close()
+            log.info((f"Set wait mode and measuring: {status.pwr_mode.name}, "
+                    f"{status.pwr_mode.value} "
+                    f"and {ext_meas.hs_voltage_1}mV"))
+            if status.pwr_mode.value != 0:
+                next_time = time() + 5
+            sleep(0.2)
+        self.epc.close()
+        ######################################### BMS ##############################################
+        log.info("Starting test for bms")
+        self.bms = MidDabsExtraMeterC(CyclerDataDeviceC(dev_id= dev_conf['bms'], model = 'b',
+                                        manufacturer= 'c', device_type= CyclerDataDeviceTypeE.BMS,
+                                        iface_name= dev_conf['bms'],
+                                        mapping_names= {'vcell1': 1, 'vcell2': 2, 'vcell3': 3,
+                                                        'vcell4': 4, 'vcell5': 5, 'vcell6': 6,
+                                                        'vcell7': 7, 'vcell8': 8, 'vcell9': 9,
+                                                        'vcell10': 10, 'vcell11': 11, 'vcell12': 12,
+                                                        'vstack': 13, 'temp1': 14, 'temp2': 15,
+                                                        'temp3': 16, 'temp4': 17, 'pres1': 18,
+                                                        'pres2': 19, 'status': 20}))
+        for _ in range(5):
+            self.bms.update(ext_meas)
+            log.info((f"Measuring: {ext_meas.__dict__}"))
+            sleep(2)
+        self.bms.close()
+        log.info("Closing can")
+        self.can.stop()
+        sleep(1.5)
+        # ######################################### SOURCE #########################################
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # log.info("Starting test for ea source")
         # test_dev2_info = CyclerDataDeviceC(iface_name = dev_conf['source']['port'] , model = 'b',
@@ -115,6 +142,7 @@ class TestChannels:
     def config(self) -> None:
         """Configure the signal handler to signal when the SIGINT is received .
         """
+        log.critical(msg="Configuring signal handler")
         signal(SIGINT, self.signal_handler)
 
 
@@ -122,7 +150,7 @@ class TestChannels:
     # @mark.parametrize("set_environ", [[1, 200, 3000, 'thread'],[2, 300, 4000, 'thread'],
     #                [1, 200, 3000, 'process'],[2, 300, 4000, 'process']], indirect=["set_environ"])
     @mark.parametrize("set_environ", [['code/dev_config.yaml']], indirect=["set_environ"])
-    def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
+    def test_normal_op(self, config, set_environ) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
         Args:
