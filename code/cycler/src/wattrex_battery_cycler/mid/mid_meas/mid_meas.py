@@ -43,12 +43,12 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
                         node_params= meas_params)
         self.working_flag = working_flag
-        self.extra_dev: List[MidDabsExtraMeterC] = []
+        self.__extra_meter: List[MidDabsExtraMeterC] = []
         for dev in devices:
             if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS):
-                self.extra_dev.append(MidDabsExtraMeterC(dev))
+                self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
-        self.devices: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
+        self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
@@ -74,9 +74,9 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         """Processes a single iteration.
         """
         # Update the measurements and status of the devices.
-        self.devices.update(self._gen_meas, self._ext_meas, self._all_status)
+        self.__pwr_dev.update(self._gen_meas, self._ext_meas, self._all_status)
         # Update the measurements and status of the extra devices.
-        for dev in self.extra_dev:
+        for dev in self.__extra_meter:
             dev.update(self._ext_meas)
         # Sync the shared data with the updated data.
         self.sync_shd_data()
@@ -84,5 +84,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     def stop(self) -> None:
         """Close the thread.
         """
-        self.devices.close()
+        for dev in self.__extra_meter:
+            dev.close()
+        self.__pwr_dev.close()
         super().stop()
