@@ -16,7 +16,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataGenMeasC,
-                                CyclerDataDeviceTypeE, CyclerDataExtMeasC, CyclerDataAllStatusC)
+            CyclerDataDeviceTypeE, CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC)
 
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
@@ -35,7 +35,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
 
     def __init__(self,shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
                  shared_status: SysShdSharedObjC, cycle_period: int, working_flag : Event,
-                 devices: List[CyclerDataDeviceC],
+                 devices: List[CyclerDataDeviceC], merge_tags: CyclerDataMergeTagsC,
                  meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the thread node used to update measurements from devices.
@@ -45,13 +45,14 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self.working_flag = working_flag
         self.extra_dev: List[MidDabsExtraMeterC] = []
         for dev in devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.METER, CyclerDataDeviceTypeE.BMS):
+            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS):
                 self.extra_dev.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
         self.devices: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
         self.globlal_all_status: SysShdSharedObjC = shared_status
+        self.__shd_excl_tags: CyclerDataMergeTagsC = merge_tags
         self._all_status: CyclerDataAllStatusC = self.globlal_all_status.read()
         self._gen_meas: CyclerDataGenMeasC = self.globlal_gen_meas.read()
         self._ext_meas: CyclerDataExtMeasC = self.globlal_ext_meas.read()
@@ -60,9 +61,12 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         '''Update
         '''
         try:
-            self.globlal_all_status.merge_exclude_tags(self._all_status, exclude_tags = [])
-            self.globlal_gen_meas.merge_exclude_tags(self._gen_meas, exclude_tags = ['instr_id'])
-            self.globlal_ext_meas.write(self._ext_meas)
+            self.globlal_all_status.merge_exclude_tags(self._all_status,
+                                                included_tags= self.__shd_excl_tags.status_attrs)
+            self.globlal_gen_meas.merge_included_tags(new_obj= self._gen_meas,
+                                                included_tags= self.__shd_excl_tags.gen_meas_attrs)
+            self.globlal_ext_meas.merge_exclude_tags(self._ext_meas,
+                                                included_tags= self.__shd_excl_tags.ext_meas_attrs)
         except SysShdErrorC as err:
             log.error(f"Failed to sync shared data: {err}")
 
