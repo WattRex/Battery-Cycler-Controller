@@ -68,11 +68,11 @@ class MidDabsExtraMeterC:
         if isinstance(self.device, DrvBmsDeviceC):
             bms_state = CyclerDataDeviceStatusC(error= getattr(res,'status').error_code,
                                                 dev_id= self.device.dev_id)
-            setattr(status, 'bms_'+str(self.device.dev_id), bms_state)
+            setattr(status, 'extra_meter_'+str(self.device.dev_id), bms_state)
         # elif isinstance(self.__device, DrvBkDeviceC):
         #     bk_state = CyclerDataDeviceStatusC(error= res.status.error_code,
         #                                         dev_id= self.__dev_id)
-        #     setattr(status, 'bk_'+str(self.__dev_id), bk_state)
+        #     setattr(status, 'extra_meter_'+str(self.__dev_id), bk_state)
         for key in self.__mapping_attr.keys():
             setattr(ext_meas, key+'_'+str(self.__mapping_attr[key]),
                     getattr(res, key))

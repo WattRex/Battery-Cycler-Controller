@@ -115,7 +115,7 @@ class TestChannels:
         for _ in range(5):
             self.bms.update(ext_meas, status)
             log.info((f"Measuring: {ext_meas.__dict__}"))
-            log.info(f"Status: {getattr(status,'bms_'+str(self.bms.device.dev_id)).name}")
+            log.info(f"Status: {getattr(status,'extra_meter_'+str(self.bms.device.dev_id)).name}")
             sleep(2)
         self.bms.close()
         log.info("Closing can")
