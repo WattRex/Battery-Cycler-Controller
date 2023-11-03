@@ -25,7 +25,6 @@ from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= re
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-# meter_counter: int = 0
 
 class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     """Returns a removable version of the DRv command .
@@ -57,8 +56,6 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self._all_status: CyclerDataAllStatusC = self.globlal_all_status.read()
         self._gen_meas: CyclerDataGenMeasC = self.globlal_gen_meas.read()
         self._ext_meas: CyclerDataExtMeasC = self.globlal_ext_meas.read()
-        ## Period for extra meters
-        # self.__meter_period: int = 10
 
     def sync_shd_data(self) -> None:
         '''Update
@@ -83,14 +80,8 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         # Update the measurements and status of the devices.
         self.__pwr_dev.update(self._gen_meas, self._ext_meas, self._all_status)
         # Update the measurements and status of the extra devices.
-        # Future versions could include period for each extra meter
-        # global meter_counter
-        # if meter_counter == 0:
-        #     meter_counter = meter_counter % self.__meter_period
-        # meter_counter += 1
         for dev in self.__extra_meter:
-            log.info("Updating extra meter")
-            dev.update(self._ext_meas)
+            dev.update(ext_meas= self._ext_meas, status= self._all_status)
         # Sync the shared data with the updated data.
         self.sync_shd_data()
         if self._gen_meas.current is not None and self._gen_meas.voltage is not None:
