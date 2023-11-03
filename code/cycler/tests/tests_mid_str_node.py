@@ -16,7 +16,7 @@ from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 
-main_logger = SysLogLoggerC(file_log_levels="code/cycler/log_config.yaml")
+main_logger = SysLogLoggerC(file_log_levels="devops/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_str")
 from system_shared_tool import SysShdSharedObjC, SysShdChanC
 #######################       THIRD PARTY IMPORTS        #######################
@@ -87,8 +87,7 @@ class TestChannels:
                         working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= 2, master_file= 'code/cycler/tests/.cred_master.yaml',
-                        cache_file= 'code/cycler/tests/.cred_cache.yaml')
+                        cycler_station= 2, cred_file= 'devops/.cred.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")

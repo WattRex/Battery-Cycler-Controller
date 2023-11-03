@@ -53,13 +53,15 @@ class MidStrFacadeC:
     This class is used to interface with the database.
     '''
     def __init__(self, cycler_station_id: int,
-                 master_file : str = ".cred.yaml", cache_file : str = ".cred.yaml") -> None:
+                 cred_file : str = ".cred.yaml") -> None:
         log.info("Initializing DB Connection...")
         self.cs_id = cycler_station_id
         self.__master_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.MASTER_DB,
-                                                            config_file= master_file)
+                                                            config_file= cred_file,
+                                                            section= 'master_db')
         self.__cache_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.CACHE_DB,
-                                                            config_file= cache_file)
+                                                            config_file= cred_file,
+                                                            section= 'cache_db')
         self.all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
         self.gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
