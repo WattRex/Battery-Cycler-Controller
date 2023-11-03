@@ -2,5 +2,5 @@ FROM python:3.11-alpine3.17
 WORKDIR /db_sync
 RUN python -m pip install --upgrade pip
 ADD ./ ./
-RUN pip install -r ./code/requirements.txt
-CMD ["python", "./code/src/wattrex_battery_cycler/mid/mid_sync/db_sync.py"]
+RUN pip install -r ./code/cycler/requirements.txt
+CMD ["python", "./code/cycler/src/wattrex_battery_cycler/mid/mid_sync/db_sync.py"]

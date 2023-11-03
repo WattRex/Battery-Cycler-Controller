@@ -6,6 +6,7 @@ on: workflow_call
 
 env:
   ENV_CRED_TO_DEPLOY: ${{ secrets.ENV_CRED_TO_DEPLOY }}
+  YAML_CRED_TO_DEPLOY: ${{ secrets.YAML_CRED_TO_DEPLOY }}
         
 jobs:
   launch-real-bat:
@@ -27,6 +28,12 @@ jobs:
         run: |
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.env
           cat /tmp/wattrex-cycler-staging/devops/.cred.env
+          echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.yaml
+          cat /tmp/wattrex-cycler-staging/devops/.cred.yaml
+      - name: Rename test-file to tests_cycler.py
+        run: |
+          echo "${{ github.event.pull_request.head.ref }}"
+          mv /tmp/wattrex-cycler-staging/tests/tests_${{ github.event.pull_request.head.ref }}".py /tmp/wattrex-cycler-staging/tests/tests_cycler.py
       - name: Build cycler docker image
         run: |
           docker build -t wattrex-cycler-node:latest --network=host -f /tmp/wattrex-cycler-staging/devops/docker/Dockerfile.cycler /tmp/wattrex-cycler-staging/
@@ -35,6 +42,12 @@ jobs:
         run: |
           chmod +x /tmp/wattrex-cycler-staging/devops/deploy.sh
           /tmp/wattrex-cycler-staging/devops/deploy.sh
+      - name: Execute deploy container
+        id: pytest
+        continue-on-error: true
+        run: |
+          /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}"
+          echo "pytest_exit_code=$?" >> "GITHUB_OUTPUT" 
       - name: Clean up
         run: |
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
@@ -42,3 +55,4 @@ jobs:
           docker image prune -f
           docker images -a
           ls -lAh /tmp
+          exit ${{ steps.pytest.outputs.pytest_exit_code }}

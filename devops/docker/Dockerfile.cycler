@@ -1,5 +1,7 @@
 FROM python:3.10-bullseye
 WORKDIR /cycler
 ADD ./code ./code
-RUN pip install -r ./code/requirements.txt
-CMD ["python", "./code/tests/run_cycler.py"]
+RUN pip install --upgrade pip
+RUN pip install pytest
+RUN pip install -r ./code/cycler/requirements.txt
+CMD ["python", "./code/cycler/tests/run_cycler.py"]
