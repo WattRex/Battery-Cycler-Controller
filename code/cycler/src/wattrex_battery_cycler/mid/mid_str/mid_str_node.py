@@ -114,6 +114,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             log.info("Turning cycler station to deprecated")
             self.db_iface.turn_cycler_station_deprecated(
                 exp_id= self.__actual_exp_id if self.__actual_exp_id != -1 else None)
+            self.working_flag.clear()
         else:
             log.error(("Can`t apply command. Error in command format, "
                        "check command type and payload type"))
@@ -128,6 +129,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def stop(self) -> None:
         """Stop the node if it is not already closed .
         """
+        #Before closing connection commit all changes
+        self.db_iface.commit_changes()
         self.db_iface.close_db_connection()
         self.working_flag.clear()
         self.status = SysShdNodeStatusE.STOP
