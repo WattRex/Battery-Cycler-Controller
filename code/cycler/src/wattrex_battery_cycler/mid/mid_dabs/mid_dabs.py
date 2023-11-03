@@ -23,7 +23,7 @@ from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
 from wattrex_driver_bms import DrvBmsDeviceC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE, CyclerDataDeviceC,
                                 CyclerDataPwrLimitE, CyclerDataDeviceStatusC, CyclerDataExtMeasC,
-                                CyclerDataGenMeasC, CyclerDataAllStatusC)
+                                CyclerDataGenMeasC, CyclerDataAllStatusC, CyclerDataDeviceStatusE)
 
 #######################          PROJECT IMPORTS         #######################
 
@@ -35,6 +35,18 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE,
 # TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
 _PERIOD_ELECT_MEAS   = 25 # value *10ms
 _PERIOD_TEMP_MEAS    = 25 # value *10ms
+
+class MidDabsIncompatibleActionErrorC(Exception):
+    """Exception raised when the action is not compatible with the device.
+    """
+    def __init__(self, message: str) -> None:
+        """Exception raised fro erros when an action is not compatible with the device, and it is
+        tried to be set.
+
+        Args:
+            message ([str]): [Explanation of the error]
+        """
+        super().__init__(message)
 
 class MidDabsExtraMeterC:
     """Instanciates an objects that are only able to measures.
@@ -197,7 +209,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         super().__init__(device)
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
-                    limit_type: CyclerDataPwrLimitE = None) -> None:
+                    limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:
         """Set the CV mode with the given voltage and current limit.
         To set cv mode in epc must have argument limit_type
         Args:
@@ -205,27 +217,33 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             limit_ref (int): [limit reference, for the epc could be mA/dW/ms the rest of devices
                             is mA]
         """
-        try:
-            if self.device_type is CyclerDataDeviceTypeE.EPC:
+        res = CyclerDataDeviceStatusE.OK
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            try:
                 self.epc.set_cv_mode(volt_ref,limit_type, limit_ref)
-            # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
-            #     self.bisource.set_cv_mode(volt_ref, limit_ref)
-            # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
-            #     if limit_ref>0:
-            #         self.load.disable()
-            #         self.source.set_cv_mode(volt_ref, limit_ref)
-            #     else:
-            #         # TODO: upgrade DrvRs to write limits when setting modes
-            #         self.source.disable()
-            #         self.load.set_cv_mode(volt_ref)
-            else:
-                log.warning("This device is not able to change to CV mode.")
-        except Exception as err:
-            log.error(f"Error while setting cv mode: {err}")
-            raise Exception("Error while setting cv mode") from err #pylint: disable= broad-exception-raised
+            except ValueError:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
+        # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+        #     try:
+        #         self.bisource.set_cv_mode(volt_ref, limit_ref)
+        #     except ValueError as err:
+        #         res = CyclerDataDeviceStatusE.INTERNAL_ERROR
+        # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
+        #     if limit_ref>0:
+        #         self.load.disable()
+        #         self.source.set_cv_mode(volt_ref, limit_ref)
+        #     else:
+        #         # TODO: upgrade DrvRs to write limits when setting modes
+        #         self.source.disable()
+        #         self.load.set_cv_mode(volt_ref)
+        else:
+            log.warning("This device is not able to change to CV mode.")
+            raise MidDabsIncompatibleActionErrorC(("This device is not able to change to "
+                                                    "CV mode."))
+        return res
 
     def set_cc_mode(self, current_ref: int, limit_ref: int,
-                    limit_type: CyclerDataPwrLimitE = None) -> None:
+                    limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:
         """Set the CC mode with the given current and voltage limit.
             To set cc mode in epc must have argument limit_type
         Args:
@@ -233,9 +251,12 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             limit_ref (int): [limit reference, for the epc could be mV/dW/ms the rest of devices
                             is mV]
         """
-        try:
-            if self.device_type is CyclerDataDeviceTypeE.EPC:
+        res = CyclerDataDeviceStatusE.OK
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            try:
                 self.epc.set_cc_mode(ref= current_ref, limit_type= limit_type, limit_ref= limit_ref)
+            except ValueError:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
             # elif self.device_type is  CyclerDataDeviceTypeE.BISOURCE:
             #     self.bisource.set_cc_mode(current_ref, limit_ref)
             # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
@@ -246,13 +267,14 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             #         # TODO: upgrade DrvRs to write limits when setting modes
             #         self.source.disable()
             #         self.load.set_cc_mode(current_ref)
-            else:
-                log.warning("This device is not able to change to CC modes.")
-        except Exception as err:
-            log.error(f"Error while setting cc mode: {err}")
-            raise Exception("Error while setting cc mode") from err #pylint: disable= broad-exception-raised
+        else:
+            log.warning("This device is not able to change to CC modes.")
+            raise MidDabsIncompatibleActionErrorC(("This device is not able to change to "
+                                                    "CC modes."))
+        return res
 
-    def set_cp_mode(self, pwr_ref: int, limit_type: CyclerDataPwrLimitE, limit_ref: int) -> None:
+    def set_cp_mode(self, pwr_ref: int, limit_type: CyclerDataPwrLimitE,
+                    limit_ref: int) -> CyclerDataDeviceStatusE:
         """Set the CP mode with the specified limits, only possible in the epc.
 
         Args:
@@ -260,31 +282,35 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             limit_type (CyclerDataPwrLimitE): [description]
             limit_ref (int): [description]
         """
-        try:
-            if self.device_type is CyclerDataDeviceTypeE.EPC:
+        res = CyclerDataDeviceStatusE.OK
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            try:
                 self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
-            else:
-                log.warning('This device is incompatible with power control mode')
-        except Exception as err:
-            log.error(f"Error while setting cp mode: {err}")
-            raise Exception("Error while setting cp mode") from err #pylint: disable= broad-exception-raised
+            except ValueError:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
+        else:
+            log.error('This device is incompatible with power control mode')
+            raise MidDabsIncompatibleActionErrorC(("This device is incompatible with "
+                                                    "power control mode"))
+        return res
 
-    def set_wait_mode(self, time_ref: int = 0):
+    def set_wait_mode(self, time_ref: int = 0) -> CyclerDataDeviceStatusE:
         """Set the wait mode for the device.
         To set the wait mode in epc must write argument time_ref = number_in_ms
         """
-        try:
-            if self.device_type is CyclerDataDeviceTypeE.EPC:
+        res = CyclerDataDeviceStatusE.OK
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            try:
                 self.epc.set_wait_mode(limit_ref = time_ref)
-            else:
-                self.disable()
-        except Exception as err:
-            log.error(f"Error while setting wait mode: {err}")
-            raise Exception("Error while setting wait mode") from err #pylint: disable= broad-exception-raised
+            except ValueError as err:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
+        else:
+            self.disable()
+        return res
 
     def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
                    ls_pwr: tuple | None = None, hs_volt: tuple | None = None,
-                   temp: tuple | None = None) -> None:
+                   temp: tuple | None = None) -> CyclerDataDeviceStatusE:
         """Set the limits of the ECP.
 
         Args:
@@ -294,36 +320,39 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
             temp (tuple, optional): [max_value, min_value]. Defaults to None.
         """
+        res = CyclerDataDeviceStatusE.OK
         if self.device_type is CyclerDataDeviceTypeE.EPC:
-            if isinstance(ls_curr, tuple):
-                self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
-            if isinstance(ls_volt, tuple):
-                self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
-            if isinstance(ls_pwr, tuple):
-                self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
-            if isinstance(hs_volt, tuple):
-                self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
-            if isinstance(temp, tuple):
-                self.epc.set_temp_limit(temp[0], temp[1])
+            try:
+                if isinstance(ls_curr, tuple):
+                    self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
+                if isinstance(ls_volt, tuple):
+                    self.epc.set_ls_volt_limit(ls_volt[0], ls_volt[1])
+                if isinstance(ls_pwr, tuple):
+                    self.epc.set_ls_pwr_limit(ls_pwr[0], ls_pwr[1])
+                if isinstance(hs_volt, tuple):
+                    self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
+                if isinstance(temp, tuple):
+                    self.epc.set_temp_limit(temp[0], temp[1])
+            except ValueError:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         else:
             log.error("The limits can not be change in this device")
+            raise MidDabsIncompatibleActionErrorC("The limits can not be change in this device")
+        return res
 
-    def disable(self) -> None:
+    def disable(self) -> CyclerDataDeviceStatusE:
         """Disable the devices.
         """
-        try:
-            if self.device_type is CyclerDataDeviceTypeE.EPC:
-                log.info("Disabling epc")
-                self.epc.disable()
-            # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:
-            #     self.bisource.disable()
-            # elif (CyclerDataDeviceTypeE.SOURCE in self.device_type and
-            #     CyclerDataDeviceTypeE.LOAD in self.device_type):
-            #     self.source.disable()
-            #     self.load.disable()
-            else:
-                log.error("The device can not be disable")
-                raise ValueError("The device can not be disable")
-        except Exception as err:
-            log.error(f"Error while disabling device: {err}")
-            raise Exception("Error while disabling device") from err #pylint: disable= broad-exception-raised
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            log.info("Disabling epc")
+            self.epc.disable()
+        # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:
+        #     self.bisource.disable()
+        # elif (CyclerDataDeviceTypeE.SOURCE in self.device_type and
+        #     CyclerDataDeviceTypeE.LOAD in self.device_type):
+        #     self.source.disable()
+        #     self.load.disable()
+        else:
+            log.error("The device can not be disable")
+            raise MidDabsIncompatibleActionErrorC("The device can not be disable")
+    
