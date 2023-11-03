@@ -8,6 +8,11 @@ on:
       - 'cycler_datatypes'
 
   pull_request_review:
+    types: [submited]
+    pull_request:
+      base:
+      ref: 
+        - "cycler_datatypes"
 
 env:
   PACKAGE_NAME: wattrex-battery-cycler-controller-datatypes
