@@ -221,7 +221,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         if self.device_type is CyclerDataDeviceTypeE.EPC:
             try:
                 self.epc.set_cv_mode(volt_ref,limit_type, limit_ref)
-            except ValueError:
+            except ValueError as err:
+                log.error(f"Error while setting CV mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
         #     try:
@@ -255,7 +256,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         if self.device_type is CyclerDataDeviceTypeE.EPC:
             try:
                 self.epc.set_cc_mode(ref= current_ref, limit_type= limit_type, limit_ref= limit_ref)
-            except ValueError:
+            except ValueError as err:
+                log.error(f"Error while setting CC mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
             # elif self.device_type is  CyclerDataDeviceTypeE.BISOURCE:
             #     self.bisource.set_cc_mode(current_ref, limit_ref)
@@ -286,7 +288,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         if self.device_type is CyclerDataDeviceTypeE.EPC:
             try:
                 self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
-            except ValueError:
+            except ValueError as err:
+                log.error(f"Error while setting CP mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         else:
             log.error('This device is incompatible with power control mode')
@@ -303,6 +306,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             try:
                 self.epc.set_wait_mode(limit_ref = time_ref)
             except ValueError as err:
+                log.error(f"Error while setting WAIT mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         else:
             self.disable()
@@ -333,7 +337,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                     self.epc.set_hs_volt_limit(hs_volt[0], hs_volt[1])
                 if isinstance(temp, tuple):
                     self.epc.set_temp_limit(temp[0], temp[1])
-            except ValueError:
+            except ValueError as err:
+                log.error(f"Error while setting limits {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         else:
             log.error("The limits can not be change in this device")
