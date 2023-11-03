@@ -152,7 +152,6 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             ### Write measures and status changes
             if self.db_iface.gen_meas.instr_id is not None:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
-                self.db_iface.commit_changes()
                 self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
                 self.db_iface.meas_id += 1
@@ -160,7 +159,6 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 # Ignore warning as receive_data return an object,
                 # which in this case must be of type DrvCanCmdDataC
                 command : MidStrCmdDataC = self.str_reqs.receive_data() # type: ignore
-                self.str_reqs.delete_until_last()
                 log.debug(f"Command to apply: {command.cmd_type.name}")
                 self.__apply_command(command)
             # TIMEOUT added to detect if database connection was ended
@@ -172,9 +170,10 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.db_iface.reset_db_connection()
         except ConnectionError as exc:
             self.status = SysShdNodeStatusE.COMM_ERROR
-            log.critical(exc)
+            log.critical(f"Communication error in str node {exc}")
         except Exception as exc:
             self.status = SysShdNodeStatusE.INTERNAL_ERROR
             log.critical(f"Unexpected error in MID_STR_Node_c thread.\n{exc}")
+            self.working_flag.clear()
 
 #######################            FUNCTIONS             #######################
