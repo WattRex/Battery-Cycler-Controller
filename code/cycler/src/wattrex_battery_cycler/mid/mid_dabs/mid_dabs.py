@@ -40,37 +40,47 @@ class MidDabsExtraMeterC:
     """Instanciates an objects that are only able to measures.
     """
     def __init__(self, device: CyclerDataDeviceC) -> None:
-        ## TODO: Añadir o no a all status para monitorizar el estado
-        ## Device id will be needed for status device monitoring
-        self.__dev_id: List = device.dev_id
-        self.__device    :  DrvBmsDeviceC |None = None # DrvBkDeviceC |
-        self.__mapping_attr = device.mapping_names
+        self.device    :  DrvBmsDeviceC |None = None # DrvBkDeviceC |
+        if device.mapping_names is None:
+            self.__mapping_attr = {}
+        else:
+            self.__mapping_attr = device.mapping_names
         if device.device_type is CyclerDataDeviceTypeE.BMS:
-            self.__device : DrvBmsDeviceC = DrvBmsDeviceC(dev_id= device.dev_id,
-                                    can_id= device.iface_name)
+            can_id= 0
+            if isinstance(device.iface_name, str):
+                can_id = int(device.iface_name,16)
+            else:
+                can_id = int(device.iface_name)
+            self.device : DrvBmsDeviceC = DrvBmsDeviceC(dev_id= device.dev_id,
+                                    can_id= can_id)
         # elif device.device_type is CyclerDataDeviceTypeE.BK:
-        #     self.__device : DrvBkDeviceC = DrvBkDeviceC(
+        #     self.device : DrvBkDeviceC = DrvBkDeviceC(
         #                                       DrvScpiHandlerC(device.link_conf.__dict__))
 
-    def update(self, ext_meas: CyclerDataExtMeasC) -> None:
+    def update(self, ext_meas: CyclerDataExtMeasC, status: CyclerDataAllStatusC) -> None:
         """Update the external measurements from bms or bk data.
 
         Args:
             ext_meas (CyclerDataExtMeasC): [description]
         """
         res = None
-        res= self.__device.get_data()
-        # status.extra_meter = CyclerDataDeviceStatusC(error= res.status.error_code,
-        #                                         dev_id= dev_id)
-        if self.__mapping_attr is not None:
-            for key in self.__mapping_attr.keys():
-                setattr(ext_meas, key+'_'+str(self.__mapping_attr[key]),
-                        getattr(res, key))
+        res= self.device.get_data()
+        if isinstance(self.device, DrvBmsDeviceC):
+            bms_state = CyclerDataDeviceStatusC(error= getattr(res,'status').error_code,
+                                                dev_id= self.device.dev_id)
+            setattr(status, 'bms_'+str(self.device.dev_id), bms_state)
+        # elif isinstance(self.__device, DrvBkDeviceC):
+        #     bk_state = CyclerDataDeviceStatusC(error= res.status.error_code,
+        #                                         dev_id= self.__dev_id)
+        #     setattr(status, 'bk_'+str(self.__dev_id), bk_state)
+        for key in self.__mapping_attr.keys():
+            setattr(ext_meas, key+'_'+str(self.__mapping_attr[key]),
+                    getattr(res, key))
 
     def close(self):
         """Close connection with the device"""
         try:
-            self.__device.close()
+            self.device.close()
         except Exception as err:
             log.error(f"Error while closing device: {err}")
             raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
@@ -79,8 +89,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure but are also power devices.
     '''
     def __init__(self, device: list [CyclerDataDeviceC]) -> None:
-        self.device_type = [x.device_type for x in device]
-        self.dev_id: List = [x.dev_id for x in device]
+        self.device_type: CyclerDataDeviceTypeE = device[0].device_type
         ## Commented for first version
         # self.bisource   : DrvEaDeviceC | None = None
         # self.source     : DrvEaDeviceC | None = None
@@ -89,12 +98,12 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         try:
             for dev in device:
                 if dev.device_type is CyclerDataDeviceTypeE.EPC:
-                    dev_id= 0
+                    can_id= 0
                     if isinstance(dev.iface_name, str):
-                        dev_id = int(dev.iface_name,16)
+                        can_id = int(dev.iface_name,16)
                     else:
-                        dev_id = int(dev.iface_name)
-                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev_id)
+                        can_id = int(dev.iface_name)
+                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev.dev_id, can_id=can_id)
                     self.epc.open()
                     self.mapping_epc = dev.mapping_names
                     self.epc.set_periodic(ack_en = False,
@@ -134,56 +143,49 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         Depending on the device type, the data will be updated in a way or another.
         """
         res = None
-        for dev_type, dev_id in zip(self.device_type, self.dev_id):
-            if dev_type is CyclerDataDeviceTypeE.EPC:
-                msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
-                msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
-                msg_mode: DrvEpcDataC  = self.epc.get_mode()
-                epc_status = self.epc.get_status()
-                status.pwr_dev = CyclerDataDeviceStatusC(error= epc_status.error_code,
-                                                        dev_id= dev_id)
-                gen_meas.voltage = msg_elect_meas.ls_voltage
-                gen_meas.current = msg_elect_meas.ls_current
-                gen_meas.power   = msg_elect_meas.ls_power
-                status.pwr_mode = msg_mode.mode
-                if self.mapping_epc is not None:
-                    for key in self.mapping_epc.keys():
-                        if 'temp' in key:
-                            setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
-                                    getattr(msg_temp_meas, key))
-                        else:
-                            setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
-                                    getattr(msg_elect_meas, key))
-            # elif dev_type is CyclerDataDeviceTypeE.BISOURCE:
-            #     res: DrvEaDataC = self.bisource.get_data()
-            #     status.pwr_dev = CyclerDataDeviceStatusC(error= res.status.error_code,
-            #                                             dev_id= dev_id)
-            # elif dev_type is CyclerDataDeviceTypeE.SOURCE:
-            #     res: DrvEaDataC = self.source.get_data()
-            #     status.source = CyclerDataDeviceStatusC(error= res.status.error_code,
-            #                                     dev_id= dev_id)
-            # elif dev_type is CyclerDataDeviceTypeE.LOAD:
-            #     res: DrvRsDataC = self.load.get_data()
-            #     status.load = CyclerDataDeviceStatusC(error= res.status.error_code,
-            #                                     dev_id= dev_id)
-        # if (CyclerDataDeviceTypeE.SOURCE in self.device_type and
-        #     CyclerDataDeviceTypeE.LOAD in self.device_type):
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
+            msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
+            msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
+            msg_mode: DrvEpcDataC  = self.epc.get_mode()
+            epc_status = self.epc.get_status()
+            status.pwr_dev = CyclerDataDeviceStatusC(error= epc_status.error_code,
+                                                    dev_id= self.epc.dev_id)
+            gen_meas.voltage = msg_elect_meas.ls_voltage
+            gen_meas.current = msg_elect_meas.ls_current
+            gen_meas.power   = msg_elect_meas.ls_power
+            status.pwr_mode = msg_mode.mode
+            if self.mapping_epc is not None:
+                for key in self.mapping_epc.keys():
+                    if 'temp' in key:
+                        setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
+                                getattr(msg_temp_meas, key))
+                    else:
+                        setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
+                                getattr(msg_elect_meas, key))
+        # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+        #     res: DrvEaDataC = self.bisource.get_data()
+        #     status.pwr_dev = CyclerDataDeviceStatusC(error= res.status.error_code,
+        #                                             dev_id= self.bisource.dev_id)
+        # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
+        #     res: DrvEaDataC = self.source.get_data()
+        #     status.source = CyclerDataDeviceStatusC(error= res.status.error_code,
+        #                                     dev_id= self.sourced.ev_id)
+        #     res: DrvRsDataC = self.load.get_data()
+        #     status.load = CyclerDataDeviceStatusC(error= res.status.error_code,
+        #                                     dev_id= self.load.dev_id)
+        # if self.device_type in (CyclerDataDeviceTypeE.LOAD, CyclerDataDeviceTypeE.SOURCE):
         #     self.__update_source_load_status(status= status)
 
     def close(self):
         """Close connection in serial with the device"""
         try:
-            for dev in self.device_type:
-                if dev is CyclerDataDeviceTypeE.EPC:
-                    self.epc.close()
-                # elif dev is CyclerDataDeviceTypeE.BISOURCE:
-                #     self.bisource.close()
-                # elif dev is CyclerDataDeviceTypeE.SOURCE:
-                #     self.source.close()
-                # elif dev is CyclerDataDeviceTypeE.LOAD:
-                #     self.load.close()
-                else:
-                    log.warning("The device can not be close")
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
+                self.epc.close()
+            # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+            #     self.bisource.close()
+            # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
+            #     self.source.close()
+            #     self.load.close()
         except Exception as err:
             log.error(f"Error while closing device: {err}")
             raise Exception("Error while closing device") from err #pylint: disable= broad-exception-raised
@@ -204,12 +206,11 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                             is mA]
         """
         try:
-            if CyclerDataDeviceTypeE.EPC in self.device_type:
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
                 self.epc.set_cv_mode(volt_ref,limit_type, limit_ref)
-            # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:
+            # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
             #     self.bisource.set_cv_mode(volt_ref, limit_ref)
-            # elif (CyclerDataDeviceTypeE.SOURCE in self.device_type and
-            #     CyclerDataDeviceTypeE.LOAD in self.device_type):
+            # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
             #     if limit_ref>0:
             #         self.load.disable()
             #         self.source.set_cv_mode(volt_ref, limit_ref)
@@ -233,12 +234,11 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                             is mV]
         """
         try:
-            if CyclerDataDeviceTypeE.EPC in self.device_type:
-                self.epc.set_cc_mode(current_ref, limit_type, limit_ref)
-            # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
+                self.epc.set_cc_mode(ref= current_ref, limit_type= limit_type, limit_ref= limit_ref)
+            # elif self.device_type is  CyclerDataDeviceTypeE.BISOURCE:
             #     self.bisource.set_cc_mode(current_ref, limit_ref)
-            # elif (CyclerDataDeviceTypeE.SOURCE in self.device_type and
-            #     CyclerDataDeviceTypeE.LOAD in self.device_type):
+            # elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
             #     if current_ref>0:
             #         self.load.disable()
             #         self.source.set_cc_mode(current_ref, limit_ref)
@@ -261,7 +261,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             limit_ref (int): [description]
         """
         try:
-            if CyclerDataDeviceTypeE.EPC in self.device_type:
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
                 self.epc.set_cp_mode(pwr_ref, limit_type, limit_ref)
             else:
                 log.warning('This device is incompatible with power control mode')
@@ -274,7 +274,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         To set the wait mode in epc must write argument time_ref = number_in_ms
         """
         try:
-            if CyclerDataDeviceTypeE.EPC in self.device_type:
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
                 self.epc.set_wait_mode(limit_ref = time_ref)
             else:
                 self.disable()
@@ -294,7 +294,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             hs_volt (tuple, optional): [max_value, min_value]. Defaults to None.
             temp (tuple, optional): [max_value, min_value]. Defaults to None.
         """
-        if CyclerDataDeviceTypeE.EPC in self.device_type:
+        if self.device_type is CyclerDataDeviceTypeE.EPC:
             if isinstance(ls_curr, tuple):
                 self.epc.set_ls_curr_limit(ls_curr[0], ls_curr[1])
             if isinstance(ls_volt, tuple):
@@ -312,7 +312,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         """Disable the devices.
         """
         try:
-            if CyclerDataDeviceTypeE.EPC in self.device_type:
+            if self.device_type is CyclerDataDeviceTypeE.EPC:
                 log.info("Disabling epc")
                 self.epc.disable()
             # elif CyclerDataDeviceTypeE.BISOURCE in self.device_type:

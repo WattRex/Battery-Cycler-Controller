@@ -25,7 +25,7 @@ from can_sniffer import DrvCanNodeC
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC, MidDabsExtraMeterC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
-                                    CyclerDataLinkConfC, CyclerDataGenMeasC,
+                                    CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataPwrLimitE,
                                         CyclerDataExtMeasC, CyclerDataAllStatusC)
 
 dev_conf = {'epc': '0x14',
@@ -84,7 +84,8 @@ class TestChannels:
         ext_meas = CyclerDataExtMeasC()
         status = CyclerDataAllStatusC()
         self.epc.update(gen_meas, ext_meas, status)
-        self.epc.set_wait_mode(time_ref = 3000)
+        self.epc.set_wait_mode(time_ref = 6000)
+        # self.epc.set_cc_mode(500, 6000, CyclerDataPwrLimitE.TIME)
         next_time = time() + 5
         while time() < next_time:
             time_1 = time()
@@ -95,7 +96,7 @@ class TestChannels:
             log.info((f"Set wait mode and measuring: {status.pwr_mode.name}, "
                     f"{status.pwr_mode.value} "
                     f"and {ext_meas.hs_voltage_1}mV"))
-            if status.pwr_mode.value != 0:
+            if status.pwr_mode.name != 'WAIT':
                 next_time = time() + 5
             sleep(0.2)
         self.epc.close()
@@ -110,10 +111,11 @@ class TestChannels:
                                                         'vcell10': 10, 'vcell11': 11, 'vcell12': 12,
                                                         'vstack': 13, 'temp1': 14, 'temp2': 15,
                                                         'temp3': 16, 'temp4': 17, 'pres1': 18,
-                                                        'pres2': 19, 'status': 20}))
+                                                        'pres2': 19}))
         for _ in range(5):
-            self.bms.update(ext_meas)
+            self.bms.update(ext_meas, status)
             log.info((f"Measuring: {ext_meas.__dict__}"))
+            log.info(f"Status: {getattr(status,'bms_'+str(self.bms.device.dev_id)).name}")
             sleep(2)
         self.bms.close()
         log.info("Closing can")
