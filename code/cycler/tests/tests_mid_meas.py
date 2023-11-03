@@ -83,7 +83,7 @@ class TestChannels:
                         'vcell10': 10, 'vcell11': 11, 'vcell12': 12,
                         'vstack': 13, 'temp1': 14, 'temp2': 15,
                         'temp3': 16, 'temp4': 17, 'pres1': 18,
-                        'pres2': 19, 'status': 20},
+                        'pres2': 19},
             },
             "SOURCE": {
                 "dev_id": 18,
@@ -145,8 +145,7 @@ class TestChannels:
                                                 'vcell4_4', 'vcell5_5', 'vcell6_6', 'vcell7_7',
                                                 'vcell8_8', 'vcell9_9', 'vcell10_10', 'vcell11_11',
                                                 'vcell12_12', 'vstack_13', 'temp1_14', 'temp2_15',
-                                                'temp3_16', 'temp4_17', 'pres1_18', 'pres2_19',
-                                                'status_20'])
+                                                'temp3_16', 'temp4_17', 'pres1_18', 'pres2_19'])
         _meas_working_flag = Event()
         _meas_working_flag.set()
         aux_ext_meas = CyclerDataExtMeasC()
@@ -164,14 +163,21 @@ class TestChannels:
             i=0
             while self.mid_meas_node.status is not SysShdNodeStatusE.OK:
                 sleep(1)
-            while i<30:
+            while i<10:
                 tic = time()
                 log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
                 # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
-                log.info(f"Measuring: external measures =  {ext_meas.read().__dict__}")
-                if all_status.read().pwr_dev.error_code != 0:
-                    log.error((f"Reading error {all_status.read().pwr_dev.name}, "
-                              f"code: {all_status.read().pwr_dev.error_code}"))
+                data_ext = ext_meas.read()
+                epc_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in tags.ext_meas_attrs[0:4]]
+                log.info(f"Measuring: external measures epc=   {epc_ext}")
+                bms_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in tags.ext_meas_attrs[4:]]
+                log.info(f"Measuring: external measures bms=   {bms_ext}")
+                data_status = all_status.read()
+                log.info(f"Status epc:{data_status.pwr_dev.name}")
+                log.info(f"Status bms:{data_status.bms_4.name}")
+                if data_status.pwr_dev.error_code != 0:
+                    log.error((f"Reading error {data_status.pwr_dev.name}, "
+                              f"code: {data_status.pwr_dev.error_code}"))
                 while time()-tic <= 1:
                     pass
                 i+=1
