@@ -17,14 +17,14 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          MODULE IMPORTS          #######################
 #######################          PROJECT IMPORTS         #######################
 #######################              ENUMS               #######################
-mapping_gen_meas: Dict[str, str] = {
+MAPPING_GEN_MEAS: Dict[str, str] = {
     "Voltage": 'voltage',
     "Current": 'current',
     "Power": 'power',
     "InstrID": 'instr_id',
 }
 
-mapping_experiment: Dict[str, str] = {
+MAPPING_EXPERIMENT: Dict[str, str] = {
     'ExpID': "exp_id",
     "Name": 'name',
     "Status": 'status',
@@ -32,64 +32,49 @@ mapping_experiment: Dict[str, str] = {
     'DateFinish': "date_finish"
 }
 
-mapping_alarm: Dict[str, str] = {
+MAPPING_ALARM: Dict[str, str] = {
     "Timestamp": 'timestamp',
     "Code": 'code',
     "Value": 'value',
 }
 
-mapping_status: Dict[str, str] = {
+MAPPING_STATUS: Dict[str, str] = {
     'Status': "name",
     'ErrorCode': 'error_code',
     'DevID': 'dev_id'
 
 }
 
-mapping_cs_db: Dict[str, str] = {
+MAPPING_CS_DB: Dict[str, str] = {
     'Name': 'name',
     'CSID': 'cs_id',
     'Deprecated': 'deprecated'}
 
-mapping_dev_db: Dict[str, str] = {
+MAPPING_DEV_DB: Dict[str, str] = {
     'Manufacturer': 'manufacturer',
     'DeviceType': 'device_type',
     'LinkName': 'iface_name',
     'SN': 'serial_number'}
 
-mapping_batt_db: Dict[str, str] = {
+MAPPING_BATT_DB: Dict[str, str] = {
     'Name': 'name',
     'Model': 'model'}
 
-mapping_instr_db: Dict[str, str] = {
+MAPPING_INSTR_DB: Dict[str, str] = {
     'InstrID': 'instr_id',
     'Mode': 'mode',
     'SetPoint': 'ref',
     'LimitType': 'limit_type',
     'LimitPoint': 'limit_ref'}
 
-mapping_instr_modes: Dict[str, int] = {
+MAPPING_INSTR_MODES: Dict[str, int] = {
     'WAIT'      : 0,
     'CV_MODE'   : 1,
     'CC_MODE'   : 2,
     'CP_MODE'   : 3}
 
-mapping_instr_limit_modes: Dict[str, int] = {
+MAPPING_INSTR_LIMIT_MODES: Dict[str, int] = {
     'TIME'      : 0,
     'VOLTAGE'   : 1,
     'CURRENT'   : 2,
     'POWER'   : 3}
-
-#######################             CLASSES              #######################
-# def remapping_dict(data: dict, mapping: dict) -> dict:
-#     """Change the key names of the data dictionary with the names of the mapping dictionary.
-#     Args:
-#         data (dict): [description]
-#         mapping (dict): [description]
-
-#     Returns:
-#         dict: [description]
-#     """
-#     log.debug(f"Remapping data {data} with mapping keys: {mapping}")
-#     aux = {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}
-#     log.debug(f"Returning: {aux}")
-#     return {n_key:data[key] for key, n_key in zip(data.keys(), mapping.keys())}
