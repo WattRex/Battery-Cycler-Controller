@@ -47,12 +47,12 @@ jobs:
         continue-on-error: true
         run: |
           /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}
-          echo "pytest_exit_code=$?" >> "GITHUB_OUTPUT"
       - name: Clean up
         run: |
+          echo "${{ steps.pytest.outputs.pytest_exit_code }}"
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
           sudo rm -rf /tmp/wattrex-cycler-staging/
           docker image prune -f
           docker images -a
           ls -lAh /tmp
-          exit ${{ steps.pytest.outputs.pytest_exit_code }}
+          if ${{ steps.pytest.outcome }} == "failure"; then exit 1; fi
