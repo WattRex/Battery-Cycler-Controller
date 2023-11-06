@@ -33,13 +33,13 @@ jobs:
     needs: detect-folder
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: "${{ github.ref_name }}"
-      package-path: "code/cycler/src/wattrex_battery_cycler/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
-      requirements-path: "code/cycler"
+      package-name: "${{ env.PACKAGE_NAME }}"
+      package-path: "code/cycler"
+      source-path: "code/cycler/src/${{ env.PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
       python-version: "3.10"
 
   publish-package:
-    name: Publish wattrex-battery-cycler-controller package to Test PyPi
+    name: Publish ${{ env.PACKAGE_NAME }} package to Test PyPi
     needs: build-package
     runs-on: ubuntu-latest
     environment: development
