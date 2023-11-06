@@ -30,6 +30,7 @@ services:
     ipc: host
     volumes:
       - ../.cred.yaml:/cycler/devops/.cred.yaml
+      - ../log_config.yaml:/cycler/devops/log_config.yaml
     depends_on:
       cache_db:
         condition: service_healthy

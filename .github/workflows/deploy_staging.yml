@@ -15,26 +15,26 @@ env:
   PACKAGE_NAME: wattrex-battery-cycler-controller
 
 jobs:
-  build-docker-image:
-    name: Build docker image
-    if: ${{ github.event.review.state == 'approved' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build and export
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./devops/docker/Dockerfile.cycler
-          tags: wattrex-cycler:latest
-          outputs: type=docker,dest=/tmp/wattrex-cycler.tar
-          push: false
+  # build-docker-image:
+  #   name: Build docker image
+  #   if: ${{ github.event.review.state == 'approved' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #     - name: Build and export
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         file: ./devops/docker/Dockerfile.cycler
+  #         tags: wattrex-cycler:latest
+  #         outputs: type=docker,dest=/tmp/wattrex-cycler.tar
+  #         push: false
 
   launch-real-bat:
     name: Launch cycler controller in real environment
-    needs: build-docker-image
+    # needs: build-docker-image
     uses: ./.github/workflows/staging_deploy_real_bat.yml
     secrets: inherit

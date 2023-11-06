@@ -48,9 +48,6 @@ jobs:
         id: pytest
         continue-on-error: true
         run: |
-          pwd
-          ls -lAh /tmp/wattrex-cycler-staging
-          ls -lAh /tmp/wattrex-cycler-staging/devops
           /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}
       - name: Clean up
         run: |
