@@ -37,6 +37,7 @@ class MidStrReqCmdE(Enum):
     GET_EXP_STATUS  = 1
     GET_CS          = 2
     SET_EXP_STATUS  = 3
+    TURN_DEPRECATED = 4
 
 class MidStrDataCmdE(Enum):
     """Type of data send as return for the request.
@@ -54,19 +55,18 @@ class MidStrCmdDataC:
                 profile: CyclerDataProfileC|None= None, battery: CyclerDataBatteryC|None= None,
                 station: CyclerDataCyclerStationC|None= None):
         self.cmd_type = cmd_type
+        self.error_flag = True
         if cmd_type is MidStrDataCmdE.EXP_DATA:
-            if experiment is None or profile is None or battery is None:
-                raise ValueError(("Experiment, profile and battery must be "
-                                  "provided when cmd_type is EXP_DATA"))
+            if all(var is not None for var in (experiment, profile, battery)):
+                self.error_flag = False
             self.experiment = experiment
             self.profile = profile
             self.battery = battery
         elif cmd_type is MidStrDataCmdE.CS_DATA:
-            if station is None:
-                raise ValueError("station must be provided when cmd_type is CS_DATA")
+            if station is not None:
+                self.error_flag = False
             self.station = station
         elif cmd_type is MidStrDataCmdE.EXP_STATUS or cmd_type is MidStrReqCmdE.SET_EXP_STATUS:
-            if exp_status is None:
-                raise ValueError(("exp_status must be provided when cmd_type is "
-                                 "EXP_STATUS or SET_EXP_STATUS"))
+            if exp_status is not None:
+                self.error_flag = False
             self.exp_status = exp_status

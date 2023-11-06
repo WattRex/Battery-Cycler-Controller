@@ -38,7 +38,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def __init__(self, name: str, working_flag : Event, shared_gen_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
                  shared_ext_meas: SysShdSharedObjC, shared_status: SysShdSharedObjC,
                  str_reqs: SysShdChanC, str_data: SysShdChanC, str_alarms: SysShdChanC,
-                 cycle_period: int, cycler_station: int, master_file: str, cache_file: str,
+                 cycle_period: int, cycler_station: int, cred_file: str,
                  str_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the MID_STR thread used as database proxy.
@@ -50,7 +50,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         '''
         super().__init__(name, cycle_period, working_flag, str_params)
         log.info(f"Initializing {name} node...")
-        self.db_iface = MidStrFacadeC(master_file= master_file, cache_file= cache_file,
+        self.db_iface = MidStrFacadeC(cred_file= cred_file,
                                       cycler_station_id= cycler_station)
         self.str_reqs: SysShdChanC = str_reqs
         self.str_data: SysShdChanC = str_data
@@ -86,12 +86,18 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         if command.cmd_type == MidStrReqCmdE.GET_NEW_EXP:
             log.info('Getting new experiment info from database')
             exp_info, battery_info, profile_info = self.db_iface.get_start_queued_exp()
-            self.__actual_exp_id = exp_info.exp_id
+            if exp_info is not None:
+                self.__actual_exp_id = exp_info.exp_id
+            ## If there is an error gathering experiment info, manager will manage it
             log.debug("Sending new experiment to APP_MANAGER")
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_DATA,
                     experiment= exp_info, battery= battery_info, profile= profile_info))
         elif command.cmd_type == MidStrReqCmdE.GET_EXP_STATUS:
-            exp_status = self.db_iface.get_exp_status(exp_id= self.__actual_exp_id)
+            if self.__actual_exp_id == -1:
+                log.warning("No experiment is running")
+                exp_status = None
+            else:
+                exp_status = self.db_iface.get_exp_status(exp_id= self.__actual_exp_id)
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.EXP_STATUS,
                                                    exp_status= exp_status))
         elif command.cmd_type == MidStrReqCmdE.GET_CS:
@@ -99,8 +105,16 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                    station= cycler_info))
         elif command.cmd_type == MidStrReqCmdE.SET_EXP_STATUS and command.exp_status is not None:
-            self.db_iface.modify_current_exp(exp_status= command.exp_status,
+            if self.__actual_exp_id == -1:
+                log.warning("No experiment is running")
+            else:
+                self.db_iface.modify_current_exp(exp_status= command.exp_status,
                                              exp_id= self.__actual_exp_id)
+        elif command.cmd_type == MidStrReqCmdE.TURN_DEPRECATED:
+            log.info("Turning cycler station to deprecated")
+            self.db_iface.turn_cycler_station_deprecated(
+                exp_id= self.__actual_exp_id if self.__actual_exp_id != -1 else None)
+            self.working_flag.clear()
         else:
             log.error(("Can`t apply command. Error in command format, "
                        "check command type and payload type"))
@@ -115,6 +129,8 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     def stop(self) -> None:
         """Stop the node if it is not already closed .
         """
+        #Before closing connection commit all changes
+        self.db_iface.commit_changes()
         self.db_iface.close_db_connection()
         self.working_flag.clear()
         self.status = SysShdNodeStatusE.STOP
@@ -133,13 +149,9 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 self.db_iface.write_new_alarm(alarms= self.__new_raised_alarms,
                                               exp_id= self.__actual_exp_id)
                 self.__new_raised_alarms.clear()
-            # log.debug("+++++ After write alarams in db_iface object +++++")
             ### Write measures and status changes
             if self.db_iface.gen_meas.instr_id is not None:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
-                log.critical("TEST COMMITING CHANGES")
-                # NOTE: improve store for future versions, it must work with only one commit
-                self.db_iface.commit_changes()
                 self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
                 self.db_iface.meas_id += 1
@@ -147,13 +159,10 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 # Ignore warning as receive_data return an object,
                 # which in this case must be of type DrvCanCmdDataC
                 command : MidStrCmdDataC = self.str_reqs.receive_data() # type: ignore
-                self.str_reqs.delete_until_last()
                 log.debug(f"Command to apply: {command.cmd_type.name}")
                 self.__apply_command(command)
-            # log.debug("+++++ Before commit changes in db_iface +++++")
             # TIMEOUT added to detect if database connection was ended
             func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes)
-            # log.debug("+++++ After commit changes in db_iface +++++")
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
                          f"Database connection will be restarted. {exc}"))
@@ -161,10 +170,10 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.db_iface.reset_db_connection()
         except ConnectionError as exc:
             self.status = SysShdNodeStatusE.COMM_ERROR
-            log.critical(exc)
+            log.critical(f"Communication error in str node {exc}")
         except Exception as exc:
             self.status = SysShdNodeStatusE.INTERNAL_ERROR
             log.critical(f"Unexpected error in MID_STR_Node_c thread.\n{exc}")
-            # self.stop()
+            self.working_flag.clear()
 
 #######################            FUNCTIONS             #######################
