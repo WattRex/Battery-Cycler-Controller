@@ -32,7 +32,6 @@ description ="Battery cycler control used to execute custom profile on multiple 
 # https://packaging.python.org/specifications/core-metadata/#description-optional
 readme = "../README.md" # Optional
 
-
 # Specify which Python versions you support. In contrast to the
 # 'Programming Language' classifiers above, 'pip install' will check this
 # and refuse to install the project if the version does not match. See
