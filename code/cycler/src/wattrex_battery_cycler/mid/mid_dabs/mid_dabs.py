@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#pylint: disable= fixme
 """
 This module will create instances of epc device in order to control
 the device and request info from it.
@@ -115,7 +116,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                         can_id = int(dev.iface_name,16)
                     else:
                         can_id = int(dev.iface_name)
-                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev.dev_id, can_id=can_id)
+                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev.dev_id, can_id=can_id) #pylint: disable= unexpected-keyword-arg, no-value-for-parameter
                     self.epc.open()
                     self.mapping_epc = dev.mapping_names
                     self.epc.set_periodic(ack_en = False,
@@ -154,14 +155,13 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         Update the variables of the class with the data received from the device.
         Depending on the device type, the data will be updated in a way or another.
         """
-        res = None
         if self.device_type is CyclerDataDeviceTypeE.EPC:
             msg_elect_meas = self.epc.get_elec_meas(periodic_flag= True)
             msg_temp_meas = self.epc.get_temp_meas(periodic_flag= True)
             msg_mode: DrvEpcDataC  = self.epc.get_mode()
             epc_status = self.epc.get_status()
             status.pwr_dev = CyclerDataDeviceStatusC(error= epc_status.error_code,
-                                                    dev_id= self.epc.dev_id)
+                                                    dev_id= self.epc.dev_id) #pylint: disable= no-member
             gen_meas.voltage = msg_elect_meas.ls_voltage
             gen_meas.current = msg_elect_meas.ls_current
             gen_meas.power   = msg_elect_meas.ls_power
@@ -304,7 +304,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         res = CyclerDataDeviceStatusE.OK
         if self.device_type is CyclerDataDeviceTypeE.EPC:
             try:
-                self.epc.set_wait_mode(limit_ref = time_ref)
+                self.epc.set_wait_mode(limit_ref = time_ref) #pylint: disable= no-value-for-parameter
             except ValueError as err:
                 log.error(f"Error while setting WAIT mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
@@ -360,4 +360,3 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         else:
             log.error("The device can not be disable")
             raise MidDabsIncompatibleActionErrorC("The device can not be disable")
-    
