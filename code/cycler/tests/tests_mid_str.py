@@ -87,7 +87,7 @@ class TestChannels:
                         working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= 2, cache_file= 'devops/.cred.yaml')
+                        cycler_station= 2, cred_file= 'devops/.cred.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")
