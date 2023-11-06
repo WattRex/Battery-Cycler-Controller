@@ -14,9 +14,6 @@ on:
       ref: 
         - "cycler_datatypes"
 
-env:
-  PACKAGE_NAME: wattrex-battery-cycler-controller-datatypes
-
 jobs:
 
   build-package-on-push:
@@ -24,7 +21,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: wattrex-battery-cycler-datatypes
+      package-name: ${{ vars.CYCLER_PACKAGE_NAME }}
       package-path: "code/datatypes"
       source-path: "code/datatypes/src/wattrex_battery_cycler_datatypes"
       python-version: "3.10"
@@ -34,13 +31,13 @@ jobs:
     if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && github.event.pull_request.head.ref == 'cycler_datatypes' }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: wattrex-battery-cycler-datatypes
+      package-name: ${{ vars.CYCLER_PACKAGE_NAME }}
       package-path: "code/datatypes"
       source-path: "code/datatypes/src/wattrex_battery_cycler_datatypes"
       python-version: "3.10"
 
   publish-package:
-    name: Publish package wattrex-battery-cycler-datatypes to PyPi
+    name: Publish package ${{ vars.CYCLER_PACKAGE_NAME }} to PyPi
     needs: build-package-on-pull-request
     if: ${{ github.event_name == 'pull_request_review' }} && ${{ github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
@@ -51,7 +48,7 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name: wattrex-battery-cycler-datatypes
+          name: ${{ vars.CYCLER_PACKAGE_NAME }}
           path: ${{ github.event.pull_request.head.ref }}/dist/
 
       - name: Publish package to PyPI
