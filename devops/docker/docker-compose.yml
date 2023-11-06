@@ -27,8 +27,10 @@ services:
       dockerfile: ../docker/Dockerfile.cycler
     image: wattrex-cycler-node
     restart: no
-    env_file:
-      - ../.cred.env
+    ipc: host
+    volumes:
+      - ../.cred.yaml:/cycler/devops/.cred.yaml
+      - ../log_config.yaml:/cycler/devops/log_config.yaml
     depends_on:
       cache_db:
         condition: service_healthy

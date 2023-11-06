@@ -28,6 +28,11 @@ instance_new_cycler () {
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
+test_cycler () {
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest /cycler/code/cycler/tests/tests_cycler.py -s
+    exit $?
+}
+
 stop_active_cycler () {
     echo "Stopping container..."
     docker stop wattrex_cycler_node_${1}
@@ -125,6 +130,15 @@ case ${ARG1} in
     "force-stop")
         # echo "Stop all"
         force_stop
+        ;;
+    "test")
+        if [[ ${ARG2} =~ $INT_RE ]]; then
+            # echo "Cycler ${2}"
+            test_cycler "${ARG2}"
+        else
+            >&2 echo "[ERROR] Invalid Cycler Station ID"
+            exit 3
+        fi
         ;;
     *)
         >&2 echo "[ERROR] Invalid command type: ${ARG1}"
