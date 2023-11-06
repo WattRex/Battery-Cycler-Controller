@@ -3,8 +3,5 @@ WORKDIR /cycler
 ADD ./code ./code
 RUN pip install --upgrade pip
 RUN pip install pytest
-RUN ls -la code/
-RUN ls -la code/cycler
-RUN cat code/cycler/requirements.txt
 RUN pip install -r code/cycler/requirements.txt
 CMD ["python", "./code/cycler/tests/run_cycler.py"]
