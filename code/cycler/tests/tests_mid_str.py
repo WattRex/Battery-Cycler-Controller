@@ -87,8 +87,8 @@ class TestChannels:
                         working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= 2, master_file= 'devops/.cred_master.yaml',
-                        cache_file= 'devops/.cred_cache.yaml')
+                        cycler_station= 2, master_file= 'devops/.cred.yaml',
+                        cache_file= 'devops/.cred.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")
@@ -183,7 +183,7 @@ def write_exp_status(chan_str_reqs: SysShdChanC,
 def delete_cache_data()->None:
     """Delete all cached data from the cache database
     """
-    cache_db = DrvDbSqlEngineC(config_file= 'code/cycler/tests/.cred_cache.yaml',
+    cache_db = DrvDbSqlEngineC(config_file= 'devops/.cred.yaml',
                             db_type= DrvDbTypeE.CACHE_DB)
     stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 1)
     cache_db.session.execute(stmt)
