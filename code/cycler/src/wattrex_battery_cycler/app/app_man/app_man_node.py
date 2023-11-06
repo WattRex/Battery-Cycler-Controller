@@ -32,16 +32,15 @@ from .app_man_core import AppManCoreC, AppManCoreStatusE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class _ConstantsC:
-    PERIOD_CYCLE_STR: int = 100 # Period in ms of the storage node
-    PERIOD_CYCLE_MEAS: int = 1000 # Period in ms of the measurement node
-    PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
+_PERIOD_CYCLE_STR: int = 100 # Period in ms of the storage node
+_PERIOD_CYCLE_MEAS: int = 1000 # Period in ms of the measurement node
+_PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
 class AppManNodeC:
     """Generate a classman node for the application .
     """
 
-    def __init__(self, cs_id: int, cycle_period: int= _ConstantsC.PERIOD_CYCLE_MAN ) -> None:
+    def __init__(self, cs_id: int, cycle_period: int= _PERIOD_CYCLE_MAN ) -> None:
 
         # Initialize attributes
         self.cs_id: int = cs_id
@@ -87,14 +86,14 @@ class AppManNodeC:
         __chan_alarms = SysShdChanC()
         __chan_str_reqs = SysShdChanC()
         __chan_str_data = SysShdChanC()
-        
+
         ### 1.1 Store thread ###
         self._th_str = MidStrNodeC(name= 'MID_STR', working_flag= self.working_str,
                 shared_gen_meas= __shd_gen_meas, shared_ext_meas= __shd_ext_meas,
-                shared_all_status= __shd_all_status, str_reqs= __chan_str_reqs,
+                shared_status= __shd_all_status, str_reqs= __chan_str_reqs,
                 str_data= __chan_str_data, str_alarms= __chan_alarms,
-                cycle_period= _ConstantsC.PERIOD_CYCLE_STR, cycler_station= self.cs_id,
-                master_file= '', cache_file= '')
+                cycle_period= _PERIOD_CYCLE_STR, cycler_station= self.cs_id,
+                cred_file= '')
         self._th_str.start()
 
         ### 1.2 Manager thread ###
@@ -109,11 +108,13 @@ class AppManNodeC:
             ### 1.3 Meas thread ###
             self._th_meas = MidMeasNodeC(name= 'MID_MEAS', working_flag= self.working_meas,
                     shared_gen_meas= __shd_gen_meas, shared_ext_meas= __shd_ext_meas,
-                    shared_all_status= __shd_all_status, devices= cs_station_info.devices,
-                    cycle_period= _ConstantsC.PERIOD_CYCLE_MEAS,)
+                    shared_status= __shd_all_status, devices= cs_station_info.devices,
+                    cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= )
             self._th_meas.start()
 
     def config_system(self) -> None:
+        """Configure the manager
+        """
         ### 1.0 Get cycler station info ###
         ### 2.0 Check if CAN sniffer is used and working ###
         ### 3.0 Check if SCPI sniffer is used and working ###
