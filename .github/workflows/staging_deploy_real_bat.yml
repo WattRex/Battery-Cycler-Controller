@@ -55,4 +55,4 @@ jobs:
           docker image prune -f
           docker images -a
           ls -lAh /tmp
-          if ${{ steps.pytest.outcome }} == "failure"; then exit 1; fi
+          if [ "${{ steps.pytest.outcome }}" = "failure" ]; then exit 1; fi
