@@ -1,4 +1,4 @@
-wattrex-battery-cycler-datatype>=0.0.3
+wattrex-battery-cycler-datatypes>=0.0.3
 system-config-tool>=0.0.4
 system-logger-tool>=0.0.3
 system-shared-tool>=0.2.11
