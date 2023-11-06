@@ -24,7 +24,7 @@ jobs:
         id: set-folder
         run: |
           echo "folder=$(echo ${{ github.ref_name }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
-    
+
   build-package:
     name: QA and Build battery controller on ${{ github.ref_name }} push
     needs: detect-folder
@@ -34,6 +34,7 @@ jobs:
       package-path: "code/cycler"
       source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
       python-version: "3.10"
+      is-test-package: true
 
   publish-package:
     name: Publish ${{ vars.CYCLER_PACKAGE_NAME }} package to Test PyPi
