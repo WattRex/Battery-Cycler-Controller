@@ -46,8 +46,8 @@ jobs:
         id: pytest
         continue-on-error: true
         run: |
-          /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}"
-          echo "pytest_exit_code=$?" >> "GITHUB_OUTPUT" 
+          /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}
+          echo "pytest_exit_code=$?" >> "GITHUB_OUTPUT"
       - name: Clean up
         run: |
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
