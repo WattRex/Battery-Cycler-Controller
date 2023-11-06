@@ -49,7 +49,7 @@ jobs:
           /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }}
       - name: Clean up
         run: |
-          echo "${{ steps.pytest.outputs.pytest_exit_code }}"
+          echo "${{ steps.pytest.outcome }}"
           /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
           sudo rm -rf /tmp/wattrex-cycler-staging/
           docker image prune -f
