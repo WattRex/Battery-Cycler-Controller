@@ -34,8 +34,14 @@ class AppManCoreStatusE(Enum):
 
 #########             CLASSES              #######################
 def alarm_callback(alarm: CyclerDataAlarmC) -> None:
+    """Callback for alarms raised along the different nodes
+
+    Args:
+        alarm (CyclerDataAlarmC): [description]
+    """
     log.error("This is a test for alarm callback")
     log.error(f"Received {alarm.__dict__}")
+
 class AppManCoreC:
     """Manage the cycler station.
     """
@@ -66,7 +72,7 @@ class AppManCoreC:
         self.pwr_control: MidPwrControlC= MidPwrControlC(devices= self.get_cs_info().devices,
                                         alarm_callback= alarm_callback)
 
-    def get_cs_info(self) -> CyclerDataCyclerStationC:
+    def get_cs_info(self) -> CyclerDataCyclerStationC | None:
         """Get the cycler station info from the database
 
         Returns:
@@ -75,12 +81,15 @@ class AppManCoreC:
         request: MidStrCmdDataC = MidStrCmdDataC(cmd= MidStrReqCmdE.GET_CS)
         self.__chan_str_reqs.send_data(request)
         response: MidStrCmdDataC = self.__chan_str_data.receive_data()
-        if response.cmd != MidStrDataCmdE.CS_DATA:
+        if response.error_flag:
+            raise ValueError(("Error in response from MID STR"))
+        elif response.cmd_type != MidStrDataCmdE.CS_DATA:
             raise ValueError(("Unexpected response from MID_STR, expected CS_DATA "
-                              f"and got {response.cmd}"))
+                              f"and got {response.cmd_type}"))
         return response.station
 
-    def __fetch_new_exp(self) -> Tuple[CyclerDataExperimentC, CyclerDataBatteryC, CyclerDataProfileC]:
+    def __fetch_new_exp(self) -> Tuple[CyclerDataExperimentC|None, CyclerDataBatteryC|None,
+                                       CyclerDataProfileC|None]:
         """AI is creating summary for fetch_new_exp
 
         Raises:
@@ -93,9 +102,11 @@ class AppManCoreC:
         request: MidStrCmdDataC = MidStrCmdDataC(cmd= MidStrReqCmdE.GET_NEW_EXP)
         self.__chan_str_reqs.send_data(request)
         response: MidStrCmdDataC = self.__chan_str_data.receive_data()
-        if response.cmd != MidStrDataCmdE.EXP_DATA:
+        if response.error_flag:
+            raise ValueError(("Error in response from MID STR"))
+        elif response.cmd_type != MidStrDataCmdE.EXP_DATA:
             raise ValueError(("Unexpected response from MID_STR, expected EXP_DATA "
-                              f"and got {response.cmd}"))
+                              f"and got {response.cmd_type}"))
         return response.experiment, response.battery, response.profile
 
     def __validate_exp_ranges(self, battery: CyclerDataBatteryC,
@@ -111,7 +122,9 @@ class AppManCoreC:
             bool: [description]
         """
         # Check if the profile range is inside the battery range
-        return profile.range.in_range(battery.elec_ranges)
+        res = (profile.range.in_range_current(battery.elec_ranges) and
+               profile.range.in_range_voltage(battery.elec_ranges))
+        return res
 
     def __write_exp_status(self, exp_status: CyclerDataExpStatusE) -> None:
         """Write the experiment status in the shared memory
@@ -119,8 +132,14 @@ class AppManCoreC:
         Args:
             exp_status (CyclerDataExpStatusE): Experiment status
         """
-        request: MidStrCmdDataC = MidStrCmdDataC(cmd= MidStrReqCmdE.SET_EXP_STATUS,
+        request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.SET_EXP_STATUS,
                         exp_status= exp_status)
+        self.__chan_str_reqs.send_data(request)
+
+    def __deprecated_cs(self):
+        """Send a deprecated command to the str node to turn all experiments to error
+        """
+        request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.TURN_DEPRECATED)
         self.__chan_str_reqs.send_data(request)
 
     def __execute_experiment(self) -> None:
@@ -129,7 +148,7 @@ class AppManCoreC:
         log.debug("Executing experiment")
         # First step is to update the local data in power
         self.pwr_control.update_local_data(self.__local_gen_meas, self.__local_all_status)
-        self.exp_status, self.__local_gen_meas.inst_id = self.pwr_control.process_iteration()
+        self.exp_status, self.__local_gen_meas.instr_id = self.pwr_control.process_iteration()
         self.__write_exp_status(self.exp_status)
 
     def __sync_shd_data(self):
@@ -152,6 +171,7 @@ class AppManCoreC:
                 cs_station_info = self.get_cs_info()
                 if cs_station_info.deprecated:
                     log.critical("Cycler station is deprecated")
+                    self.__deprecated_cs()
                     self.state = AppManCoreStatusE.ERROR
                 self.experiment, self.battery, self.profile = self.__fetch_new_exp()
                 if not self.experiment is None:
