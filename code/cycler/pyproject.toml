@@ -168,6 +168,6 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 root = "../../"
-write_to = "code/src/wattrex_battery_cycler/__version__.py"
+write_to = "code/__version__.py"
 version_scheme="python-simplified-semver"
 normalize="True"

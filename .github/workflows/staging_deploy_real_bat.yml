@@ -1,4 +1,4 @@
-# This workflow will deploy in development environment the cycler controller module 
+# This workflow will deploy in development environment the cycler controller module
 
 name: Deploy cycler to STAGING - REAL BAT
 
@@ -7,7 +7,7 @@ on: workflow_call
 env:
   ENV_CRED_TO_DEPLOY: ${{ secrets.ENV_CRED_TO_DEPLOY }}
   YAML_CRED_TO_DEPLOY: ${{ secrets.YAML_CRED_TO_DEPLOY }}
-        
+
 jobs:
   launch-real-bat:
     name: Launch cycler controller in real environment
@@ -38,7 +38,7 @@ jobs:
           mv /tmp/wattrex-cycler-staging/code/cycler/tests/tests_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py
       - name: Build cycler docker image
         run: |
-          docker build -t wattrex-cycler-node:latest --network=host -f /tmp/wattrex-cycler-staging/devops/docker/Dockerfile.cycler /tmp/wattrex-cycler-staging/
+          docker build --no-cache -t wattrex-cycler-node:latest --network=host -f /tmp/wattrex-cycler-staging/devops/docker/Dockerfile.cycler /tmp/wattrex-cycler-staging/
           docker image ls -a
       - name: Execute deploy script
         run: |
