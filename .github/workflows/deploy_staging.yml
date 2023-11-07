@@ -8,7 +8,7 @@ on:
       state: 
         - approved
     pull_request:
-      base:
+      head:
         ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",
                 "mid_pwr", "app_diag", "app_man" ]
 
@@ -33,6 +33,31 @@ jobs:
   #         tags: wattrex-cycler:latest
   #         outputs: type=docker,dest=/tmp/wattrex-cycler.tar
   #         push: false
+  test-job:
+    name: Test cycler controller
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo info
+        run: |
+          echo "This is a test job"
+          echo "Pull request head ref: ${{ github.event.pull_request.head.ref }}"
+          echo "Pull request base ref: ${{ github.event.pull_request.base.ref }}"
+          echo "Pull request head sha: ${{ github.event.pull_request.head.sha }}"
+          echo "Pull request base sha: ${{ github.event.pull_request.base.sha }}"
+          echo "Pull request number: ${{ github.event.pull_request.number }}"
+          echo "Pull request title: ${{ github.event.pull_request.title }}"
+          echo "Pull request body: ${{ github.event.pull_request.body }}"
+          echo "Pull request review state: ${{ github.event.review.state }}"
+          echo "Pull request review body: ${{ github.event.review.body }}"
+          echo "Pull request review user: ${{ github.event.review.user }}"
+          echo "Pull request review submitted_at: ${{ github.event.review.submitted_at }}"
+          echo "Pull request review commit_id: ${{ github.event.review.commit_id }}"
+          echo "Pull request review html_url: ${{ github.event.review.html_url }}"
+          echo "Pull request review pull_request_url: ${{ github.event.review.pull_request_url }}"
+          echo "Pull request review author_association: ${{ github.event.review.author_association }}"
+          echo "Pull request review id: ${{ github.event.review.id }}"
+          echo "Pull request review node_id: ${{ github.event.review.node_id }}"
+      
 
   launch-real-bat:
     name: Launch cycler controller in real environment
