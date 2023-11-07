@@ -46,7 +46,6 @@ class TestChannels:
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
         self.epc_pwr.close()
         self._meas_working_flag.clear()
-        self._can_working_flag.clear()
         sleep(2)
 
     @fixture(scope="function", autouse=False)
@@ -129,12 +128,6 @@ class TestChannels:
                                     CyclerDataDeviceC(**conf_param_dev2)]
         elif {'EPC'} <= conf_param.keys():
             conf_param_epc = conf_param[next(iter(conf_param))]
-            self._can_working_flag = Event()
-            self._can_working_flag.set()
-            can = DrvCanNodeC(tx_buffer_size= 100, working_flag = self._can_working_flag,
-                                cycle_period= 30)
-            can.start()
-            sleep(2)
             conf_param_epc['device_type'] = CyclerDataDeviceTypeE(conf_param_epc['device_type'])
             devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param_epc)]
         ### ADD EXTRA METERS
@@ -209,7 +202,6 @@ class TestChannels:
             log.error(msg=f"Exception: {err}")
 
         self._meas_working_flag.clear()
-        self._can_working_flag.clear()
         sleep(2)
 
     @fixture(scope="function")
