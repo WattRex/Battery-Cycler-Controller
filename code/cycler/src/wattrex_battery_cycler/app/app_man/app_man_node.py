@@ -13,18 +13,15 @@ from time import time, sleep
 from typing import List, Tuple
 
 #######################       THIRD PARTY IMPORTS        #######################
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels= './config/log_config.yaml')
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from system_shared_tool import SysShdChanC, SysShdSharedObjC
 
 #######################          PROJECT IMPORTS         #######################
-from mid.mid_data import (MidDataAllStatusC, MidDataGenMeasC, MidDataExtMeasC,
-    MidDataAlarmC, MidDataExperimentC, MidDataCyclerStationC, MidDataDeviceC, MidDataBatteryC,
-    MidDataProfileC, MidDataExpStatusE)
-from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
+                                                        CyclerDataExtMeasC, CyclerDataAlarmC)
+from mid.mid_str import MidStrNodeC
 from mid.mid_meas import MidMeasNodeC
 from .app_man_core import AppManCoreC, AppManCoreStatusE
 #######################          MODULE IMPORTS          #######################
@@ -32,8 +29,8 @@ from .app_man_core import AppManCoreC, AppManCoreStatusE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-_PERIOD_CYCLE_STR: int = 100 # Period in ms of the storage node
-_PERIOD_CYCLE_MEAS: int = 1000 # Period in ms of the measurement node
+_PERIOD_CYCLE_STR: int = 250 # Period in ms of the storage node
+_PERIOD_CYCLE_MEAS: int = 140 # Period in ms of the measurement node
 _PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
 class AppManNodeC:
@@ -80,9 +77,9 @@ class AppManNodeC:
         self.working_meas = Event()
         self.working_meas.set()
 
-        __shd_gen_meas = SysShdSharedObjC(MidDataGenMeasC())
-        __shd_ext_meas = SysShdSharedObjC(MidDataExtMeasC())
-        __shd_all_status  = SysShdSharedObjC(MidDataAllStatusC())
+        __shd_gen_meas = SysShdSharedObjC(CyclerDataGenMeasC())
+        __shd_ext_meas = SysShdSharedObjC(CyclerDataExtMeasC())
+        __shd_all_status  = SysShdSharedObjC(CyclerDataAllStatusC())
         __chan_alarms = SysShdChanC()
         __chan_str_reqs = SysShdChanC()
         __chan_str_data = SysShdChanC()
@@ -93,7 +90,7 @@ class AppManNodeC:
                 shared_status= __shd_all_status, str_reqs= __chan_str_reqs,
                 str_data= __chan_str_data, str_alarms= __chan_alarms,
                 cycle_period= _PERIOD_CYCLE_STR, cycler_station= self.cs_id,
-                cred_file= '')
+                cred_file= 'devops/.cred.yaml')
         self._th_str.start()
 
         ### 1.2 Manager thread ###
@@ -106,7 +103,7 @@ class AppManNodeC:
 
         if not cs_station_info.deprecated:
             ### 1.3 Meas thread ###
-            self._th_meas = MidMeasNodeC(name= 'MID_MEAS', working_flag= self.working_meas,
+            self._th_meas = MidMeasNodeC(working_flag= self.working_meas,
                     shared_gen_meas= __shd_gen_meas, shared_ext_meas= __shd_ext_meas,
                     shared_status= __shd_all_status, devices= cs_station_info.devices,
                     cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= )
@@ -124,7 +121,7 @@ class AppManNodeC:
         # TODO: manage errors on system configuration
         pass
 
-    def check_system_health_and_recover(self) -> List[MidDataAlarmC]:
+    def check_system_health_and_recover(self) -> List[CyclerDataAlarmC]:
         '''
         Checks if the device is running.
 
