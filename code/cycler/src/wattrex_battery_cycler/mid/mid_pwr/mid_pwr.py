@@ -37,11 +37,11 @@ class _MidPwrDirectionE(Enum):
 class MidPwrControlC:
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, alarm_callback: function, device: list [CyclerDataDeviceC],
+    def __init__(self, alarm_callback: function, devices: list [CyclerDataDeviceC],
             battery_limits: CyclerDataPwrRangeC|None,
             instruction_set: List[CyclerDataInstructionC]|None) -> None:
 
-        self.pwr_dev  : MidDabsPwrDevC = MidDabsPwrDevC(device)
+        self.pwr_dev  : MidDabsPwrDevC = MidDabsPwrDevC(devices)
         self.pwr_limits: CyclerDataPwrRangeC|None = battery_limits
         self.all_instructions     : List[CyclerDataInstructionC]|None = instruction_set
         self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= -1,
@@ -76,30 +76,25 @@ class MidPwrControlC:
         """
         inst_limits = True
         if self.actual_inst.mode is not CyclerDataPwrModeE.CP_MODE:
-            if (self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME and
-                self.actual_inst.mode is not CyclerDataPwrModeE.CP_MODE):
+            if (self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME):
                 if self.actual_inst.limit_ref > (int(time())-self.instr_init_time):
                     inst_limits = False
             elif self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                 if (self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE and
-                        self.actual_inst.limit_ref < self.local_gen_meas.voltage and
-                        self.actual_inst.mode is not CyclerDataPwrModeE.CV_MODE):
+                        self.actual_inst.limit_ref < self.local_gen_meas.voltage):
                     inst_limits = False
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT and
-                        self.actual_inst.limit_ref < self.local_gen_meas.current and
-                        self.actual_inst.mode is not CyclerDataPwrModeE.CC_MODE):
+                        self.actual_inst.limit_ref < self.local_gen_meas.current):
                     inst_limits = False
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER and
                         self.actual_inst.limit_ref < self.local_gen_meas.power):
                     inst_limits = False
             elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                 if (self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE and
-                        self.actual_inst.limit_ref > self.local_gen_meas.voltage and
-                        self.actual_inst.mode is not CyclerDataPwrModeE.CV_MODE):
+                        self.actual_inst.limit_ref > self.local_gen_meas.voltage):
                     inst_limits = False
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT and
-                        self.actual_inst.limit_ref > self.local_gen_meas.current and
-                        self.actual_inst.mode is not CyclerDataPwrModeE.CC_MODE):
+                        self.actual_inst.limit_ref > self.local_gen_meas.current):
                     inst_limits = False
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER and
                         self.actual_inst.limit_ref > self.local_gen_meas.power):
@@ -110,6 +105,7 @@ class MidPwrControlC:
         return inst_limits
 
     def __get_pwr_direction(self) ->None:
+        self.__pwr_direction = _MidPwrDirectionE.WAIT
         if (self.actual_inst.mode is CyclerDataPwrModeE.CC_MODE or
             self.actual_inst.mode is CyclerDataPwrModeE.CP_MODE):
             if self.actual_inst.ref >= 0:
@@ -184,8 +180,7 @@ class MidPwrControlC:
                 # The epc device always start in Disable mode,
                 # no need to check if instruction is not loaded
                 # When the epc goes back to disable means the last instruction is done
-                # if self.actual_inst.instr_id < 0:
-                if self.local_status.pwr_mode.value is CyclerDataPwrModeE.DISABLE.value:
+                if self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE:
                     # Check if there are more instructions to read
                     if len(self.all_instructions) > 0:
                         self.actual_inst = self.all_instructions.pop(0)
@@ -197,10 +192,6 @@ class MidPwrControlC:
                         status = CyclerDataExpStatusE.FINISHED
                 else:
                     status = CyclerDataExpStatusE.RUNNING
-                # elif self.local_status.pwr_mode.value is (self.actual_inst.mode.value, CyclerDataPwrModeE.DISABLE.value) :
-                #     status = CyclerDataExpStatusE.RUNNING
-                #     self.actual_inst.instr_id = -1
-
             else:
                 intrs_limits = False
                 if self.actual_inst.instr_id > 0:
