@@ -28,7 +28,7 @@ if __name__ == "__main__":
     manager: AppManNodeC = AppManNodeC(cs_id= 1, cycle_period= 1000)
     try:
         run(["sudo", "ip", "link", "set", "up", "txqueuelen", "100000", "can0", "type", "can",
-            "bitrate", "125000",], stdout=PIPE, stderr=PIPE)
+            "bitrate", "125000",], stdout=PIPE, stderr=PIPE, check= False)
         can: DrvCanNodeC = DrvCanNodeC(tx_buffer_size= 200, cycle_period= 30,
                                        working_flag= working_can)
         can.start()
@@ -40,4 +40,4 @@ if __name__ == "__main__":
         sleep(1)
         working_can.clear()
         sleep(1)
-        run(["sudo", "ip", "link", "set", "down", "can0"], stdout=PIPE, stderr=PIPE)
+        run(["sudo", "ip", "link", "set", "down", "can0"], stdout=PIPE, stderr=PIPE, check= False)
