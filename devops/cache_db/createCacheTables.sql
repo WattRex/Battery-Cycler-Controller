@@ -36,7 +36,7 @@ create table if not exists Alarm
 -- Table Status --------------------------
 create table if not exists Status
 (
-    StatusID        mediumint       unsigned    not null    auto_increment,
+    StatusID        mediumint       unsigned    not null,
     ExpID           mediumint       unsigned    not null,
     DevID           mediumint       unsigned    not null,
     Timestamp       datetime                    not null,
