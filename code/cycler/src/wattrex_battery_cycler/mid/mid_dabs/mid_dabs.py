@@ -21,6 +21,7 @@ from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
 # from wattrex_driver_ea  import DrvEaDeviceC, DrvEaDataC
 # from wattrex_driver_rs  import DrvRsDeviceC, DrvRsDataC
 # from wattrex_driver_bk import DrvBkDeviceC, DrvBkDataC
+from wattrex_driver_base import DrvBaseStatusC
 from wattrex_driver_bms import DrvBmsDeviceC
 from wattrex_driver_flow import DrvFlowDeviceC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE, CyclerDataDeviceC,
@@ -55,7 +56,8 @@ class MidDabsExtraMeterC:
     """Instanciates an objects that are only able to measures.
     """
     def __init__(self, device: CyclerDataDeviceC) -> None:
-        self.device    :  DrvBmsDeviceC |None = None # DrvBkDeviceC |
+        self.device    :  DrvBmsDeviceC| DrvFlowDeviceC |None = None # DrvBkDeviceC |
+        self._dev_db_id : int = device.dev_db_id
         if device.mapping_names is None:
             self.__mapping_attr = {}
         else:
@@ -66,13 +68,12 @@ class MidDabsExtraMeterC:
                 can_id = int(device.iface_name,16)
             else:
                 can_id = int(device.iface_name)
-            self.device : DrvBmsDeviceC = DrvBmsDeviceC(dev_id= device.dev_id,
-                                    can_id= can_id)
+            self.device : DrvBmsDeviceC = DrvBmsDeviceC(can_id= can_id)
         elif device.device_type is CyclerDataDeviceTypeE.FLOW:
-            self.device : DrvFlowDeviceC = DrvFlowDeviceC(dev_id= device.dev_id,
+            self.device : DrvFlowDeviceC = DrvFlowDeviceC(
                                     config= DrvScpiSerialConfC(port= device.iface_name,
                                                                **device.link_conf.__dict__),
-                                    rx_chan_name= "RX_SCPI_"+str(device.dev_id))
+                                    rx_chan_name= "RX_SCPI_"+str(self._dev_db_id))
         # elif device.device_type is CyclerDataDeviceTypeE.BK:
         #     self.device : DrvBkDeviceC = DrvBkDeviceC(
         #                                       DrvScpiHandlerC(device.link_conf.__dict__))
@@ -86,9 +87,10 @@ class MidDabsExtraMeterC:
         res = None
         res= self.device.get_data()
         if hasattr(res, 'status'):
-            state = CyclerDataDeviceStatusC(error= getattr(res,'status').error_code,
-                                                dev_id= self.device.dev_id)
-            setattr(status, 'extra_meter_'+str(self.device.dev_id), state)
+            if isinstance(res.status, DrvBaseStatusC):
+                state = CyclerDataDeviceStatusC(error= getattr(res,'status').error_code,
+                                                    dev_db_id= self._dev_db_id)
+                setattr(status, 'extra_meter_'+str(self._dev_db_id), state)
         # elif isinstance(self.__device, DrvBkDeviceC):
         #     bk_state = CyclerDataDeviceStatusC(error= res.status.error_code,
         #                                         dev_id= self.__dev_id)
@@ -110,6 +112,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''
     def __init__(self, device: list [CyclerDataDeviceC]) -> None:
         self.device_type: CyclerDataDeviceTypeE = device[0].device_type
+        self._dev_db_id: int = device[0].dev_db_id
         ## Commented for first version
         # self.bisource   : DrvEaDeviceC | None = None
         # self.source     : DrvEaDeviceC | None = None
@@ -123,7 +126,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                         can_id = int(dev.iface_name,16)
                     else:
                         can_id = int(dev.iface_name)
-                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(dev_id=dev.dev_id, can_id=can_id) #pylint: disable= unexpected-keyword-arg, no-value-for-parameter
+                    self.epc : DrvEpcDeviceC = DrvEpcDeviceC(can_id=can_id) #pylint: disable= unexpected-keyword-arg, no-value-for-parameter
                     self.epc.open()
                     self.mapping_epc = dev.mapping_names
                     self.epc.set_periodic(ack_en = False,
@@ -168,7 +171,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
             msg_mode: DrvEpcDataC  = self.epc.get_mode()
             epc_status = self.epc.get_status()
             status.pwr_dev = CyclerDataDeviceStatusC(error= epc_status.error_code,
-                                                    dev_id= self.epc.dev_id) #pylint: disable= no-member
+                                                    dev_db_id= self._dev_db_id) #pylint: disable= no-member
             gen_meas.voltage = msg_elect_meas.ls_voltage
             gen_meas.current = msg_elect_meas.ls_current
             gen_meas.power   = msg_elect_meas.ls_power

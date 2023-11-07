@@ -74,8 +74,8 @@ class TestChannels:
 
         # Instantiate MidDabsEpcDeviceC
         ######################################### EPC ##############################################
-        test_dev1_info = CyclerDataDeviceC(dev_id= dev_conf['epc'], model = 'b', manufacturer= 'c',
-                                        device_type= CyclerDataDeviceTypeE.EPC,
+        test_dev1_info = CyclerDataDeviceC(dev_db_id= dev_conf['epc'], model = 'b',
+                                        manufacturer= 'c', device_type= CyclerDataDeviceTypeE.EPC,
                                         iface_name= dev_conf['epc'],
                                         mapping_names= {'hs_voltage': 1})
         self.epc = MidDabsPwrDevC(device=[test_dev1_info])
@@ -102,7 +102,7 @@ class TestChannels:
         self.epc.close()
         ######################################### BMS ##############################################
         log.info("Starting test for bms")
-        self.bms = MidDabsExtraMeterC(CyclerDataDeviceC(dev_id= dev_conf['bms'], model = 'b',
+        self.bms = MidDabsExtraMeterC(CyclerDataDeviceC(dev_db_id= dev_conf['bms'], model = 'b',
                                         manufacturer= 'c', device_type= CyclerDataDeviceTypeE.BMS,
                                         iface_name= dev_conf['bms'],
                                         mapping_names= {'vcell1': 1, 'vcell2': 2, 'vcell3': 3,
