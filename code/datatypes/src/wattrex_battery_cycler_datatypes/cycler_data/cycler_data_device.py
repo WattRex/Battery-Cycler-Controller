@@ -39,6 +39,7 @@ class CyclerDataDeviceTypeE(Enum):
     EPC         = 'Epc'
     BMS         = "Bms"
     BK          = "Bk"
+    FLOW        = "Flow"
 
 #######################             CLASSES              #######################
 
