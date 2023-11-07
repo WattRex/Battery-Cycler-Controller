@@ -45,7 +45,7 @@ class TestChannels:
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
         self.epc_pwr.close()
-        self.mid_meas_node.stop()
+        self._meas_working_flag.clear()
         self._can_working_flag.clear()
         sleep(2)
 
@@ -62,7 +62,7 @@ class TestChannels:
         log.info(msg=f"Setting up the environment for {request.param}")
         conf_param = {
             "EPC": {
-                "dev_id": 20,
+                "dev_db_id": 20,
                 "device_type": "Epc",
                 "iface_name": 20,
                 "manufacturer": "abc",
@@ -76,7 +76,7 @@ class TestChannels:
                 },
             },
             "BMS": {
-                "dev_id": 4,
+                "dev_db_id": 4,
                 "device_type": "Bms",
                 "iface_name": 4,
                 "manufacturer": "abc",
@@ -91,7 +91,7 @@ class TestChannels:
                         'pres2': 19},
             },
             "SOURCE": {
-                "dev_id": 18,
+                "dev_db_id": 18,
                 "device_type": "Source",
                 "iface_name": '/dev/ttyUSB0',
                 "manufacturer": "abc",
@@ -103,7 +103,7 @@ class TestChannels:
                 },
             },
             "LOAD": {
-                "dev_id": 19,
+                "dev_db_id": 19,
                 "device_type": "Load",
                 "iface_name": '/dev/ttyUSB1',
                 "manufacturer": "abc",
@@ -170,7 +170,7 @@ class TestChannels:
                                 ref= 1000, limit_type= CyclerDataPwrLimitE.TIME, limit_ref= 10000),
                     CyclerDataInstructionC(instr_id= 2, mode= CyclerDataPwrModeE.WAIT, ref= 10000,
                                 limit_type= CyclerDataPwrLimitE.TIME, limit_ref= 10000)]
-        self.epc_pwr = MidPwrControlC(device= devices, alarm_callback= alarm_callback,
+        self.epc_pwr = MidPwrControlC(devices= devices, alarm_callback= alarm_callback,
                                       battery_limits= None, instruction_set= None)
         self.epc_pwr.set_new_experiment(instructions= instructions, bat_pwr_range= battery_info)
         exp_status = CyclerDataExpStatusE.QUEUED
