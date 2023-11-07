@@ -1,6 +1,6 @@
 # This workflow will deploy in development environment the cycler controller module 
 
-name: Deployment of battery cycler controller to real environment
+name: Deploy cycler to STAGING - REAL BAT
 
 on: workflow_call
 

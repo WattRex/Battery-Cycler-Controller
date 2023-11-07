@@ -1,6 +1,6 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deployment of battery cycler controller datatypes to Pypi
+name: Deployment of DATATYPES
 
 on:
   push:
@@ -8,13 +8,7 @@ on:
       - 'cycler_datatypes'
 
   pull_request_review:
-    review:
-      state:
-        - approved
-    pull_request:
-      base:
-        ref:
-          - "cycler_datatypes"
+    types: [submitted]
 
 jobs:
 

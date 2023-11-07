@@ -1,10 +1,11 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deployment of battery cycler controller to staging environment
+name: Deploy cycler to STAGING
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: 
+      - submitted
 
 jobs:
   # build-docker-image:
@@ -27,7 +28,7 @@ jobs:
 
   launch-real-bat:
     name: Launch cycler controller in real environment
-    if: ${{ github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
+    if: ${{ github.event.action == 'submitted' && github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
     # needs: build-docker-image
     uses: ./.github/workflows/staging_deploy_real_bat.yml
     secrets: inherit
