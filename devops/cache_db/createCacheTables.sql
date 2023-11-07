@@ -59,6 +59,7 @@ create table if not exists GenericMeasures
     InstrID         mediumint       unsigned    not null,
     Voltage         mediumint                   not null,
     Current         mediumint                   not null,
+    Power           int                         not null,
 
     constraint GenericMeasures_pk_1
         primary key (ExpID, MeasID),
