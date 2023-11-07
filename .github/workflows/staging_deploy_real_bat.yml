@@ -10,6 +10,7 @@ env:
 
 jobs:
   launch-real-bat:
+    environment: staging
     name: Launch cycler controller in real environment
     runs-on: [self-hosted, linux, ARM64, plc]
     steps:
