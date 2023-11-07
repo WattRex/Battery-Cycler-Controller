@@ -17,6 +17,7 @@ jobs:
 
   detect-folder:
     runs-on: ubuntu-latest
+    environment: development
     outputs:
       folder: ${{ steps.set-folder.outputs.folder }}
     steps:
