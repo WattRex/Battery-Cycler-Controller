@@ -48,8 +48,6 @@ class TestChannels:
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
         self.epc.close()
         self.bms.close()
-        sleep(1)
-        self.can.stop()
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):
@@ -65,12 +63,6 @@ class TestChannels:
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # run(['sudo', 'ip', 'link', 'set', 'up', 'txqueuelen', '10000', 'can0', 'type', 'can',
         #     'bitrate', '125000'], stdout=PIPE, stderr=PIPE)
-        # Instantiate can node
-        _working_can = Event()
-        _working_can.set()
-        #Create the thread for CAN
-        self.can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can, cycle_period= 30)
-        self.can.start()
 
         # Instantiate MidDabsEpcDeviceC
         ######################################### EPC ##############################################
@@ -118,9 +110,6 @@ class TestChannels:
             log.info(f"Status: {getattr(status,'extra_meter_'+str(self.bms.device.dev_id)).name}")
             sleep(2)
         self.bms.close()
-        log.info("Closing can")
-        self.can.stop()
-        sleep(1.5)
         # ######################################### SOURCE #########################################
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # log.info("Starting test for ea source")
