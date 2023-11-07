@@ -5,7 +5,8 @@ name: Deployment of battery cycler controller to staging environment
 on:
   pull_request_review:
     review:
-      state: [approved]
+      state: 
+        - approved
     pull_request:
       base:
         ref: [ "mid_data", "mid_meas", "mid_dabs", "mid_str",

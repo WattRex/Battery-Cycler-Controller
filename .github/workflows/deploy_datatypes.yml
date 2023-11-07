@@ -8,11 +8,13 @@ on:
       - 'cycler_datatypes'
 
   pull_request_review:
-    types: [submited]
+    review:
+      state:
+        - approved
     pull_request:
       base:
-      ref: 
-        - "cycler_datatypes"
+        ref:
+          - "cycler_datatypes"
 
 jobs:
 
@@ -39,7 +41,7 @@ jobs:
   publish-package:
     name: Publish package ${{ vars.DATATYPES_PACKAGE_NAME }} to PyPi
     needs: build-package-on-pull-request
-    if: ${{ github.event_name == 'pull_request_review' }} && ${{ github.event.review.state == 'approved' }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
     environment: development
     permissions:
