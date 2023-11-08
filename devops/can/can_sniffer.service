@@ -17,14 +17,14 @@ Restart=always
 RestartSec=3
 
 #Instructions executed before the service execution
-ExecStartPre=/usr/sbin/ip link set down can0
-ExecStartPre=/usr/sbin/ip link set up txqueuelen 100000 can0 type can bitrate 125000
+#ExecStartPre=/usr/sbin/ip link set down can0
+#ExecStartPre=/usr/sbin/ip link set up txqueuelen 100000 can0 type can bitrate 125000
 
 #Main service execution
 ExecStart=/usr/bin/python3 ${R_PATH}/can_node.py
 
 #Instructions executed after the service execution
-ExecStopPost=/usr/sbin/ip link set down can0
+#ExecStopPost=/usr/sbin/ip link set down can0
 ExecStopPost=echo "Can-sniffer service main execution ended."
 
 [Install]

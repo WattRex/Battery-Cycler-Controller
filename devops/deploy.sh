@@ -13,9 +13,9 @@ ARG2=$2
 
 initial_deploy () {
     force-stop
-    sudo python3 -m pip install can-sniffer
+    python3 -m pip install can-sniffer
     # python3 -m pip install scpi-sniffer
-    sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
+    # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
     
     check_sniffer "can"
@@ -25,11 +25,11 @@ initial_deploy () {
 instance_new_cycler () {
     check_sniffer "can"
     # check_sniffer "scpi"
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --user $USER -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 test_cycler () {
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest /cycler/code/cycler/tests/tests_cycler.py -s
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --user $USER --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest /cycler/code/cycler/tests/tests_cycler.py -s
     exit $?
 }
 
@@ -44,24 +44,24 @@ stop_active_cycler () {
 
 check_sniffer () {
     if [[ ${ARG2} = "can" ]] || [[ ${1} = "can" ]]; then
-        service can_sniffer status > /dev/null
+        systemctl --user status can_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up can sniffer"
-            sudo systemctl set-environment R_PATH=${SCRIPT_DIR}/can
-            sudo systemctl enable ${SCRIPT_DIR}/can/can_sniffer.service
-            sudo systemctl start can_sniffer.service
+            systemctl --user set-environment R_PATH=${SCRIPT_DIR}/can
+            systemctl --user enable ${SCRIPT_DIR}/can/can_sniffer.service
+            systemctl --user start can_sniffer.service
         else
             echo "Can sniffer is working"
         fi
     fi
 
     if [[ ${ARG2} = "scpi" ]] || [[ ${1} = "scpi" ]]; then
-        service scpi_sniffer status > /dev/null
+        systemctl --user status scpi_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up scpi sniffer"
-            sudo systemctl set-environment R_PATH=${SCRIPT_DIR}/scpi
-            sudo systemctl enable ${SCRIPT_DIR}/scpi/scpi_sniffer.service
-            sudo systemctl start scpi_sniffer.service
+            systemctl --user set-environment R_PATH=${SCRIPT_DIR}/scpi
+            systemctl --user enable ${SCRIPT_DIR}/scpi/scpi_sniffer.service
+            systemctl --user start scpi_sniffer.service
         else
             echo "Scpi sniffer is working"
         fi
@@ -70,10 +70,10 @@ check_sniffer () {
 
 force_stop () {
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} down
-    sudo systemctl stop can_sniffer.service
-    # sudo systemctl stop scpi_sniffer.service
-    sudo systemctl disable can_sniffer.service
-    # sudo systemctl disable scpi_sniffer.service
+    systemctl --user stop can_sniffer.service
+    # systemctl --user stop scpi_sniffer.service
+    systemctl --user disable can_sniffer.service
+    # systemctl --user disable scpi_sniffer.service
 }
 
 
