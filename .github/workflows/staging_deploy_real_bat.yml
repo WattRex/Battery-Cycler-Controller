@@ -36,7 +36,7 @@ jobs:
       - name: Rename test-file to tests_cycler.py
         run: |
           echo "${{ github.event.pull_request.head.ref }}"
-          mv /tmp/wattrex-cycler-staging/code/cycler/tests/tests_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py
+          mv /tmp/wattrex-cycler-staging/code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py
       - name: Build cycler docker image
         run: |
           docker build --no-cache -t wattrex-cycler-node:latest --network=host -f /tmp/wattrex-cycler-staging/devops/docker/Dockerfile.cycler /tmp/wattrex-cycler-staging/
