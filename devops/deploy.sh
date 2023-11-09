@@ -20,7 +20,7 @@ initial_deploy () {
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db -d
     #docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
     mkdir -p ./log
-    
+
     check_sniffer "can"
     # check_sniffer "scpi"
 }
@@ -79,7 +79,7 @@ force_stop () {
     # systemctl --user stop scpi_sniffer.service
     systemctl --user disable can_sniffer.service
     # systemctl --user disable scpi_sniffer.service
-    rm -r /dev/mqueue/*
+    rm -f /dev/mqueue/*
 }
 
 
