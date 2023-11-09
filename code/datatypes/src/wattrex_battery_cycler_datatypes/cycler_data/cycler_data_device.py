@@ -39,14 +39,15 @@ class CyclerDataDeviceTypeE(Enum):
     EPC         = 'Epc'
     BMS         = "Bms"
     BK          = "Bk"
+    FLOW        = "Flow"
 
 #######################             CLASSES              #######################
 
 class CyclerDataDeviceStatusC:
     '''Handles status of the driver power.
     '''
-    def __init__(self, error: int|CyclerDataDeviceStatusE, dev_id: int) -> None:
-        self.dev_id: int= dev_id
+    def __init__(self, error: int|CyclerDataDeviceStatusE, dev_db_id: int) -> None:
+        self.dev_db_id: int= dev_db_id
         if isinstance(error, CyclerDataDeviceStatusE):
             self.__status = error
             self.__error_code = error.value
@@ -140,7 +141,7 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
     '''
 
     # pylint: disable=too-many-arguments
-    def __init__(self, dev_id: int|None = None, manufacturer : str| None= None,
+    def __init__(self, dev_db_id: int|None = None, manufacturer : str| None= None,
                 model :str| None= None, serial_number : str| None= None,
                 device_type : CyclerDataDeviceTypeE| None= None, iface_name : str| None= None,
                 mapping_names : Dict| None= None,
@@ -161,7 +162,7 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
         ## Check if is initialized to none
         if device_type is not None:
             device_type = CyclerDataDeviceTypeE(device_type)
-        self.dev_id : int|None = dev_id
+        self.dev_db_id : int|None = dev_db_id
         self.manufacturer : str| None= manufacturer
         self.model : str| None = model
         self.serial_number : str| None = serial_number

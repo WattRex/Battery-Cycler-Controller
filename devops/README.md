@@ -37,3 +37,30 @@ To stop all system services configurated by the deploy.sh script, use the follow
 ```
 ./deploy force-stop
 ```
+___
+___
+
+# Self-Hosted Runner
+Once the self-hosted runner has been properly configurated, it can be deployed as a system service. To do that, the following commands are useful:
+## [Commands to manage self-hosted runner working as a service](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service)
+Inside the actions-runner folder:
+### Install runner as service
+```
+sudo ./svc.sh install
+```
+### Install runner as service
+```
+sudo ./svc.sh start
+```
+### Checking the status of the service
+```
+sudo ./svc.sh status
+```
+### Stopping the service
+```
+sudo ./svc.sh stop
+```
+### Uninstalling the service
+```
+sudo ./svc.sh uninstall
+```
