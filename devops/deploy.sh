@@ -19,6 +19,7 @@ initial_deploy () {
     # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db -d
     #docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
+    mkdir -p ./log
     
     check_sniffer "can"
     # check_sniffer "scpi"
