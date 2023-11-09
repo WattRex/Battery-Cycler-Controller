@@ -26,7 +26,6 @@ jobs:
   build-package-on-pull-request:
     name: QA and Build ${{ vars.DATATYPES_PACKAGE_NAME }} on pull request
     if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && github.event.pull_request.head.ref == 'cycler_datatypes' }}
-    environment: staging
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
       package-name: ${{ vars.DATATYPES_PACKAGE_NAME }}
@@ -39,7 +38,6 @@ jobs:
     needs: build-package-on-pull-request
     if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
-    environment: staging
     permissions:
       id-token: write
     steps:
