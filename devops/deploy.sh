@@ -10,13 +10,15 @@ INT_RE='^[0-9]+$'
 
 ARG1=$1
 ARG2=$2
+ARG3=$3
 
 initial_deploy () {
-    force-stop
+    force_stop
     python3 -m pip install can-sniffer
     # python3 -m pip install scpi-sniffer
     # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db -d
+    #docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
     
     check_sniffer "can"
     # check_sniffer "scpi"
@@ -25,11 +27,13 @@ initial_deploy () {
 instance_new_cycler () {
     check_sniffer "can"
     # check_sniffer "scpi"
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --user $USER -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} build --build-arg UPDATE_REQS=$(date +%s) --build-arg USER=$(id -u) --build-arg GROUP=$(id -g) cycler
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 test_cycler () {
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --user $USER --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest /cycler/code/cycler/tests/tests_cycler.py -s
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} build --build-arg UPDATE_REQS=$(date +%s) --build-arg USER=$(id -u) --build-arg GROUP=$(id -g) cycler
+    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest /cycler/code/cycler/tests/tests_cycler.py > ./log/py_test_${ARG3}.log
     exit $?
 }
 
@@ -74,6 +78,7 @@ force_stop () {
     # systemctl --user stop scpi_sniffer.service
     systemctl --user disable can_sniffer.service
     # systemctl --user disable scpi_sniffer.service
+    rm -r /dev/mqueue/*
 }
 
 

@@ -23,14 +23,15 @@ services:
 
   cycler:
     build:
-      context: ../cycler
-      dockerfile: ../docker/Dockerfile.cycler
+      context: ../../
+      dockerfile: ./devops/docker/Dockerfile.cycler
     image: wattrex-cycler-node
     restart: no
     ipc: host
     volumes:
       - ../.cred.yaml:/cycler/devops/.cred.yaml
       - ../log_config.yaml:/cycler/devops/log_config.yaml
+      - ../log:/cycler/log
     depends_on:
       cache_db:
         condition: service_healthy
