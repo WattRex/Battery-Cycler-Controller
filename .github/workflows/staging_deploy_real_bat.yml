@@ -50,10 +50,10 @@ jobs:
       - name: Clean up
         run: |
           echo "${{ steps.pytest.outcome }}"
-          /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
           mkdir -p ~/staging_tests
           rm -rf ~/staging_tests/logs_test_${{ github.event.pull_request.head.ref }}
           cp -r /tmp/wattrex-cycler-staging/log ~/staging_tests/logs_test_${{ github.event.pull_request.head.ref }}
+          /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
           sudo rm -rf /tmp/wattrex-cycler-staging/
           docker image prune -f
           docker images -a
