@@ -20,7 +20,7 @@ from system_shared_tool import SysShdChanC, SysShdSharedObjC
 
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
-                                                        CyclerDataExtMeasC, CyclerDataAlarmC)
+                                        CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC)
 from mid.mid_str import MidStrNodeC
 from mid.mid_meas import MidMeasNodeC
 from .app_man_core import AppManCoreC, AppManCoreStatusE
@@ -92,21 +92,24 @@ class AppManNodeC:
                 cycle_period= _PERIOD_CYCLE_STR, cycler_station= self.cs_id,
                 cred_file= 'devops/.cred.yaml')
         self._th_str.start()
+        shared_tags: CyclerDataMergeTagsC = CyclerDataMergeTagsC(status_attrs= [],
+                                                                 gen_meas_attrs= ['instr_id'],
+                                                                 ext_meas_attrs= [])
 
         ### 1.2 Manager thread ###
         self.man_core: AppManCoreC= AppManCoreC(shared_gen_meas= __shd_gen_meas,
                     shared_ext_meas= __shd_ext_meas, shared_all_status= __shd_all_status,
-                    str_reqs= __chan_str_reqs, str_data= __chan_str_data, str_alarms= __chan_alarms)
+                    str_reqs= __chan_str_reqs, str_data= __chan_str_data, str_alarms= __chan_alarms,
+                    excl_tags= shared_tags)
         # Get info from the cycler station to know which devices are compatible to
         # launch the meas node if cs is not deprecated
         cs_station_info = self.man_core.get_cs_info()
-
         if not cs_station_info.deprecated:
             ### 1.3 Meas thread ###
             self._th_meas = MidMeasNodeC(working_flag= self.working_meas,
                     shared_gen_meas= __shd_gen_meas, shared_ext_meas= __shd_ext_meas,
                     shared_status= __shd_all_status, devices= cs_station_info.devices,
-                    cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= )
+                    cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= shared_tags)
             self._th_meas.start()
 
     def config_system(self) -> None:
@@ -168,8 +171,11 @@ class AppManNodeC:
         """ Stop the thread. """
         log.critical("Stopping BFR application")
         self.working_app.clear()
-        self.working_str.clear()
         self.working_meas.clear()
+        ## If the manager is stoping 
+        self.man_core.__deprecated_cs()
+        sleep(2)
+        self.working_str.clear()
         # TODO: improve stop process
         # self._th_str.join(timeout=timeout)
         # self._th_meas.join(timeout=timeout)

@@ -21,7 +21,8 @@ from system_shared_tool import SysShdChanC, SysShdSharedObjC
 from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExperimentC, CyclerDataProfileC,
                 CyclerDataBatteryC, CyclerDataExpStatusE, CyclerDataAllStatusC, CyclerDataAlarmC,
-                    CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataCyclerStationC)
+                                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataCyclerStationC,
+                                CyclerDataMergeTagsC)
 from mid.mid_pwr import MidPwrControlC
 #######################              ENUMS               #######################
 class AppManCoreStatusE(Enum):
@@ -47,7 +48,8 @@ class AppManCoreC:
     """
     def __init__(self, shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC,
                 shared_all_status: SysShdSharedObjC, str_reqs: SysShdChanC,
-                str_data: SysShdChanC, str_alarms: SysShdChanC) -> None:
+                str_data: SysShdChanC, str_alarms: SysShdChanC,
+                excl_tags: CyclerDataMergeTagsC) -> None:
         ##
         self.state: AppManCoreStatusE = AppManCoreStatusE.GETTING_EXP
 
@@ -67,7 +69,7 @@ class AppManCoreC:
         self.__chan_alarms = str_alarms
         self.__chan_str_reqs = str_reqs
         self.__chan_str_data = str_data
-
+        self.__excl_tags: CyclerDataMergeTagsC = excl_tags
         ## Power control object
         self.pwr_control: MidPwrControlC= MidPwrControlC(devices= self.get_cs_info().devices,
                                         alarm_callback= alarm_callback)
@@ -155,24 +157,27 @@ class AppManCoreC:
         """Update the local and global data arrays of the local and global data .
         """
         log.debug("Updating local and global data")
+        ## Gen meas-> write instruction id and gather the rest
         self.__local_gen_meas : CyclerDataGenMeasC = self.__shd_gen_meas.\
-            merge_included_tags(self.__local_gen_meas, ['voltage','current','power']) # type: ignore
-        self.__local_ext_meas : CyclerDataExtMeasC = self.__shd_ext_meas.read() # type: ignore
-        self.__local_all_status : CyclerDataAllStatusC = self.__shd_all_status.read() # type: ignore
+            update_including_tags(self.__local_gen_meas, self.__excl_tags.gen_meas_attrs)
+        ## Ext meas-> read all
+        self.__local_ext_meas : CyclerDataExtMeasC = self.__shd_ext_meas.read()
+        ## All status-> read all
+        self.__local_all_status : CyclerDataAllStatusC = self.__shd_all_status.read()
 
     def execute_machine_status(self) -> None:
         """Execute the machine status
         """
         log.debug("Executing machine status")
         try:
+            ### Check always if the cycler station is deprecated
+            cs_station_info = self.get_cs_info()
+            if cs_station_info.deprecated:
+                log.critical("Cycler station is deprecated")
+                self.__deprecated_cs()
+                self.state = AppManCoreStatusE.ERROR
             if self.state == AppManCoreStatusE.GETTING_EXP:
                 log.debug("Getting experiment")
-                # Despite the status check if the cs is deprecated
-                cs_station_info = self.get_cs_info()
-                if cs_station_info.deprecated:
-                    log.critical("Cycler station is deprecated")
-                    self.__deprecated_cs()
-                    self.state = AppManCoreStatusE.ERROR
                 self.experiment, self.battery, self.profile = self.__fetch_new_exp()
                 if not self.experiment is None:
                     if not self.__validate_exp_ranges(self.battery, self.profile):
@@ -182,13 +187,13 @@ class AppManCoreC:
                         self.state = AppManCoreStatusE.PREPARING
 
             elif self.state == AppManCoreStatusE.PREPARING:
-                ## Get devices in cycler station and creates pwr control object, every time a experiment
+                ## Get devices in cycler station and creates pwr control object,
+                #  every time a experiment
                 # is fetch a new instante is created
-                ## TODO: FUNCTION FOR ALARMS CALLBACK  
+                ## TODO: FUNCTION FOR ALARMS CALLBACK
                 log.debug("Preparing experiment")
                 self.pwr_control.set_new_experiment(instructions= self.profile.instructions,
                                                     bat_pwr_range= self.battery.elec_ranges)
-                
                 self.state = AppManCoreStatusE.EXECUTE
             elif self.state == AppManCoreStatusE.EXECUTE:
                 log.debug("Executing experiment")
