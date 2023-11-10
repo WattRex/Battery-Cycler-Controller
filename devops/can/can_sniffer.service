@@ -21,7 +21,7 @@ RestartSec=3
 #ExecStartPre=/usr/sbin/ip link set up txqueuelen 100000 can0 type can bitrate 125000
 
 #Main service execution
-ExecStart=/usr/bin/python3 ${R_PATH}/can_node.py
+ExecStart=/usr/bin/python3 ${SRC_PATH}/can_node.py
 
 #Instructions executed after the service execution
 #ExecStopPost=/usr/sbin/ip link set down can0

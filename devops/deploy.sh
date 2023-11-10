@@ -1,25 +1,31 @@
 #!/bin/bash
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DEVOPS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" && pwd )
+REPO_ROOT_DIR=$( cd "${DEVOPS_DIR}/../" && pwd)
 ENV_FILE=.cred.env
 DOCKER_FOLDER=docker
 DOCKER_COMPOSE=docker-compose.yml
+CYCLER_SRC_DIR="${REPO_ROOT_DIR}/code/cycler"
 CYCLER_DOCKERFILE=Dockerfile.cycler
 DB_SYNC_DOCKERFILE=Dockerfile.db_sync
 INT_RE='^[0-9]+$'
+DOCKER_COMPOSE_ARGS="-f ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${DEVOPS_DIR}/${ENV_FILE}"
 
 ARG1=$1
 ARG2=$2
 ARG3=$3
 
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
+
 initial_deploy () {
     force_stop
     python3 -m pip install can-sniffer
+
     # python3 -m pip install scpi-sniffer
     # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db -d
-    #docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} up cache_db db_sync -d
-    mkdir -p ${SCRIPT_DIR}/../log
+    docker compose ${DOCKER_COMPOSE_ARGS} up cache_db -d
+    #docker compose ${DOCKER_COMPOSE_ARGS} up cache_db db_sync -d
 
     check_sniffer "can"
     # check_sniffer "scpi"
@@ -28,14 +34,15 @@ initial_deploy () {
 instance_new_cycler () {
     check_sniffer "can"
     # check_sniffer "scpi"
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} build --build-arg UPDATE_REQS=$(date +%s) --build-arg USER=$(id -u) --build-arg GROUP=$(id -g) cycler
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
+    docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
+    docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 test_cycler () {
-    sleep 1
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} build  --build-arg USER=$(id -u) --build-arg GROUP=$(id -g) cycler #--build-arg UPDATE_REQS=$(date +%s)
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest -s /cycler/code/cycler/tests/tests_cycler.py # | tee ./log/py_test_${ARG3}.log
+    cp ${CYCLER_SRC_DIR}/tests/log_config_${ARG3}.yaml ${DEVOPS_DIR}/cycler/log_config.yaml
+    cp ${CYCLER_SRC_DIR}/tests/test_${ARG3}.py ${CYCLER_SRC_DIR}/tests/test_cycler.py
+    docker compose ${DOCKER_COMPOSE_ARGS} build cycler #--build-arg UPDATE_REQS=$(date +%s)
+    docker compose ${DOCKER_COMPOSE_ARGS} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest -s /cycler/code/cycler/tests/test_cycler.py
     exit $?
 }
 
@@ -53,8 +60,8 @@ check_sniffer () {
         systemctl --user status can_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up can sniffer"
-            systemctl --user set-environment R_PATH=${SCRIPT_DIR}/can
-            systemctl --user enable ${SCRIPT_DIR}/can/can_sniffer.service
+            systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}/can
+            systemctl --user enable ${DEVOPS_DIR}/can/can_sniffer.service
             systemctl --user start can_sniffer.service
         else
             echo "Can sniffer is working"
@@ -65,8 +72,8 @@ check_sniffer () {
         systemctl --user status scpi_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up scpi sniffer"
-            systemctl --user set-environment R_PATH=${SCRIPT_DIR}/scpi
-            systemctl --user enable ${SCRIPT_DIR}/scpi/scpi_sniffer.service
+            systemctl --user set-environment R_PATH=${DEVOPS_DIR}/scpi
+            systemctl --user enable ${DEVOPS_DIR}/scpi/scpi_sniffer.service
             systemctl --user start scpi_sniffer.service
         else
             echo "Scpi sniffer is working"
@@ -75,27 +82,29 @@ check_sniffer () {
 }
 
 force_stop () {
-    docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} down
-    systemctl --user stop can_sniffer.service
+    docker compose ${DOCKER_COMPOSE_ARGS} down
+
+    systemctl --user stop can_sniffer.service &> /dev/null
+    systemctl --user disable can_sniffer.service &> /dev/null
+
     # systemctl --user stop scpi_sniffer.service
-    systemctl --user disable can_sniffer.service
     # systemctl --user disable scpi_sniffer.service
     rm -f /dev/mqueue/*
 }
 
 
 # MAIN
-if ! [ -f "${SCRIPT_DIR}/${ENV_FILE}" ]; then
+if ! [ -f "${DEVOPS_DIR}/${ENV_FILE}" ]; then
     >&2 echo "[ERROR] .cred.env file not found"
     exit 2
 fi
 
-if ! [ -d "${SCRIPT_DIR}/${DOCKER_FOLDER}" ]; then
-    >&2 echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER} folder not found"
+if ! [ -d "${DEVOPS_DIR}/${DOCKER_FOLDER}" ]; then
+    >&2 echo "[ERROR] ${DEVOPS_DIR}/${DOCKER_FOLDER} folder not found"
     exit 2
 else
-    if ! [ -f "${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE}" ]; then
-        >&2 echo "[ERROR] ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} file not found"
+    if ! [ -f "${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE}" ]; then
+        >&2 echo "[ERROR] ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} file not found"
         exit 2
     fi
 fi
@@ -122,7 +131,7 @@ case ${ARG1} in
         else
             >&2 echo "[ERROR] Invalid sniffer"
             exit 3
-        fi 
+        fi
         ;;
     "stop-cycler")
         # echo "Stop cycler ${ARG2}"

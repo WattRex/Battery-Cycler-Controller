@@ -21,38 +21,32 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      - name: Copy repository content
-        run: |
-          rsync -av --progress ./ /tmp/wattrex-cycler-staging --exclude ./.git
-          ls -lAh /tmp/wattrex-cycler-staging
+      # - name: Copy repository content
+      #   run: |
+      #     rsync -av --progress ./ /tmp/wattrex-cycler-staging --exclude ./.git
+      #     ls -lAh /tmp/wattrex-cycler-staging
       - name: Set secrets and log to deploy
         run: |
-          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.env
-          echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.yaml
-          echo "${{ vars.LOG_CONFIG }}" > /tmp/wattrex-cycler-staging/devops/log_config.yaml
-      - name: Rename test-file to tests_cycler.py
+          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > ./devops/.cred.env
+          echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > ./devops/.cred.yaml
+          echo "${{ vars.LOG_CONFIG }}" > ./devops/log_config.yaml
+      - name: Rename test-file to test_cycler.py
         run: |
-          mv /tmp/wattrex-cycler-staging/code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py
-          mv /tmp/wattrex-cycler-staging/code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml /tmp/wattrex-cycler-staging/devops/log_config.yaml
-          pwd
-          ls -la ./
+          mv ./code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py ./code/cycler/tests/test_cycler.py
+          mv ./code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml ./devops/cycler/log_config.yaml
       - name: Execute deploy script
         run: |
-          chmod +x /tmp/wattrex-cycler-staging/devops/deploy.sh
-          /tmp/wattrex-cycler-staging/devops/deploy.sh
+          chmod +x ./devops/deploy.sh
+          ./devops/deploy.sh
       - name: Execute deploy container
         id: pytest
         continue-on-error: true
         run: |
-          /tmp/wattrex-cycler-staging/devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
+          ./devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
       - name: Clean up
         run: |
           echo "${{ steps.pytest.outcome }}"
-          mkdir -p ~/staging_tests
-          rm -rf ~/staging_tests/logs_test_${{ github.event.pull_request.head.ref }}
-          cp -r /tmp/wattrex-cycler-staging/log ~/staging_tests/logs_test_${{ github.event.pull_request.head.ref }}
-          /tmp/wattrex-cycler-staging/devops/deploy.sh force-stop
-          sudo rm -rf /tmp/wattrex-cycler-staging/
+          mv ./log/tests ./log/tests_${{ github.event.pull_request.head.ref }}
           docker image prune -f
           docker images -a
           ls -lAh /tmp

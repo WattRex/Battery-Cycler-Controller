@@ -25,12 +25,16 @@ services:
     build:
       context: ../../
       dockerfile: ./devops/docker/Dockerfile.cycler
+      args:
+        USER: ${USER_ID}
+        GROUP: ${GROUP_ID}
     image: wattrex-cycler-node
     restart: no
+    user: ${USER_ID}:${GROUP_ID}
     ipc: host
     volumes:
       - ../.cred.yaml:/cycler/devops/.cred.yaml
-      - ../log_config.yaml:/cycler/devops/log_config.yaml
+      - ../cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
       - ../../log:/cycler/log
     depends_on:
       cache_db:
