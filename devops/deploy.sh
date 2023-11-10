@@ -33,6 +33,7 @@ instance_new_cycler () {
 }
 
 test_cycler () {
+    sleep 1
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} build  --build-arg USER=$(id -u) --build-arg GROUP=$(id -g) cycler #--build-arg UPDATE_REQS=$(date +%s)
     docker compose -f ${SCRIPT_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${SCRIPT_DIR}/${ENV_FILE} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest -s /cycler/code/cycler/tests/tests_cycler.py # | tee ./log/py_test_${ARG3}.log
     exit $?
