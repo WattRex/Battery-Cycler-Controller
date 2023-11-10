@@ -14,6 +14,12 @@ from signal import signal, SIGINT
 from time import sleep, time
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
+print(os.getcwd())
+print(sys.path)
+print(os.getlogin())
+print(os.listdir(os.getcwd()))
+print(os.listdir(os.getcwd()+'/..'))
+
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 main_logger = SysLogLoggerC(file_log_levels="devops/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_dabs")
