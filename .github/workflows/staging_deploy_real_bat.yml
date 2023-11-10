@@ -21,20 +21,13 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_VAR: ${{ vars.CYCLER_STATION_ID }}"
           echo "$ENV_CRED_TO_DEPLOY"
-      # - name: Copy repository content
-      #   run: |
-      #     rsync -av --progress ./ /tmp/wattrex-cycler-staging --exclude ./.git
-      #     ls -lAh /tmp/wattrex-cycler-staging
+
       - name: Set secrets and log to deploy
         run: |
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > ./devops/.cred.env
           echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > ./devops/.cred.yaml
           echo "${{ vars.LOG_CONFIG }}" > ./devops/log_config.yaml
 
-      # - name: Rename test-file to test_cycler.py
-      #   run: |
-      #     mv ./code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py ./code/cycler/tests/test_cycler.py
-      #     mv ./code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml ./devops/cycler/log_config.yaml
       - name: Execute deploy script
         run: |
           chmod +x ./devops/deploy.sh

@@ -21,6 +21,7 @@ export GROUP_ID=$(id -g)
 initial_deploy () {
     force_stop
     python3 -m pip install can-sniffer
+    mkdir -p "${REPO_ROOT_DIR}/log"
 
     # python3 -m pip install scpi-sniffer
     # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
