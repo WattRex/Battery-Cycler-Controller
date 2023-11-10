@@ -14,11 +14,13 @@ from signal import signal, SIGINT
 from time import sleep, time
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
-print(os.getcwd())
-print(sys.path)
-print(os.getlogin())
-print(os.listdir(os.getcwd()))
-print(os.listdir(os.getcwd()+'/..'))
+
+print(os.system('pwd'))
+print(os.system('ls -la ./'))
+print(os.system('id -n -u'))
+print(os.system('id -u'))
+print(os.system('ls -laR ./'))
+print(os.system('ls -la ../'))
 
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 main_logger = SysLogLoggerC(file_log_levels="devops/log_config.yaml")
