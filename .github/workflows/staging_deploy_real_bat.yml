@@ -28,11 +28,8 @@ jobs:
       - name: Set secrets and log to deploy
         run: |
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.env
-          cat /tmp/wattrex-cycler-staging/devops/.cred.env
           echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > /tmp/wattrex-cycler-staging/devops/.cred.yaml
-          cat /tmp/wattrex-cycler-staging/devops/.cred.yaml
           echo "${{ vars.LOG_CONFIG }}" > /tmp/wattrex-cycler-staging/devops/log_config.yaml
-          cat /tmp/wattrex-cycler-staging/devops/log_config.yaml
       - name: Rename test-file to tests_cycler.py
         run: |
           mv /tmp/wattrex-cycler-staging/code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py

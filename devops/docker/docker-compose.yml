@@ -31,7 +31,7 @@ services:
     volumes:
       - ../.cred.yaml:/cycler/devops/.cred.yaml
       - ../log_config.yaml:/cycler/devops/log_config.yaml
-      - ../log:/cycler/log
+      - ../../log:/cycler/log
     depends_on:
       cache_db:
         condition: service_healthy
