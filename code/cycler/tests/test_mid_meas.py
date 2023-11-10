@@ -75,9 +75,9 @@ class TestChannels:
                 },
             },
             "BMS": {
-                "dev_db_id": 2,
+                "dev_db_id": 3, ## For local test use 2
                 "device_type": "Bms",
-                "iface_name": 2,
+                "iface_name": 3, ## For local test use 2
                 "manufacturer": "abc",
                 "model" : "123",
                 "serial_number" : "12311",
@@ -147,11 +147,8 @@ class TestChannels:
                                     ext_meas_attrs= [])
         self._meas_working_flag = Event() #pylint: disable= attribute-defined-outside-init
         self._meas_working_flag.set()
-        aux_ext_meas = CyclerDataExtMeasC()
-        # for attr in tags.ext_meas_attrs:
-        #     setattr(aux_ext_meas, attr, None)
         gen_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataGenMeasC())
-        ext_meas: SysShdSharedObjC = SysShdSharedObjC(aux_ext_meas)
+        ext_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataExtMeasC())
         all_status: SysShdSharedObjC = SysShdSharedObjC(CyclerDataAllStatusC())
         mid_meas_node = MidMeasNodeC(shared_gen_meas = gen_meas, shared_ext_meas = ext_meas,
                                      shared_status = all_status, cycle_period = 500,
