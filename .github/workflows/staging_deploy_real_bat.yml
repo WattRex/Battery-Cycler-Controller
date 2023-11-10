@@ -30,10 +30,11 @@ jobs:
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > ./devops/.cred.env
           echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > ./devops/.cred.yaml
           echo "${{ vars.LOG_CONFIG }}" > ./devops/log_config.yaml
-      - name: Rename test-file to test_cycler.py
-        run: |
-          mv ./code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py ./code/cycler/tests/test_cycler.py
-          mv ./code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml ./devops/cycler/log_config.yaml
+
+      # - name: Rename test-file to test_cycler.py
+      #   run: |
+      #     mv ./code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py ./code/cycler/tests/test_cycler.py
+      #     mv ./code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml ./devops/cycler/log_config.yaml
       - name: Execute deploy script
         run: |
           chmod +x ./devops/deploy.sh
