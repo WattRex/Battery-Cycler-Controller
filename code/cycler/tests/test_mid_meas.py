@@ -14,11 +14,11 @@ from time import time, sleep
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
-main_logger = SysLogLoggerC(file_log_levels="code/cycler/log_config.yaml")
+main_logger = SysLogLoggerC(file_log_levels="devops/log_config.yaml")
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_dabs")
 from system_shared_tool import SysShdSharedObjC, SysShdNodeStatusE
 #######################       THIRD PARTY IMPORTS        #######################
-from can_sniffer import DrvCanNodeC
+# from can_sniffer import DrvCanNodeC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
                 CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataAllStatusC,
                 CyclerDataMergeTagsC)
@@ -42,10 +42,14 @@ class TestChannels:
             frame ([type]): [description]
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
-        self.mid_meas_node.stop()
+        self._meas_working_flag.clear()
+        sleep(2)
+        # self._can_working_flag.clear()
+        # sleep(2)
+        sys.exit(0)
 
     @fixture(scope="function", autouse=False)
-    def set_environ(self, request): #pylint: disable= too-many-locals
+    def set_environ(self, request): #pylint: disable= too-many-locals, too-many-statements
         """Setup the environment variables and start the process .
 
         Args:
@@ -57,7 +61,7 @@ class TestChannels:
         log.info(msg=f"Setting up the environment for {request.param}")
         conf_param = {
             "EPC": {
-                "dev_id": 20,
+                "dev_db_id": 20,
                 "device_type": "Epc",
                 "iface_name": 20,
                 "manufacturer": "abc",
@@ -71,9 +75,9 @@ class TestChannels:
                 },
             },
             "BMS": {
-                "dev_id": 4,
+                "dev_db_id": 2,
                 "device_type": "Bms",
-                "iface_name": 4,
+                "iface_name": 2,
                 "manufacturer": "abc",
                 "model" : "123",
                 "serial_number" : "12311",
@@ -86,7 +90,7 @@ class TestChannels:
                         'pres2': 19},
             },
             "SOURCE": {
-                "dev_id": 18,
+                "dev_db_id": 18,
                 "device_type": "Source",
                 "iface_name": '/dev/ttyUSB0',
                 "manufacturer": "abc",
@@ -98,7 +102,7 @@ class TestChannels:
                 },
             },
             "LOAD": {
-                "dev_id": 19,
+                "dev_db_id": 19,
                 "device_type": "Load",
                 "iface_name": '/dev/ttyUSB1',
                 "manufacturer": "abc",
@@ -124,12 +128,12 @@ class TestChannels:
                                     CyclerDataDeviceC(**conf_param_dev2)]
         elif {'EPC'} <= conf_param.keys():
             conf_param_epc = conf_param[next(iter(conf_param))]
-            _can_working_flag = Event()
-            _can_working_flag.set()
-            can = DrvCanNodeC(tx_buffer_size= 100, working_flag = _can_working_flag,
-                                cycle_period= 50)
-            can.start()
-            sleep(2)
+            # self._can_working_flag = Event() #pylint: disable= attribute-defined-outside-init
+            # self._can_working_flag.set()
+            # can = DrvCanNodeC(tx_buffer_size= 100, working_flag = self._can_working_flag,
+            #                     cycle_period= 50)
+            # can.start()
+            # sleep(2)
             conf_param_epc['device_type'] = CyclerDataDeviceTypeE(conf_param_epc['device_type'])
             devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param_epc)]
         ### ADD EXTRA METERS
@@ -138,43 +142,44 @@ class TestChannels:
             conf_param['device_type'] = CyclerDataDeviceTypeE(conf_param['device_type'])
             devices.append(CyclerDataDeviceC(**conf_param))
         log.info(msg=f"Devices: {devices}")
-        tags = CyclerDataMergeTagsC(status_attrs= ['pwr_dev', 'pwr_mode'],
-                                    gen_meas_attrs= ['voltage', 'current', 'power'],
-                                    ext_meas_attrs= ['hs_voltage_1', 'temp_body_2', 'temp_anod_3',
-                                                'temp_amb_4', 'vcell1_1', 'vcell2_2', 'vcell3_3',
-                                                'vcell4_4', 'vcell5_5', 'vcell6_6', 'vcell7_7',
-                                                'vcell8_8', 'vcell9_9', 'vcell10_10', 'vcell11_11',
-                                                'vcell12_12', 'vstack_13', 'temp1_14', 'temp2_15',
-                                                'temp3_16', 'temp4_17', 'pres1_18', 'pres2_19'])
-        _meas_working_flag = Event()
-        _meas_working_flag.set()
+        tags = CyclerDataMergeTagsC(status_attrs= [],
+                                    gen_meas_attrs= ['instr_id'],
+                                    ext_meas_attrs= [])
+        self._meas_working_flag = Event() #pylint: disable= attribute-defined-outside-init
+        self._meas_working_flag.set()
         aux_ext_meas = CyclerDataExtMeasC()
         # for attr in tags.ext_meas_attrs:
         #     setattr(aux_ext_meas, attr, None)
         gen_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataGenMeasC())
         ext_meas: SysShdSharedObjC = SysShdSharedObjC(aux_ext_meas)
         all_status: SysShdSharedObjC = SysShdSharedObjC(CyclerDataAllStatusC())
-        self.mid_meas_node = MidMeasNodeC(shared_gen_meas = gen_meas, shared_ext_meas = ext_meas,
+        mid_meas_node = MidMeasNodeC(shared_gen_meas = gen_meas, shared_ext_meas = ext_meas,
                                      shared_status = all_status, cycle_period = 500,
-                                     working_flag = _meas_working_flag, devices = devices,
+                                     working_flag = self._meas_working_flag, devices = devices,
                                      excl_tags= tags)
+        ext_meas_list= ['hs_voltage_1', 'temp_body_2', 'temp_anod_3', 'temp_amb_4', 'vcell1_1',
+                'vcell2_2', 'vcell3_3', 'vcell4_4', 'vcell5_5', 'vcell6_6', 'vcell7_7', 'vcell8_8',
+                'vcell9_9', 'vcell10_10', 'vcell11_11', 'vcell12_12', 'vstack_13', 'temp1_14',
+                'temp2_15', 'temp3_16', 'temp4_17', 'pres1_18', 'pres2_19']
         try:
-            self.mid_meas_node.start()
+            mid_meas_node.start()
             i=0
-            while self.mid_meas_node.status is not SysShdNodeStatusE.OK:
+            while mid_meas_node.status is not SysShdNodeStatusE.OK:
                 sleep(1)
             while i<10:
                 tic = time()
                 log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
                 # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
                 data_ext = ext_meas.read()
-                epc_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in tags.ext_meas_attrs[0:4]]
+                epc_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in ext_meas_list[0:4]]
                 log.info(f"Measuring: external measures epc=   {epc_ext}")
-                bms_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in tags.ext_meas_attrs[4:]]
+                bms_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in ext_meas_list[4:]]
                 log.info(f"Measuring: external measures bms=   {bms_ext}")
                 data_status = all_status.read()
                 log.info(f"Status epc:{data_status.pwr_dev.name}")
-                log.info(f"Status bms:{data_status.bms_4.name}")
+                att_name = [attr for attr in data_status.__dict__.keys() if 'extra_meter' in attr]
+                if len(att_name)>0:
+                    log.info(f"Status bms:{getattr(data_status, att_name[0]).name}")
                 if data_status.pwr_dev.error_code != 0:
                     log.error((f"Reading error {data_status.pwr_dev.name}, "
                               f"code: {data_status.pwr_dev.error_code}"))
@@ -184,9 +189,10 @@ class TestChannels:
         except Exception as err:
             log.error(msg=f"Exception: {err}")
 
-        _can_working_flag.clear()
-        _meas_working_flag.clear()
+        self._meas_working_flag.clear()
         sleep(2)
+        # self._can_working_flag.clear()
+        # sleep(1)
 
     @fixture(scope="function")
     def config(self) -> None:
