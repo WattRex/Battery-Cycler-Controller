@@ -37,7 +37,8 @@ jobs:
         run: |
           mv /tmp/wattrex-cycler-staging/code/cycler/tests/test_${{ github.event.pull_request.head.ref }}.py /tmp/wattrex-cycler-staging/code/cycler/tests/tests_cycler.py
           mv /tmp/wattrex-cycler-staging/code/cycler/tests/log_config_${{ github.event.pull_request.head.ref }}.yaml /tmp/wattrex-cycler-staging/devops/log_config.yaml
-
+          pwd
+          ls -la ./
       - name: Execute deploy script
         run: |
           chmod +x /tmp/wattrex-cycler-staging/devops/deploy.sh
