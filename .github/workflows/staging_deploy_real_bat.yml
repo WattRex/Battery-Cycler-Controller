@@ -40,8 +40,7 @@ jobs:
       - name: Clean up
         run: |
           echo "${{ steps.pytest.outcome }}"
-          mv ./log/tests ./log/tests_${{ github.event.pull_request.head.ref }}
+          mv ./log/ /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
           docker image prune -f
           docker images -a
-          ls -lAh /tmp
           if [ "${{ steps.pytest.outcome }}" = "failure" ]; then exit 1; fi
