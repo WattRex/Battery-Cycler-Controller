@@ -12,6 +12,7 @@ config.*
 *.yml
 *__version__.py
 .github/
+*code/cycler/tests/test_cycler.py
 
 
 ### Software IDEAS ###

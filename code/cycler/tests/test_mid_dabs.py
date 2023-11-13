@@ -14,8 +14,9 @@ from signal import signal, SIGINT
 from time import sleep, time
 from pytest import fixture, mark
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
+
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
-main_logger = SysLogLoggerC(file_log_levels="devops/log_config.yaml")
+main_logger = SysLogLoggerC(file_log_levels="devops/cycler/log_config.yaml", output_sub_folder='tests')
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_dabs")
 from system_shared_tool import SysShdChanC
 #######################       THIRD PARTY IMPORTS        #######################
@@ -48,8 +49,6 @@ class TestChannels:
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
         self.epc.close()
         self.bms.close()
-        sleep(1)
-        self.can.stop()
 
     @fixture(scope="function", autouse=False)
     def set_environ(self, request):
@@ -65,17 +64,11 @@ class TestChannels:
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # run(['sudo', 'ip', 'link', 'set', 'up', 'txqueuelen', '10000', 'can0', 'type', 'can',
         #     'bitrate', '125000'], stdout=PIPE, stderr=PIPE)
-        # Instantiate can node
-        _working_can = Event()
-        _working_can.set()
-        #Create the thread for CAN
-        self.can = DrvCanNodeC(tx_buffer_size= 150, working_flag = _working_can, cycle_period= 30)
-        self.can.start()
 
         # Instantiate MidDabsEpcDeviceC
         ######################################### EPC ##############################################
-        test_dev1_info = CyclerDataDeviceC(dev_id= dev_conf['epc'], model = 'b', manufacturer= 'c',
-                                        device_type= CyclerDataDeviceTypeE.EPC,
+        test_dev1_info = CyclerDataDeviceC(dev_db_id= dev_conf['epc'], model = 'b',
+                                        manufacturer= 'c', device_type= CyclerDataDeviceTypeE.EPC,
                                         iface_name= dev_conf['epc'],
                                         mapping_names= {'hs_voltage': 1})
         self.epc = MidDabsPwrDevC(device=[test_dev1_info])
@@ -102,7 +95,7 @@ class TestChannels:
         self.epc.close()
         ######################################### BMS ##############################################
         log.info("Starting test for bms")
-        self.bms = MidDabsExtraMeterC(CyclerDataDeviceC(dev_id= dev_conf['bms'], model = 'b',
+        self.bms = MidDabsExtraMeterC(CyclerDataDeviceC(dev_db_id= dev_conf['bms'], model = 'b',
                                         manufacturer= 'c', device_type= CyclerDataDeviceTypeE.BMS,
                                         iface_name= dev_conf['bms'],
                                         mapping_names= {'vcell1': 1, 'vcell2': 2, 'vcell3': 3,
@@ -115,12 +108,9 @@ class TestChannels:
         for _ in range(5):
             self.bms.update(ext_meas, status)
             log.info((f"Measuring: {ext_meas.__dict__}"))
-            log.info(f"Status: {getattr(status,'extra_meter_'+str(self.bms.device.dev_id)).name}")
+            log.info(f"Status: {getattr(status,'extra_meter_'+str(self.bms._dev_db_id)).name}")
             sleep(2)
         self.bms.close()
-        log.info("Closing can")
-        self.can.stop()
-        sleep(1.5)
         # ######################################### SOURCE #########################################
         # run(['sudo', 'ip', 'link', 'set', 'down', 'can0'], stdout=PIPE, stderr=PIPE)
         # log.info("Starting test for ea source")

@@ -1,7 +1,23 @@
 FROM python:3.10-bullseye
+ARG USER=default
+ARG GROUP=default
+ENV U_ID=${USER}
+ENV G_UID=${GROUP}
+ENV UG_NAME=wattrex
+RUN addgroup --system --gid ${G_UID} ${UG_NAME} && adduser --system --gid ${G_UID} --uid ${U_ID} ${UG_NAME}
+USER ${UG_NAME}
 WORKDIR /cycler
-ADD ./code ./code
+ENV PATH="${PATH}:/home/${UG_NAME}/.local/bin"
 RUN pip install --upgrade pip
 RUN pip install pytest
+
+ARG UPDATE_REQS=default
+ADD --chown=${UG_NAME}:${UG_NAME} ./code/cycler/requirements.txt ./code/cycler/requirements.txt
+
+RUN cat code/cycler/requirements.txt
 RUN pip install -r code/cycler/requirements.txt
+
+ADD --chown=${UG_NAME}:${UG_NAME} ./code ./code
+
+
 CMD ["python", "./code/cycler/tests/run_cycler.py"]

@@ -10,10 +10,16 @@ import os
 from time import sleep
 from threading import Event
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
+# Change path to the root of the project
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname + "/../../")
+
 from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, Logger
 #######################       LOGGER CONFIGURATION       #######################
+
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels=os.environ["R_PATH"]+'/log_config.yaml')
+    cycler_logger = SysLogLoggerC(file_log_levels='./devops/can/log_config.yaml', output_sub_folder='can')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
