@@ -14,7 +14,8 @@ if __name__ == '__main__':
     cycler_logger = SysLogLoggerC(file_log_levels= 'log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
-from system_shared_tool import SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC, SysShdNodeStatusE
+from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC,
+                                SysShdNodeStatusE)
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataGenMeasC,
             CyclerDataDeviceTypeE, CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC)
 
@@ -27,10 +28,8 @@ from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= re
 #######################             CLASSES              #######################
 
 class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
-    """Returns a removable version of the DRv command .
-
-    Args:
-        threading ([type]): [description]
+    """
+    Class that represents a node used for update the measurements of the devices.
     """
 
     def __init__(self,shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
@@ -39,6 +38,15 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
                  meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the thread node used to update measurements from devices.
+        Arguments of the constructor:
+        - shared_gen_meas: Shared object for generic measures.
+        - shared_ext_meas: Shared object for extended measures.
+        - shared_status: Shared object for devices status.
+        - cycle_period: Node period.
+        - working_flag: Working flag.
+        - devices: List of devices.
+        - excl_tags: Tags of excluded attributes.
+        - meas_params: Node parameters.
         '''
         super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
                         node_params= meas_params)
@@ -58,19 +66,17 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self._ext_meas: CyclerDataExtMeasC = self.globlal_ext_meas.read()
 
     def sync_shd_data(self) -> None:
-        '''Update
+        '''Update the local variables to the shared data.
+        In this case the function will update all the attributes except the ones in the
+        excluded tags, from the local data to the global.
         '''
         try:
-            ## TODO: CHANGE TO MERGE EXCLUDE TAGS
-            # self.globlal_all_status.merge_exclude_tags(self._all_status,
-            #                                     included_tags= self.__shd_excl_tags.status_attrs)
-            # self.globlal_gen_meas.merge_included_tags(new_obj= self._gen_meas,
-            #                                     included_tags= self.__shd_excl_tags.gen_meas_attrs)
-            # self.globlal_ext_meas.merge_included_tags(self._ext_meas,
-            #                                     included_tags= self.__shd_excl_tags.ext_meas_attrs)
-            self.globlal_all_status.write(self._all_status)
-            self.globlal_gen_meas.write(self._gen_meas)
-            self.globlal_ext_meas.write(self._ext_meas)
+            self.globlal_all_status.update_excluding_tags(self._all_status,
+                                                excluded_tags= self.__shd_excl_tags.status_attrs)
+            self.globlal_gen_meas.update_excluding_tags(new_obj= self._gen_meas,
+                                                excluded_tags= self.__shd_excl_tags.gen_meas_attrs)
+            self.globlal_ext_meas.update_excluding_tags(self._ext_meas,
+                                                excluded_tags= self.__shd_excl_tags.ext_meas_attrs)
         except SysShdErrorC as err:
             log.error(f"Failed to sync ext shared data: {err}")
 
@@ -84,7 +90,8 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
             dev.update(ext_meas= self._ext_meas, status= self._all_status)
         # Sync the shared data with the updated data.
         self.sync_shd_data()
-        if self._gen_meas.current is not None and self._gen_meas.voltage is not None:
+        if (self._gen_meas.current is not None and self._gen_meas.voltage != 0 and
+            self._gen_meas.voltage is not None):
             self.status = SysShdNodeStatusE.OK
 
     def stop(self) -> None:
