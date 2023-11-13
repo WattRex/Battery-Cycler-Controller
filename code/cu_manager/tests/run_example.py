@@ -33,5 +33,7 @@ from cu_manager import CuManagerNodeC
 if __name__ == '__main__':
     working_flag_event : threading.Event = threading.Event()
     working_flag_event.set()
-    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1000, )
+    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event,
+                                          cycle_period=1000,
+                                          cu_id_file_path='./devops/.cu_id')
     cu_manager_node.run()

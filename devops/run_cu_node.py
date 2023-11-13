@@ -19,8 +19,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.getcwd()+'/code/cu_manager/')
-from cu_manager import CuManagerNodeC
+from wattrex_battery_cycler_cu_manager import CuManagerNodeC
 
 #######################          PROJECT IMPORTS         #######################
 
@@ -33,5 +32,7 @@ from cu_manager import CuManagerNodeC
 if __name__ == '__main__':
     working_flag_event : threading.Event = threading.Event()
     working_flag_event.set()
-    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1000)
+    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event,
+                                          cycle_period=1000,
+                                          cu_id_file_path='./devops/.cu_id')
     cu_manager_node.run()
