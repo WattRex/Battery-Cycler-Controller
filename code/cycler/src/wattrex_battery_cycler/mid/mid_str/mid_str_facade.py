@@ -66,6 +66,8 @@ class MidStrFacadeC:
         self.gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
         self.meas_id: int = 0
+        self.status_id: int = 0
+        self.alarm_id: int = 0
 
     def get_start_queued_exp(self) -> Tuple[CyclerDataExperimentC|None, CyclerDataBatteryC|None,
                                             CyclerDataProfileC|None]:
@@ -74,6 +76,8 @@ class MidStrFacadeC:
         cycler would be running, and change its status to RUNNING in database.
         '''
         self.meas_id = 0
+        self.status_id = 0
+        self.alarm_id = 0
         exp = None
         battery = None
         profile = None
@@ -257,11 +261,13 @@ class MidStrFacadeC:
             new_status (CyclerDataAllStatusC): [description]
         """
         status = DrvDbCacheStatusC()
+        status.StatusID = self.status_id
         status.Timestamp = datetime.now()
         status.ExpID = exp_id
         for db_name, att_name in MAPPING_STATUS.items():
             setattr(status, db_name, getattr(self.all_status.pwr_dev, att_name))
         self.__cache_db.session.add(status)
+        self.status_id += 1
 
     def write_new_alarm(self, alarms: List[CyclerDataAlarmC], exp_id: int) -> None:
         """Write an alarm into the cache db .
@@ -270,11 +276,13 @@ class MidStrFacadeC:
         """
         for alarm in alarms:
             alarm_db = DrvDbAlarmC()
+            alarm_db.AlarmID = self.alarm_id
             alarm_db.Timestamp = datetime.now()
             alarm_db.ExpID = exp_id
             for db_name, att_name in MAPPING_ALARM.items():
                 setattr(alarm_db, db_name, getattr(alarm, att_name))
             self.__cache_db.session.add(alarm_db)
+            self.alarm_id += 1
 
     def write_generic_measures(self, exp_id: int) -> None:
         """Write the generic measures into the cache db .
