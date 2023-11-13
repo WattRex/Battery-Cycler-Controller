@@ -1,6 +1,6 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deployment of battery cycler controller datatypes to Pypi
+name: Deployment of DATATYPES
 
 on:
   push:
@@ -8,48 +8,43 @@ on:
       - 'cycler_datatypes'
 
   pull_request_review:
-    types: [submited]
-    pull_request:
-      base:
-      ref: 
-        - "cycler_datatypes"
-
-env:
-  PACKAGE_NAME: wattrex-battery-cycler-controller-datatypes
+    types: [submitted]
 
 jobs:
 
   build-package-on-push:
-    name: QA and Build battery controller datatypes on push
+    name: QA and Build ${{ vars.DATATYPES_PACKAGE_NAME }} on push
     if: ${{ github.event_name == 'push' }}
+    environment: development
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: wattrex-battery-cycler-controller-datatypes
+      package-name: ${{ vars.DATATYPES_PACKAGE_NAME }}
       package-path: "code/datatypes"
+      source-path: "code/datatypes/src"
       python-version: "3.10"
 
   build-package-on-pull-request:
-    name: QA and Build battery controller datatypes on pull request
+    name: QA and Build ${{ vars.DATATYPES_PACKAGE_NAME }} on pull request
     if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && github.event.pull_request.head.ref == 'cycler_datatypes' }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: wattrex-battery-cycler-controller-datatypes
+      package-name: ${{ vars.DATATYPES_PACKAGE_NAME }}
       package-path: "code/datatypes"
+      source-path: "code/datatypes/src"
       python-version: "3.10"
 
   publish-package:
-    name: Publish package wattrex-battery-cycler-controller-datatypes to PyPi
+    name: Publish package ${{ vars.DATATYPES_PACKAGE_NAME }} to PyPi
     needs: build-package-on-pull-request
-    if: ${{ github.event_name == 'pull_request_review' }} && ${{ github.event.review.state == 'approved' }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
-    environment: development
     permissions:
       id-token: write
     steps:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name: wattrex-battery-cycler-controller-datatypes
+          name: ${{ vars.DATATYPES_PACKAGE_NAME }}
           path: ${{ github.event.pull_request.head.ref }}/dist/
 
       - name: Publish package to PyPI

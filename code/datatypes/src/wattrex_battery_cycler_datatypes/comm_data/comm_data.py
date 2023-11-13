@@ -76,7 +76,7 @@ class CommDataCuC:
             str: string with the data of the CU.
         '''
         return f'CU info: \nCU_ID: {self.cu_id}\nMAC: {self.mac}\nUser: {self.user}\n' + \
-            'Hostname: {self.hostname}\nIP: {self.ip}\nPort: {self.port}\nMsg Type: {self.msg_type}'
+            f'Hostname: {self.hostname}\nIP: {self.ip}\nPort: {self.port}\nMsgType: {self.msg_type}'
 
 
 class CommDataHeartbeatC:
@@ -109,7 +109,7 @@ class CommDataDeviceC:
     '''
 
     def __init__(self, cu_id : int, comp_dev_id : int, serial_number : int,
-                link_name : int) -> None:
+                link_name : str) -> None:
         '''
         Initialize the class with the device info.
 
@@ -117,7 +117,7 @@ class CommDataDeviceC:
             cu_id (int): id of the CU
             comp_dev_id (int): ID of the compatible device
             serial_number (int): serial number of the device
-            link_name (int): name of the link that the device is connected
+            link_name (str): name of the link that the device is connected
         '''
         self.cu_id = cu_id
         self.comp_dev_id = comp_dev_id
@@ -132,7 +132,7 @@ class CommDataDeviceC:
             str: string with the data of the Device.
         '''
         return f'Device info: \nCU_ID: {self.cu_id}\nComp_dev_id: {self.comp_dev_id}\n' + \
-            'SN: {self.serial_number}\nLink name: {self.link_name}'
+            f'SN: {self.serial_number}\nLink name: {self.link_name}'
 
 
 class CommDataMnCmdDataC:

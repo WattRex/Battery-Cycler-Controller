@@ -35,15 +35,6 @@ from src.wattrex_battery_cycler.mid.mid_str import (MidStrNodeC, MidStrCmdDataC,
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class DummyNodeC(MidStrNodeC):
-    def __init__(self, name: str, cycle_period: int, working_flag: Event,
-                 shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC,
-                 shared_status: SysShdSharedObjC, str_reqs: SysShdChanC,
-                 str_alarms: SysShdChanC, str_data: SysShdChanC,
-                 cycler_station: int, master_file: str, cache_file: str) -> None:
-        super().__init__(name, cycle_period, working_flag, shared_gen_meas,
-                         shared_ext_meas, shared_status, str_reqs, str_alarms,
-                         str_data, cycler_station, master_file, cache_file)
 
 class TestChannels:
     """A test that tests the channels in pytest.
@@ -182,8 +173,8 @@ def write_exp_status(chan_str_reqs: SysShdChanC,
 def delete_cache_data()->None:
     """Delete all cached data from the cache database
     """
-    cache_db = DrvDbSqlEngineC(config_file= 'code/cycler/tests/.cred_cache.yaml',
-                            db_type= DrvDbTypeE.CACHE_DB)
+    cache_db = DrvDbSqlEngineC(config_file= 'devops/.cred.yaml',
+                            db_type= DrvDbTypeE.CACHE_DB, section= 'cache_db')
     stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 1)
     cache_db.session.execute(stmt)
     stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 1)
