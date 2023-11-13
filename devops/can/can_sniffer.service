@@ -10,8 +10,6 @@ StartLimitIntervalSec=15
 
 [Service]
 #Type of service
-User=plc004
-Group=plc004
 Type=simple
 #Restart policy
 Restart=always
