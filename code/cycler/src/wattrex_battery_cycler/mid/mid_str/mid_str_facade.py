@@ -181,6 +181,16 @@ class MidStrFacadeC:
         battery.elec_ranges = bat_range
         return battery
 
+    def get_cycler_station_status(self) -> bool:
+        """Returns if the cycler station is deprecated or not.
+        Returns:
+            [bool]: [description]
+        """
+        ## Get cycler station info
+        stmt = select(DrvDbCyclerStationC.Deprecated).where(DrvDbCyclerStationC.CSID == self.cs_id)
+        result = self.__master_db.session.execute(stmt).one()[0]
+        return result
+
     def get_cycler_station_info(self) -> CyclerDataCyclerStationC|None: #pylint: disable= too-many-locals
         """Returns the name and name of the cycle station for the experiment .
         Returns:

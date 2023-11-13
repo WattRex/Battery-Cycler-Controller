@@ -104,6 +104,10 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             cycler_info = self.db_iface.get_cycler_station_info()
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                    station= cycler_info))
+        elif command.cmd_type == MidStrReqCmdE.GET_CS_STATUS:
+            cycler_status = self.db_iface.get_cycler_station_status()
+            self.str_data.send_data(data= MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_STATUS,
+                                                station_status = cycler_status))
         elif command.cmd_type == MidStrReqCmdE.SET_EXP_STATUS and command.exp_status is not None:
             if self.__actual_exp_id == -1:
                 log.warning("No experiment is running")
