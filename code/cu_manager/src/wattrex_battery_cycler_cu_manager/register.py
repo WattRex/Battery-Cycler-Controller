@@ -49,12 +49,13 @@ def __get_local_ip() -> str:
     try:
         # doesn't even have to be reachable
         s.connect(('192.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
+        ip_address = s.getsockname()[0]
+    except Exception as exc:
+        log.debug(exc)
+        ip_address = '127.0.0.1'
     finally:
         s.close()
-    return IP
+    return ip_address
 
 
 if __name__ == "__main__":

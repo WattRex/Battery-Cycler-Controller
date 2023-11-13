@@ -35,12 +35,13 @@ from .detect import DetectorC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class CuManagerNodeC(SysShdNodeC):
+class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attributes
     '''
     Cu Manager Class to instanciate a CU Manager Node
     '''
 
-    def __init__(self, working_flag : threading.Event, cycle_period : int, cu_id_file_path : str = './devops/.cu_id') -> None:
+    def __init__(self, working_flag : threading.Event, cycle_period : int,
+                 cu_id_file_path : str = './devops/.cu_id') -> None:
         '''
         Initialize the CU manager node.
         '''
@@ -59,11 +60,11 @@ class CuManagerNodeC(SysShdNodeC):
         self.working_flag = working_flag
         self.cycle_period : int = cycle_period
 
-        self.CU_ID_FILE_PATH : str = cu_id_file_path
+        self.__cu_id_file_path : str = cu_id_file_path
 
         self._cu_id = None
-        if path.exists(self.CU_ID_FILE_PATH):
-            with open(self.CU_ID_FILE_PATH, 'r', encoding='utf-8') as cu_id_file:
+        if path.exists(self.__cu_id_file_path):
+            with open(self.__cu_id_file_path, 'r', encoding='utf-8') as cu_id_file:
                 self.cu_id = int(cu_id_file.read())
                 self.client_mqtt.subscribe_cu(self.cu_id)
                 log.info(f"Device previously registered with id: {self.cu_id}")
@@ -75,12 +76,24 @@ class CuManagerNodeC(SysShdNodeC):
         self.detector = DetectorC(self.cu_id)
 
     @property
-    def cu_id(self) -> None:
+    def cu_id(self) -> int:
+        '''
+        Get the cu_id
+
+        Returns:
+            int: cu_id
+        '''
         return self._cu_id
 
 
     @cu_id.setter
     def cu_id(self, new_cu_id) -> None:
+        '''
+        Set the cu_id
+
+        Args:
+            new_cu_id (int): new cu_id
+        '''
         self.client_mqtt.cu_id = new_cu_id
         self._cu_id = new_cu_id
 
@@ -107,10 +120,17 @@ class CuManagerNodeC(SysShdNodeC):
 
 
     def store_cu_info_cb(self, data : CommDataCuC) -> None:
+        '''
+        Callback function executed from the Broker Client when a message is received from the
+        broker in the CU_ID/register/ topic.
+
+        Args:
+            data (CommDataCuC): data received from the broker
+        '''
         if isinstance(data, CommDataCuC):
             self.cu_id = data.cu_id
             log.info(f'CU_ID assigned: {self.cu_id}')
-            with open(self.CU_ID_FILE_PATH, 'w', encoding='utf-8') as cu_id_file:
+            with open(self.__cu_id_file_path, 'w', encoding='utf-8') as cu_id_file:
                 cu_id_file.write(str(self.cu_id))
             self.registered.set()
             log.info(f"Device registered with CU_ID: {data.cu_id}")
@@ -119,12 +139,18 @@ class CuManagerNodeC(SysShdNodeC):
 
 
     def process_detect(self) -> None:
+        '''
+        Process the detection
+        '''
         log.info("Processing detection")
         detected_devices : List[CommDataDeviceC] = self.detector.process_detection()
         self.client_mqtt.publish_dev(detected_devices)
 
 
     def process_heartbeat(self) -> None:
+        '''
+        Process the heartbeat
+        '''
         log.debug("Processing heartbeat")
         if self.__gather_heartbeat():
             hb = CommDataHeartbeatC(cu_id=self.cu_id)
@@ -132,7 +158,7 @@ class CuManagerNodeC(SysShdNodeC):
 
 
     def __gather_heartbeat(self) -> bool:
-        # TODO: implement this @roberto
+        # TODO: implement this @roberto # pylint: disable=fixme
         return True
 
 
@@ -145,7 +171,7 @@ class CuManagerNodeC(SysShdNodeC):
         '''
         log.info(f"Launching CS: {cs_id}")
         self.active_cs[cs_id] = datetime.now()
-        # TODO: fix it, raise an error due to bad credential configuration
+        # TODO: fix it, raise an error due to bad credential configuration # pylint: disable=fixme
         result = subprocess.run(['./devops/deploy.sh', '', 'cs', f'{cs_id}'],
                     stdout=subprocess.PIPE,
                     universal_newlines=True,
@@ -154,8 +180,22 @@ class CuManagerNodeC(SysShdNodeC):
 
 
     def process_iteration(self) -> None:
+        '''
+        Process an iteration of the CU Manager Node.
+        '''
         self.client_mqtt.process_iteration()
         self.process_heartbeat()
+
+
+    def sync_shd_data(self) -> None:
+        '''Sync shared data with the sync node.
+        '''
+
+
+    def stop(self) -> None:
+        '''Stop the stream .
+        '''
+        self.client_mqtt.close()
 
 #######################            FUNCTIONS             #######################
 

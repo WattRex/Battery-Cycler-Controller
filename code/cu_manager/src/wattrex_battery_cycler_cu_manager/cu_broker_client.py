@@ -55,12 +55,24 @@ class BrokerClientC():
 
 
     def subscribe_cu(self, cu_id : int) -> None:
+        '''
+        Subscribe to the topics of the CU
+
+        Args:
+            cu_id (int): CU ID
+        '''
         self.cu_id = cu_id
         self.mqtt.subscribe(topic=f'/{cu_id}{_SUFFIX_RX_DET}', callback=self.process_det_dev)
         self.mqtt.subscribe(topic=f'/{cu_id}{_SUFFIX_RX_LAUNCH}', callback=self.process_launch)
 
 
     def process_inform_reg(self, raw_data : bytearray) -> None:
+        '''
+        Process the registration answer from MQTT Broker
+
+        Args:
+            raw_data (bytearray): Raw data received
+        '''
         data : CommDataCuC = loads(raw_data)
         if isinstance(data, CommDataCuC):
             if data.msg_type is CommDataRegisterTypeE.OFFER:
@@ -79,34 +91,72 @@ class BrokerClientC():
 
 
     def publish_cu_info(self, cu_info : CommDataCuC) -> None:
+        '''
+        Publish the CU info to the MQTT Broker
+        '''
         log.info(f"Send {cu_info.msg_type.name} msg with mac: {cu_info.mac}")
         raw_data = dumps(cu_info)
         self.mqtt.publish(topic=_REGISTER_TOPIC, data=raw_data)
 
 
     def process_launch(self, raw_data : bytearray) -> None:
+        '''
+        Process the launch request from MQTT Broker
+
+        Args:
+            raw_data (bytearray): Raw data received
+        '''
         log.info(f"Received launch request from {raw_data}")
         cs_id : int = int(raw_data)
         self.__launch_cb(cs_id)
 
 
     def process_det_dev(self, raw_data : bytearray) -> None:
-        log.info(f"Received device detection request")
+        '''
+        Process the device detection request from MQTT Broker
+
+        Args:
+            raw_data (bytearray): Raw data received (Not used)
+        '''
+        log.info("Received device detection request")
+        log.debug(f"Raw data received from device detection request : {raw_data}")
         self.__detect_cb()
 
 
     def publish_dev(self, devices : List[CommDataDeviceC]) -> None:
+        '''
+        Publish the detected devices to the MQTT Broker
+
+        Args:
+            devices (List[CommDataDeviceC]): List of detected devices
+        '''
         raw_devs = dumps(devices)
         log.critical(f"Publishing detected devices: {raw_devs} on CU: {self.cu_id}")
         self.mqtt.publish(topic=f'/{self.cu_id}{_SUFFIX_TX_DET_DEV}', data=raw_devs)
 
 
-    def publish_heartbeat(self, hb : CommDataHeartbeatC) -> None:
-        raw_data = dumps(hb)
+    def publish_heartbeat(self, heartbeat : CommDataHeartbeatC) -> None:
+        '''
+        Publish the heartbeat to the MQTT Broker
+
+        Args:
+            hb (CommDataHeartbeatC): Heartbeat to publish
+        '''
+        raw_data = dumps(heartbeat)
         self.mqtt.publish(topic=f'/{self.cu_id}{_SUFFIX_TX_HB}', data=raw_data)
 
 
     def process_iteration(self) -> None:
+        '''
+        Process the MQTT Broker data
+        '''
         self.mqtt.process_data()
+
+
+    def close(self) -> None:
+        '''
+        Close the broker client.
+        '''
+        self.mqtt.close()
 
 #######################            FUNCTIONS             #######################

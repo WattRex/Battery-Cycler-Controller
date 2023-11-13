@@ -27,11 +27,26 @@ from wattrex_battery_cycler_datatypes.comm_data import CommDataDeviceC
 #######################             CLASSES              #######################
 
 class DetectorC:
+    '''
+    Detector Class to detect connected devices
+    '''
     def __init__(self, cu_id : int) -> None:
         self.cu_id = cu_id
 
     def process_detection(self) -> List[CommDataDeviceC]:
-        # TODO: implement this
-        dev1 = CommDataDeviceC(cu_id=self.cu_id, comp_dev_id=1, serial_number=1, link_name="ACM0_test")
-        dev2 = CommDataDeviceC(cu_id=self.cu_id, comp_dev_id=2, serial_number=3, link_name="ACM2_test")
+        '''
+        Process the detection of connected devices
+
+        Returns:
+            List[CommDataDeviceC]: List of detected devices
+        '''
+        # TODO: implement this  # pylint: disable=fixme
+        dev1 = CommDataDeviceC(cu_id=self.cu_id,
+                               comp_dev_id=1,
+                               serial_number=1,
+                               link_name="ACM0_test")
+        dev2 = CommDataDeviceC(cu_id=self.cu_id,
+                               comp_dev_id=2,
+                               serial_number=3,
+                               link_name="ACM2_test")
         return [dev1, dev2]
