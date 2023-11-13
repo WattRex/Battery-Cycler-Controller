@@ -30,12 +30,17 @@ jobs:
 
       - name: Execute deploy script
         run: |
+          echo $DBUS_SESSION_BUS_ADDRESS
+          echo $XDG_RUNTIME_DIR
           chmod +x ./devops/deploy.sh
           ./devops/deploy.sh
+          echo $DBUS_SESSION_BUS_ADDRESS
+          echo $XDG_RUNTIME_DIR
       - name: Execute deploy container
         id: pytest
         continue-on-error: true
         run: |
+          ls -lA /dev/mqueue/
           ./devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
       - name: Clean up
         run: |
