@@ -2,7 +2,7 @@
 First of all, `cd` to the folder where this README is stored (?/Battery-Cyclers-Controller/devops/can). After that, the following commands have to be executed in order:
 
 ```
-systemctl --user set-environment R_PATH=$(pwd)
+systemctl --user set-environment SRC_PATH=$(pwd)
 ```
 
 ```
