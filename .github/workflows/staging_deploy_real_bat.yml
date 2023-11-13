@@ -30,27 +30,27 @@ jobs:
 
       - name: Execute deploy script
         run: |
-          id -n -u
-          id -u
           export XDG_RUNTIME_DIR="/run/user/$UID"
           export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
           echo $DBUS_SESSION_BUS_ADDRESS
           echo $XDG_RUNTIME_DIR
           chmod +x ./devops/deploy.sh
           ./devops/deploy.sh
-          echo $DBUS_SESSION_BUS_ADDRESS
-          echo $XDG_RUNTIME_DIR
+          systemctl --user status can_sniffer.service
+          ls -lA /dev/mqueue/
       - name: Execute deploy container
         id: pytest
         continue-on-error: true
         run: |
+          systemctl --user status can_sniffer.service
           ls -lA /dev/mqueue/
           ./devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
       - name: Clean up
         run: |
           echo "${{ steps.pytest.outcome }}"
           mkdir -p /tmp/github_wattrex
-          mv ./log /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
+          rm -rf /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
+          cp -R ./log /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
           docker image prune -f
           docker images -a
           if [ "${{ steps.pytest.outcome }}" = "failure" ]; then exit 1; fi
