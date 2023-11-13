@@ -42,6 +42,8 @@ jobs:
         id: pytest
         continue-on-error: true
         run: |
+          export XDG_RUNTIME_DIR="/run/user/$UID"
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
           systemctl --user status can_sniffer.service
           ls -lA /dev/mqueue/
           ./devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
