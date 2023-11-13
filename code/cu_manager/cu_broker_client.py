@@ -7,6 +7,7 @@ Wrapper for the MQTT client
 #######################         GENERIC IMPORTS          #######################
 from typing import Callable, List
 from pickle import dumps, loads
+from uuid import getnode
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -34,6 +35,8 @@ _SUFFIX_TX_HB = '/heartbeat'
 _SUFFIX_RX_DET = '/req_detect'
 _SUFFIX_RX_LAUNCH = '/launch'
 
+_MAC: int = getnode()
+
 #######################             CLASSES              #######################
 
 class BrokerClientC():
@@ -50,6 +53,7 @@ class BrokerClientC():
         self.cu_id = None
         self.mqtt.subscribe(topic=_INFORM_TOPIC, callback=self.process_inform_reg)
 
+
     def subscribe_cu(self, cu_id : int) -> None:
         self.cu_id = cu_id
         self.mqtt.subscribe(topic=f'/{cu_id}{_SUFFIX_RX_DET}', callback=self.process_det_dev)
@@ -60,16 +64,16 @@ class BrokerClientC():
         data : CommDataCuC = loads(raw_data)
         if isinstance(data, CommDataCuC):
             if data.msg_type is CommDataRegisterTypeE.OFFER:
-                log.info(f"Receiving {data.msg_type.name} from [host: {data.hostname}, mac: {data.mac}]")
-                data.msg_type = CommDataRegisterTypeE.REQUEST
-                # TODO: answer only if the recieved mac is the same as the sent one
-                self.publish_cu_info(data)
-            elif data.msg_type is CommDataRegisterTypeE.ACK:
+                log.info(f"Receiving {data.msg_type.name} from "
+                         + f"[host: {data.hostname}, mac: {data.mac}]")
+                if data.mac == _MAC:
+                    data.msg_type = CommDataRegisterTypeE.REQUEST
+                    self.publish_cu_info(data)
+            elif data.msg_type is CommDataRegisterTypeE.ACK and data.mac == _MAC:
                 log.info(f"Received {data.msg_type.name}. Device registered. CU_ID: {data.cu_id}")
                 self.subscribe_cu(data.cu_id)
-
                 self.__store_cu_info_cb(data)
-                # self.mqtt.unsubscribe(topic='/inform_reg') # TODO: add it on drv_mqtt
+                self.mqtt.unsubscribe(topic='/inform_reg')
         else:
             log.error(f"Receiving {type(data)} instead of CommDataC")
 
@@ -90,8 +94,10 @@ class BrokerClientC():
         log.info(f"Received device detection request")
         self.__detect_cb()
 
+
     def publish_dev(self, devices : List[CommDataDeviceC]) -> None:
         raw_devs = dumps(devices)
+        log.critical(f"Publishing detected devices: {raw_devs} on CU: {self.cu_id}")
         self.mqtt.publish(topic=f'/{self.cu_id}{_SUFFIX_TX_DET_DEV}', data=raw_devs)
 
 

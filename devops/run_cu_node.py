@@ -5,7 +5,8 @@ Cu Manager
 #######################        MANDATORY IMPORTS         #######################
 
 #######################         GENERIC IMPORTS          #######################
-from typing import List
+import sys, os
+import threading
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -18,20 +19,19 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
+sys.path.append(os.getcwd()+'/code/cu_manager/')
+from cu_manager import CuManagerNodeC
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_battery_cycler_datatypes.comm_data import CommDataDeviceC
 
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
 
-class DetectorC:
-    def __init__(self, cu_id : int) -> None:
-        self.cu_id = cu_id
+#######################            FUNCTIONS             #######################
 
-    def process_detection(self) -> List[CommDataDeviceC]:
-        # TODO: implement this
-        dev1 = CommDataDeviceC(cu_id=self.cu_id, comp_dev_id=1, serial_number=1, link_name="ACM0_test")
-        dev2 = CommDataDeviceC(cu_id=self.cu_id, comp_dev_id=2, serial_number=3, link_name="ACM2_test")
-        return [dev1, dev2]
+if __name__ == '__main__':
+    working_flag_event : threading.Event = threading.Event()
+    working_flag_event.set()
+    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1000)
+    cu_manager_node.run()
