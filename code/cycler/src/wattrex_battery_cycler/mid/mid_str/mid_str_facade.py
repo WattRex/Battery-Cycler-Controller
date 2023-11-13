@@ -48,7 +48,7 @@ class MidStrDbElementNotFoundErrorC(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class MidStrFacadeC:
+class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
     '''
     This class is used to interface with the database.
     '''
