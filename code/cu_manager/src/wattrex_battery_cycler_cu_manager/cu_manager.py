@@ -28,12 +28,11 @@ from wattrex_battery_cycler_datatypes.comm_data import CommDataCuC, CommDataHear
 from system_shared_tool import SysShdIpcChanC, SysShdNodeC, SysShdNodeStatusE
 
 #######################          MODULE IMPORTS          #######################
-from cu_broker_client import BrokerClientC
-from register import get_cu_info
-from detect import DetectorC
+from .cu_broker_client import BrokerClientC
+from .register import get_cu_info
+from .detect import DetectorC
 
 #######################              ENUMS               #######################
-CU_ID_FILE_PATH = './devops/.cu_id'
 
 #######################             CLASSES              #######################
 class CuManagerNodeC(SysShdNodeC):
@@ -41,7 +40,7 @@ class CuManagerNodeC(SysShdNodeC):
     Cu Manager Class to instanciate a CU Manager Node
     '''
 
-    def __init__(self, working_flag : threading.Event, cycle_period : int) -> None:
+    def __init__(self, working_flag : threading.Event, cycle_period : int, cu_id_file_path : str = './devops/.cu_id') -> None:
         '''
         Initialize the CU manager node.
         '''
@@ -60,9 +59,11 @@ class CuManagerNodeC(SysShdNodeC):
         self.working_flag = working_flag
         self.cycle_period : int = cycle_period
 
+        self.CU_ID_FILE_PATH : str = cu_id_file_path
+
         self._cu_id = None
-        if path.exists(CU_ID_FILE_PATH):
-            with open(CU_ID_FILE_PATH, 'r', encoding='utf-8') as cu_id_file:
+        if path.exists(self.CU_ID_FILE_PATH):
+            with open(self.CU_ID_FILE_PATH, 'r', encoding='utf-8') as cu_id_file:
                 self.cu_id = int(cu_id_file.read())
                 self.client_mqtt.subscribe_cu(self.cu_id)
                 log.info(f"Device previously registered with id: {self.cu_id}")
@@ -109,7 +110,7 @@ class CuManagerNodeC(SysShdNodeC):
         if isinstance(data, CommDataCuC):
             self.cu_id = data.cu_id
             log.info(f'CU_ID assigned: {self.cu_id}')
-            with open(CU_ID_FILE_PATH, 'w', encoding='utf-8') as cu_id_file:
+            with open(self.CU_ID_FILE_PATH, 'w', encoding='utf-8') as cu_id_file:
                 cu_id_file.write(str(self.cu_id))
             self.registered.set()
             log.info(f"Device registered with CU_ID: {data.cu_id}")
