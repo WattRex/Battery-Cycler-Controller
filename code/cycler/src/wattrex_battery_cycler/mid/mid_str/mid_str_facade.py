@@ -85,8 +85,9 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                     .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value)\
                     .where(DrvDbMasterExperimentC.CSID == self.cs_id)\
                     .order_by(DrvDbMasterExperimentC.DateCreation.asc())
-        exp_result = self.__master_db.session.execute(stmt).first()[0]
+        exp_result = self.__master_db.session.execute(stmt).all()
         if len(exp_result) != 0:
+            exp_result: DrvDbMasterExperimentC = exp_result[0][0]
             exp : CyclerDataExperimentC = CyclerDataExperimentC()
             for db_name, att_name in MAPPING_EXPERIMENT.items():
                 setattr(exp, att_name, getattr(exp_result,db_name))
@@ -130,7 +131,6 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
         stmt = select(DrvDbProfileC).join(DrvDbMasterExperimentC,
                     DrvDbMasterExperimentC.ProfID == DrvDbProfileC.ProfID).where(
                     DrvDbMasterExperimentC.ExpID == exp_id)
-        log.warning(stmt)
         result = self.__master_db.session.execute(stmt).one()
         result: DrvDbProfileC = result[0]
         profile = CyclerDataProfileC(name= result.Name)
