@@ -156,8 +156,10 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             ### Write measures and status changes
             if self.db_iface.gen_meas.instr_id is not None:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
-                self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
+                ## TODO: remove commit, should work without this commit # pylint: disable=fixme
+                # self.db_iface.commit_changes()
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
+                self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.meas_id += 1
             if not self.str_reqs.is_empty():
                 # Ignore warning as receive_data return an object,
