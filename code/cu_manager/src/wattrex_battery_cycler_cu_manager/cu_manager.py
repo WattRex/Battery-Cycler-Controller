@@ -41,7 +41,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
     '''
 
     def __init__(self, working_flag : threading.Event, cycle_period : int,
-                 cu_id_file_path : str = './devops/.cu_id') -> None:
+                 cu_id_file_path : str = './devops/cu_manager/.cu_id') -> None:
         '''
         Initialize the CU manager node.
         '''
@@ -173,11 +173,11 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         log.info(f"Launching CS: {cs_id}")
         self.active_cs[cs_id] = datetime.now()
         # TODO: fix it, raise an error due to bad credential configuration # pylint: disable=fixme
-        result = subprocess.run(['./devops/deploy.sh', '', 'cs', f'{cs_id}'],
+        result = subprocess.run(['./devops/deploy.sh', 'cycler', f'{cs_id}'],
                     stdout=subprocess.PIPE,
                     universal_newlines=True,
                     check=False)
-        log.debug(result.stdout)
+        log.critical(result.stdout)
 
 
     def process_iteration(self) -> None:
