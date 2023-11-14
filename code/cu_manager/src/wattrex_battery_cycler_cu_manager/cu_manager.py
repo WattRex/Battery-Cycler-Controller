@@ -47,6 +47,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         '''
         super().__init__(name='cu_manager_node', cycle_period=cycle_period,
                          working_flag=working_flag)
+        self.cu_info: CommDataCuC = get_cu_info()
         self.heartbeat_queue : SysShdIpcChanC = SysShdIpcChanC(name='heartbeat_queue')
         self.active_cs : Dict[int, datetime] = {} # {cs_id : last_connection}
         self.client_mqtt : BrokerClientC = BrokerClientC(error_callback=self.broker_error_cb,
@@ -66,7 +67,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         if path.exists(self.__cu_id_file_path):
             with open(self.__cu_id_file_path, 'r', encoding='utf-8') as cu_id_file:
                 self.cu_id = int(cu_id_file.read())
-                self.client_mqtt.subscribe_cu(self.cu_id)
+                self.client_mqtt.subscribe_cu(cu_id=self.cu_id, mac=self.cu_info.mac)
                 log.info(f"Device previously registered with id: {self.cu_id}")
         else:
             self.registered = threading.Event()
@@ -198,9 +199,3 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         self.client_mqtt.close()
 
 #######################            FUNCTIONS             #######################
-
-if __name__ == '__main__':
-    working_flag_event : threading.Event = threading.Event()
-    working_flag_event.set()
-    cu_manager_node = CuManagerNodeC(working_flag=working_flag_event, cycle_period=1000)
-    cu_manager_node.run()

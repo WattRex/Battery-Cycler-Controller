@@ -7,7 +7,6 @@ Wrapper for the MQTT client
 #######################         GENERIC IMPORTS          #######################
 from typing import Callable, List
 from pickle import dumps, loads
-from uuid import getnode
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -35,7 +34,7 @@ _SUFFIX_TX_HB = '/heartbeat'
 _SUFFIX_RX_DET = '/req_detect'
 _SUFFIX_RX_LAUNCH = '/launch'
 
-_MAC: int = getnode()
+
 
 #######################             CLASSES              #######################
 
@@ -46,21 +45,33 @@ class BrokerClientC():
     def __init__(self, error_callback : Callable, launch_callback : Callable,\
                 detect_callback : Callable, store_cu_info_cb : Callable) -> None:
         self.mqtt : DrvMqttDriverC = DrvMqttDriverC(error_callback=error_callback,
-                                                    cred_path='.cred.mqtt.yaml')
+                                                    cred_path='./devops/.cred.yaml')
         self.__launch_cb : Callable = launch_callback
         self.__detect_cb : Callable = detect_callback
         self.__store_cu_info_cb : Callable = store_cu_info_cb
         self.cu_id = None
-        self.mqtt.subscribe(topic=_INFORM_TOPIC, callback=self.process_inform_reg)
+        self.mac : int = None
 
 
-    def subscribe_cu(self, cu_id : int) -> None:
+    def __store_mac(self, mac : int) -> None:
+        '''
+        Store the MAC address of the CU
+
+        Args:
+            mac (int): MAC address
+        '''
+        if self.mac is None:
+            self.mac = mac
+
+
+    def subscribe_cu(self, cu_id : int, mac : int) -> None:
         '''
         Subscribe to the topics of the CU
 
         Args:
             cu_id (int): CU ID
         '''
+        self.__store_mac(mac)
         self.cu_id = cu_id
         self.mqtt.subscribe(topic=f'/{cu_id}{_SUFFIX_RX_DET}', callback=self.process_det_dev)
         self.mqtt.subscribe(topic=f'/{cu_id}{_SUFFIX_RX_LAUNCH}', callback=self.process_launch)
@@ -76,14 +87,14 @@ class BrokerClientC():
         data : CommDataCuC = loads(raw_data)
         if isinstance(data, CommDataCuC):
             if data.msg_type is CommDataRegisterTypeE.OFFER:
-                log.info(f"Receiving {data.msg_type.name} from "
-                         + f"[host: {data.hostname}, mac: {data.mac}]")
-                if data.mac == _MAC:
+                log.info(f"Receiving {data.msg_type.name} for "
+                         + f"[host: {data.hostname}, mac: {data.mac}], cu_id: {data.cu_id}")
+                if data.mac == self.mac:
                     data.msg_type = CommDataRegisterTypeE.REQUEST
                     self.publish_cu_info(data)
-            elif data.msg_type is CommDataRegisterTypeE.ACK and data.mac == _MAC:
+            elif data.msg_type is CommDataRegisterTypeE.ACK and data.mac == self.mac:
                 log.info(f"Received {data.msg_type.name}. Device registered. CU_ID: {data.cu_id}")
-                self.subscribe_cu(data.cu_id)
+                self.subscribe_cu(data.cu_id, self.mac)
                 self.__store_cu_info_cb(data)
                 self.mqtt.unsubscribe(topic='/inform_reg')
         else:
@@ -94,6 +105,9 @@ class BrokerClientC():
         '''
         Publish the CU info to the MQTT Broker
         '''
+        if self.mac is None:
+            self.mac = cu_info.mac
+            self.mqtt.subscribe(topic=_INFORM_TOPIC, callback=self.process_inform_reg)
         log.info(f"Send {cu_info.msg_type.name} msg with mac: {cu_info.mac}")
         raw_data = dumps(cu_info)
         self.mqtt.publish(topic=_REGISTER_TOPIC, data=raw_data)
