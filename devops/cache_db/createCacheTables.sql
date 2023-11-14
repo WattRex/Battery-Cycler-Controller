@@ -36,7 +36,7 @@ create table if not exists Alarm
 -- Table Status --------------------------
 create table if not exists Status
 (
-    StatusID        mediumint       unsigned    not null    auto_increment,
+    StatusID        mediumint       unsigned    not null,
     ExpID           mediumint       unsigned    not null,
     DevID           mediumint       unsigned    not null,
     Timestamp       datetime                    not null,
@@ -59,6 +59,7 @@ create table if not exists GenericMeasures
     InstrID         mediumint       unsigned    not null,
     Voltage         mediumint                   not null,
     Current         mediumint                   not null,
+    Power           int                         not null,
 
     constraint GenericMeasures_pk_1
         primary key (ExpID, MeasID),
