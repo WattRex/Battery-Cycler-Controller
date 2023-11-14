@@ -12,12 +12,9 @@ RUN pip install --upgrade pip
 RUN pip install pytest
 
 ARG UPDATE_REQS=default
-ADD --chown=${UG_NAME}:${UG_NAME} ./code/cycler/requirements.txt ./code/cycler/requirements.txt
+RUN pip install wattrex-battery-cycler
 
-RUN cat code/cycler/requirements.txt
-RUN pip install -r code/cycler/requirements.txt
-
-ADD --chown=${UG_NAME}:${UG_NAME} ./code ./code
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
 
 
-CMD ["python", "./code/cycler/tests/run_cycler.py"]
+CMD ["python", "./devops/cycler/run_cycler.py"]
