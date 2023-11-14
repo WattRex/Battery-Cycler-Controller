@@ -3,11 +3,9 @@
 DEVOPS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" && pwd )
 REPO_ROOT_DIR=$( cd "${DEVOPS_DIR}/../" && pwd)
 ENV_FILE=.cred.env
-DOCKER_FOLDER=docker
+DOCKER_FOLDER=./
 DOCKER_COMPOSE=docker-compose.yml
 CYCLER_SRC_DIR="${REPO_ROOT_DIR}/code/cycler"
-CYCLER_DOCKERFILE=Dockerfile.cycler
-DB_SYNC_DOCKERFILE=Dockerfile.db_sync
 INT_RE='^[0-9]+$'
 DOCKER_COMPOSE_ARGS="-f ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${DEVOPS_DIR}/${ENV_FILE}"
 
