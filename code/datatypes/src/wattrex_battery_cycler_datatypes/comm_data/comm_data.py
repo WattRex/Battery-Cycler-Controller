@@ -109,7 +109,7 @@ class CommDataDeviceC:
     '''
 
     def __init__(self, cu_id : int, comp_dev_id : int, serial_number : int,
-                link_name : str) -> None:
+                link_name : str|int) -> None:
         '''
         Initialize the class with the device info.
 
