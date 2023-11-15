@@ -59,7 +59,7 @@ class TestChannels:
         delete_cache_data()
         self.working_flag: Event = Event()
         self.working_flag.set()
-        manager: AppManNodeC = AppManNodeC(cs_id= 21, cycle_period= 1500,
+        manager: AppManNodeC = AppManNodeC(cs_id= 21, cycle_period= 500,
                                            working_flag= self.working_flag)
         try:
             sleep(1)
@@ -88,7 +88,7 @@ class TestChannels:
             set_environ ([type]): [description]
             config ([type]): [description]
         """
-        log.debug(msg="1. Test SALG machine status: check machine status normal operation")    
+        log.debug(msg="1. Test SALG machine status: check machine status normal operation")
 
 def delete_cache_data()->None:
     """Delete all cached data from the cache database
