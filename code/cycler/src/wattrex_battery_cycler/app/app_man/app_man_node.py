@@ -9,13 +9,12 @@ from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from threading import Event, current_thread
 from signal import signal, SIGINT
-from time import time, sleep
-from typing import List, Tuple
+from time import sleep
+from typing import List
 
 #######################       THIRD PARTY IMPORTS        #######################
 from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
-
 from system_shared_tool import SysShdChanC, SysShdSharedObjC, SysShdNodeC, SysShdNodeStatusE
 
 #######################          PROJECT IMPORTS         #######################
@@ -23,6 +22,7 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, 
                                         CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC,
                                         CyclerDataCyclerStationC)
 #######################          MODULE IMPORTS          #######################
+from .context import *
 from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC
 from mid.mid_meas import MidMeasNodeC
 from .app_man_core import AppManCoreC, AppManCoreStatusE
@@ -30,8 +30,8 @@ from .app_man_core import AppManCoreC, AppManCoreStatusE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-_PERIOD_CYCLE_STR: int = 250 # Period in ms of the storage node
-_PERIOD_CYCLE_MEAS: int = 140 # Period in ms of the measurement node
+_PERIOD_CYCLE_STR: int = 500#250 # Period in ms of the storage node
+_PERIOD_CYCLE_MEAS: int = 400#140 # Period in ms of the measurement node
 _PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
 class AppManNodeC(SysShdNodeC):
@@ -97,7 +97,8 @@ class AppManNodeC(SysShdNodeC):
         self._th_str.start()
         # Get info from the cycler station to know which devices are compatible
         cs_info = self.configure_cs(reqs_chan= __chan_str_reqs, data_chan= __chan_str_data)
-
+        for dev in cs_info.devices:
+            log.info(f"Device {dev.device_type.name} with iface {dev.iface_name}")
         ### 1.2 Manager thread ###
         self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, str_reqs= __chan_str_reqs,
                                 str_data= __chan_str_data, str_alarms= __chan_alarms)
@@ -109,7 +110,10 @@ class AppManNodeC(SysShdNodeC):
                     shared_status= self.__shd_all_status, devices= cs_info.devices,
                     cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
             self._th_meas.start()
-        ## TODO: ADD ELSE
+        else:
+            log.critical(("Cycler station is deprecated. Meas node will not be launched, "
+                        "cycler station will be stop"))
+            self.stop()
         sleep(2)
         self.__prepare_node()
 
@@ -120,7 +124,7 @@ class AppManNodeC(SysShdNodeC):
         Returns:
             CyclerDataCyclerStationC: Cycler station info
         """
-        request: MidStrCmdDataC = MidStrCmdDataC(cmd= MidStrReqCmdE.GET_CS)
+        request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.GET_CS)
         reqs_chan.send_data(request)
         response: MidStrCmdDataC = data_chan.receive_data()
         if response.error_flag:
@@ -131,6 +135,8 @@ class AppManNodeC(SysShdNodeC):
         log.info(f"Running {self.th_name} thread")
         self.iter = -1
         self.sync_shd_data()
+        while self.man_core.local_gen_meas.voltage is None:
+            sleep(1)
         self.status = SysShdNodeStatusE.OK
 
 
@@ -179,11 +185,11 @@ class AppManNodeC(SysShdNodeC):
     def stop(self, timeout=1.0):
         """ Stop the thread. """
         self.status = SysShdNodeStatusE.STOP
-        log.critical("Stopping BFR application")
+        log.critical("Stopping Cycler manager node")
         self.working_app.clear()
         self.working_meas.clear()
         ## If the manager is stoping, first turn all experiments queued or running to error
-        self.man_core.__deprecated_cs()
+        self.man_core.deprecated_cs()
         sleep(2)
         self.working_str.clear()
         # TODO: improve stop process
@@ -191,33 +197,38 @@ class AppManNodeC(SysShdNodeC):
         # self._th_meas.join(timeout=timeout)
 
     def sync_shd_data(self) -> None:
-        self.man_core.__local_gen_meas : CyclerDataGenMeasC = self.__shd_gen_meas.\
-            update_including_tags(self.man_core.__local_gen_meas, self.__shared_tags.gen_meas_attrs)
-        self.man_core.__local_ext_meas : CyclerDataExtMeasC = self.__shd_ext_meas.\
-            update_including_tags(self.man_core.__local_ext_meas, self.__shared_tags.ext_meas_attrs)
-        self.man_core.__local_all_status : CyclerDataAllStatusC = self.__shd_all_status.\
-            update_including_tags(self.man_core.__local_all_status, self.__shared_tags.status_attrs)
+        self.man_core.local_gen_meas : CyclerDataGenMeasC = self.__shd_gen_meas.\
+            update_including_tags(self.man_core.local_gen_meas, self.__shared_tags.gen_meas_attrs)
+        self.man_core.local_ext_meas : CyclerDataExtMeasC = self.__shd_ext_meas.\
+            update_including_tags(self.man_core.local_ext_meas, self.__shared_tags.ext_meas_attrs)
+        self.man_core.local_all_status : CyclerDataAllStatusC = self.__shd_all_status.\
+            update_including_tags(self.man_core.local_all_status, self.__shared_tags.status_attrs)
 
-    def run(self) -> None:
+    def process_iteration(self) -> None:
         """Run the app .
         """
         try:
-            log.debug(f"----- {self.th_name} iteration: [{self.iter}] -----")
-            raised_alarms = []
             self.iter += 1
-            # 1.0 Sync shared data
-            self.sync_shd_data()
-            # 2.0 Process reqs to str node
-            self.man_core.process_request()
-            # 3.0 Check system healthy and recover if possible
+            log.debug(f"----- {self.th_name} start iteration: [{self.iter}] -----")
+            log.debug(f"----- start iteration: {self.iter} mode: {self.man_core.state} -----")
+            raised_alarms = []
+            # 1.0 Check system healthy and recover if possible
             raised_alarms = self.check_system_health_and_recover()
+            # 2.0 HeartBeat
+            self.heartbeat()
+            # 3.0 Sync shared data
+            self.sync_shd_data()
+            # 4.0 Process reqs to str node
+            self.man_core.process_request()
 
-            # 4.0 Execute status machine
+            # 5.0 Execute status machine
             self.man_core.execute_machine_status()
 
-            # 5.0 Check if man_core is in error to stop node
+            # 6.0 Check if man_core is in error to stop node
             if self.man_core.state == AppManCoreStatusE.ERROR:
                 self.stop()
+            log.debug(f"----- {self.th_name} end iteration: [{self.iter}] -----")
+            log.debug(f"----- end iteration: {self.iter} mode: {self.man_core.state} -----")
         except Exception as exc:
             log.critical(f"Unexpected error during main execution in APP_SALG_Node thread.\n{exc}")
             log.exception(exc)
