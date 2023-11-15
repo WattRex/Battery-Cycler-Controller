@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  cache_db:
+    #image: linuxserver/mariadb
+    image: tobi312/rpi-mariadb:10.11-alpine
+    container_name: wattrex_cycler_cache_db
+    restart: always
+    ports:
+      - "3366:3306"
+    volumes:
+      - wattrex_cycler_cache_db:/var/lib/mysql:rw
+      - ./cache_db/createCacheCyclerTables.sql:/docker-entrypoint-initdb.d/createCacheCyclerTables.sql
+    environment:
+      TZ: Europe/Berlin
+    env_file:
+      - ./.cred.env
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u${MARIADB_ROOT_USER}", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  cycler:
+    build:
+      context: ../
+      dockerfile: ./devops/cycler/Dockerfile.cycler
+      args:
+        USER: ${USER_ID}
+        GROUP: ${GROUP_ID}
+    image: wattrex-cycler-node
+    restart: no
+    user: ${USER_ID}:${GROUP_ID}
+    ipc: host
+    volumes:
+      - ./.cred.yaml:/cycler/devops/.cred.yaml
+      - ./cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
+      - ../log:/cycler/log
+    depends_on:
+      cache_db:
+        condition: service_healthy
+
+  db_sync:
+    build:
+      context: ../
+      dockerfile: ./devops/db_sync/Dockerfile.db_sync
+    image: wattrex-cycler-db-sync
+    container_name: wattrex_cycler_db_sync
+    restart: always
+    env_file:
+      - ./.cred.env
+    depends_on:
+      cache_db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "${MASTER_MYSQL_HOST}", "-u${MASTER_MYSQL_USER}", "-p${MASTER_MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wattrex_cycler_cache_db:
+    name: wattrex_cycler_cache_db
