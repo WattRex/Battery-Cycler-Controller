@@ -60,7 +60,9 @@ class MidStrCmdDataC:
         self.cmd_type = cmd_type
         self.error_flag = True
         if cmd_type is MidStrDataCmdE.EXP_DATA:
-            if all(var is not None for var in (experiment, profile, battery)):
+            ## Check if the experiment is ok or if there is no experiment at all
+            if (all(var is not None for var in (experiment, profile, battery)) or
+                    all(var is None for var in (experiment, profile, battery))):
                 self.error_flag = False
             self.experiment = experiment
             self.profile = profile
