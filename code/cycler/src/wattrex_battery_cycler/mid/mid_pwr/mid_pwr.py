@@ -44,13 +44,14 @@ class MidPwrControlC:
         self.pwr_dev  : MidDabsPwrDevC = MidDabsPwrDevC(devices)
         self.pwr_limits: CyclerDataPwrRangeC|None = battery_limits
         self.all_instructions     : List[CyclerDataInstructionC]|None = instruction_set
-        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= -1,
+        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= 0,
                                                         mode= CyclerDataPwrModeE.DISABLE,
                                                         ref=0, limit_type= CyclerDataPwrLimitE.TIME,
                                                         limit_ref= 0)
         self.instr_init_time: int = 0
         self.local_gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.local_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
+        self.__last_mode: CyclerDataPwrModeE = CyclerDataPwrModeE.WAIT
         self.__pwr_direction: _MidPwrDirectionE = _MidPwrDirectionE.WAIT
         self.__alarm_callback: function = alarm_callback
 
@@ -76,7 +77,7 @@ class MidPwrControlC:
         """
         inst_limits = True
         if self.actual_inst.mode is not CyclerDataPwrModeE.CP_MODE:
-            if (self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME):
+            if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
                 if self.actual_inst.limit_ref > (int(time())-self.instr_init_time):
                     inst_limits = False
             elif self.__pwr_direction is _MidPwrDirectionE.CHARGE:
@@ -163,7 +164,7 @@ class MidPwrControlC:
             bat_pwr_range (CyclerDataPwrRangeC): [description]
         """
         self.all_instructions = instructions
-        self.actual_inst.instr_id = -1
+        self.actual_inst.instr_id = 0
         self.pwr_limits = bat_pwr_range
 
     def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]:
@@ -180,16 +181,22 @@ class MidPwrControlC:
                 # The epc device always start in Disable mode,
                 # no need to check if instruction is not loaded
                 # When the epc goes back to disable means the last instruction is done
-                if self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE:
+                if (self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE and
+                    self.__last_mode is not CyclerDataPwrModeE.DISABLE):
                     # Check if there are more instructions to read
                     if len(self.all_instructions) > 0:
                         self.actual_inst = self.all_instructions.pop(0)
                         log.warning(f"New instruction: {self.actual_inst.__dict__}")
                         self.__apply_instruction()
+                        self.__last_mode = CyclerDataPwrModeE.DISABLE
                         status = CyclerDataExpStatusE.RUNNING
                     else:
-                        self.actual_inst.instr_id = -1
+                        self.actual_inst.instr_id = 0
                         status = CyclerDataExpStatusE.FINISHED
+                elif (self.local_status.pwr_mode is not CyclerDataPwrModeE.DISABLE and
+                    self.__last_mode is CyclerDataPwrModeE.DISABLE):
+                    self.__last_mode = self.actual_inst.mode
+                    status = CyclerDataExpStatusE.RUNNING
                 else:
                     status = CyclerDataExpStatusE.RUNNING
             else:
