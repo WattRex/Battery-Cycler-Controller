@@ -21,17 +21,17 @@ from system_shared_tool import SysShdChanC, SysShdSharedObjC, SysShdNodeC, SysSh
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
                                         CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC,
                                         CyclerDataCyclerStationC)
-#######################          MODULE IMPORTS          #######################
 from .context import *
 from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC
 from mid.mid_meas import MidMeasNodeC
+#######################          MODULE IMPORTS          #######################
 from .app_man_core import AppManCoreC, AppManCoreStatusE
 
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-_PERIOD_CYCLE_STR: int = 500#250 # Period in ms of the storage node
-_PERIOD_CYCLE_MEAS: int = 400#140 # Period in ms of the measurement node
+_PERIOD_CYCLE_STR: int = 250 # Period in ms of the storage node
+_PERIOD_CYCLE_MEAS: int = 120 # Period in ms of the measurement node
 _PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
 class AppManNodeC(SysShdNodeC):
@@ -97,13 +97,11 @@ class AppManNodeC(SysShdNodeC):
         self._th_str.start()
         # Get info from the cycler station to know which devices are compatible
         cs_info = self.configure_cs(reqs_chan= __chan_str_reqs, data_chan= __chan_str_data)
-        for dev in cs_info.devices:
-            log.info(f"Device {dev.device_type.name} with iface {dev.iface_name}")
-        ### 1.2 Manager thread ###
-        self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, str_reqs= __chan_str_reqs,
-                                str_data= __chan_str_data, str_alarms= __chan_alarms)
-        # launch the meas node if cs is not deprecated
+        # launch the man_core and meas node if cs is not deprecated
         if not cs_info.deprecated:
+            ### 1.2 Manager thread ###
+            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, str_reqs= __chan_str_reqs,
+                                    str_data= __chan_str_data, str_alarms= __chan_alarms)
             ### 1.3 Meas thread ###
             self._th_meas = MidMeasNodeC(working_flag= self.working_meas,
                     shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
@@ -115,7 +113,11 @@ class AppManNodeC(SysShdNodeC):
                         "cycler station will be stop"))
             self.stop()
         sleep(2)
-        self.__prepare_node()
+        self.iter = -1
+        self.sync_shd_data()
+        while self.man_core.local_gen_meas.voltage is None:
+            sleep(1)
+        self.status = SysShdNodeStatusE.OK
 
     def configure_cs(self, reqs_chan: SysShdChanC,
                      data_chan: SysShdChanC) -> CyclerDataCyclerStationC:
@@ -130,15 +132,6 @@ class AppManNodeC(SysShdNodeC):
         if response.error_flag:
             raise ValueError(("Error in response from MID STR"))
         return response.station
-
-    def __prepare_node(self):
-        log.info(f"Running {self.th_name} thread")
-        self.iter = -1
-        self.sync_shd_data()
-        while self.man_core.local_gen_meas.voltage is None:
-            sleep(1)
-        self.status = SysShdNodeStatusE.OK
-
 
     def check_system_health_and_recover(self) -> List[CyclerDataAlarmC]:
         '''
@@ -197,12 +190,15 @@ class AppManNodeC(SysShdNodeC):
         # self._th_meas.join(timeout=timeout)
 
     def sync_shd_data(self) -> None:
-        self.man_core.local_gen_meas : CyclerDataGenMeasC = self.__shd_gen_meas.\
-            update_including_tags(self.man_core.local_gen_meas, self.__shared_tags.gen_meas_attrs)
-        self.man_core.local_ext_meas : CyclerDataExtMeasC = self.__shd_ext_meas.\
-            update_including_tags(self.man_core.local_ext_meas, self.__shared_tags.ext_meas_attrs)
-        self.man_core.local_all_status : CyclerDataAllStatusC = self.__shd_all_status.\
-            update_including_tags(self.man_core.local_all_status, self.__shared_tags.status_attrs)
+        self.man_core.update_local_data(new_gen_meas=  self.__shd_gen_meas.\
+                                            update_including_tags(self.man_core.local_gen_meas,
+                                                                self.__shared_tags.gen_meas_attrs),
+                                        new_ext_meas= self.__shd_ext_meas.\
+                                            update_including_tags(self.man_core.local_ext_meas,
+                                                                self.__shared_tags.ext_meas_attrs),
+                                        new_all_status= self.__shd_all_status.\
+                                            update_including_tags(self.man_core.local_all_status,
+                                                                self.__shared_tags.status_attrs))
 
     def process_iteration(self) -> None:
         """Run the app .
@@ -227,8 +223,8 @@ class AppManNodeC(SysShdNodeC):
             # 6.0 Check if man_core is in error to stop node
             if self.man_core.state == AppManCoreStatusE.ERROR:
                 self.stop()
-            log.debug(f"----- {self.th_name} end iteration: [{self.iter}] -----")
-            log.debug(f"----- end iteration: {self.iter} mode: {self.man_core.state} -----")
+            # log.debug(f"----- {self.th_name} end iteration: [{self.iter}] -----")
+            # log.debug(f"----- end iteration: {self.iter} mode: {self.man_core.state} -----")
         except Exception as exc:
             log.critical(f"Unexpected error during main execution in APP_SALG_Node thread.\n{exc}")
             log.exception(exc)
