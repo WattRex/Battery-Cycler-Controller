@@ -7,7 +7,7 @@ system-shared-tool>=0.2.11
 wattrex-battery-cycler-datatypes>=0.0.14
 
 wattrex-driver-db>=0.0.12
-wattrex-driver-epc>=0.0.9
+wattrex-driver-epc>=0.0.8
 wattrex-driver-bms>=0.0.2
 wattrex-driver-flow>=0.0.3
 wattrex-driver-ea>=0.0.2

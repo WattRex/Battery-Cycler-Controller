@@ -18,6 +18,6 @@ can_sniffer: "INFO"
 ##### SYS #####
 sys_abs.sys_conf: "ERROR"
 system_logger_tool: "ERROR"
-system_shared_tool: "WARNING"
+system_shared_tool: "INFO"
 
 file_handlers: {}
