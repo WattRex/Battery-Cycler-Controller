@@ -5,7 +5,7 @@ the device and request info from it.
 """
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 from enum import Enum
 #######################         GENERIC IMPORTS          #######################
 from time import time
@@ -17,13 +17,13 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-
-#######################          MODULE IMPORTS          #######################
-from ..mid_dabs import MidDabsPwrDevC
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC,
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC, #pylint: disable= wrong-import-position
                         CyclerDataInstructionC, CyclerDataDeviceTypeE, CyclerDataPwrLimitE,
                         CyclerDataGenMeasC, CyclerDataPwrModeE, CyclerDataExpStatusE,
                         CyclerDataAlarmC, CyclerDataAllStatusC)
+
+#######################          MODULE IMPORTS          #######################
+from ..mid_dabs import MidDabsPwrDevC
 #######################              ENUMS               #######################
 class _MidPwrDirectionE(Enum):
     '''Enum to define the direction of the power flow.
@@ -34,10 +34,10 @@ class _MidPwrDirectionE(Enum):
 
 
 #######################             CLASSES              #######################
-class MidPwrControlC:
+class MidPwrControlC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, alarm_callback: function, devices: list [CyclerDataDeviceC],
+    def __init__(self, alarm_callback: Callable, devices: list [CyclerDataDeviceC],
             battery_limits: CyclerDataPwrRangeC|None,
             instruction_set: List[CyclerDataInstructionC]|None) -> None:
 
@@ -53,7 +53,7 @@ class MidPwrControlC:
         self.local_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
         self.__last_mode: CyclerDataPwrModeE = CyclerDataPwrModeE.WAIT
         self.__pwr_direction: _MidPwrDirectionE = _MidPwrDirectionE.WAIT
-        self.__alarm_callback: function = alarm_callback
+        self.__alarm_callback: Callable = alarm_callback
 
     def __check_security_limits(self) -> bool:
         """Checks if the measures are within the limits of the battery pwr limits .
@@ -167,7 +167,7 @@ class MidPwrControlC:
         self.actual_inst.instr_id = 0
         self.pwr_limits = bat_pwr_range
 
-    def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]:
+    def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]: #pylint: disable= too-many-branches
         """Processes a single instruction .
 
         Returns:
@@ -215,7 +215,7 @@ class MidPwrControlC:
                     status = CyclerDataExpStatusE.RUNNING
         else:
             status = CyclerDataExpStatusE.ERROR
-            # TODO: Add alarms callback
+            # TODO: Add alarms callback #pylint: disable= fixme
             self.__alarm_callback(CyclerDataAlarmC(code= 0, value=0))
         return status, self.actual_inst.instr_id
 
