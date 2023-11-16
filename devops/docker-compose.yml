@@ -25,6 +25,7 @@ services:
     build:
       context: ../
       dockerfile: ./devops/cycler/Dockerfile.cycler
+      target: ${CYCLER_TARGET}
       args:
         USER: ${USER_ID}
         GROUP: ${GROUP_ID}
