@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#pylint: disable= fixme
 """
 This modules initialize the cycler platform, check 4 new experiments and execute
 them.
@@ -15,16 +16,16 @@ from typing import List
 #######################       THIRD PARTY IMPORTS        #######################
 from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
-from system_shared_tool import (SysShdIpcChanC, SysShdChanC, SysShdSharedObjC, SysShdNodeC,
+from system_shared_tool import (SysShdChanC, SysShdSharedObjC, SysShdNodeC,
                                 SysShdNodeStatusE)
 
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
                                         CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC,
                                         CyclerDataCyclerStationC)
-import .context 
-from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC
-from mid.mid_meas import MidMeasNodeC
+from .context import * # pylint: disable=wildcard-import, unused-wildcard-import
+from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC # pylint: disable= import-error, wrong-import-order
+from mid.mid_meas import MidMeasNodeC # pylint: disable= import-error, wrong-import-order
 #######################          MODULE IMPORTS          #######################
 from .app_man_core import AppManCoreC, AppManCoreStatusE
 
@@ -35,7 +36,7 @@ _PERIOD_CYCLE_STR: int = 250 # Period in ms of the storage node
 _PERIOD_CYCLE_MEAS: int = 120 # Period in ms of the measurement node
 _PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
-class AppManNodeC(SysShdNodeC):
+class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
     """Generate a classman node for the application .
     """
 
@@ -53,12 +54,12 @@ class AppManNodeC(SysShdNodeC):
 
         log.info(f"{self.th_name} node initiliazed")
 
-    def signal_handler(self, sig, frame):
+    def signal_handler(self, sig, frame): # pylint: disable=unused-argument
         """Stop the keyboard .
         """
         log.critical('You pressed Ctrl+C! Stopping all threads...')
         self.stop()
-        # TODO: raise alarm if stops node
+        ## TODO: raise alarm if stops node
 
 
     def init_system(self) -> None:
@@ -120,11 +121,11 @@ class AppManNodeC(SysShdNodeC):
         # launch the man_core and meas node if cs is not deprecated
         if not cs_info.deprecated:
             ### 1.2 Manager thread ###
-            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, #
+            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, # pylint: disable=attribute-defined-outside-init
                                     str_reqs= reqs_chan, str_data= data_chan,
                                     str_alarms= alarms_chan)
             ### 1.3 Meas thread ###
-            self._th_meas = MidMeasNodeC(working_flag= self.working_meas,
+            self._th_meas = MidMeasNodeC(working_flag= self.working_meas, # pylint: disable=attribute-defined-outside-init
                     shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
                     shared_status= self.__shd_all_status, devices= cs_info.devices,
                     cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
@@ -134,7 +135,7 @@ class AppManNodeC(SysShdNodeC):
                         "cycler station will be stop"))
             self.stop()
         sleep(2)
-        self.iter = -1
+        self.iter = -1 # pylint: disable=attribute-defined-outside-init
         self.sync_shd_data()
         while self._th_meas.status != SysShdNodeStatusE.OK:
             sleep(1)
@@ -174,14 +175,13 @@ class AppManNodeC(SysShdNodeC):
         #         self.__stopDABS_CAN()
         #         stop = True
 
-        # TODO: improve shutdown
+        ## TODO: improve shutdown
         return alarms
 
     def heartbeat(self) -> None:
         """Perform a heartbeat .
         """
         ## TODO: add heartbeat
-        pass
 
     def stop(self, timeout=1.0):
         """ Stop the thread. """
@@ -190,7 +190,7 @@ class AppManNodeC(SysShdNodeC):
         self.working_app.clear()
         self.working_meas.clear()
         ## If the manager is stoping, first turn all experiments queued or running to error
-        self.man_core.deprecated_cs()
+        self.man_core.is_deprecated()
         sleep(2)
         self.working_str.clear()
         self._th_str.join(timeout=timeout)
@@ -214,10 +214,10 @@ class AppManNodeC(SysShdNodeC):
             self.iter += 1
             log.debug(f"----- {self.th_name} start iteration: [{self.iter}] -----")
             log.debug(f"----- start iteration: {self.iter} mode: {self.man_core.state} -----")
-            raised_alarms = []
+            raised_alarms = [] #pylint: disable=unused-variable
             # 1.0 Check system healthy and recover if possible
             raised_alarms = self.check_system_health_and_recover()
-            
+
             # 2.0 Perform doctor diagnostics
             ##TODO: MISING PERFORM DOCTOR DIAGNOSTICS
 
@@ -228,7 +228,7 @@ class AppManNodeC(SysShdNodeC):
             self.sync_shd_data()
 
             # 5.0 Process reqs to str node
-            self.man_core.process_request()
+            self.man_core.process_recv_data()
 
             # 6.0 Execute status machine
             self.man_core.execute_machine_status()
