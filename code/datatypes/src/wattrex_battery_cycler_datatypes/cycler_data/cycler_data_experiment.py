@@ -236,10 +236,17 @@ class CyclerDataPwrRangeC:
             self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
             res = True
         return res
+
     def no_current(self) -> bool:
+        '''
+        Check if the current limits are None.
+        '''
         return self.curr_max is None and self.curr_min is None
 
     def no_voltage(self) -> bool:
+        '''
+        Check if the voltage limits are None.
+        '''
         return self.volt_max is None and self.volt_min is None
 
 class CyclerDataProfileC:

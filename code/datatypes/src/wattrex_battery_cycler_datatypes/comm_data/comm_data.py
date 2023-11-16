@@ -3,6 +3,7 @@
 Data used for communication protocol between cu and master nodes
 """
 #######################        MANDATORY IMPORTS         #######################
+from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
 from datetime import datetime
