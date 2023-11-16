@@ -3,6 +3,7 @@
 Data used for communication protocol between cu and master nodes
 """
 #######################        MANDATORY IMPORTS         #######################
+from __future__ import annotations
 
 #######################         GENERIC IMPORTS          #######################
 from datetime import datetime
@@ -109,7 +110,7 @@ class CommDataDeviceC:
     '''
 
     def __init__(self, cu_id : int, comp_dev_id : int, serial_number : int,
-                link_name : str) -> None:
+                link_name : str|int) -> None:
         '''
         Initialize the class with the device info.
 
