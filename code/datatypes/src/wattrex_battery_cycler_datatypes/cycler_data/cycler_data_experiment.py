@@ -131,7 +131,7 @@ class CyclerDataPwrRangeC:
         if volt_max is None and volt_min is None:
             error_detected = False
         elif volt_max is not None and volt_min is not None:
-            if volt_max > volt_min:
+            if volt_max >= volt_min:
                 error_detected = False
         if error_detected:
             msg = "Invalid voltage range"
@@ -153,10 +153,10 @@ class CyclerDataPwrRangeC:
         if curr_max is None and curr_min is None:
             error_detected = False
         elif curr_max is not None and curr_min is not None:
-            if curr_max > curr_min:
+            if curr_max >= curr_min:
                 error_detected = False
         if error_detected:
-            msg = "Invalid current range"
+            msg = f"Invalid current range inputs: max {curr_max} min {curr_min}"
             log.error(msg)
             raise ValueError(msg)
 
@@ -236,6 +236,18 @@ class CyclerDataPwrRangeC:
             self.curr_max <= aux_pwr_range.curr_max and self.curr_min >= aux_pwr_range.curr_min):
             res = True
         return res
+
+    def no_current(self) -> bool:
+        '''
+        Check if the current limits are None.
+        '''
+        return self.curr_max is None and self.curr_min is None
+
+    def no_voltage(self) -> bool:
+        '''
+        Check if the voltage limits are None.
+        '''
+        return self.volt_max is None and self.volt_min is None
 
 class CyclerDataProfileC:
     '''

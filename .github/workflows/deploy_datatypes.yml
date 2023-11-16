@@ -15,7 +15,6 @@ jobs:
   build-package-on-push:
     name: QA and Build ${{ vars.DATATYPES_PACKAGE_NAME }} on push
     if: ${{ github.event_name == 'push' }}
-    environment: development
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
       package-name: ${{ vars.DATATYPES_PACKAGE_NAME }}
