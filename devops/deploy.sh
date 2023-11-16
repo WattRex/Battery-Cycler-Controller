@@ -3,11 +3,9 @@
 DEVOPS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" && pwd )
 REPO_ROOT_DIR=$( cd "${DEVOPS_DIR}/../" && pwd)
 ENV_FILE=.cred.env
-DOCKER_FOLDER=docker
+DOCKER_FOLDER=./
 DOCKER_COMPOSE=docker-compose.yml
 CYCLER_SRC_DIR="${REPO_ROOT_DIR}/code/cycler"
-CYCLER_DOCKERFILE=Dockerfile.cycler
-DB_SYNC_DOCKERFILE=Dockerfile.db_sync
 INT_RE='^[0-9]+$'
 DOCKER_COMPOSE_ARGS="-f ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${DEVOPS_DIR}/${ENV_FILE}"
 
@@ -35,14 +33,16 @@ initial_deploy () {
 instance_new_cycler () {
     check_sniffer "can"
     # check_sniffer "scpi"
+    export CYCLER_TARGET=cycler_prod
     docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
     docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 test_cycler () {
+    export CYCLER_TARGET=cycler_test
     cp ${CYCLER_SRC_DIR}/tests/log_config_${ARG3}.yaml ${DEVOPS_DIR}/cycler/log_config.yaml
     cp ${CYCLER_SRC_DIR}/tests/test_${ARG3}.py ${CYCLER_SRC_DIR}/tests/test_cycler.py
-    docker compose ${DOCKER_COMPOSE_ARGS} build cycler #--build-arg UPDATE_REQS=$(date +%s)
+    docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler 
     docker compose ${DOCKER_COMPOSE_ARGS} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest -s /cycler/code/cycler/tests/test_cycler.py
     exit $?
 }

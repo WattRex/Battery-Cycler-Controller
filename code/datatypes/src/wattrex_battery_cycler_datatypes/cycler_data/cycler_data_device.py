@@ -143,7 +143,7 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
     # pylint: disable=too-many-arguments
     def __init__(self, dev_db_id: int|None = None, manufacturer : str| None= None,
                 model :str| None= None, serial_number : str| None= None,
-                device_type : CyclerDataDeviceTypeE| None= None, iface_name : str| None= None,
+                device_type : CyclerDataDeviceTypeE| None= None, iface_name : str|int| None= None,
                 mapping_names : Dict| None= None,
                 link_configuration: CyclerDataLinkConfC|None = None) -> None:
         """Initialize the attributes of the device .
@@ -167,7 +167,7 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
         self.model : str| None = model
         self.serial_number : str| None = serial_number
         self.device_type : CyclerDataDeviceTypeE|None = device_type
-        self.iface_name :str| None = iface_name
+        self.iface_name :str|int| None = iface_name
         self.mapping_names : Dict| None = mapping_names
         self.link_conf: CyclerDataLinkConfC|None = link_configuration
 

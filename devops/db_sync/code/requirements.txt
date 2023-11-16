@@ -1,2 +1,0 @@
-system_logger_tool>=0.0.3
-system-config-tool>=0.0.3

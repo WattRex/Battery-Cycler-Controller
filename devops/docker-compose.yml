@@ -10,11 +10,11 @@ services:
       - "3366:3306"
     volumes:
       - wattrex_cycler_cache_db:/var/lib/mysql:rw
-      - ../cache_db/createCacheTables.sql:/docker-entrypoint-initdb.d/createCacheTables.sql
+      - ./cache_db/createCacheCyclerTables.sql:/docker-entrypoint-initdb.d/createCacheCyclerTables.sql
     environment:
       TZ: Europe/Berlin
     env_file:
-      - ../.cred.env
+      - ./.cred.env
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u${MARIADB_ROOT_USER}", "-p${MARIADB_ROOT_PASSWORD}"]
       interval: 10s
@@ -23,8 +23,9 @@ services:
 
   cycler:
     build:
-      context: ../../
-      dockerfile: ./devops/docker/Dockerfile.cycler
+      context: ../
+      dockerfile: ./devops/cycler/Dockerfile.cycler
+      target: ${CYCLER_TARGET}
       args:
         USER: ${USER_ID}
         GROUP: ${GROUP_ID}
@@ -33,22 +34,22 @@ services:
     user: ${USER_ID}:${GROUP_ID}
     ipc: host
     volumes:
-      - ../.cred.yaml:/cycler/devops/.cred.yaml
-      - ../cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
-      - ../../log:/cycler/log
+      - ./.cred.yaml:/cycler/devops/.cred.yaml
+      - ./cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
+      - ../log:/cycler/log
     depends_on:
       cache_db:
         condition: service_healthy
 
   db_sync:
     build:
-      context: ../db_sync
-      dockerfile: ../docker/Dockerfile.db_sync
+      context: ../
+      dockerfile: ./devops/db_sync/Dockerfile.db_sync
     image: wattrex-cycler-db-sync
     container_name: wattrex_cycler_db_sync
     restart: always
     env_file:
-      - ../.cred.env
+      - ./.cred.env
     depends_on:
       cache_db:
         condition: service_healthy

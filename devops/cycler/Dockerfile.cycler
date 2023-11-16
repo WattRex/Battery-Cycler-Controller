@@ -1,0 +1,25 @@
+FROM python:3.10-bullseye as cycler_base
+ARG USER=default
+ARG GROUP=default
+ENV U_ID=${USER}
+ENV G_UID=${GROUP}
+ENV UG_NAME=wattrex
+RUN addgroup --system --gid ${G_UID} ${UG_NAME} && adduser --system --gid ${G_UID} --uid ${U_ID} ${UG_NAME}
+USER ${UG_NAME}
+WORKDIR /cycler
+ENV PATH="${PATH}:/home/${UG_NAME}/.local/bin"
+RUN pip install --upgrade pip
+RUN pip install pytest
+
+FROM cycler_base as cycler_test
+ARG UPDATE_REQS=default
+ADD --chown=${UG_NAME}:${UG_NAME} ./code/cycler ./code/cycler
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
+RUN pip install -r ./code/cycler/requirements.txt
+
+FROM cycler_base as cycler_prod
+ARG UPDATE_REQS=default
+RUN pip install wattrex-battery-cycler
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
+
+CMD ["python", "./devops/cycler/run_cycler.py"]

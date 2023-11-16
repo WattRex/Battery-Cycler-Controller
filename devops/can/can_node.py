@@ -7,7 +7,6 @@ from __future__ import annotations
 import sys
 import os
 #######################         GENsERIC IMPORTS          #######################
-from time import sleep
 from threading import Event
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
 # Change path to the root of the project
@@ -32,7 +31,7 @@ if __name__ == '__main__':
     _working_can = Event()
     _working_can.set()
     #Create the thread for CAN
-    can = DrvCanNodeC(tx_buffer_size= 150, working_flag=_working_can)
+    can = DrvCanNodeC(tx_buffer_size= 250, working_flag=_working_can, cycle_period=40)
     try:
         can.run()
     except KeyboardInterrupt:

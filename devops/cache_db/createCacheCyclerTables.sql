@@ -36,7 +36,7 @@ create table if not exists Alarm
 -- Table Status --------------------------
 create table if not exists Status
 (
-    StatusID        mediumint       unsigned    not null    auto_increment,
+    StatusID        mediumint       unsigned    not null,
     ExpID           mediumint       unsigned    not null,
     DevID           mediumint       unsigned    not null,
     Timestamp       datetime                    not null,
@@ -59,6 +59,8 @@ create table if not exists GenericMeasures
     InstrID         mediumint       unsigned    not null,
     Voltage         mediumint                   not null,
     Current         mediumint                   not null,
+    Power           int                         not null,
+    PowerMode       enum ('DISABLE', 'WAIT', 'CC_MODE', 'CV_MODE', 'CP_MODE') not null,
 
     constraint GenericMeasures_pk_1
         primary key (ExpID, MeasID),
@@ -70,13 +72,13 @@ create table if not exists GenericMeasures
 -- Table ExtendedMeasures --------------------------
 create table if not exists ExtendedMeasures
 (
-    ExpID           mediumint       unsigned    not null,
-    MeasType        mediumint       unsigned    not null,
     MeasID          int             unsigned    not null,
+    ExpID           mediumint       unsigned    not null,
+    UsedMeasID      mediumint       unsigned    not null,
     Value           mediumint                   not null,
 
     constraint ExtendedMeasures_pk_1
-        primary key (ExpID, MeasType, MeasID),
+        primary key (ExpID, UsedMeasID, MeasID),
     constraint ExtendedMeasures_fk_1
         foreign key (ExpID, MeasID) references GenericMeasures (ExpID, MeasID)
 );
