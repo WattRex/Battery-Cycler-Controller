@@ -14,22 +14,23 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from system_shared_tool import SysShdChanC
 #######################          PROJECT IMPORTS         #######################
-
-#######################          MODULE IMPORTS          #######################
-from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE
-from mid.mid_pwr import MidPwrControlC
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExperimentC, CyclerDataProfileC,
                 CyclerDataBatteryC, CyclerDataExpStatusE, CyclerDataAllStatusC, CyclerDataAlarmC,
                                 CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataCyclerStationC,
                                 CyclerDataDeviceC)
+from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE
+from mid.mid_pwr import MidPwrControlC
+
+#######################          MODULE IMPORTS          #######################
+
 #######################              ENUMS               #######################
 _PERIOD_WAIT_EXP = 10
 class AppManCoreStatusE(Enum):
     """Application manager status
     """
-    GETTING_EXP = 0
-    EXECUTE = 1
-    PREPARING = 2
+    GET_EXP = 0
+    PREPARE_EXP = 1
+    EXECUTE_EXP = 2
     ERROR = 3
 
 #########             CLASSES              #######################
@@ -48,7 +49,7 @@ class AppManCoreC:
     def __init__(self, devices: List[CyclerDataDeviceC], str_reqs: SysShdChanC,
                 str_data: SysShdChanC, str_alarms: SysShdChanC) -> None:
         ##
-        self.state: AppManCoreStatusE = AppManCoreStatusE.GETTING_EXP
+        self.state: AppManCoreStatusE = AppManCoreStatusE.GET_EXP
 
         ## Attributes related with experiment
         self.profile: CyclerDataProfileC|None = None
@@ -218,7 +219,7 @@ class AppManCoreC:
         log.debug("Executing machine status")
         try:
             ## Process machine status
-            if self.state == AppManCoreStatusE.GETTING_EXP:
+            if self.state == AppManCoreStatusE.GET_EXP:
                 ## Wait for cs status to continue
                 if ((not self.__wait_cs_reqst and not self.__wait_exp_reqst) or
                     self.__iter> _PERIOD_WAIT_EXP):
@@ -238,10 +239,10 @@ class AppManCoreC:
                         self.__write_exp_status(self.exp_status)
                     else:
                         self.__wait_exp_reqst = False
-                        self.state = AppManCoreStatusE.PREPARING
+                        self.state = AppManCoreStatusE.PREPARE_EXP
                 elif self.__wait_exp_reqst:
                     self.__iter +=1
-            elif self.state == AppManCoreStatusE.PREPARING:
+            elif self.state == AppManCoreStatusE.PREPARE_EXP:
                 ## Set experiment to pwr control
                 ## TODO: FUNCTION FOR ALARMS CALLBACK
                 log.debug("Preparing experiment")
@@ -250,8 +251,8 @@ class AppManCoreC:
                 ## Check the instructions are the same in order
                 ## to execute the correct experiment
                 if self.pwr_control.all_instructions == self.profile.instructions:
-                    self.state = AppManCoreStatusE.EXECUTE
-            elif self.state == AppManCoreStatusE.EXECUTE:
+                    self.state = AppManCoreStatusE.EXECUTE_EXP
+            elif self.state == AppManCoreStatusE.EXECUTE_EXP:
                 log.debug("Executing experiment")
                 self.__execute_experiment()
                 ## Check if the experiment has finish and try to get the next one
@@ -260,7 +261,7 @@ class AppManCoreC:
                                         CyclerDataExpStatusE.ERROR):
                     self.request_cs_status()
                     self.experiment = None
-                    self.state = AppManCoreStatusE.GETTING_EXP
+                    self.state = AppManCoreStatusE.GET_EXP
             else:
                 log.debug("Error in machine status")
         except Exception as err:

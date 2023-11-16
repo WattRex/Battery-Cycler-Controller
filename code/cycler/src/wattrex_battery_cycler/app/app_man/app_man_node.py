@@ -15,13 +15,14 @@ from typing import List
 #######################       THIRD PARTY IMPORTS        #######################
 from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
-from system_shared_tool import SysShdChanC, SysShdSharedObjC, SysShdNodeC, SysShdNodeStatusE
+from system_shared_tool import (SysShdIpcChanC, SysShdChanC, SysShdSharedObjC, SysShdNodeC,
+                                SysShdNodeStatusE)
 
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
                                         CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC,
                                         CyclerDataCyclerStationC)
-from .context import *
+import .context 
 from mid.mid_str import MidStrNodeC, MidStrReqCmdE, MidStrCmdDataC
 from mid.mid_meas import MidMeasNodeC
 #######################          MODULE IMPORTS          #######################
@@ -83,6 +84,8 @@ class AppManNodeC(SysShdNodeC):
         __chan_alarms = SysShdChanC()
         __chan_str_reqs = SysShdChanC()
         __chan_str_data = SysShdChanC()
+        ## TODO: add heartbeat channel
+        # self.hb_chan: SysShdIpcChanC
         self.__shared_tags: CyclerDataMergeTagsC = CyclerDataMergeTagsC(status_attrs= [],
                                                                  gen_meas_attrs= ['instr_id'],
                                                                  ext_meas_attrs= [])
@@ -95,13 +98,31 @@ class AppManNodeC(SysShdNodeC):
                 cycle_period= _PERIOD_CYCLE_STR, cycler_station= self.cs_id,
                 cred_file= 'devops/.cred.yaml')
         self._th_str.start()
+
         # Get info from the cycler station to know which devices are compatible
-        cs_info = self.configure_cs(reqs_chan= __chan_str_reqs, data_chan= __chan_str_data)
+        self.configure_cs(reqs_chan= __chan_str_reqs, data_chan= __chan_str_data,
+                          alarms_chan= __chan_alarms)
+
+
+    def configure_cs(self, reqs_chan: SysShdChanC, data_chan: SysShdChanC,
+                     alarms_chan: SysShdChanC) -> CyclerDataCyclerStationC:
+        """Get the cycler station info from the database
+
+        Returns:
+            CyclerDataCyclerStationC: Cycler station info
+        """
+        request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.GET_CS)
+        reqs_chan.send_data(request)
+        response: MidStrCmdDataC = data_chan.receive_data()
+        if response.error_flag:
+            raise ValueError(("Error in response from MID STR"))
+        cs_info = response.station
         # launch the man_core and meas node if cs is not deprecated
         if not cs_info.deprecated:
             ### 1.2 Manager thread ###
-            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, str_reqs= __chan_str_reqs,
-                                    str_data= __chan_str_data, str_alarms= __chan_alarms)
+            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, #
+                                    str_reqs= reqs_chan, str_data= data_chan,
+                                    str_alarms= alarms_chan)
             ### 1.3 Meas thread ###
             self._th_meas = MidMeasNodeC(working_flag= self.working_meas,
                     shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
@@ -115,23 +136,9 @@ class AppManNodeC(SysShdNodeC):
         sleep(2)
         self.iter = -1
         self.sync_shd_data()
-        while self.man_core.local_gen_meas.voltage is None:
+        while self._th_meas.status != SysShdNodeStatusE.OK:
             sleep(1)
         self.status = SysShdNodeStatusE.OK
-
-    def configure_cs(self, reqs_chan: SysShdChanC,
-                     data_chan: SysShdChanC) -> CyclerDataCyclerStationC:
-        """Get the cycler station info from the database
-
-        Returns:
-            CyclerDataCyclerStationC: Cycler station info
-        """
-        request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.GET_CS)
-        reqs_chan.send_data(request)
-        response: MidStrCmdDataC = data_chan.receive_data()
-        if response.error_flag:
-            raise ValueError(("Error in response from MID STR"))
-        return response.station
 
     def check_system_health_and_recover(self) -> List[CyclerDataAlarmC]:
         '''
@@ -173,6 +180,7 @@ class AppManNodeC(SysShdNodeC):
     def heartbeat(self) -> None:
         """Perform a heartbeat .
         """
+        ## TODO: add heartbeat
         pass
 
     def stop(self, timeout=1.0):
@@ -185,9 +193,8 @@ class AppManNodeC(SysShdNodeC):
         self.man_core.deprecated_cs()
         sleep(2)
         self.working_str.clear()
-        # TODO: improve stop process
-        # self._th_str.join(timeout=timeout)
-        # self._th_meas.join(timeout=timeout)
+        self._th_str.join(timeout=timeout)
+        self._th_meas.join(timeout=timeout)
 
     def sync_shd_data(self) -> None:
         self.man_core.update_local_data(new_gen_meas=  self.__shd_gen_meas.\
@@ -210,17 +217,23 @@ class AppManNodeC(SysShdNodeC):
             raised_alarms = []
             # 1.0 Check system healthy and recover if possible
             raised_alarms = self.check_system_health_and_recover()
-            # 2.0 HeartBeat
+            
+            # 2.0 Perform doctor diagnostics
+            ##TODO: MISING PERFORM DOCTOR DIAGNOSTICS
+
+            # 3.0 HeartBeat
             self.heartbeat()
-            # 3.0 Sync shared data
+
+            # 4.0 Sync shared data
             self.sync_shd_data()
-            # 4.0 Process reqs to str node
+
+            # 5.0 Process reqs to str node
             self.man_core.process_request()
 
-            # 5.0 Execute status machine
+            # 6.0 Execute status machine
             self.man_core.execute_machine_status()
 
-            # 6.0 Check if man_core is in error to stop node
+            # 7.0 Check if man_core is in error to stop node
             if self.man_core.state == AppManCoreStatusE.ERROR:
                 self.stop()
             # log.debug(f"----- {self.th_name} end iteration: [{self.iter}] -----")
