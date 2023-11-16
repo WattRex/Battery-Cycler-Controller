@@ -80,14 +80,17 @@ class TestChannels:
                         working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= 2, cred_file= 'devops/.cred.yaml')
+                        cycler_station= request.param[1], cred_file= 'devops/.cred.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")
         experiment, battery, profile = fetch_new_exp(str_reqs, str_data)
-        log.info(f"New experiment retrieved {experiment.__dict__}")
-        log.info(f"New battery retrieved {battery.__dict__}")
-        log.info(f"New profile retrieved {profile.__dict__}")
+        if experiment is not None:
+            log.info(f"New experiment retrieved {experiment.__dict__}")
+        if battery is not None:
+            log.info(f"New battery retrieved {battery.__dict__}")
+        if profile is not None:
+            log.info(f"New profile retrieved {profile.__dict__}")
         log.info(f"CS status: {get_cs_status(str_reqs, str_data)}")
         log.info("Uploading random measures to shared objects to test the node")
         all_status = CyclerDataAllStatusC()
@@ -101,8 +104,8 @@ class TestChannels:
         ext_meas.temp_body_2 = 211
         ext_meas.temp_amb_3 = -115
         shared_ext_meas.write(new_obj= ext_meas)
-        log.info("Waiting for the node to finish for 10s")
-        sleep(10)
+        log.info("Waiting for the node to finish for 5s")
+        sleep(5)
         write_exp_status(str_reqs, CyclerDataExpStatusE.ERROR)
         sleep(1)
         __str_flag_node.clear()
@@ -116,7 +119,7 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[00]], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[500,2],[500,21]], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
@@ -128,7 +131,8 @@ class TestChannels:
 
 #######################            FUNCTIONS             #######################
 
-def get_cs_info(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> CyclerDataCyclerStationC:
+def get_cs_info(chan_str_reqs: SysShdChanC,
+                chan_str_data: SysShdChanC) -> CyclerDataCyclerStationC|None:
     """Get the cycler station info from the database
 
     Returns:
@@ -142,7 +146,7 @@ def get_cs_info(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> Cycle
                             f"and got {response.cmd_type}"))
     return response.station
 
-def get_cs_status(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> bool:
+def get_cs_status(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> bool|None:
     """Get the cycler station status from the database
 
     Returns:
@@ -157,7 +161,7 @@ def get_cs_status(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> boo
     return response.station_status
 
 def fetch_new_exp(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> \
-            Tuple[CyclerDataExperimentC, CyclerDataBatteryC, CyclerDataProfileC]:
+            Tuple[CyclerDataExperimentC|None, CyclerDataBatteryC|None, CyclerDataProfileC|None]:
     """AI is creating summary for fetch_new_exp
 
     Raises:
@@ -174,6 +178,13 @@ def fetch_new_exp(chan_str_reqs: SysShdChanC, chan_str_data: SysShdChanC) -> \
         response: MidStrCmdDataC = chan_str_data.receive_data()
         # raise ValueError(("Unexpected response from MID_STR, expected EXP_DATA "
         #                   f"and got {response.cmd_type}"))
+    if response.error_flag:
+        log.error("Error flag fetching experiment")
+    elif (all(var is None for var in [response.experiment, response.battery, response.profile]) and
+        not response.error_flag):
+        log.warning("No new experiments")
+    else:
+        log.info("New experiment fetched")
     return response.experiment, response.battery, response.profile
 
 def write_exp_status(chan_str_reqs: SysShdChanC,
@@ -187,18 +198,18 @@ def write_exp_status(chan_str_reqs: SysShdChanC,
                     exp_status= exp_status)
     chan_str_reqs.send_data(request)
 
-def delete_cache_data()->None:
+def delete_cache_data() -> None:
     """Delete all cached data from the cache database
     """
     cache_db = DrvDbSqlEngineC(config_file= 'devops/.cred.yaml',
-                            db_type= DrvDbTypeE.CACHE_DB, section= 'cache_db')
-    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 1)
+                            db_type= DrvDbTypeE.CACHE_DB)
+    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 1)
+    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 1)
+    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 1)
+    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 6)
     cache_db.session.execute(stmt)
     cache_db.session.commit()
     cache_db.session.close()
