@@ -71,7 +71,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.__new_raised_alarms.append(alarm)
             alarm = self.str_alarms.receive_data_unblocking()
 
-    def __apply_command(self, command : MidStrCmdDataC) -> None:
+    def __apply_command(self, command : MidStrCmdDataC) -> None: #pylint: disable= too-many-branches
         '''
         Apply a command to the Storage node.
 
