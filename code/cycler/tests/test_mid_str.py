@@ -119,7 +119,7 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[500,2],[500,21]], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[500,2],[500,20]], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
@@ -203,13 +203,13 @@ def delete_cache_data() -> None:
     """
     cache_db = DrvDbSqlEngineC(config_file= 'devops/.cred.yaml',
                             db_type= DrvDbTypeE.CACHE_DB)
-    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 6)
+    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 5)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 6)
+    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 5)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 6)
+    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 5)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 6)
+    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 5)
     cache_db.session.execute(stmt)
     cache_db.session.commit()
     cache_db.session.close()

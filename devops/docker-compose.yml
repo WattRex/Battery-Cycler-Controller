@@ -6,6 +6,7 @@ services:
     image: tobi312/rpi-mariadb:10.11-alpine
     container_name: wattrex_cycler_cache_db
     restart: always
+    network-mode: host
     ports:
       - "3366:3306"
     volumes:
