@@ -42,7 +42,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
 
     def __init__(self, cs_id: int, working_flag: Event,
                 cycle_period: int= _PERIOD_CYCLE_MAN) -> None:
-        super().__init__(name= "App_Manager", cycle_period= cycle_period,
+        super().__init__(name= "Control_Node", cycle_period= cycle_period,
                          working_flag=working_flag)
         # Initialize attributes
         self.cs_id: int = cs_id
@@ -69,8 +69,6 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         self.th_name = current_thread().name
         ### 2.1 Manager thread ###
         log.info(f"Starting {self.th_name} node ...")
-        self.working_app = Event()
-        self.working_app.set()
 
         self.working_str = Event()
         self.working_str.set()
@@ -92,7 +90,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
                                                                  ext_meas_attrs= [])
 
         ### 1.1 Store thread ###
-        self._th_str = MidStrNodeC(name= 'MID_STR', working_flag= self.working_str,
+        self._th_str = MidStrNodeC(name= 'Store_Node', working_flag= self.working_str,
                 shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
                 shared_status= self.__shd_all_status, str_reqs= __chan_str_reqs,
                 str_data= __chan_str_data, str_alarms= __chan_alarms,
@@ -103,10 +101,15 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         # Get info from the cycler station to know which devices are compatible
         self.configure_cs(reqs_chan= __chan_str_reqs, data_chan= __chan_str_data,
                           alarms_chan= __chan_alarms)
+        if self.status is not SysShdNodeStatusE.OK:
+            self.working_str.clear()
+            self._th_str.join()
+            self.working_flag.clear()
+
 
 
     def configure_cs(self, reqs_chan: SysShdChanC, data_chan: SysShdChanC,
-                     alarms_chan: SysShdChanC) -> CyclerDataCyclerStationC:
+                     alarms_chan: SysShdChanC) -> None:
         """Get the cycler station info from the database
 
         Returns:
@@ -116,30 +119,32 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         reqs_chan.send_data(request)
         response: MidStrCmdDataC = data_chan.receive_data()
         if response.error_flag:
-            raise ValueError(("Error in response from MID STR"))
-        cs_info = response.station
-        # launch the man_core and meas node if cs is not deprecated
-        if not cs_info.deprecated:
-            ### 1.2 Manager thread ###
-            self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, # pylint: disable=attribute-defined-outside-init
-                                    str_reqs= reqs_chan, str_data= data_chan,
-                                    str_alarms= alarms_chan)
-            ### 1.3 Meas thread ###
-            self._th_meas = MidMeasNodeC(working_flag= self.working_meas, # pylint: disable=attribute-defined-outside-init
-                    shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
-                    shared_status= self.__shd_all_status, devices= cs_info.devices,
-                    cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
-            self._th_meas.start()
+            log.error(("Was imposible to get the cycler station info from the database. "))
+            self.status = SysShdNodeStatusE.INTERNAL_ERROR
         else:
-            log.critical(("Cycler station is deprecated. Meas node will not be launched, "
-                        "cycler station will be stop"))
-            self.stop()
-        sleep(2)
-        self.iter = -1 # pylint: disable=attribute-defined-outside-init
-        self.sync_shd_data(raised_alarms= [])
-        while self._th_meas.status != SysShdNodeStatusE.OK:
-            sleep(1)
-        self.status = SysShdNodeStatusE.OK
+            cs_info = response.station
+            # launch the man_core and meas node if cs is not deprecated
+            if not cs_info.deprecated:
+                ### 1.2 Manager thread ###
+                self.man_core: AppManCoreC= AppManCoreC(devices=cs_info.devices, # pylint: disable=attribute-defined-outside-init
+                                        str_reqs= reqs_chan, str_data= data_chan,
+                                        str_alarms= alarms_chan)
+                ### 1.3 Meas thread ###
+                self._th_meas = MidMeasNodeC(working_flag= self.working_meas, # pylint: disable=attribute-defined-outside-init
+                        shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
+                        shared_status= self.__shd_all_status, devices= cs_info.devices,
+                        cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
+                self._th_meas.start()
+            else:
+                log.critical(("Cycler station is deprecated. Meas node will not be launched, "
+                            "cycler station will be stop"))
+                self.stop()
+            sleep(2)
+            self.iter = -1 # pylint: disable=attribute-defined-outside-init
+            self.sync_shd_data(raised_alarms= [])
+            while self._th_meas.status != SysShdNodeStatusE.OK:
+                sleep(1)
+            self.status = SysShdNodeStatusE.OK
 
     def check_system_health_and_recover(self) -> List[CyclerDataAlarmC]:
         '''
@@ -187,7 +192,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         """ Stop the thread. """
         self.status = SysShdNodeStatusE.STOP
         log.critical("Stopping Cycler manager node")
-        self.working_app.clear()
+        self.working_flag.clear()
         self.working_meas.clear()
         ## If the manager is stoping, first turn all experiments queued or running to error
         self.man_core.turn_deprecated()
