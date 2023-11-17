@@ -59,7 +59,7 @@ class TestChannels:
         delete_cache_data()
         self.working_flag: Event = Event()
         self.working_flag.set()
-        manager: AppManNodeC = AppManNodeC(cs_id= 21, cycle_period= 500,
+        manager: AppManNodeC = AppManNodeC(cs_id= 21, cycle_period= 350,
                                            working_flag= self.working_flag)
         try:
             sleep(1)
@@ -94,14 +94,14 @@ def delete_cache_data()->None:
     """Delete all cached data from the cache database
     """
     cache_db = DrvDbSqlEngineC(config_file= 'devops/.cred.yaml',
-                            db_type= DrvDbTypeE.CACHE_DB, section= 'cache_db')
-    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 1)
+                            db_type= DrvDbTypeE.CACHE_DB)
+    stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 1)
+    stmt = delete(DrvDbCacheExtendedMeasureC).where(DrvDbCacheExtendedMeasureC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 1)
+    stmt = delete(DrvDbCacheGenericMeasureC).where(DrvDbCacheGenericMeasureC.ExpID == 6)
     cache_db.session.execute(stmt)
-    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 1)
+    stmt = delete(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == 6)
     cache_db.session.execute(stmt)
     cache_db.session.commit()
     cache_db.session.close()

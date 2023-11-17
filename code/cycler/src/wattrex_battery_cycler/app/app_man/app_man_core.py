@@ -48,12 +48,13 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.experiment: CyclerDataExperimentC|None = None
         self.battery: CyclerDataBatteryC|None = None
         self.exp_status: CyclerDataExpStatusE = CyclerDataExpStatusE.QUEUED
-        ## Attributes related with measurements
+        ## Attributes related with measurements and alarms
         self.__local_all_status: CyclerDataAllStatusC|None = None
         self.__local_gen_meas: CyclerDataGenMeasC|None = None
         self.__local_ext_meas: CyclerDataExtMeasC|None = None
+        self.raised_alarms: List[CyclerDataAlarmC] = []
         ## Channel attributes to receive and send info
-        self.__chan_alarms = str_alarms #pylint: disable=unused-private-member
+        self.__chan_str_alarms = str_alarms #pylint: disable=unused-private-member
         self.__chan_str_reqs = str_reqs
         self.__chan_str_data = str_data
         self.__cs_deprecated: bool = False
@@ -65,7 +66,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                             alarm_callback= self.alarm_callback, battery_limits=None,
                             instruction_set=None)
     @property
-    def local_gen_meas(self) -> CyclerDataGenMeasC|None:
+    def gen_meas(self) -> CyclerDataGenMeasC|None:
         """Return the local general measurements
 
         Returns:
@@ -74,7 +75,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         return self.__local_gen_meas
 
     @property
-    def local_ext_meas(self) -> CyclerDataExtMeasC|None:
+    def ext_meas(self) -> CyclerDataExtMeasC|None:
         """Return the local external measurements
 
         Returns:
@@ -83,7 +84,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         return self.__local_ext_meas
 
     @property
-    def local_all_status(self) -> CyclerDataAllStatusC|None:
+    def all_status(self) -> CyclerDataAllStatusC|None:
         """Return the local all status
 
         Returns:
@@ -91,10 +92,21 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         """
         return self.__local_all_status
 
+    @property
+    def is_deprecated(self) -> bool:
+        """Return True if the cycler station is deprecated
+
+        Returns:
+            bool: True if the cycler station is deprecated
+        """
+        return self.__cs_deprecated
+
 
     def update_local_data(self, new_gen_meas: CyclerDataGenMeasC, new_ext_meas: CyclerDataExtMeasC,
-                          new_all_status: CyclerDataAllStatusC) -> None:
+                            new_all_status: CyclerDataAllStatusC,
+                            new_alarms: List[CyclerDataAlarmC]) -> None:
         """Update the local data"""
+        self.raised_alarms.extend(new_alarms)
         self.__local_all_status = new_all_status
         self.__local_ext_meas = new_ext_meas
         self.__local_gen_meas = new_gen_meas
@@ -115,7 +127,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         self.__update_exp_status(exp_status=CyclerDataExpStatusE.ERROR)
                     elif msg.cmd_type == MidStrDataCmdE.CS_STATUS:
                         ## The cycler station will be set to deprecated
-                        self.is_deprecated()
+                        self.turn_deprecated()
                     elif msg.cmd_type == MidStrDataCmdE.EXP_STATUS:
                         pass
                 else:
@@ -161,7 +173,8 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         If the profile has no current neither voltage, means the profile could be only of waits, so
         is also valid.
         If the profile has no current or voltage, means the profile could have only current/voltage
-        modes apart from waits, so
+        modes apart from waits, so is also valid if the range of the profile is inside the range of
+        battery
 
         Args:
             battery (CyclerDataBatteryC): [description]
@@ -198,7 +211,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         exp_status= exp_status)
         self.__chan_str_reqs.send_data(request)
 
-    def is_deprecated(self):
+    def turn_deprecated(self):
         """Send a deprecated command to the str node to turn all experiments to error
         """
         request: MidStrCmdDataC = MidStrCmdDataC(cmd_type= MidStrReqCmdE.TURN_DEPRECATED)
@@ -224,9 +237,9 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                     self.__fetch_new_exp()
                     self.__request_cs_status()
                 ## Check if the cycler station is deprecated
-                if self.__cs_deprecated:
+                if self.is_deprecated:
                     log.critical("Cycler station is deprecated")
-                    self.is_deprecated()
+                    self.turn_deprecated()
                     self.state = AppManCoreStatusE.ERROR
                 ## Wait for the experiment and check if the experiment is valid
                 if not self.experiment is None and self.__wait_exp_reqst:

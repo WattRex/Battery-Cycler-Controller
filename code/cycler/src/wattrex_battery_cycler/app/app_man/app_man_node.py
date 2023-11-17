@@ -32,7 +32,7 @@ from .app_man_core import AppManCoreC, AppManCoreStatusE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-_PERIOD_CYCLE_STR: int = 250 # Period in ms of the storage node
+_PERIOD_CYCLE_STR: int = 150 # Period in ms of the storage node
 _PERIOD_CYCLE_MEAS: int = 120 # Period in ms of the measurement node
 _PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
@@ -136,7 +136,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
             self.stop()
         sleep(2)
         self.iter = -1 # pylint: disable=attribute-defined-outside-init
-        self.sync_shd_data()
+        self.sync_shd_data(raised_alarms= [])
         while self._th_meas.status != SysShdNodeStatusE.OK:
             sleep(1)
         self.status = SysShdNodeStatusE.OK
@@ -190,22 +190,23 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         self.working_app.clear()
         self.working_meas.clear()
         ## If the manager is stoping, first turn all experiments queued or running to error
-        self.man_core.is_deprecated()
+        self.man_core.turn_deprecated()
         sleep(2)
         self.working_str.clear()
         self._th_str.join(timeout=timeout)
         self._th_meas.join(timeout=timeout)
 
-    def sync_shd_data(self) -> None:
+    def sync_shd_data(self, raised_alarms: List[CyclerDataAlarmC]) -> None: #pylint: disable= arguments-differ
         self.man_core.update_local_data(new_gen_meas=  self.__shd_gen_meas.\
-                                            update_including_tags(self.man_core.local_gen_meas,
+                                            update_including_tags(self.man_core.gen_meas,
                                                                 self.__shared_tags.gen_meas_attrs),
                                         new_ext_meas= self.__shd_ext_meas.\
-                                            update_including_tags(self.man_core.local_ext_meas,
+                                            update_including_tags(self.man_core.ext_meas,
                                                                 self.__shared_tags.ext_meas_attrs),
                                         new_all_status= self.__shd_all_status.\
-                                            update_including_tags(self.man_core.local_all_status,
-                                                                self.__shared_tags.status_attrs))
+                                            update_including_tags(self.man_core.all_status,
+                                                                self.__shared_tags.status_attrs),
+                                        new_alarms= raised_alarms)
 
     def process_iteration(self) -> None:
         """Run the app .
@@ -225,7 +226,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
             self.heartbeat()
 
             # 4.0 Sync shared data
-            self.sync_shd_data()
+            self.sync_shd_data(raised_alarms)
 
             # 5.0 Process reqs to str node
             self.man_core.process_recv_data()
