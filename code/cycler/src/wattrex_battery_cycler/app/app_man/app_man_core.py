@@ -28,10 +28,18 @@ _PERIOD_WAIT_EXP = 10
 class AppManCoreStatusE(Enum):
     """Application manager status
     """
-    GET_EXP = 0
+    GET_EXP     = 0
     PREPARE_EXP = 1
     EXECUTE_EXP = 2
-    ERROR = 3
+    ERROR       = 3
+
+class _AppManCoreGetExpStatusE(Enum):
+    """Application manager get experiment status
+    """
+    GET_EXP     = 0
+    WAIT_CS     = 1
+    WAIT_EXP    = 2
+    WAIT        = 3
 
 #########             CLASSES              #######################
 
@@ -61,6 +69,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.__wait_exp_reqst: bool = False
         self.__wait_cs_reqst: bool = False
         self.__iter: int = 0
+        self.__get_exp_status: _AppManCoreGetExpStatusE = _AppManCoreGetExpStatusE.GET_EXP
         ## Power control object
         self.pwr_control: MidPwrControlC= MidPwrControlC(devices= devices,
                             alarm_callback= self.alarm_callback, battery_limits=None,
@@ -125,9 +134,11 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         any(var is None for var in (msg.battery, msg.profile))):
                         ## The experiment will be set to error
                         self.__update_exp_status(exp_status=CyclerDataExpStatusE.ERROR)
+                        self.__wait_exp_reqst = False
                     elif msg.cmd_type == MidStrDataCmdE.CS_STATUS:
                         ## The cycler station will be set to deprecated
                         self.turn_deprecated()
+                        self.__wait_cs_reqst = False
                     elif msg.cmd_type == MidStrDataCmdE.EXP_STATUS:
                         pass
                 else:
@@ -135,6 +146,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         self.experiment = msg.experiment
                         self.battery = msg.battery
                         self.profile = msg.profile
+                        self.__wait_exp_reqst = False
                     elif msg.cmd_type is MidStrDataCmdE.EXP_STATUS:
                         self.exp_status = msg.exp_status
                     elif msg.cmd_type is MidStrDataCmdE.CS_STATUS:
@@ -232,22 +244,30 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
             ## Process machine status
             if self.state == AppManCoreStatusE.GET_EXP:
                 ## Wait for cs status to continue
-                if ((not self.__wait_cs_reqst and not self.__wait_exp_reqst) or
-                    self.__iter> _PERIOD_WAIT_EXP):
+                if self.__get_exp_status is _AppManCoreGetExpStatusE.GET_EXP:
                     self.__fetch_new_exp()
                     self.__request_cs_status()
-                ## Check if the cycler station is deprecated
-                if self.is_deprecated:
-                    log.critical("Cycler station is deprecated")
-                    self.turn_deprecated()
-                    self.state = AppManCoreStatusE.ERROR
-                ## Wait for the experiment and check if the experiment is valid
-                if not self.experiment is None and self.__wait_exp_reqst:
-                    self.__iter = 0
-                    self.__wait_exp_reqst = False
-                    self.state = AppManCoreStatusE.PREPARE_EXP
-                elif self.__wait_exp_reqst:
-                    self.__iter +=1
+                    self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT_CS
+                elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT_CS:
+                    if not self.__wait_cs_reqst:
+                        if self.is_deprecated:
+                            log.critical("Cycler station is deprecated")
+                            self.turn_deprecated()
+                            self.state = AppManCoreStatusE.ERROR
+                        else:
+                            self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT_EXP
+                elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT_EXP:
+                    if self.experiment is not None and self.__wait_exp_reqst:
+                        self.__iter = 0
+                        self.state = AppManCoreStatusE.PREPARE_EXP
+                    elif self.experiment is None and self.__wait_exp_reqst:
+                        self.__iter +=1
+                        self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT
+                elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT:
+                    if self.__iter> _PERIOD_WAIT_EXP:
+                        self.__get_exp_status = _AppManCoreGetExpStatusE.GET_EXP
+                    else:
+                        self.__iter +=1
             elif self.state == AppManCoreStatusE.PREPARE_EXP:
                 ## Set experiment to pwr control
                 ## TODO: FUNCTION FOR ALARMS CALLBACK
