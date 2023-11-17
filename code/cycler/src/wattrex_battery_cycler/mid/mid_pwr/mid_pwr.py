@@ -5,7 +5,7 @@ the device and request info from it.
 """
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 from enum import Enum
 #######################         GENERIC IMPORTS          #######################
 from time import time
@@ -17,13 +17,13 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-
-#######################          MODULE IMPORTS          #######################
-from ..mid_dabs import MidDabsPwrDevC
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC,
+from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC, #pylint: disable= wrong-import-position
                         CyclerDataInstructionC, CyclerDataDeviceTypeE, CyclerDataPwrLimitE,
                         CyclerDataGenMeasC, CyclerDataPwrModeE, CyclerDataExpStatusE,
                         CyclerDataAlarmC, CyclerDataAllStatusC)
+
+#######################          MODULE IMPORTS          #######################
+from ..mid_dabs import MidDabsPwrDevC
 #######################              ENUMS               #######################
 class _MidPwrDirectionE(Enum):
     '''Enum to define the direction of the power flow.
@@ -34,25 +34,26 @@ class _MidPwrDirectionE(Enum):
 
 
 #######################             CLASSES              #######################
-class MidPwrControlC:
+class MidPwrControlC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure.
     '''
-    def __init__(self, alarm_callback: function, devices: list [CyclerDataDeviceC],
+    def __init__(self, alarm_callback: Callable, devices: list [CyclerDataDeviceC],
             battery_limits: CyclerDataPwrRangeC|None,
             instruction_set: List[CyclerDataInstructionC]|None) -> None:
 
         self.pwr_dev  : MidDabsPwrDevC = MidDabsPwrDevC(devices)
         self.pwr_limits: CyclerDataPwrRangeC|None = battery_limits
         self.all_instructions     : List[CyclerDataInstructionC]|None = instruction_set
-        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= -1,
+        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= 0,
                                                         mode= CyclerDataPwrModeE.DISABLE,
                                                         ref=0, limit_type= CyclerDataPwrLimitE.TIME,
                                                         limit_ref= 0)
         self.instr_init_time: int = 0
         self.local_gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.local_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
+        self.__last_mode: CyclerDataPwrModeE = CyclerDataPwrModeE.WAIT
         self.__pwr_direction: _MidPwrDirectionE = _MidPwrDirectionE.WAIT
-        self.__alarm_callback: function = alarm_callback
+        self.__alarm_callback: Callable = alarm_callback
 
     def __check_security_limits(self) -> bool:
         """Checks if the measures are within the limits of the battery pwr limits .
@@ -76,7 +77,7 @@ class MidPwrControlC:
         """
         inst_limits = True
         if self.actual_inst.mode is not CyclerDataPwrModeE.CP_MODE:
-            if (self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME):
+            if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
                 if self.actual_inst.limit_ref > (int(time())-self.instr_init_time):
                     inst_limits = False
             elif self.__pwr_direction is _MidPwrDirectionE.CHARGE:
@@ -163,10 +164,10 @@ class MidPwrControlC:
             bat_pwr_range (CyclerDataPwrRangeC): [description]
         """
         self.all_instructions = instructions
-        self.actual_inst.instr_id = -1
+        self.actual_inst.instr_id = 0
         self.pwr_limits = bat_pwr_range
 
-    def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]:
+    def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]: #pylint: disable= too-many-branches
         """Processes a single instruction .
 
         Returns:
@@ -180,16 +181,22 @@ class MidPwrControlC:
                 # The epc device always start in Disable mode,
                 # no need to check if instruction is not loaded
                 # When the epc goes back to disable means the last instruction is done
-                if self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE:
+                if (self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE and
+                    self.__last_mode is not CyclerDataPwrModeE.DISABLE):
                     # Check if there are more instructions to read
                     if len(self.all_instructions) > 0:
                         self.actual_inst = self.all_instructions.pop(0)
                         log.warning(f"New instruction: {self.actual_inst.__dict__}")
                         self.__apply_instruction()
+                        self.__last_mode = CyclerDataPwrModeE.DISABLE
                         status = CyclerDataExpStatusE.RUNNING
                     else:
-                        self.actual_inst.instr_id = -1
+                        self.actual_inst.instr_id = 0
                         status = CyclerDataExpStatusE.FINISHED
+                elif (self.local_status.pwr_mode is not CyclerDataPwrModeE.DISABLE and
+                    self.__last_mode is CyclerDataPwrModeE.DISABLE):
+                    self.__last_mode = self.actual_inst.mode
+                    status = CyclerDataExpStatusE.RUNNING
                 else:
                     status = CyclerDataExpStatusE.RUNNING
             else:
@@ -208,7 +215,7 @@ class MidPwrControlC:
                     status = CyclerDataExpStatusE.RUNNING
         else:
             status = CyclerDataExpStatusE.ERROR
-            # TODO: Add alarms callback
+            # TODO: Add alarms callback #pylint: disable= fixme
             self.__alarm_callback(CyclerDataAlarmC(code= 0, value=0))
         return status, self.actual_inst.instr_id
 
