@@ -119,7 +119,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         reqs_chan.send_data(request)
         response: MidStrCmdDataC = data_chan.receive_data()
         if response.error_flag:
-            log.error(("Was imposible to get the cycler station info from the database. "))
+            log.critical(("Was imposible to get the cycler station info from the database. "))
             self.status = SysShdNodeStatusE.INTERNAL_ERROR
         else:
             cs_info = response.station
@@ -135,16 +135,15 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
                         shared_status= self.__shd_all_status, devices= cs_info.devices,
                         cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
                 self._th_meas.start()
+                self.iter = -1 # pylint: disable=attribute-defined-outside-init
+                self.sync_shd_data(raised_alarms= [])
+                while self._th_meas.status != SysShdNodeStatusE.OK:
+                    sleep(1)
+                self.status = SysShdNodeStatusE.OK
             else:
                 log.critical(("Cycler station is deprecated. Meas node will not be launched, "
                             "cycler station will be stop"))
-                self.stop()
-            sleep(2)
-            self.iter = -1 # pylint: disable=attribute-defined-outside-init
-            self.sync_shd_data(raised_alarms= [])
-            while self._th_meas.status != SysShdNodeStatusE.OK:
-                sleep(1)
-            self.status = SysShdNodeStatusE.OK
+                self.status = SysShdNodeStatusE.INTERNAL_ERROR
 
     def check_system_health_and_recover(self) -> List[CyclerDataAlarmC]:
         '''
