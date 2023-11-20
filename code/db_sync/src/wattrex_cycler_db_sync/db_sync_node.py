@@ -8,7 +8,7 @@ from sys import path
 import os
 
 #######################         GENERIC IMPORTS          #######################
-import threading
+from threading import Event
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -21,22 +21,23 @@ log = sys_log_logger_get_module_logger(__name__)
 from system_shared_tool import SysShdNodeC # pylint: disable=wrong-import-position
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_driver_db import DrvDbSqlEngineC 
 from wattrex_driver_db import * 
 
 #######################          MODULE IMPORTS          #######################
-from mid_sync import MidSyncFachadeC # pylint: disable=wrong-import-position
+from .context import DEFAULT_CRED_FILE
+from .db_sync_fachade import DbSyncFachadeC # pylint: disable=wrong-import-position
 
 #######################              ENUMS               #######################
 
 
 #######################              CLASSES             #######################
-class MidSyncNodeC(SysShdNodeC): #TODO: No reconode el SysShdNodeC
+class DbSyncNodeC(SysShdNodeC): #TODO: No reconode el SysShdNodeC
     '''
     It is a thread that runs in background and is used to synchronize
     the database with the other nodes.
     '''
-    def __init__(self, comp_unit: int, cycle_period: int):
+    def __init__(self, working_flag: Event, comp_unit: int, cycle_period: int,
+                 cred_file: str = DEFAULT_CRED_FILE):
         '''Initialize the class.
         Args:
             - comp_unit (int): _____________
@@ -47,16 +48,21 @@ class MidSyncNodeC(SysShdNodeC): #TODO: No reconode el SysShdNodeC
             - None
         '''
         log.info(f"Initializing {comp_unit} node...") # pylint: disable=logging-fstring-interpolation
-        master_db = DrvDbSqlEngineC(db_type = DrvDbTypeE.MASTER_DB,\
-                                    config_file='./mid_sync/.server_cred.yaml') #Remote database
-        cache_db = DrvDbSqlEngineC(db_type = DrvDbTypeE.CACHE_DB,\
-                                   config_file='./mid_sync/.cache_cred.yaml')   #Local database
-
+        super().__init__(name= "Sync_Node", cycle_period=cycle_period, working_flag= working_flag)
         self.comp_unit: int = comp_unit
-        self.fachade: MidSyncFachadeC = MidSyncFachadeC(master_db = master_db, cache_db = cache_db)
-        self.working_flag: threading.Event = None
-        self.cycle_period: int = cycle_period
+        self.fachade: DbSyncFachadeC = DbSyncFachadeC(cred_file= cred_file)
 
+    def stop(self) -> None:
+        '''Stop the thread.
+        Args:
+            - None
+        Returns:
+            - None
+        Raises:
+            - None
+        '''
+        log.info(f"Stopping {self.name} in CU {self.comp_unit}...")
+        self.working_flag.clear()
 
     def process_iterarion(self) -> None:
         '''Process the iteration.
@@ -68,9 +74,10 @@ class MidSyncNodeC(SysShdNodeC): #TODO: No reconode el SysShdNodeC
             - None
         '''
         log.info("Processing iteration for experiment...") # pylint: disable=logging-fstring-interpolation
+        self.fachade.push_experiments()
         self.fachade.push_gen_meas()
         self.fachade.push_ext_meas()
-        # self.fachade.update_experiments()
         self.fachade.push_alarms()
         self.fachade.push_status()
         self.fachade.commit()
+        self.fachade.update_last_connection()

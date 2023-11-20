@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 # users can install this project, e.g.:
 #
 # $ pip install <sampleproject>
-name = "wattrex-battery-cycler"
+name = "wattrex_cycler_db_sync"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
@@ -20,7 +20,7 @@ dynamic = ["version","dependencies"]
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
 # https://packaging.python.org/specifications/core-metadata/#summary
-description ="Battery cycler control used to execute custom profile on multiple battery technologies." # Optional
+description ="Driver to launch a node that can sync cache database with master database." # Optional
 
 # This is an optional longer description of your project that represents
 # the body of text which users will see when they visit PyPI.
@@ -49,18 +49,16 @@ license = {file = "../LICENSE.txt"}
 # Note that this is a list of additional keywords, separated
 # by commas, to be used to assist searching for the distribution in a
 # larger catalog.
-keywords= ["Embedded Systems", "Power Control", "Lithium Battery Cycler", "Battery",
-  "Industrial Battery", "SoH", "State of Health", "SoC", "State of Charge", 
-  "Redox Flow Vanadium", "Battery", "Cycler", "Battery Profiling"]  # Optional
+keywords= ["ORM", "database", "synchronization", "mysql", "sqlite", "SQLAlchemy", "Database tools"]  # Optional
 
 # This should be your name or the name of the organization who originally
 # authored the project, and a valid email address corresponding to the name
 # listed.
 authors = [
   # Optional
+  { name="Roberto Aldea", email="r.aldea.csic+pypi@gmail.com" },
   { name="Marius Crisan", email="mariuscrsn+pypi@gmail.com" },
   { name="Javier Sanz", email="javiersanzmoline@gmail.com" },
-  { name="Roberto Aldea", email="r.aldea.csic+pypi@gmail.com" },
   { name="Pablo Pastor", email="pastorpflores+pypi@gmail.com" },
   { name="Luis Roche", email="luis.roche@hotmail.com" }
 ]
@@ -146,10 +144,10 @@ dependencies = {file = ["requirements.txt"]}
 # maintainers, and where to support the project financially. The key is
 # what's used to render the link text on PyPI.
 [project.urls]  # Optional
-"Homepage" = "https://github.com/WattRex/Battery-Cycler-Drivers"
-"Bug Reports" = "https://github.com/WattRex/Battery-Cycler-Drivers/issues"
-"Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Drivers/issues"
-"Source" = "https://github.com/WattRex/Battery-Cycler-Drivers/code/drv/drv_epc"
+"Homepage" = "https://github.com/WattRex/Battery-Cycler-Controller"
+"Bug Reports" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
+"Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
+"Source" = "https://github.com/WattRex/Battery-Cycler-Controller/tree/develop/code/db_sync/src/wattrex_cycler_db_sync"
 "Funding" = "https://donate.pypi.org"
 # "Say Thanks!" = "http://saythanks.io/to/example"
 
@@ -168,6 +166,6 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 root = "../../"
-write_to = "code/src/wattrex_battery_cycler/__version__.py"
+write_to = "code/db_sync/src/wattrex_cycler_db_sync/__version__.py"
 version_scheme="python-simplified-semver"
 normalize="True"
