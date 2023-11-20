@@ -257,10 +257,10 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         else:
                             self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT_EXP
                 elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT_EXP:
-                    if self.experiment is not None and self.__wait_exp_reqst:
+                    if self.experiment is not None and not self.__wait_exp_reqst:
                         self.__iter = 0
                         self.state = AppManCoreStatusE.PREPARE_EXP
-                    elif self.experiment is None and self.__wait_exp_reqst:
+                    elif self.experiment is None and not self.__wait_exp_reqst:
                         self.__iter +=1
                         self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT
                 elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT:
@@ -291,7 +291,6 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                 log.critical(f"Experiment status: {self.exp_status}")
                 if self.exp_status in (CyclerDataExpStatusE.FINISHED,
                                         CyclerDataExpStatusE.ERROR):
-                    self.__request_cs_status()
                     self.experiment = None
                     self.state = AppManCoreStatusE.GET_EXP
             else:
