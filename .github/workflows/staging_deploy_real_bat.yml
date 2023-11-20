@@ -21,6 +21,7 @@ jobs:
         run: |
           echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > ./devops/.cred.env
           echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > ./devops/.cred.yaml
+          echo "${{ vars.CONFIG_PARAMS }}" > ./devops/config_params.yaml
           echo "${{ vars.LOG_CONFIG }}" > ./devops/log_config.yaml
 
       - name: Execute deploy script

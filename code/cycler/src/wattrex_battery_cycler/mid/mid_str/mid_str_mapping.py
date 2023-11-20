@@ -41,7 +41,7 @@ MAPPING_ALARM: Dict[str, str] = {
 MAPPING_STATUS: Dict[str, str] = {
     'Status': "name",
     'ErrorCode': 'error_code',
-    'DevID': 'dev_id'
+    'DevID': 'dev_db_id'
 
 }
 
@@ -51,6 +51,7 @@ MAPPING_CS_DB: Dict[str, str] = {
     'Deprecated': 'deprecated'}
 
 MAPPING_DEV_DB: Dict[str, str] = {
+    'DevID': 'dev_db_id',
     'Manufacturer': 'manufacturer',
     'DeviceType': 'device_type',
     'LinkName': 'iface_name',

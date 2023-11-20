@@ -20,6 +20,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - wattrex-net
 
   cycler:
     build:
@@ -37,6 +39,8 @@ services:
       - ./.cred.yaml:/cycler/devops/.cred.yaml
       - ./cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
       - ../log:/cycler/log
+    networks:
+      - wattrex-net
     depends_on:
       cache_db:
         condition: service_healthy
@@ -62,3 +66,7 @@ services:
 volumes:
   wattrex_cycler_cache_db:
     name: wattrex_cycler_cache_db
+
+networks:
+  wattrex-net:
+    driver: bridge

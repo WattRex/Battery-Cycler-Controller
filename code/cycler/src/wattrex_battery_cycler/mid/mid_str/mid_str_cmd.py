@@ -36,15 +36,18 @@ class MidStrReqCmdE(Enum):
     GET_NEW_EXP     = 0
     GET_EXP_STATUS  = 1
     GET_CS          = 2
-    SET_EXP_STATUS  = 3
-    TURN_DEPRECATED = 4
+    GET_CS_STATUS   = 3
+    SET_EXP_STATUS  = 4
+    TURN_DEPRECATED = 5
 
 class MidStrDataCmdE(Enum):
     """Type of data send as return for the request.
     """
     EXP_DATA    = 0
-    CS_DATA     = 1
-    EXP_STATUS  = 2
+    EXP_STATUS  = 1
+    CS_DATA     = 2
+    CS_STATUS   = 3
+
 
 class MidStrCmdDataC:
     """Class that wrapp the messages send through the queue, containing the request and returns.
@@ -53,11 +56,13 @@ class MidStrCmdDataC:
                 exp_status: CyclerDataExpStatusE|None= None,
                 experiment: CyclerDataExperimentC|None= None,
                 profile: CyclerDataProfileC|None= None, battery: CyclerDataBatteryC|None= None,
-                station: CyclerDataCyclerStationC|None= None):
+                station: CyclerDataCyclerStationC|None= None, station_status: bool|None= None):
         self.cmd_type = cmd_type
         self.error_flag = True
         if cmd_type is MidStrDataCmdE.EXP_DATA:
-            if all(var is not None for var in (experiment, profile, battery)):
+            ## Check if the experiment is ok or if there is no experiment at all
+            if (all(var is not None for var in (experiment, profile, battery)) or
+                    all(var is None for var in (experiment, profile, battery))):
                 self.error_flag = False
             self.experiment = experiment
             self.profile = profile
@@ -66,6 +71,10 @@ class MidStrCmdDataC:
             if station is not None:
                 self.error_flag = False
             self.station = station
+        elif cmd_type is MidStrDataCmdE.CS_STATUS:
+            if station_status is not None:
+                self.error_flag = False
+            self.station_status = station_status
         elif cmd_type is MidStrDataCmdE.EXP_STATUS or cmd_type is MidStrReqCmdE.SET_EXP_STATUS:
             if exp_status is not None:
                 self.error_flag = False

@@ -6,10 +6,13 @@ ENV G_UID=${GROUP}
 ENV UG_NAME=wattrex
 RUN addgroup --system --gid ${G_UID} ${UG_NAME} && adduser --system --gid ${G_UID} --uid ${U_ID} ${UG_NAME}
 USER ${UG_NAME}
-WORKDIR /cycler
+ENV APP_PATH=/cycler
+WORKDIR ${APP_PATH}
 ENV PATH="${PATH}:/home/${UG_NAME}/.local/bin"
 RUN pip install --upgrade pip
 RUN pip install pytest
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/config_params.yaml ./devops/config_params.yaml
+ENV CONFIG_FILE_PATH=${APP_PATH}/devops/config_params.yaml
 
 FROM cycler_base as cycler_test
 ARG UPDATE_REQS=default

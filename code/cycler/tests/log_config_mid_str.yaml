@@ -1,0 +1,23 @@
+---
+#YAML FILE START
+APP.APP_MODULE: "CRITICAL" #APP/APP_MODULE/APP_EXAMPLE.py
+test_mid_str: "DEBUG"
+
+__main__: "INFO"
+
+##### DEV ######
+cu_broker_client: "DEBUG"
+cu_manager: "DEBUG"
+detect: "INFO"
+register: "DEBUG"
+
+##### DRV ######
+wattrex_driver_db: 'INFO'
+wattrex_battery_cycler_datatypes.cycler_data: 'INFO'
+
+##### SYS #####
+sys_abs.sys_conf: "ERROR"
+system_logger_tool: "ERROR"
+system_shared_tool: "INFO"
+
+file_handlers: {}

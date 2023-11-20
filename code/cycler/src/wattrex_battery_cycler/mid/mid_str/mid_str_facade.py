@@ -48,7 +48,7 @@ class MidStrDbElementNotFoundErrorC(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class MidStrFacadeC:
+class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
     '''
     This class is used to interface with the database.
     '''
@@ -57,11 +57,9 @@ class MidStrFacadeC:
         log.info("Initializing DB Connection...")
         self.cs_id = cycler_station_id
         self.__master_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.MASTER_DB,
-                                                            config_file= cred_file,
-                                                            section= 'master_db')
+                                                            config_file= cred_file)
         self.__cache_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.CACHE_DB,
-                                                            config_file= cred_file,
-                                                            section= 'cache_db')
+                                                            config_file= cred_file)
         self.all_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
         self.gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.ext_meas: CyclerDataExtMeasC = CyclerDataExtMeasC()
@@ -85,8 +83,9 @@ class MidStrFacadeC:
                     .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value)\
                     .where(DrvDbMasterExperimentC.CSID == self.cs_id)\
                     .order_by(DrvDbMasterExperimentC.DateCreation.asc())
-        exp_result = self.__master_db.session.execute(stmt).first()[0]
+        exp_result = self.__master_db.session.execute(stmt).all()
         if len(exp_result) != 0:
+            exp_result: DrvDbMasterExperimentC = exp_result[0][0]
             exp : CyclerDataExperimentC = CyclerDataExperimentC()
             for db_name, att_name in MAPPING_EXPERIMENT.items():
                 setattr(exp, att_name, getattr(exp_result,db_name))
@@ -130,7 +129,6 @@ class MidStrFacadeC:
         stmt = select(DrvDbProfileC).join(DrvDbMasterExperimentC,
                     DrvDbMasterExperimentC.ProfID == DrvDbProfileC.ProfID).where(
                     DrvDbMasterExperimentC.ExpID == exp_id)
-        log.warning(stmt)
         result = self.__master_db.session.execute(stmt).one()
         result: DrvDbProfileC = result[0]
         profile = CyclerDataProfileC(name= result.Name)
@@ -180,6 +178,16 @@ class MidStrFacadeC:
         bat_range.fill_voltage(result.VoltMax, result.VoltMin)
         battery.elec_ranges = bat_range
         return battery
+
+    def get_cycler_station_status(self) -> bool:
+        """Returns if the cycler station is deprecated or not.
+        Returns:
+            [bool]: [description]
+        """
+        ## Get cycler station info
+        stmt = select(DrvDbCyclerStationC.Deprecated).where(DrvDbCyclerStationC.CSID == self.cs_id)
+        result = self.__master_db.session.execute(stmt).one()[0]
+        return result
 
     def get_cycler_station_info(self) -> CyclerDataCyclerStationC|None: #pylint: disable= too-many-locals
         """Returns the name and name of the cycle station for the experiment .

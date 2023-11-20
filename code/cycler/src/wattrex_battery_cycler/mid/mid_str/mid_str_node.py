@@ -21,7 +21,7 @@ from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC
                         SysShdNodeStatusE)
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
                                               CyclerDataExtMeasC, CyclerDataAllStatusC,
-                                              CyclerDataCyclerStationC)
+                                              CyclerDataCyclerStationC, CyclerDataExpStatusE)
 
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
@@ -71,7 +71,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             self.__new_raised_alarms.append(alarm)
             alarm = self.str_alarms.receive_data_unblocking()
 
-    def __apply_command(self, command : MidStrCmdDataC) -> None:
+    def __apply_command(self, command : MidStrCmdDataC) -> None: #pylint: disable= too-many-branches
         '''
         Apply a command to the Storage node.
 
@@ -104,12 +104,19 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             cycler_info = self.db_iface.get_cycler_station_info()
             self.str_data.send_data(MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_DATA,
                                                    station= cycler_info))
+        elif command.cmd_type == MidStrReqCmdE.GET_CS_STATUS:
+            cycler_status = self.db_iface.get_cycler_station_status()
+            self.str_data.send_data(data= MidStrCmdDataC(cmd_type= MidStrDataCmdE.CS_STATUS,
+                                                station_status = cycler_status))
         elif command.cmd_type == MidStrReqCmdE.SET_EXP_STATUS and command.exp_status is not None:
             if self.__actual_exp_id == -1:
                 log.warning("No experiment is running")
             else:
                 self.db_iface.modify_current_exp(exp_status= command.exp_status,
                                              exp_id= self.__actual_exp_id)
+                if command.exp_status in (CyclerDataExpStatusE.ERROR,
+                                          CyclerDataExpStatusE.FINISHED):
+                    self.__actual_exp_id = -1
         elif command.cmd_type == MidStrReqCmdE.TURN_DEPRECATED:
             log.info("Turning cycler station to deprecated")
             self.db_iface.turn_cycler_station_deprecated(
@@ -125,6 +132,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         self.db_iface.all_status: CyclerDataAllStatusC = self.globlal_all_status.read()
         self.db_iface.gen_meas: CyclerDataGenMeasC     = self.globlal_gen_meas.read()
         self.db_iface.ext_meas: CyclerDataExtMeasC     = self.globlal_ext_meas.read()
+
 
     def stop(self) -> None:
         """Stop the node if it is not already closed .
@@ -150,10 +158,12 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                                               exp_id= self.__actual_exp_id)
                 self.__new_raised_alarms.clear()
             ### Write measures and status changes
-            if self.db_iface.gen_meas.instr_id is not None:
+            if self.db_iface.gen_meas.instr_id is not None and self.__actual_exp_id != -1:
                 self.db_iface.write_generic_measures(exp_id= self.__actual_exp_id)
-                self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
+                ## TODO: remove commit, should work without this commit # pylint: disable=fixme
+                self.db_iface.commit_changes()
                 self.db_iface.write_status_changes(exp_id= self.__actual_exp_id)
+                self.db_iface.write_extended_measures(exp_id= self.__actual_exp_id)
                 self.db_iface.meas_id += 1
             if not self.str_reqs.is_empty():
                 # Ignore warning as receive_data return an object,
