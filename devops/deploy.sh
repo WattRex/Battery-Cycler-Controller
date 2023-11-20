@@ -35,7 +35,7 @@ instance_new_cycler () {
     # check_sniffer "scpi"
     export CYCLER_TARGET=cycler_prod
     docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
-    docker compose ${DOCKER_COMPOSE_ARGS} run --use-aliases -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
+    docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
 test_cycler () {
