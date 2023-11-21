@@ -82,5 +82,5 @@ class DbSyncNodeC(SysShdNodeC):
         self.fachade.push_status()
         self.fachade.commit()
         log.debug("Commit and push ext, alarms and status done")
-        self.fachade.remove_from_cache()
+        self.fachade.delete_pushed_data()
         self.fachade.update_last_connection()

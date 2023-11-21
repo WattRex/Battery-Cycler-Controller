@@ -172,7 +172,7 @@ class DbSyncFachadeC():
         except Exception as err:
             log.error("Error commiting changes: %s", err)
 
-    def remove_from_cache(self):
+    def delete_pushed_data(self):
         '''Remove the pushed data from the cache database.
         '''
         for meas,name in zip([self.__push_alarms, self.__push_status,
