@@ -165,7 +165,6 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         '''
         log.info("Commiting changes...")
         try:
-            # pass
             self.__master_db.commit_changes(raise_exception= True)
             ## No rollback done in master db
         except Exception as err:

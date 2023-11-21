@@ -22,7 +22,8 @@ from system_shared_tool import SysShdNodeC # pylint: disable=wrong-import-positi
 #######################          PROJECT IMPORTS         #######################
 
 #######################          MODULE IMPORTS          #######################
-from .context import DEFAULT_CRED_FILEPATH, DEFAULT_SYNC_NODE_NAME
+from .context import (DEFAULT_CRED_FILEPATH, DEFAULT_SYNC_NODE_NAME, DEFAULT_NODE_PERIOD,
+                      DEFAULT_COMP_UNIT)
 from .db_sync_fachade import DbSyncFachadeC # pylint: disable=wrong-import-position
 
 #######################              ENUMS               #######################
@@ -34,7 +35,8 @@ class DbSyncNodeC(SysShdNodeC): #pylint: disable= abstract-method
     It is a thread that runs in background and is used to synchronize
     the database with the other nodes.
     '''
-    def __init__(self, working_flag: Event, comp_unit: int, cycle_period: int,
+    def __init__(self, working_flag: Event, comp_unit: int= DEFAULT_COMP_UNIT,
+                 cycle_period: int= DEFAULT_NODE_PERIOD,
                  cred_file: str = DEFAULT_CRED_FILEPATH):
         '''Initialize the class.
         Args:
