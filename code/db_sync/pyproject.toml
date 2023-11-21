@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 # users can install this project, e.g.:
 #
 # $ pip install <sampleproject>
-name = "wattrex_cycler_db_sync"
+name = "wattrex_battery_cycler_db_sync"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/
@@ -147,7 +147,7 @@ dependencies = {file = ["requirements.txt"]}
 "Homepage" = "https://github.com/WattRex/Battery-Cycler-Controller"
 "Bug Reports" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
 "Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
-"Source" = "https://github.com/WattRex/Battery-Cycler-Controller/tree/develop/code/db_sync/src/wattrex_cycler_db_sync"
+"Source" = "https://github.com/WattRex/Battery-Cycler-Controller/tree/develop/code/db_sync/src/wattrex_battery_cycler_db_sync"
 "Funding" = "https://donate.pypi.org"
 # "Say Thanks!" = "http://saythanks.io/to/example"
 
@@ -166,6 +166,6 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 root = "../../"
-write_to = "code/db_sync/src/wattrex_cycler_db_sync/__version__.py"
+write_to = "code/db_sync/src/wattrex_battery_cycler_db_sync/__version__.py"
 version_scheme="python-simplified-semver"
 normalize="True"
