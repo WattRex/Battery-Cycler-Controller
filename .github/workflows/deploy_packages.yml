@@ -15,13 +15,13 @@ on:
 jobs:
 
   build-package-on-push:
-    name: QA and Build ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} on push
+    name: QA and Build ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }} on push
     if: ${{ github.event_name == 'push' }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
-      package-name: ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }}
-      package-path: "code/${{ github.event.pull_request.head.ref }}"
-      source-path: "code/${{ github.event.pull_request.head.ref }}/src/${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }}"
+      package-name: ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}
+      package-path: "code/${{ github.ref_name }}"
+      source-path: "code/${{ github.ref_name }}/src/${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}"
       python-version: "3.10"
 
   build-package-on-pull-request:
