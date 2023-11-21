@@ -23,8 +23,9 @@ from system_config_tool import sys_conf_update_config_params
 
 ######################             CONSTANTS              ######################
 # For further information check out README.md
-DEFAULT_CRED_FILE : str = 'devops/.cred.yaml' # Max number of allowed message per chan
+DEFAULT_CRED_FILEPATH : str = 'devops/.cred.yaml' # Max number of allowed message per chan
+DEFAULT_SYNC_NODE_NAME: str = 'SYNC'
 
-# CONSTANTS_NAMES = ('DEFAULT_CRED_FILE')
-# sys_conf_update_config_params(context=globals(),
-#                               constants_names=CONSTANTS_NAMES)
+CONSTANTS_NAMES = ('DEFAULT_CRED_FILEPATH',)
+sys_conf_update_config_params(context=globals(),
+                              constants_names=CONSTANTS_NAMES)

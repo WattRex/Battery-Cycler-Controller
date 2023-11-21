@@ -28,7 +28,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbMasterExperimen
                                DrvDbCacheExperimentC, DrvDbCacheExtendedMeasureC,
                                DrvDbCacheGenericMeasureC, DrvDbCacheStatusC,
                                DrvDbMasterStatusC, DrvDbMasterExtendedMeasureC,
-                               DrvDbMasterGenericMeasureC)
+                               DrvDbMasterGenericMeasureC, DrvDbExpStatusE)
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/db_sync/')
@@ -70,11 +70,14 @@ class TestChannels:
         for stmt in cache_exp_4_stmt:
             cache_db.session.execute(text(stmt))
         cache_db.session.commit()
+        cache_db.close_connection()
         log.info('Removing data from master...')
         master_db = DrvDbSqlEngineC(db_type= DrvDbTypeE.MASTER_DB, config_file= cred_file)
         for stmt in master_exp_4_stmt:
             master_db.session.execute(text(stmt))
-        master_db.session.commit()
+            master_db.session.commit()
+        sleep(2)
+        master_db.close_connection()
 
     def check_push_exp(self, master_con: DrvDbSqlEngineC) -> bool:
         """Check if the experiment is pushed correctly.
@@ -82,24 +85,23 @@ class TestChannels:
         log.info("Check push general measures")
         result = False
         stmt = select(DrvDbMasterExperimentC).where(DrvDbMasterExperimentC.ExpID == 4)
-        master_meas: DrvDbMasterExperimentC = master_con.session.execute(stmt).all()[0][0]
+        master_meas: DrvDbMasterExperimentC = master_con.session.execute(stmt).one()[0]
         cache_dict = {"ExpID": 4, 'Name': 'Prueba Rob Sync','Description':'Experimento prueba SYNC',
                       "DateCreation":'2023-10-18 06:57:00', "DateBegin": '2023-11-17 14:12:33',
                       "DateFinish": '2023-11-17 14:12:35', "Status": 'FINISHED', "CSID": 31,
                       "BatID": 2, "ProfID": 2}
         cache_meas: DrvDbCacheExperimentC = DrvDbCacheExperimentC(**cache_dict)
         if (cache_meas.ExpID == master_meas.ExpID and
-            cache_meas.Description == meas_master.Description and
+            cache_meas.Description == master_meas.Description and
             cache_meas.Name == master_meas.Name and
-            cache_meas.Status == meas_master.Status and
-            cache_meas.DateCreation == master_meas.DateCreation and
-            cache_meas.DateBegin == master_meas.DateBegin and
-            cache_meas.DateFinish == meas_master.DateFinish and
-            cache_meas.CSID == meas_master.CSID and
-            cache_meas.BatID == meas_master.BatID and
-            cache_meas.ProfID == meas_master.ProfID):
+            cache_meas.Status == master_meas.Status and
+            cache_meas.DateCreation == str(master_meas.DateCreation) and
+            cache_meas.DateBegin == str(master_meas.DateBegin) and
+            cache_meas.DateFinish == str(master_meas.DateFinish) and
+            cache_meas.CSID == master_meas.CSID and
+            cache_meas.BatID == master_meas.BatID and
+            cache_meas.ProfID == master_meas.ProfID):
             result = True
-        print(result)
         return result
 
 
@@ -118,11 +120,15 @@ class TestChannels:
         self.working_flag: Event = Event()
         self.working_flag.set()
         sync_node = DbSyncNodeC(comp_unit=1, cycle_period=1000, working_flag= self.working_flag)
-        sync_node.run()
-        sleep(10)
+        sync_node.start()
+        sleep(5)
         master_db = DrvDbSqlEngineC(db_type= DrvDbTypeE.MASTER_DB, config_file= request.param)
         if not self.check_push_exp(master_con= master_db):
             raise AssertionError("The sync between master and cache is not correct")
+        else:
+            log.info("The sync between master and cache is correct")
+            self.working_flag.clear()
+            sync_node.join()
 
 
     @fixture(scope="function")
@@ -173,7 +179,7 @@ cache_exp_4_stmt= [("INSERT INTO `Experiment` (`ExpID`, `Name`, `Description`, `
 ("INSERT INTO `GenericMeasures` (`ExpID`, `MeasID`, `Timestamp`, `InstrID`, `Voltage`, `Current`, "
             "`Power`, `PowerMode`) VALUES (4, 0, '2023-11-17 12:40:03', 1, 1000, 34, 0, 'WAIT');"),
 ("INSERT INTO `ExtendedMeasures` (`MeasID`, `ExpID`, `UsedMeasID`, `Value`) "
-                                                                    "VALUES (0, 4, 1, 3000);"),
+                                                                    "VALUES (0, 4, 1, 5000);"),
 ("INSERT INTO `ExtendedMeasures` (`MeasID`, `ExpID`, `UsedMeasID`, `Value`) "
                                                                     "VALUES (1, 4, 1, 3000);"),
 ("INSERT INTO `ExtendedMeasures` (`MeasID`, `ExpID`, `UsedMeasID`, `Value`) "
@@ -260,12 +266,12 @@ cache_exp_4_stmt= [("INSERT INTO `Experiment` (`ExpID`, `Name`, `Description`, `
  "VALUES (1, 4, 2, '2023-11-17 12:40:03', 'OK', 0);"),
 ("INSERT INTO `Status` (`StatusID`, `ExpID`, `DevID`, `Timestamp`, `Status`, `ErrorCode`) "
  "VALUES (2, 4, 2, '2023-11-17 12:40:04', 'OK', 0);")]
-
-master_exp_4_stmt = [("REPLACE INTO `Experiment` (`ExpID`, `Name`, `Description`, `DateCreation`, "
-                "`DateBegin`, `DateFinish`, `Status`, `CSID`, `BatID`, `ProfID`) VALUES "
-                "(4, 'Prueba Rob Sync', 'Experimento prueba SYNC', '2023-10-18 06:57:00', "
-                "NULL, NULL, 'QUEUED', 31, 2, 2);"),
-    "DELETE FROM `ExtendedMeasures` WHERE  `ExpID`=4;",
+master_exp_4_stmt = [
+    "DELETE FROM `ExtendedMeasures` WHERE  `ExpID`= 4;",
     "DELETE FROM `Status` WHERE  `ExpID`=4;",
     "DELETE FROM `Alarm` WHERE  `ExpID`=4;",
-    "DELETE FROM `GenericMeasures` WHERE  `ExpID`=4;"]
+    "DELETE FROM `GenericMeasures` WHERE  `ExpID`= 4;",
+    ("REPLACE INTO `Experiment` (`ExpID`, `Name`, `Description`, `DateCreation`, "
+                "`DateBegin`, `DateFinish`, `Status`, `CSID`, `BatID`, `ProfID`) VALUES "
+                "(4, 'Prueba Rob Sync', 'Experimento prueba SYNC', '2023-10-18 06:57:00', "
+                "NULL, NULL, 'QUEUED', 31, 2, 2);")]
