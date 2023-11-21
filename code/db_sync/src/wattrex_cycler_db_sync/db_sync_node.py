@@ -29,7 +29,7 @@ from .db_sync_fachade import DbSyncFachadeC # pylint: disable=wrong-import-posit
 
 
 #######################              CLASSES             #######################
-class DbSyncNodeC(SysShdNodeC):
+class DbSyncNodeC(SysShdNodeC): #pylint: disable= abstract-method
     '''
     It is a thread that runs in background and is used to synchronize
     the database with the other nodes.

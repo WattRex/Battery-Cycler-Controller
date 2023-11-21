@@ -12,8 +12,7 @@ import os
 #######################         GENERIC IMPORTS          #######################
 
 #######################       THIRD PARTY IMPORTS        #######################
-from sqlalchemy import (select, Table, Column, Integer, String, MetaData, ForeignKey, DateTime,
-                        delete)
+from sqlalchemy import select
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 path.append(os.getcwd())
@@ -34,7 +33,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbAlarmC, DrvDbCa
 
 #######################              CLASSES             #######################
 
-class DbSyncFachadeC():
+class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
     '''It is a thread that runs in background and is used to synchronize
     the database with the other nodes.
     '''
@@ -170,7 +169,7 @@ class DbSyncFachadeC():
             self.__master_db.commit_changes(raise_exception= True)
             ## No rollback done in master db
         except Exception as err:
-            log.error("Error commiting changes: %s", err)
+            log.error(f"Error commiting changes: {err}")
 
     def delete_pushed_data(self):
         '''Remove the pushed data from the cache database.
@@ -178,7 +177,7 @@ class DbSyncFachadeC():
         for meas,name in zip([self.__push_alarms, self.__push_status,
                         self.__push_ext_meas, self.__push_gen_meas, self.__push_exps],
                         ['alarms', 'status', 'ext_meas', 'gen_meas', 'exps']):
-            log.info("Deleting %s...", name)
+            log.info(f"Deleting {name}...")
             for row in meas:
                 self.__cache_db.session.expunge(row)
                 self.__cache_db.session.delete(row)

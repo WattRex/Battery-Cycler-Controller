@@ -26,9 +26,7 @@ log: Logger = sys_log_logger_get_module_logger(name="test_db_sync")
 #######################          PROJECT IMPORTS         #######################
 from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbMasterExperimentC,
                                DrvDbCacheExperimentC, DrvDbCacheExtendedMeasureC,
-                               DrvDbCacheGenericMeasureC, DrvDbCacheStatusC,
-                               DrvDbMasterStatusC, DrvDbMasterExtendedMeasureC,
-                               DrvDbMasterGenericMeasureC, DrvDbExpStatusE)
+                               DrvDbCacheGenericMeasureC, DrvDbCacheStatusC)
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/db_sync/')
@@ -55,7 +53,7 @@ class TestChannels:
 
     def create_enviroment(self, cred_file: str) -> None:
         '''Create the enviroment'''
-        log.info(f'Deleting data from cache...')
+        log.info('Deleting data from cache...')
         cache_db = DrvDbSqlEngineC(db_type= DrvDbTypeE.CACHE_DB, config_file= cred_file)
         stmt = delete(DrvDbCacheStatusC).where(DrvDbCacheStatusC.ExpID == 4)
         cache_db.session.execute(stmt)
@@ -91,7 +89,7 @@ class TestChannels:
                       "DateFinish": '2023-11-17 14:12:35', "Status": 'FINISHED', "CSID": 31,
                       "BatID": 2, "ProfID": 2}
         cache_meas: DrvDbCacheExperimentC = DrvDbCacheExperimentC(**cache_dict)
-        if (cache_meas.ExpID == master_meas.ExpID and
+        if (cache_meas.ExpID == master_meas.ExpID and # pylint: disable=too-many-boolean-expressions
             cache_meas.Description == master_meas.Description and
             cache_meas.Name == master_meas.Name and
             cache_meas.Status == master_meas.Status and
@@ -117,7 +115,7 @@ class TestChannels:
         """
         log.info(msg="Setting up the environment testing mid sync")
         self.create_enviroment(request.param)
-        self.working_flag: Event = Event()
+        self.working_flag: Event = Event() #pylint: disable=attribute-defined-outside-init
         self.working_flag.set()
         sync_node = DbSyncNodeC(comp_unit=1, cycle_period=1000, working_flag= self.working_flag)
         sync_node.start()
@@ -125,10 +123,9 @@ class TestChannels:
         master_db = DrvDbSqlEngineC(db_type= DrvDbTypeE.MASTER_DB, config_file= request.param)
         if not self.check_push_exp(master_con= master_db):
             raise AssertionError("The sync between master and cache is not correct")
-        else:
-            log.info("The sync between master and cache is correct")
-            self.working_flag.clear()
-            sync_node.join()
+        log.info("The sync between master and cache is correct")
+        self.working_flag.clear()
+        sync_node.join()
 
 
     @fixture(scope="function")
