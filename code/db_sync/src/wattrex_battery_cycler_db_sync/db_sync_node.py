@@ -77,12 +77,14 @@ class DbSyncNodeC(SysShdNodeC): #pylint: disable= abstract-method
         log.info("Processing iteration for experiment...") # pylint: disable=logging-fstring-interpolation
         self.fachade.push_experiments()
         self.fachade.push_gen_meas()
-        self.fachade.commit()
-        log.debug("Commit and push of gen and exp done")
-        self.fachade.push_ext_meas()
-        self.fachade.push_alarms()
-        self.fachade.push_status()
-        self.fachade.commit()
-        log.debug("Commit and push ext, alarms and status done")
-        self.fachade.delete_pushed_data()
-        self.fachade.update_last_connection()
+        try:
+            self.fachade.commit()
+            log.debug("Commit and push of gen and exp done")
+            self.fachade.push_ext_meas()
+            self.fachade.push_alarms()
+            self.fachade.push_status()
+            self.fachade.commit()
+            log.debug("Commit and push ext, alarms and status done")
+            self.fachade.delete_pushed_data()
+        except Exception as err:
+            log.error((f"Error in trying to commit to master or cache, doing rollback: {err}"))

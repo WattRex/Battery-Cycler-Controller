@@ -63,13 +63,13 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
             - None
         '''
         log.info("Pushing general measures...")
-        stmt = select(DrvDbCacheGenericMeasureC)
-        cache_meas  = self.__cache_db.session.execute(stmt).all()
+        cache_meas  = self.__cache_db.session.query(DrvDbCacheGenericMeasureC).all()
         for meas in cache_meas:
-            meas_add = DrvDbMasterGenericMeasureC()
-            transform_gen_meas_db(source= meas[0], target= meas_add)
-            self.__push_gen_meas.append(meas[0])
-            self.__master_db.session.add(meas_add)
+            if meas not in self.__push_gen_meas:
+                meas_add = DrvDbMasterGenericMeasureC()
+                transform_gen_meas_db(source= meas, target= meas_add)
+                self.__push_gen_meas.append(meas)
+                self.__master_db.session.add(meas_add)
 
     def push_ext_meas(self) -> None:
         '''Push the measures to the database.
@@ -84,10 +84,11 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         log.info("Pushing external measures...")
         cache_meas = self.__cache_db.session.query(DrvDbCacheExtendedMeasureC).all()
         for meas in cache_meas:
-            meas_add = DrvDbMasterExtendedMeasureC()
-            transform_ext_meas_db(source= meas, target= meas_add)
-            self.__push_ext_meas.append(meas)
-            self.__master_db.session.add(meas_add)
+            if meas not in self.__push_ext_meas:
+                meas_add = DrvDbMasterExtendedMeasureC()
+                transform_ext_meas_db(source= meas, target= meas_add)
+                self.__push_ext_meas.append(meas)
+                self.__master_db.session.add(meas_add)
 
     def push_alarms(self) -> None:
         '''Push the alarms to the database.
@@ -99,11 +100,11 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
             - None
         '''
         log.info("Pushing alarms...")
-        stmt = select(DrvDbAlarmC)
-        cache_meas = self.__cache_db.session.execute(stmt).all()
+        cache_meas = self.__cache_db.session.query(DrvDbAlarmC).all()
         for meas in cache_meas:
-            self.__push_alarms.append(meas[0])
-            self.__master_db.session.add(meas[0])
+            if meas not in self.__push_alarms:
+                self.__push_alarms.append(meas)
+                self.__master_db.session.add(meas)
 
 
     def push_status(self) -> None:
@@ -116,22 +117,20 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
             - None
         '''
         log.info("Pushing status...")
-        stmt = select(DrvDbCacheStatusC)
-        cache_meas = self.__cache_db.session.execute(stmt).all()
+        cache_meas = self.__cache_db.session.query(DrvDbCacheStatusC).all()
         for meas in cache_meas:
-            meas_add = DrvDbMasterStatusC()
-            transform_status_db(source= meas[0], target= meas_add)
-            self.__push_status.append(meas[0])
-            self.__master_db.session.add(meas_add)
+            if meas not in self.__push_status:
+                meas_add = DrvDbMasterStatusC()
+                transform_status_db(source= meas, target= meas_add)
+                self.__push_status.append(meas)
+                self.__master_db.session.add(meas_add)
 
     def push_experiments(self) -> None:
         '''Push the experiments to the database.
         '''
         log.info("Pushing experiments...")
-        stmt = select(DrvDbCacheExperimentC)
-        cache_meas = self.__cache_db.session.execute(stmt).all()
+        cache_meas = self.__cache_db.session.query(DrvDbCacheExperimentC).all()
         for meas in cache_meas:
-            meas = meas[0]
             meas_add = DrvDbMasterExperimentC()
             if (meas.ExpID not in self.__last_exp_status or (meas.ExpID in self.__last_exp_status
                 and meas.Status != self.__last_exp_status[meas.ExpID])):
@@ -140,19 +139,6 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
                 transform_experiment_db(source= meas, target= meas_add)
                 self.__push_exps.append(meas)
                 self.__master_db.session.merge(meas_add)
-
-
-    def update_last_connection(self) -> None:
-        ''' Update last connection
-        Args:
-            - None
-        Returns:
-            - None
-        Raises:
-            - None
-        '''
-        log.info("Updating last connection.")
-
 
     def commit(self) -> None:
         '''Confirm the changes made to the indicated database.
@@ -164,11 +150,8 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
             - None
         '''
         log.info("Commiting changes...")
-        try:
-            self.__master_db.commit_changes(raise_exception= True)
-            ## No rollback done in master db
-        except Exception as err:
-            log.error(f"Error commiting changes: {err}")
+        self.__master_db.commit_changes(raise_exception= True)
+        ## No rollback done in master db
 
     def delete_pushed_data(self):
         '''Remove the pushed data from the cache database.
