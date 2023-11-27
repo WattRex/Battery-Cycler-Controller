@@ -22,7 +22,8 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, Cyc
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
 #######################          PROJECT IMPORTS         #######################
-
+######################             CONSTANTS              ######################
+from .context import DEFAULT_NODE_PERIOD, DEFAULT_NODE_NAME
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -33,8 +34,9 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self,shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
-                 shared_status: SysShdSharedObjC, cycle_period: int, working_flag : Event,
+                 shared_status: SysShdSharedObjC, working_flag : Event,
                  devices: List[CyclerDataDeviceC], excl_tags: CyclerDataMergeTagsC,
+                 cycle_period: int = DEFAULT_NODE_PERIOD, name: str = DEFAULT_NODE_NAME,
                  meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the thread node used to update measurements from devices.
@@ -48,12 +50,13 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         - excl_tags: Tags of excluded attributes.
         - meas_params: Node parameters.
         '''
-        super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
+        super().__init__(name= name,cycle_period= cycle_period, working_flag= working_flag,
                         node_params= meas_params)
         self.working_flag = working_flag
         self.__extra_meter: List[MidDabsExtraMeterC] = []
         for dev in devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS):
+            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
+                                CyclerDataDeviceTypeE.FLOW):
                 self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
         self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
