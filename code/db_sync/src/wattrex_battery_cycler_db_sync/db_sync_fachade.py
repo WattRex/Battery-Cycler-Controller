@@ -160,8 +160,14 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
                         ['alarms', 'status', 'ext_meas', 'gen_meas', 'exps']):
             log.info(f"Deleting {name}...")
             for row in meas:
-                self.__cache_db.session.expunge(row)
-                self.__cache_db.session.delete(row)
+                if name == 'exps':
+                    if row.Status in (DrvDbExpStatusE.FINISHED, DrvDbExpStatusE.ERROR):
+                        self.__last_exp_status.pop(row.ExpID)
+                        self.__cache_db.session.expunge(row)
+                        self.__cache_db.session.delete(row)
+                else:
+                    self.__cache_db.session.expunge(row)
+                    self.__cache_db.session.delete(row)
             self.__cache_db.commit_changes(raise_exception= True)
 
         self.__push_gen_meas   = []
