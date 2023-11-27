@@ -24,7 +24,7 @@ from system_config_tool import sys_conf_update_config_params
 ######################             CONSTANTS              ######################
 # For further information check out README.md
 
-DEFAULT_NODE_PERIOD: int        = 250 # Express in milliseconds
+DEFAULT_NODE_PERIOD: int        = 120 # Express in milliseconds
 DEFAULT_NODE_NAME: str          = 'MEAS'
 
 CONSTANTS_NAMES = ('DEFAULT_NODE_PERIOD', 'DEFAULT_NODE_NAME')
