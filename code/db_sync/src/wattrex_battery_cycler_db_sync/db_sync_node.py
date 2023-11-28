@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-_______________________________________________________________________________
+Class that sync between the cache and the master database.
 '''
 
 #######################        MANDATORY IMPORTS         #######################
@@ -40,8 +40,8 @@ class DbSyncNodeC(SysShdNodeC): #pylint: disable= abstract-method
                  cred_file: str = DEFAULT_CRED_FILEPATH):
         '''Initialize the class.
         Args:
-            - comp_unit (int): _____________
-            - cycle_period (int): period of the cycler station.
+            - comp_unit (int): number of the computational unit.
+            - cycle_period (int): period of the sync.
         Returns:
             - None
         Raises:
