@@ -8,6 +8,7 @@ from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from datetime import datetime
 from typing import List, Tuple
+from time import time_ns
 
 #######################       THIRD PARTY IMPORTS        #######################
 from sqlalchemy import select, update
@@ -70,7 +71,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
     def get_start_queued_exp(self) -> Tuple[CyclerDataExperimentC|None, CyclerDataBatteryC|None,
                                             CyclerDataProfileC|None]:
         '''
-        Get the oldest queued experiment, assigned to the cycler station where this 
+        Get the oldest queued experiment, assigned to the cycler station where this
         cycler would be running, and change its status to RUNNING in database.
         '''
         self.meas_id = 0
@@ -79,30 +80,48 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
         exp = None
         battery = None
         profile = None
+        master_connection = self.__master_db.engine.connect()
         stmt =  select(DrvDbMasterExperimentC)\
                     .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value)\
                     .where(DrvDbMasterExperimentC.CSID == self.cs_id)\
                     .order_by(DrvDbMasterExperimentC.DateCreation.asc())
-        exp_result = self.__master_db.session.execute(stmt).all()
+        exp_result = master_connection.execute(stmt).all()
+        master_connection.close()
+        # exp_result = self.__master_db.session.query(DrvDbMasterExperimentC).filter(
+        #     DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value,
+        #     DrvDbMasterExperimentC.CSID == self.cs_id).order_by(
+        #         DrvDbMasterExperimentC.DateCreation.asc()).all()
+        log.critical(f"Experiment fetched: {exp_result}")
         if len(exp_result) != 0:
-            exp_result: DrvDbMasterExperimentC = exp_result[0][0]
+            exp_db = DrvDbCacheExperimentC()
+            exp_db.ExpID = exp_result[0][0]
+            exp_db.Name = exp_result[0][1]
+            exp_db.Description = exp_result[0][2]
+            exp_db.DateCreation = exp_result[0][3]
+            exp_db.DateBegin = exp_result[0][4]
+            exp_db.DateFinish = exp_result[0][5]
+            exp_db.Status = exp_result[0][6]
+            exp_db.CSID = exp_result[0][7]
+            exp_db.BatID = exp_result[0][9]
+            exp_db.ProfID = exp_result[0][11]
+            # exp_result: DrvDbMasterExperimentC = DrvDbMasterExperimentC(exp_result[0])
             exp : CyclerDataExperimentC = CyclerDataExperimentC()
             for db_name, att_name in MAPPING_EXPERIMENT.items():
-                setattr(exp, att_name, getattr(exp_result,db_name))
+                setattr(exp, att_name, getattr(exp_db,db_name))
 
             # Get battery info
-            battery = self.__get_exp_battery_data(exp.exp_id)
+            battery = self.__get_exp_battery_data(exp_db.BatID)
             # Get profile info
-            profile = self.__get_exp_profile_data(exp.exp_id)
+            profile = self.__get_exp_profile_data(exp_db.ProfID)
             # Change experiment status to running and update begin datetime
-            exp_db = DrvDbCacheExperimentC()
-            transform_experiment_db(source= exp_result, target = exp_db)
+            # transform_experiment_db(source= exp_result, target = exp_db)
             exp_db.Status = DrvDbExpStatusE.RUNNING.value
             exp_db.DateBegin = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
             self.__cache_db.session.add(exp_db)
             log.debug(f"Experiment fetched: {exp.__dict__}, {battery.__dict__}, {profile.__dict__}")
         else:
             log.debug("No experiment found")
+            log.info(f"No experiment found {exp_result}")
         return exp, battery, profile
 
     ## All methods that get information will gather the info from the master db
@@ -114,23 +133,24 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             CyclerDataExpStatusE: [description]
         """
         stmt = select(DrvDbMasterExperimentC.Status).where(DrvDbMasterExperimentC.ExpID == exp_id)
-        result: DrvDbExpStatusE = self.__master_db.session.execute(stmt).one()[0]
+        result: DrvDbExpStatusE = self.__master_db.session.execute(stmt).all()
         if len(result) != 0:
             raise MidStrDbElementNotFoundErrorC(f'Experiment with id {exp_id} not found')
-        return CyclerDataExpStatusE(result)
+        return CyclerDataExpStatusE(result[0][0])
 
-    def __get_exp_profile_data(self,exp_id: int) -> CyclerDataProfileC|None:
+    def __get_exp_profile_data(self,prof_id: int) -> CyclerDataProfileC|None:
         """AI is creating summary for get_exp_profile_data
         Args:
             exp_id (int): [description]
         Returns:
             CyclerDataProfileC: [description]
         """
-        stmt = select(DrvDbProfileC).join(DrvDbMasterExperimentC,
-                    DrvDbMasterExperimentC.ProfID == DrvDbProfileC.ProfID).where(
-                    DrvDbMasterExperimentC.ExpID == exp_id)
-        result = self.__master_db.session.execute(stmt).one()
-        result: DrvDbProfileC = result[0]
+        # stmt = select(DrvDbProfileC).join(DrvDbMasterExperimentC,
+        #             DrvDbMasterExperimentC.ProfID == DrvDbProfileC.ProfID).where(
+        #             DrvDbMasterExperimentC.ExpID == exp_id)
+        stmt = select(DrvDbProfileC).where(DrvDbProfileC.ProfID == prof_id)
+        result = self.__master_db.session.execute(stmt).all()
+        result: DrvDbProfileC = result[0][0]
         profile = CyclerDataProfileC(name= result.Name)
         profile_range = CyclerDataPwrRangeC(curr_max= result.CurrMax, curr_min= result.CurrMin,
                                          volt_max= result.VoltMax, volt_min= result.VoltMin)
@@ -158,7 +178,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
         profile.instructions = instructions
         return profile
 
-    def __get_exp_battery_data(self, exp_id: int) -> CyclerDataBatteryC|None:
+    def __get_exp_battery_data(self, bat_id: int) -> CyclerDataBatteryC|None:
         """Get the mid - data of an experiment .
         Args:
             exp_id (int): [description]
@@ -166,10 +186,15 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             CyclerDataBatteryC: [description]
         """
         battery = None
-        stmt = select(DrvDbBatteryC).join(DrvDbMasterExperimentC,
-                    DrvDbMasterExperimentC.BatID == DrvDbBatteryC.BatID).where(
-                    DrvDbMasterExperimentC.ExpID == exp_id)
-        result = self.__master_db.session.execute(stmt).one()[0]
+        # stmt = select(DrvDbBatteryC).join(DrvDbMasterExperimentC,
+        #             DrvDbMasterExperimentC.BatID == DrvDbBatteryC.BatID).where(
+        #             DrvDbMasterExperimentC.ExpID == exp_id)
+        stmt = select(DrvDbBatteryC).where(DrvDbBatteryC.BatID == bat_id)
+        try:
+            result = self.__master_db.session.execute(stmt).one()[0]
+        except Exception as err:
+            log.exception(err)
+            raise Exception(err)
         battery = CyclerDataBatteryC()
         for db_name, att_name in MAPPING_BATT_DB.items():
             setattr(battery, att_name, getattr(result,db_name))
@@ -222,7 +247,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                     setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
                     setattr(device, att_name, getattr(comp_dev_res,db_name))
-            stmt = select(DrvDbUsedMeasuresC).where(DrvDbUsedMeasuresC.DevID == res_dev.DevID and
+            stmt = select(DrvDbUsedMeasuresC).where(DrvDbUsedMeasuresC.DevID == res_dev.DevID).where(
                                                     DrvDbUsedMeasuresC.CSID == self.cs_id)
             ext_meas_res = self.__master_db.session.execute(stmt).all()
             for ext_meas in ext_meas_res:
