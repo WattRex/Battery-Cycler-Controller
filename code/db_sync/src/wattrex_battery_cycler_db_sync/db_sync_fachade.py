@@ -5,7 +5,7 @@ _______________________________________________________________________________
 
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations # pylint: disable=wrong-import-position
-from typing import List
+from typing import List, Set
 from sys import path
 import os
 
@@ -34,9 +34,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbAlarmC, DrvDbCa
 class _SyncExpStatus():
     def __init__(self, status: DrvDbExpStatusE) -> None:
         self.status: DrvDbExpStatusE = status
-        self.max_gen_meas: int = -1
-        self.max_ext_meas: int = -1
-
+        self.max_pushed_gen: int = -1
 
 class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
     '''It is a thread that runs in background and is used to synchronize
@@ -50,12 +48,11 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         #Local database
         self.__cache_db: DrvDbSqlEngineC = DrvDbSqlEngineC(db_type=DrvDbTypeE.CACHE_DB,
                                                             config_file= cred_file)
-        self.__push_gen_meas: List[DrvDbCacheGenericMeasureC]  = []
-        self.__push_ext_meas: List[DrvDbCacheExtendedMeasureC]  = []
-        self.__push_status:   List[DrvDbCacheStatusC] = []
-        self.__push_alarms:   List[DrvDbAlarmC] = []
-        self.__push_exps:     List[DrvDbCacheExperimentC]   = []
-        # self.__last_exp_status: dict[int, [DrvDbExpStatusE, int, int]] ={}
+        self.__push_gen_meas: Set[DrvDbCacheGenericMeasureC]  = set()
+        self.__push_ext_meas: Set[DrvDbCacheExtendedMeasureC]  = set()
+        self.__push_status:   Set[DrvDbCacheStatusC] = set()
+        self.__push_alarms:   Set[DrvDbAlarmC] = set()
+        self.__push_exps:     Set[DrvDbCacheExperimentC]   = set()
         self.__exp_dict: dict[int, _SyncExpStatus] = {}
 
 
@@ -71,23 +68,28 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         log.info("Pushing general measures...")
         for exp_id, exp_info in self.__exp_dict.items():
             cache_meas  = self.__cache_db.session.query(DrvDbCacheGenericMeasureC).\
-                    filter(DrvDbCacheGenericMeasureC.ExpID == exp_id,
-                    DrvDbCacheGenericMeasureC.MeasID > exp_info.max_gen_meas).all()
-            max_id = -1
+                    filter(DrvDbCacheGenericMeasureC.ExpID == exp_id).\
+                    order_by(DrvDbCacheGenericMeasureC.MeasID.asc()).all()
+
             log.warning(f"Exp {exp_id} has {len(cache_meas)} gen meas")
-            for meas in cache_meas:
-                if meas not in self.__push_gen_meas:
-                    if meas.MeasID > max_id:
-                        max_id = meas.MeasID
+            if len(cache_meas) > 0:
+                to_push_meas = set()
+                log.warning(f"Last gen_meas in cache: {cache_meas[-1].MeasID}")
+                if exp_info.status in (DrvDbExpStatusE.FINISHED.value,DrvDbExpStatusE.ERROR.value):
+                    self.__exp_dict[exp_id].max_pushed_gen = cache_meas[-1].MeasID
+                    to_push_meas = set(cache_meas)
+                elif len(cache_meas)>1:
+                    last_push_gen_meas = cache_meas[-2].MeasID
+                    if exp_info.max_pushed_gen < last_push_gen_meas:
+                        self.__exp_dict[exp_id].max_pushed_gen = last_push_gen_meas
+                    to_push_meas = set(cache_meas[:-1])
+                log.warning(f"Last pushed gen_meas: {exp_info.max_pushed_gen}")
+
+                for meas in to_push_meas:
                     meas_add = DrvDbMasterGenericMeasureC()
                     transform_gen_meas_db(source= meas, target= meas_add)
-                    self.__push_gen_meas.append(meas)
+                    self.__push_gen_meas.add(meas)
                     self.__master_db.session.add(meas_add)
-            if max_id > exp_info.max_gen_meas or max_id == -1:
-                log.warning(f"Modificando el valor de max_gen_meas de {exp_info.max_gen_meas} a {max_id}")
-                self.__exp_dict[exp_id].max_gen_meas = max_id
-
-
 
     def push_ext_meas(self) -> None:
         '''Push the measures to the database.
@@ -102,23 +104,14 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         log.info("Pushing external measures...")
         for exp_id, exp_info in self.__exp_dict.items():
             cache_meas = self.__cache_db.session.query(DrvDbCacheExtendedMeasureC).\
-                filter(DrvDbCacheExtendedMeasureC.ExpID<= exp_id,
-                DrvDbCacheExtendedMeasureC.MeasID <= exp_info.max_gen_meas,
-                DrvDbCacheGenericMeasureC.MeasID >exp_info.max_ext_meas).\
-                order_by(DrvDbCacheExtendedMeasureC.MeasID).all()
-            max_id = -1
+                populate_existing().filter(DrvDbCacheExtendedMeasureC.ExpID == exp_id,
+                DrvDbCacheExtendedMeasureC.MeasID <= exp_info.max_pushed_gen).all()
             log.warning(f"Exp {exp_id} has {len(cache_meas)} ext meas")
             for meas in cache_meas:
-                if meas not in self.__push_ext_meas:
-                    if meas.MeasID > max_id:
-                        max_id = meas.MeasID
-                    meas_add = DrvDbMasterExtendedMeasureC()
-                    transform_ext_meas_db(source= meas, target= meas_add)
-                    self.__push_ext_meas.append(meas)
-                    self.__master_db.session.add(meas_add)
-            if max_id > exp_info.max_ext_meas or max_id == -1:
-                log.warning(f"Modificando el valor de max_ext_meas de {exp_info.max_ext_meas} a {max_id}")
-                self.__exp_dict[exp_id].max_ext_meas = max_id
+                meas_add = DrvDbMasterExtendedMeasureC()
+                transform_ext_meas_db(source= meas, target= meas_add)
+                self.__push_ext_meas.add(meas)
+                self.__master_db.session.add(meas_add)
 
     def push_alarms(self) -> None:
         '''Push the alarms to the database.
@@ -132,9 +125,8 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         log.info("Pushing alarms...")
         cache_meas = self.__cache_db.session.query(DrvDbAlarmC).all()
         for meas in cache_meas:
-            if meas not in self.__push_alarms:
-                self.__push_alarms.append(meas)
-                self.__master_db.session.add(meas)
+            self.__push_alarms.add(meas)
+            self.__master_db.session.add(meas)
 
 
     def push_status(self) -> None:
@@ -149,30 +141,28 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         log.info("Pushing status...")
         cache_meas = self.__cache_db.session.query(DrvDbCacheStatusC).all()
         for meas in cache_meas:
-            if meas not in self.__push_status:
-                meas_add = DrvDbMasterStatusC()
-                transform_status_db(source= meas, target= meas_add)
-                self.__push_status.append(meas)
-                self.__master_db.session.add(meas_add)
+            meas_add = DrvDbMasterStatusC()
+            transform_status_db(source= meas, target= meas_add)
+            self.__push_status.add(meas)
+            self.__master_db.session.add(meas_add)
 
     def push_experiments(self) -> None:
         '''Push the experiments to the database.
         '''
         log.info("Pushing experiments...")
-        cache_meas = self.__cache_db.session.query(DrvDbCacheExperimentC).all()
+        cache_meas = self.__cache_db.session.query(DrvDbCacheExperimentC).populate_existing().all()
         for meas in cache_meas:
             meas_add = DrvDbMasterExperimentC()
-            # if (meas.ExpID not in self.__last_exp_status or (meas.ExpID in self.__last_exp_status
-            #     and meas.Status != self.__last_exp_status[meas.ExpID])):
             if (meas.ExpID not in self.__exp_dict or (meas.ExpID in self.__exp_dict
                 and meas.Status != self.__exp_dict[meas.ExpID].status)):
                 if meas.ExpID not in self.__exp_dict:
                     self.__exp_dict[meas.ExpID] = _SyncExpStatus(meas.Status)
                 else:
                     self.__exp_dict[meas.ExpID].status = meas.Status
+                    self.__push_exps.add(meas)
+
                 log.info(f"Experiment {meas.ExpID} status changed to {meas.Status}")
                 transform_experiment_db(source= meas, target= meas_add)
-                self.__push_exps.append(meas)
                 self.__master_db.session.merge(meas_add)
 
     def commit(self) -> None:
@@ -191,36 +181,22 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
     def delete_pushed_data(self):
         '''Remove the pushed data from the cache database.
         '''
-        for meas,name in zip([self.__push_alarms, self.__push_status,
-                        self.__push_ext_meas, self.__push_gen_meas, self.__push_exps],
-                        ['alarms', 'status', 'ext_meas', 'gen_meas', 'exps']):
+        for meas in [self.__push_alarms, self.__push_status,
+                        self.__push_ext_meas, self.__push_gen_meas]:
             for row in meas:
-                if name == 'exps':
-                    log.error(f"Exp {row.ExpID} is {row.Status}, ext meas: {self.__exp_dict[row.ExpID].max_ext_meas}, gen meas: {self.__exp_dict[row.ExpID].max_gen_meas}")
-                    if (row.Status in (DrvDbExpStatusE.FINISHED.value, DrvDbExpStatusE.ERROR.value)
-                        and self.__exp_dict[row.ExpID].max_gen_meas == -1):
-                        log.critical(f"Removing exp {row.ExpID} from cache")
-                        # self.__last_exp_status.pop(row.ExpID)
-                        self.__exp_dict.pop(row.ExpID)
-                        self.__cache_db.session.expunge(row)
-                        self.__cache_db.session.delete(row)
+                self.__cache_db.session.expunge(row)
+                self.__cache_db.session.delete(row)
+            log.info("Deleting ...")
+        self.__cache_db.commit_changes(raise_exception= True)
 
-                elif name == 'gen_meas':
-                    log.warning(f"Removing gen meas {row.MeasID}, from exp {row.ExpID}, is below {self.__exp_dict[row.ExpID].max_ext_meas}")
-                    if (row.MeasID < self.__exp_dict[row.ExpID].max_ext_meas or
-                        self.__exp_dict[row.ExpID].max_ext_meas == -1):
-                        self.__cache_db.session.expunge(row)
-                        self.__cache_db.session.delete(row)
-                        # meas.remove(row)
-                else:
-                    self.__cache_db.session.expunge(row)
-                    self.__cache_db.session.delete(row)
-                    # meas.remove(row)
-            log.info(f"Deleting {name}...")
-            self.__cache_db.commit_changes(raise_exception= True)
+        for exp in self.__push_exps:
+            self.__exp_dict.pop(exp.ExpID)
+            self.__cache_db.session.expunge(exp)
+            self.__cache_db.session.delete(exp)
+        self.__cache_db.commit_changes(raise_exception= True)
 
-        self.__push_gen_meas   = []
-        self.__push_ext_meas   = []
-        self.__push_status     = []
-        self.__push_alarms     = []
-        self.__push_exps       = []
+        self.__push_gen_meas   = set()
+        self.__push_ext_meas   = set()
+        self.__push_status     = set()
+        self.__push_alarms     = set()
+        self.__push_exps       = set()
