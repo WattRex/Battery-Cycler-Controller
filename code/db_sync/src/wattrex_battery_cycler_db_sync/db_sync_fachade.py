@@ -5,7 +5,7 @@ _______________________________________________________________________________
 
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations # pylint: disable=wrong-import-position
-from typing import List, Set
+from typing import Set
 from sys import path
 import os
 
@@ -71,19 +71,19 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
                     filter(DrvDbCacheGenericMeasureC.ExpID == exp_id).\
                     order_by(DrvDbCacheGenericMeasureC.MeasID.asc()).all()
 
-            log.warning(f"Exp {exp_id} has {len(cache_meas)} gen meas")
+            log.debug(f"Exp {exp_id} has {len(cache_meas)} gen meas")
             if len(cache_meas) > 0:
                 to_push_meas = set()
-                log.warning(f"Last gen_meas in cache: {cache_meas[-1].MeasID}")
+                log.debug(f"Last gen_meas in cache: {cache_meas[-1].MeasID}")
                 if exp_info.status in (DrvDbExpStatusE.FINISHED.value,DrvDbExpStatusE.ERROR.value):
-                    self.__exp_dict[exp_id].max_pushed_gen = cache_meas[-1].MeasID
+                    self.__exp_dict[exp_id].max_pushed_gen = cache_meas[-1].MeasID #pylint: disable= unnecessary-dict-index-lookup
                     to_push_meas = set(cache_meas)
                 elif len(cache_meas)>1:
                     last_push_gen_meas = cache_meas[-2].MeasID
-                    if exp_info.max_pushed_gen < last_push_gen_meas:
-                        self.__exp_dict[exp_id].max_pushed_gen = last_push_gen_meas
+                    self.__exp_dict[exp_id].max_pushed_gen = max(last_push_gen_meas, #pylint: disable= unnecessary-dict-index-lookup
+                                                                 exp_info.max_pushed_gen)
                     to_push_meas = set(cache_meas[:-1])
-                log.warning(f"Last pushed gen_meas: {exp_info.max_pushed_gen}")
+                log.debug(f"Last pushed gen_meas: {exp_info.max_pushed_gen}")
 
                 for meas in to_push_meas:
                     meas_add = DrvDbMasterGenericMeasureC()
@@ -106,7 +106,7 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
             cache_meas = self.__cache_db.session.query(DrvDbCacheExtendedMeasureC).\
                 populate_existing().filter(DrvDbCacheExtendedMeasureC.ExpID == exp_id,
                 DrvDbCacheExtendedMeasureC.MeasID <= exp_info.max_pushed_gen).all()
-            log.warning(f"Exp {exp_id} has {len(cache_meas)} ext meas")
+            log.debug(f"Exp {exp_id} has {len(cache_meas)} ext meas")
             for meas in cache_meas:
                 meas_add = DrvDbMasterExtendedMeasureC()
                 transform_ext_meas_db(source= meas, target= meas_add)
@@ -161,7 +161,7 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
                     self.__exp_dict[meas.ExpID].status = meas.Status
                     self.__push_exps.add(meas)
 
-                log.info(f"Experiment {meas.ExpID} status changed to {meas.Status}")
+                log.debug(f"Experiment {meas.ExpID} status changed to {meas.Status}")
                 transform_experiment_db(source= meas, target= meas_add)
                 self.__master_db.session.merge(meas_add)
 
