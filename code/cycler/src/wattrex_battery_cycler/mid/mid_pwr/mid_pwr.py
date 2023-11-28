@@ -44,7 +44,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         self.pwr_dev  : MidDabsPwrDevC = MidDabsPwrDevC(devices)
         self.pwr_limits: CyclerDataPwrRangeC|None = battery_limits
         self.all_instructions     : List[CyclerDataInstructionC]|None = instruction_set
-        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= 0,
+        self.actual_inst       : CyclerDataInstructionC = CyclerDataInstructionC(instr_id= None,
                                                         mode= CyclerDataPwrModeE.DISABLE,
                                                         ref=0, limit_type= CyclerDataPwrLimitE.TIME,
                                                         limit_ref= 0)
@@ -67,6 +67,9 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
              self.local_gen_meas.voltage < self.pwr_limits.volt_min) or
             (self.local_gen_meas.current > self.pwr_limits.curr_max or
              self.local_gen_meas.current < self.pwr_limits.curr_min)):
+            log.error(f"Local measures: {self.local_gen_meas.voltage}mV, {self.local_gen_meas.current}mA")
+            log.error(f"Voltage limits: {self.pwr_limits.volt_max}mV, {self.pwr_limits.volt_min}mV")
+            log.error(f"Current limits: {self.pwr_limits.curr_max}mA, {self.pwr_limits.curr_min}mA")
             sec_limits = False
         return sec_limits
 
@@ -122,7 +125,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
     def __apply_instruction(self) -> None:
         """Function to apply the instruction to the device
         """
-        if self.actual_inst.instr_id >=0:
+        if self.actual_inst.instr_id is not None:
             if self.actual_inst.mode is CyclerDataPwrModeE.CV_MODE:
                 self.pwr_dev.set_cv_mode(volt_ref= self.actual_inst.ref,
                         limit_type= self.actual_inst.limit_type,
@@ -164,7 +167,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
             bat_pwr_range (CyclerDataPwrRangeC): [description]
         """
         self.all_instructions = instructions
-        self.actual_inst.instr_id = 0
+        self.actual_inst.instr_id = None
         self.pwr_limits = bat_pwr_range
 
     def process_iteration(self) -> Tuple[CyclerDataExpStatusE, int]: #pylint: disable= too-many-branches
@@ -191,7 +194,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
                         self.__last_mode = CyclerDataPwrModeE.DISABLE
                         status = CyclerDataExpStatusE.RUNNING
                     else:
-                        self.actual_inst.instr_id = 0
+                        self.actual_inst.instr_id = None
                         status = CyclerDataExpStatusE.FINISHED
                 elif (self.local_status.pwr_mode is not CyclerDataPwrModeE.DISABLE and
                     self.__last_mode is CyclerDataPwrModeE.DISABLE):
@@ -201,7 +204,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
                     status = CyclerDataExpStatusE.RUNNING
             else:
                 intrs_limits = False
-                if self.actual_inst.instr_id > 0:
+                if self.actual_inst.instr_id > -1:
                     intrs_limits = self.__check_instr_limits()
                 if not intrs_limits:
                     # if surpassed check if there is more instructions
