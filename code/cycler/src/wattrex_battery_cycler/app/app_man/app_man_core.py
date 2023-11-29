@@ -244,8 +244,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.__update_exp_status(self.exp_status)
 
     def execute_machine_status(self) -> None: #pylint: disable=too-many-branches
-        """Execute the machine status
-        """
+        """Execute the machine status """
         log.debug("Executing machine status")
         try:
             ## Process machine status
@@ -287,8 +286,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                     log.debug("Preparing experiment")
                     self.pwr_control.set_new_experiment(instructions= self.profile.instructions,
                                                         bat_pwr_range= self.battery.elec_ranges)
-                    ## Check the instructions are the same in order
-                    ## to execute the correct experiment
+                    # Check the instructions are the same in order to execute the correct experiment
                     if self.pwr_control.all_instructions == self.profile.instructions:
                         self.state = AppManCoreStatusE.EXECUTE_EXP
             elif self.state == AppManCoreStatusE.EXECUTE_EXP:

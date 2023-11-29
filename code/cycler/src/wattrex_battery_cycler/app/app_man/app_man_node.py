@@ -92,8 +92,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         self._th_str = MidStrNodeC(working_flag= self.working_str,
                 shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
                 shared_status= self.__shd_all_status, str_reqs= __chan_str_reqs,
-                str_data= __chan_str_data, str_alarms= __chan_alarms, cycler_station= self.cs_id,
-                cred_file= 'devops/.cred.yaml')
+                str_data= __chan_str_data, str_alarms= __chan_alarms, cycler_station= self.cs_id)
         self._th_str.start()
 
         # Get info from the cycler station to know which devices are compatible
@@ -120,7 +119,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
             log.critical(("Was imposible to get the cycler station info from the database. "))
             self.status = SysShdNodeStatusE.INTERNAL_ERROR
         else:
-            cs_info = response.station
+            cs_info: CyclerDataCyclerStationC = response.station
             # launch the man_core and meas node if cs is not deprecated
             if not cs_info.deprecated:
                 ### 1.2 Manager thread ###
