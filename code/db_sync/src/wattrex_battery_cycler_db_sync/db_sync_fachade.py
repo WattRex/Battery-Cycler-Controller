@@ -103,8 +103,8 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
         self.__cache_db.session.expire_all()
         log.info("Pushing external measures...")
         for exp_id, exp_info in self.__exp_dict.items():
-            cache_meas = self.__cache_db.session.query(DrvDbCacheExtendedMeasureC).populate_existing().\
-                filter(DrvDbCacheExtendedMeasureC.ExpID == exp_id,
+            cache_meas = self.__cache_db.session.query(DrvDbCacheExtendedMeasureC).\
+                populate_existing().filter(DrvDbCacheExtendedMeasureC.ExpID == exp_id,
                 DrvDbCacheExtendedMeasureC.MeasID <= exp_info.max_pushed_gen).all()
             log.debug(f"Exp {exp_id} has {len(cache_meas)} ext meas")
             for meas in cache_meas:
