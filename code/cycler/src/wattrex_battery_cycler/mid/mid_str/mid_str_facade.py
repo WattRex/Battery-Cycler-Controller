@@ -8,7 +8,6 @@ from __future__ import annotations
 #######################         GENERIC IMPORTS          #######################
 from datetime import datetime
 from typing import List, Tuple
-from time import time_ns
 
 #######################       THIRD PARTY IMPORTS        #######################
 from sqlalchemy import select, update
@@ -176,7 +175,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             result = self.__master_db.session.execute(stmt).one()[0]
         except Exception as err:
             log.exception(err)
-            raise Exception(err)
+            raise Exception(err) from err #pylint: disable= broad-exception-raised
         battery = CyclerDataBatteryC()
         for db_name, att_name in MAPPING_BATT_DB.items():
             setattr(battery, att_name, getattr(result,db_name))
@@ -229,8 +228,8 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                     setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
                     setattr(device, att_name, getattr(comp_dev_res,db_name))
-            stmt = select(DrvDbUsedMeasuresC).where(DrvDbUsedMeasuresC.DevID == res_dev.DevID).where(
-                                                    DrvDbUsedMeasuresC.CSID == self.cs_id)
+            stmt = select(DrvDbUsedMeasuresC).where(DrvDbUsedMeasuresC.DevID == res_dev.DevID).\
+                where(DrvDbUsedMeasuresC.CSID == self.cs_id)
             ext_meas_res = self.__master_db.session.execute(stmt).all()
             for ext_meas in ext_meas_res:
                 ext_meas: DrvDbUsedMeasuresC = ext_meas[0]
@@ -341,7 +340,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                     .where(DrvDbMasterExperimentC.CSID == self.cs_id)\
                     .order_by(DrvDbMasterExperimentC.DateCreation.asc())
         result = self.__master_db.session.execute(stmt).all()
-        log.warning(f"Number of experiments queued to be deleted")
+
         for exp_result in result:
             exp_result: DrvDbMasterExperimentC = exp_result[0]
             exp_db = DrvDbCacheExperimentC()

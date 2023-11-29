@@ -24,7 +24,8 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, Cycl
                                               CyclerDataCyclerStationC, CyclerDataExpStatusE)
 
 ######################             CONSTANTS              ######################
-from .context import DEFAULT_TIMEOUT_CONNECTION, DEFAULT_NODE_NAME, DEFAULT_NODE_PERIOD, DEFAULT_CRED_FILEPATH
+from .context import (DEFAULT_TIMEOUT_CONNECTION, DEFAULT_NODE_NAME, DEFAULT_NODE_PERIOD,
+                      DEFAULT_CRED_FILEPATH)
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
 from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
