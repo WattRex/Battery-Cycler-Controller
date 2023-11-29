@@ -17,16 +17,16 @@ from system_shared_tool import SysShdChanC
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExperimentC, CyclerDataProfileC,
                 CyclerDataBatteryC, CyclerDataExpStatusE, CyclerDataAllStatusC, CyclerDataAlarmC,
-                                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC)
+                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC, CyclerDataDeviceTypeE)
 from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE #pylint: disable= import-error
 from mid.mid_pwr import MidPwrControlC #pylint: disable= import-error
 
 #######################          MODULE IMPORTS          #######################
 
-#######################              ENUMS               #######################
 ######################             CONSTANTS              ######################
 from .context import (DEFAULT_PERIOD_WAIT_EXP)
 
+#######################              ENUMS               #######################
 class AppManCoreStatusE(Enum):
     """Application manager status
     """
@@ -73,7 +73,12 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.__iter: int = 0
         self.__get_exp_status: _AppManCoreGetExpStatusE = _AppManCoreGetExpStatusE.GET_EXP
         ## Power control object
-        self.pwr_control: MidPwrControlC= MidPwrControlC(devices= devices,
+        pwr_devices: List[CyclerDataDeviceC] = devices.copy()
+        for dev in pwr_devices:
+            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
+                                   CyclerDataDeviceTypeE.FLOW):
+                pwr_devices.remove(dev)
+        self.pwr_control: MidPwrControlC= MidPwrControlC(devices= pwr_devices,
                             alarm_callback= self.alarm_callback, battery_limits=None,
                             instruction_set=None)
     @property
@@ -183,7 +188,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                        profile: CyclerDataProfileC) -> bool:
         """Returns True if the experiment is valid, which means the electric range of the profile
         is between the limits of the battery.
-        
+
         If the profile has no current neither voltage, means the profile could be only of waits, so
         is also valid.
         If the profile has no current or voltage, means the profile could have only current/voltage
