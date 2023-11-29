@@ -23,6 +23,8 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, Cycl
                                               CyclerDataExtMeasC, CyclerDataAllStatusC,
                                               CyclerDataCyclerStationC, CyclerDataExpStatusE)
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_TIMEOUT_CONNECTION, DEFAULT_NODE_NAME, DEFAULT_NODE_PERIOD, DEFAULT_CRED_FILEPATH
 #######################          MODULE IMPORTS          #######################
 from .mid_str_facade import MidStrFacadeC
 from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
@@ -30,16 +32,14 @@ from .mid_str_cmd import MidStrCmdDataC, MidStrDataCmdE, MidStrReqCmdE
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-TIMEOUT_CONNECTION = 5
 ### THREAD ###
 class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
     """This class will create a node that communicates with the databases reading and writing data.
     """
-    def __init__(self, name: str, working_flag : Event, shared_gen_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
+    def __init__(self, working_flag : Event, shared_gen_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
                  shared_ext_meas: SysShdSharedObjC, shared_status: SysShdSharedObjC,
                  str_reqs: SysShdChanC, str_data: SysShdChanC, str_alarms: SysShdChanC,
-                 cycle_period: int, cycler_station: int, cred_file: str,
-                 str_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
+                 cycler_station: int, str_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
         Initialize the MID_STR thread used as database proxy.
 
@@ -48,9 +48,9 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
             working_flag (threading.Event): Flag used to stop the thread.
             name (str, optional): Name of the thread. Defaults to 'MID_STR'.
         '''
-        super().__init__(name, cycle_period, working_flag, str_params)
-        log.info(f"Initializing {name} node...")
-        self.db_iface = MidStrFacadeC(cred_file= cred_file,
+        super().__init__(DEFAULT_NODE_NAME, DEFAULT_NODE_PERIOD, working_flag, str_params)
+        log.info(f"Initializing {DEFAULT_NODE_NAME} node...")
+        self.db_iface = MidStrFacadeC(cred_file= DEFAULT_CRED_FILEPATH,
                                       cycler_station_id= cycler_station)
         self.str_reqs: SysShdChanC = str_reqs
         self.str_data: SysShdChanC = str_data
@@ -172,7 +172,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
                 log.debug(f"Command to apply: {command.cmd_type.name}")
                 self.__apply_command(command)
             # TIMEOUT added to detect if database connection was ended
-            func_timeout(TIMEOUT_CONNECTION, self.db_iface.commit_changes)
+            func_timeout(DEFAULT_TIMEOUT_CONNECTION, self.db_iface.commit_changes)
         except FunctionTimedOut as exc:
             log.warning(("Timeout during commit changes to local database."
                          f"Database connection will be restarted. {exc}"))
