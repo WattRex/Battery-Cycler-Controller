@@ -24,7 +24,9 @@ from mid.mid_pwr import MidPwrControlC #pylint: disable= import-error
 #######################          MODULE IMPORTS          #######################
 
 #######################              ENUMS               #######################
-_PERIOD_WAIT_EXP = 10
+######################             CONSTANTS              ######################
+from .context import (DEFAULT_PERIOD_WAIT_EXP)
+
 class AppManCoreStatusE(Enum):
     """Application manager status
     """
@@ -264,7 +266,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         self.__iter +=1
                         self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT
                 elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT:
-                    if self.__iter> _PERIOD_WAIT_EXP:
+                    if self.__iter> DEFAULT_PERIOD_WAIT_EXP:
                         self.__get_exp_status = _AppManCoreGetExpStatusE.GET_EXP
                     else:
                         self.__iter +=1

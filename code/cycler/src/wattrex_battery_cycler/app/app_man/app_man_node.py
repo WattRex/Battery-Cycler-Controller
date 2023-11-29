@@ -31,18 +31,17 @@ from .app_man_core import AppManCoreC, AppManCoreStatusE
 
 #######################              ENUMS               #######################
 
+######################             CONSTANTS              ######################
+from .context import (DEFAULT_PERIOD_CYCLE_MAN, DEFAULT_CS_MNG_NODE_NAME)
 #######################             CLASSES              #######################
-_PERIOD_CYCLE_STR: int = 150 # Period in ms of the storage node
-_PERIOD_CYCLE_MEAS: int = 120 # Period in ms of the measurement node
-_PERIOD_CYCLE_MAN: int = 1000 # Period in ms of the manager node
 
 class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
     """Generate a classman node for the application .
     """
 
     def __init__(self, cs_id: int, working_flag: Event,
-                cycle_period: int= _PERIOD_CYCLE_MAN) -> None:
-        super().__init__(name= "Control_Node", cycle_period= cycle_period,
+                cycle_period: int= DEFAULT_PERIOD_CYCLE_MAN) -> None:
+        super().__init__(name= DEFAULT_CS_MNG_NODE_NAME, cycle_period= cycle_period,
                          working_flag=working_flag)
         # Initialize attributes
         self.cs_id: int = cs_id
@@ -90,11 +89,10 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
                                                                  ext_meas_attrs= [])
 
         ### 1.1 Store thread ###
-        self._th_str = MidStrNodeC(name= 'Store_Node', working_flag= self.working_str,
+        self._th_str = MidStrNodeC(working_flag= self.working_str,
                 shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
                 shared_status= self.__shd_all_status, str_reqs= __chan_str_reqs,
-                str_data= __chan_str_data, str_alarms= __chan_alarms,
-                cycle_period= _PERIOD_CYCLE_STR, cycler_station= self.cs_id,
+                str_data= __chan_str_data, str_alarms= __chan_alarms, cycler_station= self.cs_id,
                 cred_file= 'devops/.cred.yaml')
         self._th_str.start()
 
@@ -133,7 +131,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
                 self._th_meas = MidMeasNodeC(working_flag= self.working_meas, # pylint: disable=attribute-defined-outside-init
                         shared_gen_meas= self.__shd_gen_meas, shared_ext_meas= self.__shd_ext_meas,
                         shared_status= self.__shd_all_status, devices= cs_info.devices,
-                        cycle_period= _PERIOD_CYCLE_MEAS, excl_tags= self.__shared_tags)
+                        excl_tags= self.__shared_tags)
                 self._th_meas.start()
                 self.iter = -1 # pylint: disable=attribute-defined-outside-init
                 self.sync_shd_data(raised_alarms= [])
