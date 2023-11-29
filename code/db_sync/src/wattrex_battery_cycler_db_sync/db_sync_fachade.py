@@ -157,6 +157,8 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
                 and meas.Status != self.__exp_dict[meas.ExpID].status)):
                 if meas.ExpID not in self.__exp_dict:
                     self.__exp_dict[meas.ExpID] = _SyncExpStatus(meas.Status)
+                    if meas.Status in (DrvDbExpStatusE.FINISHED.value,DrvDbExpStatusE.ERROR.value):
+                        self.__push_exps.add(meas)
                 else:
                     self.__exp_dict[meas.ExpID].status = meas.Status
                     self.__push_exps.add(meas)
@@ -181,15 +183,16 @@ class DbSyncFachadeC(): # pylint: disable=too-many-instance-attributes
     def delete_pushed_data(self):
         '''Remove the pushed data from the cache database.
         '''
+        log.info("Deleting ...")
         for meas in [self.__push_alarms, self.__push_status,
                         self.__push_ext_meas, self.__push_gen_meas]:
             for row in meas:
                 self.__cache_db.session.expunge(row)
                 self.__cache_db.session.delete(row)
-            log.info("Deleting ...")
         self.__cache_db.commit_changes(raise_exception= True)
 
         for exp in self.__push_exps:
+            log.debug(f"Deleting experiment {exp.ExpID}")
             self.__exp_dict.pop(exp.ExpID)
             self.__cache_db.session.expunge(exp)
             self.__cache_db.session.delete(exp)
