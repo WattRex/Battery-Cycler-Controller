@@ -243,7 +243,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.exp_status, self.__local_gen_meas.instr_id = self.pwr_control.process_iteration()
         self.__update_exp_status(self.exp_status)
 
-    def execute_machine_status(self) -> None: #pylint: disable=too-many-branches
+    def execute_machine_status(self) -> None: #pylint: disable=too-many-branches, too-many-statements
         """Execute the machine status """
         log.debug("Executing machine status")
         try:
