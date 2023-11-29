@@ -151,7 +151,7 @@ class TestChannels:
         ext_meas: SysShdSharedObjC = SysShdSharedObjC(CyclerDataExtMeasC())
         all_status: SysShdSharedObjC = SysShdSharedObjC(CyclerDataAllStatusC())
         mid_meas_node = MidMeasNodeC(shared_gen_meas = gen_meas, shared_ext_meas = ext_meas,
-                                     shared_status = all_status, cycle_period = 500,
+                                     shared_status = all_status,
                                      working_flag = self._meas_working_flag, devices = devices,
                                      excl_tags= tags)
         ext_meas_list= ['hs_voltage_1', 'temp_body_2', 'temp_anod_3', 'temp_amb_4', 'vcell1_1',
