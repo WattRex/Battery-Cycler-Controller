@@ -329,11 +329,19 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
     def turn_cycler_station_deprecated(self, exp_id: int|None) -> None:
         """Method to turn a cycler station to deprecated.
         """
+        self.__master_db.session.expire_all()
+        self.__master_db.session.close()
+        self.__master_db.session.begin()
+        if exp_id is not None:
+            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
+                values(DateFinish= datetime.now(), Status = DrvDbExpStatusE.ERROR.value)
+            self.__cache_db.session.execute(stmt)
         stmt =  select(DrvDbMasterExperimentC)\
                     .where(DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value)\
                     .where(DrvDbMasterExperimentC.CSID == self.cs_id)\
                     .order_by(DrvDbMasterExperimentC.DateCreation.asc())
         result = self.__master_db.session.execute(stmt).all()
+        log.warning(f"Number of experiments queued to be deleted")
         for exp_result in result:
             exp_result: DrvDbMasterExperimentC = exp_result[0]
             exp_db = DrvDbCacheExperimentC()
@@ -342,10 +350,6 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             exp_db.DateBegin = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
             exp_db.DateFinish = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
             self.__cache_db.session.add(exp_db)
-        if exp_id is not None:
-            stmt = update(DrvDbCacheExperimentC).where(DrvDbCacheExperimentC.ExpID == exp_id).\
-                values(DateFinish= datetime.now(), Status = DrvDbExpStatusE.ERROR.value)
-            self.__cache_db.session.execute(stmt)
 
     def commit_changes(self):
         """Commit changes made to the cache database.
