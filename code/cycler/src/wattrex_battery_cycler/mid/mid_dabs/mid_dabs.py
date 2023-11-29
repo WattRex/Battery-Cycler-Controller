@@ -121,7 +121,7 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
             for dev in device:
                 if dev.device_type == CyclerDataDeviceTypeE.EPC:
                     can_id= 0
-                    if not dev.iface_name.isnumeric(): # isinstance(dev.iface_name, str), 
+                    if not dev.iface_name.isnumeric(): # isinstance(dev.iface_name, str),
                         can_id = int(dev.iface_name,16)
                     else:
                         can_id = int(dev.iface_name)
