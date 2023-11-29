@@ -24,7 +24,7 @@ from system_config_tool import sys_conf_update_config_params
 ######################             CONSTANTS              ######################
 # For further information check out README.md
 
-DEFAULT_PERIOD_CYCLE_MAN: int   = 120 # Express in milliseconds
+DEFAULT_PERIOD_CYCLE_MAN: int   = 800 # Express in milliseconds
 DEFAULT_CS_MNG_NODE_NAME: str   = 'MANAGER'
 DEFAULT_PERIOD_WAIT_EXP: int    = 10 # Periods of the cycle manager
 
