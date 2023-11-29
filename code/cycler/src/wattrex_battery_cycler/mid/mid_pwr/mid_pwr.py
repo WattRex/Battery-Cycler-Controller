@@ -67,7 +67,8 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
              self.local_gen_meas.voltage < self.pwr_limits.volt_min) or
             (self.local_gen_meas.current > self.pwr_limits.curr_max or
              self.local_gen_meas.current < self.pwr_limits.curr_min)):
-            log.error(f"Local measures: {self.local_gen_meas.voltage}mV, {self.local_gen_meas.current}mA")
+            log.error((f"Local measures: {self.local_gen_meas.voltage}mV, "
+                       f"{self.local_gen_meas.current}mA"))
             log.error(f"Voltage limits: {self.pwr_limits.volt_max}mV, {self.pwr_limits.volt_min}mV")
             log.error(f"Current limits: {self.pwr_limits.curr_max}mA, {self.pwr_limits.curr_min}mA")
             sec_limits = False
