@@ -76,11 +76,10 @@ class TestChannels:
         shared_gen_meas = SysShdSharedObjC(shared_obj=CyclerDataGenMeasC())
         shared_ext_meas = SysShdSharedObjC(shared_obj=CyclerDataExtMeasC())
         shared_all_status = SysShdSharedObjC(shared_obj=CyclerDataAllStatusC())
-        str_node = MidStrNodeC(name= 'STR_dummyNode', cycle_period=request.param[0],
-                        working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
+        str_node = MidStrNodeC(working_flag= __str_flag_node, shared_gen_meas= shared_gen_meas,
                         shared_ext_meas= shared_ext_meas, shared_status= shared_all_status,
                         str_reqs= str_reqs, str_alarms= str_alarms, str_data= str_data,
-                        cycler_station= request.param[1], cred_file= 'devops/.cred.yaml')
+                        cycler_station= request.param[0], cred_file= 'devops/.cred.yaml')
         str_node.start()
         log.info("Mid Storage Node started")
         log.info(f"Cycler station info retrieved {get_cs_info(str_reqs, str_data).__dict__}")
@@ -119,7 +118,7 @@ class TestChannels:
 
 
     #Test container
-    @mark.parametrize("set_environ", [[500,2],[500,20]], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [[2],[20]], indirect=["set_environ"])
     def test_normal_op(self, set_environ, config) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
