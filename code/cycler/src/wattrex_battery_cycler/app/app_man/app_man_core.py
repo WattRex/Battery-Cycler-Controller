@@ -73,12 +73,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.__iter: int = 0
         self.__get_exp_status: _AppManCoreGetExpStatusE = _AppManCoreGetExpStatusE.GET_EXP
         ## Power control object
-        pwr_devices: List[CyclerDataDeviceC] = devices.copy()
-        for dev in pwr_devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
-                                   CyclerDataDeviceTypeE.FLOW):
-                pwr_devices.remove(dev)
-        self.pwr_control: MidPwrControlC= MidPwrControlC(devices= pwr_devices,
+        self.pwr_control: MidPwrControlC= MidPwrControlC(devices= devices,
                             alarm_callback= self.alarm_callback, battery_limits=None,
                             instruction_set=None)
     @property
