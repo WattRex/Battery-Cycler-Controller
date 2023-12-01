@@ -17,7 +17,7 @@ from system_shared_tool import SysShdChanC
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExperimentC, CyclerDataProfileC,
                 CyclerDataBatteryC, CyclerDataExpStatusE, CyclerDataAllStatusC, CyclerDataAlarmC,
-                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC, CyclerDataDeviceTypeE)
+                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC)
 from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE #pylint: disable= import-error
 from mid.mid_pwr import MidPwrControlC #pylint: disable= import-error
 
