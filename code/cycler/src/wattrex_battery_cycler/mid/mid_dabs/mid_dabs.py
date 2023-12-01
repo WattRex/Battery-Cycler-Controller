@@ -220,7 +220,12 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
     def _init__(self, device: List[CyclerDataDeviceC])->None:
-        super().__init__(device)
+        pwr_devices: List[CyclerDataDeviceC] = device.copy()
+        for dev in pwr_devices:
+            if dev.device_type not in (CyclerDataDeviceTypeE.EPC, CyclerDataDeviceTypeE.SOURCE,
+                                   CyclerDataDeviceTypeE.LOAD, CyclerDataDeviceTypeE.BISOURCE):
+                pwr_devices.remove(dev)
+        super().__init__(pwr_devices)
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
                     limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:
