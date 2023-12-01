@@ -13,11 +13,21 @@ This script requires the following software to be installed:
 - python3-pip
 
 ## Usage
+Before launching, is mandatory to change the queue length and message length:
+```
+sudo sh -c 'echo 400 > /proc/sys/fs/mqueue/msg_max'
+sudo sh -c 'echo 400 > /proc/sys/fs/mqueue/msgsize_max'
+```
 First of all, you need to launch the script with the following command. This command will launch and start up the cache database, the database syncronizer and the SCPI and CAN sniffer services.
 ```
 ./deploy.sh
 ```
-
+To launch CU MANAGER node, inside the folder of the repository:
+```
+export CONFIG_FILE_PATH=devops/config_params.yaml
+pip install wattrex-battery-cycler-cu-manager
+python3 /devops/cu_manager/run_cu_node.py
+```
 To deploy a battery cycler instance, you need to launch the script with the following command changing the _<cycler_station_id>_ with the id of the station you want to deploy:
 ```
 ./deploy.sh cycler <cycler_station_id>
