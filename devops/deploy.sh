@@ -124,6 +124,19 @@ else
     fi
 fi
 
+# Check if the required files are present.
+required_file_list=("docker-compose.yml" ".cred.env" ".cred.yaml" "config_params.yaml"
+                    "scpi/log_config.yaml" "cycler/log_config.yaml" "cu_manager/log_config.yaml"
+                    "can/log_config.yaml" "cache_db/createCacheCyclerTables.sql")
+for file in ${required_file_list}
+do
+    file_path=${DEVOPS_DIR}/${file}
+    if [ ! -f ${file_path} ]; then
+    echo "${file_path} not found"
+    exit 1
+    fi
+done
+
 case ${ARG1} in
     "")
         # echo "Initial Deploy"
