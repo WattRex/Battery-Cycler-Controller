@@ -36,4 +36,4 @@ jobs:
       package-name: "${{ vars.CYCLER_PACKAGE_NAME }}"
       package-path: "code/cycler"
       source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
-      is_production: false
+      is-production: false
