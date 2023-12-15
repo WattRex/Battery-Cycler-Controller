@@ -3,6 +3,9 @@
 name: Deploy cycler to PRODUCTION
 
 on:
+  push:
+    branches:
+      - "mid_meas"
   pull_request_review:
     types: [submitted]
 
@@ -12,17 +15,18 @@ on:
 
 jobs:
 
-  build-and-deploy-cycler-on-pr:
+  publish-cycler-pkg-prod:
     if: ${{ github.event_name == 'pull_request_review' &&
       github.event.review.state == 'approved' &&
       github.event.pull_request.head.ref == 'develop' &&
       github.event.pull_request.base.ref == 'master' }}
     name: Build and publish cycler package
-    uses: ./.github/workflows/deploy_packages.yml
+    uses: ./.github/workflows/build_publish_package.yml
     with:
-      package-name: wattrex_battery_cycler
-      package-path: code/cycler
-      source-path: code/cycler/src/wattrex_battery_cycler
+      package-name: ${{ vars.CYCLER_PACKAGE_NAME }}"
+      package-path: "code/cycler"
+      source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}"
+      is-production: true
 
   publish-docker-image-cycler:
     name: Publish cycler docker image
