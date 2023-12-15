@@ -1,0 +1,39 @@
+# This workflow deploys battery cycler controller to development environment
+
+name: Deploy cycler to DEVELOPMENT
+
+on:
+
+  pull_request_review:
+    types: [submitted]
+    # branches:
+    #   - "app_diag"
+    #   - "app_man"
+    #   - "mid_meas"
+    #   - "mid_dabs"
+    #   - "mid_str"
+    #   - "mid_pwr"
+
+jobs:
+
+  detect-folder:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
+    environment: development
+    outputs:
+      folder: ${{ steps.set-folder.outputs.folder }}
+    steps:
+      - name: "Set env variables"
+        id: set-folder
+        run: |
+          echo "folder=$(echo ${{ github.ref_name }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
+
+  build-publish-package-on-pr:
+    name: Build and publish QA and Build battery controller on ${{ github.ref_name }} pull request
+    needs: detect-folder
+    uses: ./.github/workflows/build_python_package.yml
+    with:
+      package-name: "${{ vars.CYCLER_PACKAGE_NAME }}"
+      package-path: "code/cycler"
+      source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
+      is_production: false
