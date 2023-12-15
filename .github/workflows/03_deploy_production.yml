@@ -34,7 +34,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
     with:
       dockerfile-path: ./devops/cycler/Dockerfile.cycler
-      docker-repo-name: wattrex-battery-cycler
+      docker-repo-name: wattrex-cycler-node
       is-develop: false
       docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
 
@@ -46,6 +46,6 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
     with:
       dockerfile-path: ./devops/db_sync/Dockerfile.db_sync
-      docker-repo-name: wattrex-db-sync
+      docker-repo-name: wattrex-cycler-db-sync
       is-develop: false
       docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
