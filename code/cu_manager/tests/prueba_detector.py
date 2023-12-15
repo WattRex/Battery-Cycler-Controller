@@ -1,7 +1,17 @@
 #!/usr/bin/python3
-from os import getenv
-from time import sleep
-from threading import Event
+"""
+This script is used to test the functionality of the DetectorC class 
+in the wattrex_battery_cycler_cu_manager module.
+It initializes a DetectorC object with a cu_id of 69 and calls the 
+process_detection() method to detect EPCs, BMSs, and EAs.
+The detected EPCs, BMSs, and EAs are logged using the Logger 
+class from the system_logger_tool module.
+"""
+import sys
+import os
+# from os import getenv
+# from time import sleep
+# from threading import Event
 
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 if __name__ == '__main__':
@@ -9,7 +19,8 @@ if __name__ == '__main__':
                                   output_sub_folder='detector')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
-from dev_detector import DetectorC
+sys.path.append(os.getcwd()+'/code/cu_manager/')
+from src.wattrex_battery_cycler_cu_manager.detect import DetectorC
 # from can_sniffer import DrvCanNodeC
 
 # can_working_flag = Event()

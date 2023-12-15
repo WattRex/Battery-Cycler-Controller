@@ -9,7 +9,7 @@ from typing import List, Dict, Tuple
 
 #######################         GENERIC IMPORTS          #######################
 from os import listdir
-from time import sleep, time
+from time import time
 from serial import PARITY_ODD
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
@@ -30,10 +30,8 @@ from system_shared_tool import SysShdIpcChanC
 #######################          MODULE IMPORTS          #######################
 
 ######################             CONSTANTS              ######################
-from context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
-                    DEFAULT_RX_SCPI_NAME, DEFAULT_DETECT_TIMEOUT)
-DEV_PATH = '/dev/wattrex/'
-SCPI_QUEUE_PREFIX = 'DET_'
+from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
+                    DEFAULT_DETECT_TIMEOUT, DEFAULT_DEV_PATH, DEFAULT_SCPI_QUEUE_PREFIX)
 
 #######################              CLASS               #######################
 all_devices = {
@@ -46,9 +44,14 @@ comp_dev = {
     'EPC': {'Model_0': 2, 'Model_1': 4, 'Model_2': 5, 'Model_3': 6, 'Model_4': 7, 'Model_5': 8,
             'Model_6': 9, 'Model_7': 10, 'Model_8': 11, 'Model_9': 12, 'Model_A': 13,
             'Model_B': 14, 'Model_C': 15, 'Model_D': 16, 'Model_E': 17},
+    'EA': {'VIRTUAL': 1},
+    'RS': {},
+    'BK': {},
+    'BMS': 3,
+    'FLOW': {},
 }
 
-class DetectorC:
+class DetectorC: #pylint: disable= too-many-instance-attributes
     '''
     Classmethod to handle DetectorCectorC .
     '''
@@ -67,18 +70,17 @@ class DetectorC:
             'bk': {},
             'flow': {},
         }
-        self.__reqs_flow: bool = False
+        self.__reqs_flow: bool = False #pylint: disable= unused-private-member
         self.__reqs_sources: bool = False
-        self.__reqs_rs: bool = False
+        self.__reqs_rs: bool = False #pylint: disable= unused-private-member
         self.__reqs_epc: bool = False
-        ## Create the queues for CAN messages # TODO: Uncomment when can is working
+        ## Create the queues for CAN messages # TODO: Uncomment when can is working #pylint: disable= fixme
         self.__tx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_CAN_NAME)
         self.__rx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_RX_CAN_NAME,
                                                         max_message_size= 400)
-        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
         ## Create the queues for SCPI messages
-        # self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
-        # self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
+        self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
+        self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
 
     def process_detection(self) -> None:
         '''
@@ -86,9 +88,8 @@ class DetectorC:
         '''
         ## Reset detected devices lists
         self.__reset_detected()
-        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
-        # self.__find_scpi_devs()
-        ## Add filter to the can bus to receive all messages # TODO: Uncomment when can is working
+        self.__find_scpi_devs()
+        ## Add filter to the can bus to receive all messages # TODO: Uncomment when can is working #pylint: disable= fixme
         self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.ADD_FILTER,
                                         payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
                                                                 chan_name=DEFAULT_RX_CAN_NAME)))
@@ -96,7 +97,7 @@ class DetectorC:
         self.detect_epc()
         ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
         # self.detect_sources()
-        log.info(f"START DETECT DEVICES LOOP")
+        log.info("START DETECT DEVICES LOOP")
         initial_time = time()
         while (initial_time + DEFAULT_DETECT_TIMEOUT) > time():
             msg_can : DrvCanMessageC = self.__rx_can.receive_data_unblocking()
@@ -123,7 +124,7 @@ class DetectorC:
                                                 chan_name=DEFAULT_RX_CAN_NAME)))
         ## Closing conections with queues
         self.__tx_can.close()
-        # self.__tx_scpi.close()
+        self.__tx_scpi.close()
         self.__rx_can.terminate()
 
     def __reset_detected(self) -> None:
@@ -135,11 +136,11 @@ class DetectorC:
         self.det_ea.clear()
         self.det_rs.clear()
         self.det_flow.clear()
-        for dev_dict in self.found_scpi_devs:
-            self.found_scpi_devs[dev_dict].clear()
-        self.__reqs_flow = False
+        for dev_dict,_ in self.found_scpi_devs.items():
+            self.found_scpi_devs[dev_dict].clear() #pylint: disable= unnecessary-dict-index-lookup
+        self.__reqs_flow = False #pylint: disable= unused-private-member
         self.__reqs_sources = False
-        self.__reqs_rs = False
+        self.__reqs_rs = False #pylint: disable= unused-private-member
         self.__reqs_epc = False
 
     def __find_scpi_devs(self) -> None:
@@ -149,19 +150,20 @@ class DetectorC:
         for dev_dir,_ in self.found_scpi_devs.items():
             listdir_result: List[str] = []
             try:
-                listdir_result = listdir(DEV_PATH+dev_dir)
+                listdir_result = listdir(DEFAULT_DEV_PATH+dev_dir)
             except FileNotFoundError:
-                log.info(f"Path {DEV_PATH+dev_dir} not found")
+                log.info(f"Path {DEFAULT_DEV_PATH+dev_dir} not found")
                 continue
             for element in listdir_result:
-                self.found_scpi_devs[dev_dir][element] = False
+                self.found_scpi_devs[dev_dir][element] = False #pylint: disable= unnecessary-dict-index-lookup
 
     def detect_bms(self, msg: DrvCanMessageC):
         '''
         Detect the bms connected to the cycler.
         '''
         if int(msg.addr) not in [dev.serial_number for dev in self.det_bms]:
-            dev_data = CommDataDeviceC(cu_id=self.__cu_id, comp_dev_id= 0, serial_number= msg.addr,
+            dev_data = CommDataDeviceC(cu_id=self.__cu_id, comp_dev_id= comp_dev['BMS'],
+                                    serial_number= msg.addr,
                                     link_name= str(msg.addr - 0x100))
             self.det_bms.append(dev_data)
 
@@ -196,17 +198,18 @@ class DetectorC:
         '''
         Detect the sources connected to the cycler.
         '''
-        if not self.__reqs_sources:
+        if not self.__reqs_sources: #pylint: disable= too-many-nested-blocks
             ## Create a queue for each SCPI connected device
             for source_name in self.found_scpi_devs['source']:
-                self.__rx_scpi[source_name] = SysShdIpcChanC(name= SCPI_QUEUE_PREFIX+source_name,
-                                                        max_message_size=400)
+                self.__rx_scpi[source_name] = SysShdIpcChanC(
+                                                name= DEFAULT_SCPI_QUEUE_PREFIX+source_name,
+                                                max_message_size=400)
                 self.__tx_scpi.send_data(DrvScpiCmdDataC(
                                                 data_type=DrvScpiCmdTypeE.ADD_DEV,
-                                                port=DEV_PATH+'source/'+source_name,
-                                                rx_chan_name=SCPI_QUEUE_PREFIX+source_name,
+                                                port=DEFAULT_DEV_PATH+'source/'+source_name,
+                                                rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+source_name,
                                                 payload=DrvScpiSerialConfC(
-                                                        port=DEV_PATH+'source/'+source_name,
+                                                        port=DEFAULT_DEV_PATH+'source/'+source_name,
                                                         separator='\n', timeout = 0.8,
                                                         write_timeout = 0.8, parity = PARITY_ODD,
                                                         baudrate = 9600)
@@ -215,8 +218,8 @@ class DetectorC:
                 ## Request info for the source
                 if source_name.startswith('EA'):
                     self.__tx_scpi.send_data(DrvScpiCmdDataC(data_type=DrvScpiCmdTypeE.WRITE_READ,
-                                                            port=DEV_PATH+'source/'+source_name,
-                                                            payload=":*IDN?"))
+                                                        port=DEFAULT_DEV_PATH+'source/'+source_name,
+                                                        payload=":*IDN?"))
             self.__reqs_sources = True
         else:
             for source_name in self.found_scpi_devs['source']:
@@ -235,24 +238,21 @@ class DetectorC:
                             else:
                                 log.critical(f"EA found: {msg_source.__dict__}")
                                 self.det_ea.append(CommDataDeviceC(cu_id=self.__cu_id,
-                                                                    comp_dev_id= 0,
-                                                                    serial_number=ea_serial_number,
-                                                                    link_name=source_name))
+                                                            comp_dev_id= comp_dev['EA'][ea_model],
+                                                            serial_number=ea_serial_number,
+                                                            link_name=source_name))
 
                         self.found_scpi_devs['source'][source_name] = True
                         self.__tx_scpi.send_data(DrvScpiCmdDataC(
                                                 data_type=DrvScpiCmdTypeE.DEL_DEV,
-                                                port=DEV_PATH+'source/'+source_name,
+                                                port=DEFAULT_DEV_PATH+'source/'+source_name,
                                                 )
                                         )
-
-
 
     def detect_flow(self, msg: DrvScpiCmdDataC):
         '''
         Detect the flow connected to the cycler.
         '''
-        pass
 
     def __parse_epc_msg(self, msg: DrvCanMessageC) -> Tuple[int, str, bitarray]:
         msg_bits = int2ba(int.from_bytes(msg.payload,'little'),length=64, endian='little')

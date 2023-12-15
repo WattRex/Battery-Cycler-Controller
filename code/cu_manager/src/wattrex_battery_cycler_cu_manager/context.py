@@ -28,13 +28,16 @@ from system_config_tool import sys_conf_update_config_params
 DEFAULT_TX_CAN_NAME     : str = 'TX_CAN'            # Default tx_can system queue name
 DEFAULT_TX_SCPI_NAME    : str = 'TX_SCPI'           # Default tx_scpi system queue name
 DEFAULT_RX_CAN_NAME     : str = 'RX_CAN_QUEUE'      # Default rx_can system queue name
-DEFAULT_RX_SCPI_NAME    : str = 'RX_SCPI_QUEUE'     # Default rx_scpi system queue name
 DEFAULT_DETECT_TIMEOUT  : int = 2                   # Default time to read asked devices answers
+DEFAULT_DEV_PATH        : str = '/dev/wattrex/'     # Default path to the devices
+DEFAULT_SCPI_QUEUE_PREFIX: str = 'DET_'             # Default prefix for the scpi queues
 
 CONSTANTS_NAMES = ('DEFAULT_TX_CAN_NAME', 'DEFAULT_TX_SCPI_NAME',
-                   'DEFAULT_RX_CAN_NAME', 'DEFAULT_RX_SCPI_NAME', 'DEFAULT_DETECT_TIMEOUT')
+                   'DEFAULT_RX_CAN_NAME', 'DEFAULT_DETECT_TIMEOUT',
+                   'DEFAULT_DEV_PATH', 'DEFAULT_SCPI_QUEUE_PREFIX')
+# TODO: Remove section param when this will be used to create the cu_manager package #pylint: disable= fixme
 sys_conf_update_config_params(context=globals(),
                               constants_names=CONSTANTS_NAMES,
-                              section='wattrex_battery_cycler_cu_manager') # TODO: Remove section param when this will be used to create the cu_manager package
+                              section='wattrex_battery_cycler_cu_manager')
 # sys_conf_update_config_params(context=globals(),
 #                               constants_names=CONSTANTS_NAMES)
