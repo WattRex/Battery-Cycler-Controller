@@ -26,10 +26,10 @@ jobs:
       - name: "Set env variables"
         id: set-folder
         run: |
-          echo "folder=$(echo ${{ github.ref_name }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
+          echo "folder=$(echo ${{ github.event.pull_request.head.ref }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
 
   build-publish-package-on-pr:
-    name: Build and publish QA and Build battery controller on ${{ github.ref_name }} pull request
+    name: Build and publish QA and Build battery controller on ${{ github.event.pull_request.head.ref }} pull request
     needs: detect-folder
     uses: ./.github/workflows/build_publish_package.yml
     with:
