@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - "mid_meas"
-  pull_request_review:
-    types: [submitted]
 
   pull_request_review:
     types:
