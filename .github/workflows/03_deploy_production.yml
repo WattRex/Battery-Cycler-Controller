@@ -51,3 +51,4 @@ jobs:
       docker-repo-name: wattrex-cycler-db-sync
       is-develop: false
       docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
+
