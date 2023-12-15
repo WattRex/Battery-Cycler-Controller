@@ -30,7 +30,8 @@ jobs:
     name: Publish cycler docker image
     needs: publish-cycler-pkg-prod
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
-    secrets: inherit
+    secrets:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
     with:
       dockerfile-path: ./devops/cycler/Dockerfile.cycler
       docker-repo-name: wattrex-battery-cycler
@@ -41,7 +42,8 @@ jobs:
     name: Publish db-sync docker image
     needs: publish-cycler-pkg-prod
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
-    secrets: inherit
+    secrets:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
     with:
       dockerfile-path: ./devops/db_sync/Dockerfile.db_sync
       docker-repo-name: wattrex-db-sync
