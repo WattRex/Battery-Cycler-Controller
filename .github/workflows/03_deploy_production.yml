@@ -37,6 +37,7 @@ jobs:
       docker-repo-name: wattrex-cycler-node
       is-develop: false
       docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
+      docker-build-args: "USER=wattrex GROUP=wattrex"
 
   publish-docker-image-db-sync:
     name: Publish db-sync docker image
