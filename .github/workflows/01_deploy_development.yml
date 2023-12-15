@@ -1,6 +1,6 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deploy cycler to DEVELOPMENT
+name: Build cycler - DEVELOPMENT
 
 on:
 

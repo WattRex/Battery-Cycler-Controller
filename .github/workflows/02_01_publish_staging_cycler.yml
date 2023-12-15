@@ -1,6 +1,6 @@
 # This workflow deploys battery cycler controller to development environment
 
-name: Deploy cycler to DEVELOPMENT
+name: Publish cycler package - STAGING
 
 on:
 
