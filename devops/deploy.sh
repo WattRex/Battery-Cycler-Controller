@@ -19,6 +19,7 @@ export GROUP_ID=$(id -g)
 initial_deploy () {
     force_stop
     python3 -m pip install can-sniffer
+    python3 -m pip install SCPI-sniffer
     mkdir -p "${REPO_ROOT_DIR}/log"
 
     # python3 -m pip install scpi-sniffer
@@ -27,11 +28,12 @@ initial_deploy () {
     #docker compose ${DOCKER_COMPOSE_ARGS} up cache_db db_sync -d
 
     check_sniffer "can"
-    # check_sniffer "scpi"
+    check_sniffer "scpi"
 }
 
 instance_new_cycler () {
     check_sniffer "can"
+    check_sniffer "scpi"
     # check_sniffer "scpi"
     export CYCLER_TARGET=cycler_prod
     docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
@@ -42,7 +44,7 @@ test_cycler () {
     export CYCLER_TARGET=cycler_test
     cp ${CYCLER_SRC_DIR}/tests/log_config_${ARG3}.yaml ${DEVOPS_DIR}/cycler/log_config.yaml
     cp ${CYCLER_SRC_DIR}/tests/test_${ARG3}.py ${CYCLER_SRC_DIR}/tests/test_cycler.py
-    docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler 
+    docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
     docker compose ${DOCKER_COMPOSE_ARGS} run --rm -e CSID=${1} --name wattrex_cycler_node_test_${1} cycler pytest -s /cycler/code/cycler/tests/test_cycler.py
     exit $?
 }
@@ -61,7 +63,8 @@ check_sniffer () {
         systemctl --user status can_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up can sniffer"
-            systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}/can
+            systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}
+            systemctl --user set-environment CONFIG_FILE_PATH=${DEVOPS_DIR}/config_params.yaml
             systemctl --user enable ${DEVOPS_DIR}/can/can_sniffer.service
             systemctl --user start can_sniffer.service
         else
@@ -73,7 +76,8 @@ check_sniffer () {
         systemctl --user status scpi_sniffer.service > /dev/null
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up scpi sniffer"
-            systemctl --user set-environment R_PATH=${DEVOPS_DIR}/scpi
+            systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}
+            systemctl --user set-environment CONFIG_FILE_PATH=${DEVOPS_DIR}/config_params.yaml
             systemctl --user enable ${DEVOPS_DIR}/scpi/scpi_sniffer.service
             systemctl --user start scpi_sniffer.service
         else
@@ -82,14 +86,24 @@ check_sniffer () {
     fi
 }
 
+stop_sniffer () {
+    if [[ ${ARG2} = "can" ]] || [[ ${1} = "can" ]]; then
+        systemctl --user stop can_sniffer.service &> /dev/null
+        systemctl --user disable can_sniffer.service &> /dev/null
+    fi
+
+    if [[ ${ARG2} = "scpi" ]] || [[ ${1} = "scpi" ]]; then
+        systemctl --user stop scpi_sniffer.service &> /dev/null
+        systemctl --user disable scpi_sniffer.service &> /dev/null
+    fi
+}
+
 force_stop () {
     docker compose ${DOCKER_COMPOSE_ARGS} down
 
-    systemctl --user stop can_sniffer.service &> /dev/null
-    systemctl --user disable can_sniffer.service &> /dev/null
+    stop_sniffer "can"
+    stop_sniffer "scpi"
 
-    # systemctl --user stop scpi_sniffer.service
-    # systemctl --user disable scpi_sniffer.service
     rm -f /dev/mqueue/*
 }
 
@@ -110,6 +124,19 @@ else
     fi
 fi
 
+# Check if the required files are present.
+required_file_list=("docker-compose.yml" ".cred.env" ".cred.yaml" "config_params.yaml"
+                    "scpi/log_config.yaml" "cycler/log_config.yaml" "cu_manager/log_config.yaml"
+                    "can/log_config.yaml" "cache_db/createCacheCyclerTables.sql")
+for file in ${required_file_list}
+do
+    file_path=${DEVOPS_DIR}/${file}
+    if [ ! -f ${file_path} ]; then
+    echo "${file_path} not found"
+    exit 1
+    fi
+done
+
 case ${ARG1} in
     "")
         # echo "Initial Deploy"
@@ -127,8 +154,18 @@ case ${ARG1} in
     "sniffer")
         # echo "Check Sniffer"
         if [[ "${ARG2}" = "can" ]] || [[ "${ARG2}" = "scpi" ]]; then
-            # echo "Cycler ${2}"
+            # echo "Sniffer ${2}"
             check_sniffer "${ARG2}"
+        else
+            >&2 echo "[ERROR] Invalid sniffer"
+            exit 3
+        fi
+        ;;
+    "stop-sniffer")
+        # echo "Stop Sniffer"
+        if [[ "${ARG2}" = "can" ]] || [[ "${ARG2}" = "scpi" ]]; then
+            # echo "Sniffer ${2}"
+            stop_sniffer "${ARG2}"
         else
             >&2 echo "[ERROR] Invalid sniffer"
             exit 3
