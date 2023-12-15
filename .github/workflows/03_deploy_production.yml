@@ -14,10 +14,10 @@ on:
 jobs:
 
   publish-cycler-pkg-prod:
-    if: ${{ github.event_name == 'pull_request_review' &&
-      github.event.review.state == 'approved' &&
-      github.event.pull_request.head.ref == 'develop' &&
-      github.event.pull_request.base.ref == 'master' }}
+    # if: ${{ github.event_name == 'pull_request_review' &&
+    #   github.event.review.state == 'approved' &&
+    #   github.event.pull_request.head.ref == 'develop' &&
+    #   github.event.pull_request.base.ref == 'master' }}
     name: Build and publish cycler package
     uses: ./.github/workflows/build_publish_package.yml
     with:
