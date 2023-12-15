@@ -28,7 +28,7 @@ jobs:
 
   publish-docker-image-cycler:
     name: Publish cycler docker image
-    needs: publish-package
+    needs: publish-cycler-pkg-prod
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
     secrets: inherit
     with:
@@ -39,7 +39,7 @@ jobs:
 
   publish-docker-image-db-sync:
     name: Publish db-sync docker image
-    needs: publish-package
+    needs: publish-cycler-pkg-prod
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
     secrets: inherit
     with:
