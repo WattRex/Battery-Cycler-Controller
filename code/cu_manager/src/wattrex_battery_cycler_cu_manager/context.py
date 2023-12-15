@@ -34,4 +34,7 @@ DEFAULT_DETECT_TIMEOUT  : int = 2                   # Default time to read asked
 CONSTANTS_NAMES = ('DEFAULT_TX_CAN_NAME', 'DEFAULT_TX_SCPI_NAME',
                    'DEFAULT_RX_CAN_NAME', 'DEFAULT_RX_SCPI_NAME', 'DEFAULT_DETECT_TIMEOUT')
 sys_conf_update_config_params(context=globals(),
-                              constants_names=CONSTANTS_NAMES)
+                              constants_names=CONSTANTS_NAMES,
+                              section='wattrex_battery_cycler_cu_manager') # TODO: Remove section param when this will be used to create the cu_manager package
+# sys_conf_update_config_params(context=globals(),
+#                               constants_names=CONSTANTS_NAMES)
