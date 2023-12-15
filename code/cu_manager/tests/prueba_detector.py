@@ -5,7 +5,8 @@ from threading import Event
 
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./devops/scpi/log_config.yaml', output_sub_folder='detector')
+    cycler_logger = SysLogLoggerC(file_log_levels='./devops/log_config.yaml',
+                                  output_sub_folder='detector')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from dev_detector import DetectorC

@@ -15,9 +15,11 @@ from serial import PARITY_ODD
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./devops/scpi/log_config.yaml', output_sub_folder='detector')
+    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cu_manager/log_config.yaml',
+                                  output_sub_folder='detector')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 from bitarray.util import ba2int, int2ba
+from bitarray import bitarray
 
 #######################       THIRD PARTY IMPORTS        #######################
 from can_sniffer import DrvCanCmdDataC, DrvCanFilterC, DrvCanCmdTypeE, DrvCanMessageC
@@ -28,8 +30,6 @@ from system_shared_tool import SysShdIpcChanC
 #######################          MODULE IMPORTS          #######################
 
 ######################             CONSTANTS              ######################
-# from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
-#                     DEFAULT_RX_SCPI_NAME, DEFAULT_DETECT_TIMEOUT)
 from context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
                     DEFAULT_RX_SCPI_NAME, DEFAULT_DETECT_TIMEOUT)
 DEV_PATH = '/dev/wattrex/'
@@ -40,6 +40,12 @@ all_devices = {
     'EPC': (0x13, 0x80), # Range of can ids for the registered EPCs (0x80 excluded, max value 0x7F)
     'EA': {}, # Dict with info from the ea devices registered
     'RS': {} # Dict with info from the rs devices registered
+}
+## The models corresponds to the bits of the serial number to know which sensor has.
+comp_dev = {
+    'EPC': {'Model_0': 2, 'Model_1': 4, 'Model_2': 5, 'Model_3': 6, 'Model_4': 7, 'Model_5': 8,
+            'Model_6': 9, 'Model_7': 10, 'Model_8': 11, 'Model_9': 12, 'Model_A': 13,
+            'Model_B': 14, 'Model_C': 15, 'Model_D': 16, 'Model_E': 17},
 }
 
 class DetectorC:
@@ -67,11 +73,12 @@ class DetectorC:
         self.__reqs_epc: bool = False
         ## Create the queues for CAN messages # TODO: Uncomment when can is working
         self.__tx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_CAN_NAME)
-        # self.__rx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_RX_CAN_NAME,
-        #                                                 max_message_size= 400)
+        self.__rx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_RX_CAN_NAME,
+                                                        max_message_size= 400)
+        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
         ## Create the queues for SCPI messages
-        self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
-        self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
+        # self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
+        # self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
 
     def process_detection(self) -> None:
         '''
@@ -79,42 +86,45 @@ class DetectorC:
         '''
         ## Reset detected devices lists
         self.__reset_detected()
-        self.__find_scpi_devs()
-        log.critical(f"Found scpi devs: {self.found_scpi_devs}")
+        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
+        # self.__find_scpi_devs()
         ## Add filter to the can bus to receive all messages # TODO: Uncomment when can is working
-        # self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.ADD_FILTER,
-        #                                 payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
-        #                                                         chan_name=DEFAULT_RX_CAN_NAME)))
+        self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.ADD_FILTER,
+                                        payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
+                                                                chan_name=DEFAULT_RX_CAN_NAME)))
         ## Request detections
-        # self.detect_epc()
-        self.detect_sources()
+        self.detect_epc()
+        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
+        # self.detect_sources()
         log.info(f"START DETECT DEVICES LOOP")
         initial_time = time()
         while (initial_time + DEFAULT_DETECT_TIMEOUT) > time():
-            ## TODO: Uncomment when can is working
-            # msg_can : DrvCanMessageC = self.__rx_can.receive_data_unblocking()
-            # if msg_can is not None:
-            #     if 0x100 <= msg_can.addr <= 0x120:
-            #         self.detect_bms(msg_can)
-            #     elif 0x130 <= msg_can.addr <= 0x7FF:
-            #         self.detect_epc(msg_can)
-            #     else:
-            #         log.error(f"Unknown device with can id {msg_can.addr}")
-
-            self.detect_sources()
+            msg_can : DrvCanMessageC = self.__rx_can.receive_data_unblocking()
+            if msg_can is not None:
+                if 0x100 <= msg_can.addr <= 0x120:
+                    log.warning("BMS detected")
+                    self.detect_bms(msg_can)
+                elif 0x130 <= msg_can.addr <= 0x7FF:
+                    log.warning("EPC detected")
+                    self.detect_epc(msg_can)
+                else:
+                    log.error(f"Unknown device with can id {msg_can.addr}")
+            ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
+            # self.detect_sources()
             # while not self.__rx_scpi.is_empty():
             #     msg: DrvScpiCmdDataC = self.__rx_scpi.receive_data()
             #     # TODO: Add detection of ea, rs and flow
             #     if msg.data_type == DrvScpiCmdTypeE.MESSAGE:
             #         pass
-            #         #self.detect_epc(msg)
 
         ## TODO: Uncomment when can is working
-        # self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.REMOVE_FILTER,
-        #                                 payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
-        #                                                         chan_name=DEFAULT_RX_CAN_NAME)))
-        self.__tx_can.terminate()
-        # self.__rx_can.terminate()
+        self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.REMOVE_FILTER,
+                                        payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
+                                                chan_name=DEFAULT_RX_CAN_NAME)))
+        ## Closing conections with queues
+        self.__tx_can.close()
+        # self.__tx_scpi.close()
+        self.__rx_can.terminate()
 
     def __reset_detected(self) -> None:
         '''
@@ -136,7 +146,7 @@ class DetectorC:
         '''
         Find the scpi devices connected to the computational unit.
         '''
-        for dev_dir in self.found_scpi_devs:
+        for dev_dir,_ in self.found_scpi_devs.items():
             listdir_result: List[str] = []
             try:
                 listdir_result = listdir(DEV_PATH+dev_dir)
@@ -172,11 +182,12 @@ class DetectorC:
                 self.__tx_can.send_data(DrvCanCmdDataC(data_type=DrvCanCmdTypeE.MESSAGE,
                                                          payload=msg))
             self.__reqs_epc = True
-        elif msg is not None:
-            can_id, serial_number = self.__parse_epc_msg(msg)
+        elif msg is not None and (msg.addr & 0x00F) == 0xA:
+            can_id, serial_number, hw_ver = self.__parse_epc_msg(msg)
+            hw_ver = ba2int(hw_ver[7:])
             if can_id not in [int(dev.link_name) for dev in self.det_epc]:
                 dev_data = CommDataDeviceC(cu_id=self.__cu_id,
-                                           comp_dev_id= 0,
+                                           comp_dev_id= comp_dev['EPC'][f"Model_{hex(hw_ver)[0]}"],
                                            serial_number=serial_number,
                                            link_name= can_id)
                 self.det_epc.append(dev_data)
@@ -219,7 +230,8 @@ class DetectorC:
                                 ea_serial_number = msg_source.payload[0].split(', ')[2]
                                 ea_model = msg_source.payload[0].split(', ')[1].replace(' ', '_')
                             except Exception as exc:
-                                log.error(f"Error parsing EA response: {exc} | Response received (__dict__): {msg_source.__dict__}")
+                                log.error((f"Error parsing EA response: {exc} | "
+                                           f"Response received (__dict__): {msg_source.__dict__}"))
                             else:
                                 log.critical(f"EA found: {msg_source.__dict__}")
                                 self.det_ea.append(CommDataDeviceC(cu_id=self.__cu_id,
@@ -242,17 +254,17 @@ class DetectorC:
         '''
         pass
 
-    def __parse_epc_msg(self, msg: DrvCanMessageC) -> Tuple[int, str]:
+    def __parse_epc_msg(self, msg: DrvCanMessageC) -> Tuple[int, str, bitarray]:
         msg_bits = int2ba(int.from_bytes(msg.payload,'little'),length=64, endian='little')
         # The first 6 bits correspond to the can id
         can_id = ba2int(msg_bits[:6])
-        log.info(f"Device ID: {can_id}")
+        log.debug(f"Device ID: {can_id}")
         # The next 5 bits correspond to the fw version
         fw_ver = ba2int(msg_bits[6:11])
-        log.info(f"Device fw version: {fw_ver}")
+        log.debug(f"Device fw version: {fw_ver}")
         # The next 13 bits correspond to the hw version
         hw_ver = msg_bits[11:24]
-        log.info(f"Device hw version: {ba2int(hw_ver)}")
+        log.debug(f"Device hw version: {ba2int(hw_ver)}")
         # The last bits correspond to the serial number
         serial_number = str(ba2int(msg_bits[24:32]))
-        return can_id, serial_number
+        return can_id, serial_number, hw_ver
