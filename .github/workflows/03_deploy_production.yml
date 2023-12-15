@@ -21,7 +21,7 @@ jobs:
     name: Build and publish cycler package
     uses: ./.github/workflows/build_publish_package.yml
     with:
-      package-name: ${{ vars.CYCLER_PACKAGE_NAME }}"
+      package-name: "${{ vars.CYCLER_PACKAGE_NAME }}"
       package-path: "code/cycler"
       source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}"
       is-production: true
