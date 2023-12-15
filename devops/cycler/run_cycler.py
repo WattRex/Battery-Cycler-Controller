@@ -7,8 +7,7 @@ Cu Manager
 #######################         GENERIC IMPORTS          #######################
 import os
 import sys
-import threading
-from time import sleep
+from threading import Event
 
 #######################       THIRD PARTY IMPORTS        #######################
 
@@ -18,11 +17,14 @@ from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, 
 #######################       LOGGER CONFIGURATION       #######################
 CS_ID = os.getenv("CSID")
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cycler/log_config.yaml', output_sub_folder=f'cycler_{CS_ID}')
+    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cycler/log_config.yaml',
+                                  output_sub_folder=f'cycler_{CS_ID}')
 log: Logger = sys_log_logger_get_module_logger(__name__)
+log.critical(f'CS_ID: {CS_ID}')
 
 #######################          MODULE IMPORTS          #######################
-# from wattrex_battery_cycler_cu_manager import CuManagerNodeC
+sys.path.append(os.getcwd()+'/code/cycler/')
+from src.wattrex_battery_cycler.app.app_man import AppManNodeC
 
 #######################          PROJECT IMPORTS         #######################
 
@@ -32,13 +34,11 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################            FUNCTIONS             #######################
 if __name__ == '__main__':
-    # working_flag_event : threading.Event = threading.Event()
-    # working_flag_event.set()
-    # cu_manager_node = CuManagerNodeC(working_flag=working_flag_event,
-    #                                       cycle_period=1000,
-    #                                       cu_id_file_path='./devops/cu_manager/cu_id')
-    # cu_manager_node.run()
-
-    while 1:
-        log.critical('Ha pasado 1 minuto desde que pasó el último')
-        sleep(1)
+    working_flag_event : Event = Event()
+    working_flag_event.set()
+    cs_manager: AppManNodeC = AppManNodeC(cs_id= CS_ID, working_flag= working_flag_event)
+    log.critical('Starting the manager')
+    try:
+        cs_manager.run()
+    except KeyboardInterrupt:
+        working_flag_event.clear()

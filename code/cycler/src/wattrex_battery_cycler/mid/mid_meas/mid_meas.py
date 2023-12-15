@@ -22,7 +22,8 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, Cyc
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
 #######################          PROJECT IMPORTS         #######################
-
+######################             CONSTANTS              ######################
+from .context import DEFAULT_NODE_PERIOD, DEFAULT_NODE_NAME
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -33,7 +34,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self,shared_gen_meas: SysShdSharedObjC, shared_ext_meas: SysShdSharedObjC, #pylint: disable= too-many-arguments
-                 shared_status: SysShdSharedObjC, cycle_period: int, working_flag : Event,
+                 shared_status: SysShdSharedObjC, working_flag : Event,
                  devices: List[CyclerDataDeviceC], excl_tags: CyclerDataMergeTagsC,
                  meas_params: SysShdNodeParamsC= SysShdNodeParamsC()) -> None:
         '''
@@ -48,12 +49,13 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         - excl_tags: Tags of excluded attributes.
         - meas_params: Node parameters.
         '''
-        super().__init__(name= "Meas_Node",cycle_period= cycle_period, working_flag= working_flag,
-                        node_params= meas_params)
+        super().__init__(name= DEFAULT_NODE_NAME,cycle_period= DEFAULT_NODE_PERIOD,
+                        working_flag= working_flag, node_params= meas_params)
         self.working_flag = working_flag
         self.__extra_meter: List[MidDabsExtraMeterC] = []
         for dev in devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS):
+            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
+                                CyclerDataDeviceTypeE.FLOW):
                 self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
         self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
@@ -100,4 +102,3 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         for dev in self.__extra_meter:
             dev.close()
         self.__pwr_dev.close()
-        super().stop()

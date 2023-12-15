@@ -24,12 +24,12 @@ from system_config_tool import sys_conf_update_config_params
 ######################             CONSTANTS              ######################
 # For further information check out README.md
 
-DEFAULT_PERIOD_CYCLE_MAN: int   = 800 # Express in milliseconds
-DEFAULT_CS_MNG_NODE_NAME: str   = 'MANAGER'
-DEFAULT_PERIOD_WAIT_EXP: int    = 10 # Periods of the cycle manager
+DEFAULT_TIMEOUT_CONNECTION: int = 5
+DEFAULT_NODE_PERIOD: int        = 250 # Express in milliseconds
+DEFAULT_NODE_NAME: str          = 'STR'
+DEFAULT_CRED_FILEPATH : str = './devops/.cred.yaml' # Path to the location of the credential file
 
-
-CONSTANTS_NAMES = ('DEFAULT_PERIOD_CYCLE_MAN', 'DEFAULT_CS_MNG_NODE_NAME',
-                   'DEFAULT_PERIOD_WAIT_EXP')
+CONSTANTS_NAMES = ('DEFAULT_TIMEOUT_CONNECTION', 'DEFAULT_NODE_PERIOD', 'DEFAULT_NODE_NAME',
+                   'DEFAULT_CRED_FILEPATH')
 sys_conf_update_config_params(context=globals(),
                               constants_names=CONSTANTS_NAMES)

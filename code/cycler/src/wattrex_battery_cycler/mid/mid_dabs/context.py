@@ -24,12 +24,9 @@ from system_config_tool import sys_conf_update_config_params
 ######################             CONSTANTS              ######################
 # For further information check out README.md
 
-DEFAULT_PERIOD_CYCLE_MAN: int   = 800 # Express in milliseconds
-DEFAULT_CS_MNG_NODE_NAME: str   = 'MANAGER'
-DEFAULT_PERIOD_WAIT_EXP: int    = 10 # Periods of the cycle manager
+DEFAULT_PERIOD_ELECT_MEAS: int        = 25 # Express in centiseconds
+DEFAULT_PERIOD_TEMP_MEAS: int         = 25 # Express in centiseconds
 
-
-CONSTANTS_NAMES = ('DEFAULT_PERIOD_CYCLE_MAN', 'DEFAULT_CS_MNG_NODE_NAME',
-                   'DEFAULT_PERIOD_WAIT_EXP')
+CONSTANTS_NAMES = ('DEFAULT_PERIOD_ELECT_MEAS', 'DEFAULT_PERIOD_TEMP_MEAS')
 sys_conf_update_config_params(context=globals(),
                               constants_names=CONSTANTS_NAMES)

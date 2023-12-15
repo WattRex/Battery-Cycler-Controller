@@ -17,14 +17,16 @@ from system_shared_tool import SysShdChanC
 #######################          PROJECT IMPORTS         #######################
 from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataExperimentC, CyclerDataProfileC,
                 CyclerDataBatteryC, CyclerDataExpStatusE, CyclerDataAllStatusC, CyclerDataAlarmC,
-                                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC)
+                CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataDeviceC)
 from mid.mid_str import MidStrReqCmdE, MidStrCmdDataC, MidStrDataCmdE #pylint: disable= import-error
 from mid.mid_pwr import MidPwrControlC #pylint: disable= import-error
 
 #######################          MODULE IMPORTS          #######################
 
+######################             CONSTANTS              ######################
+from .context import (DEFAULT_PERIOD_WAIT_EXP)
+
 #######################              ENUMS               #######################
-_PERIOD_WAIT_EXP = 10
 class AppManCoreStatusE(Enum):
     """Application manager status
     """
@@ -181,7 +183,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                        profile: CyclerDataProfileC) -> bool:
         """Returns True if the experiment is valid, which means the electric range of the profile
         is between the limits of the battery.
-        
+
         If the profile has no current neither voltage, means the profile could be only of waits, so
         is also valid.
         If the profile has no current or voltage, means the profile could have only current/voltage
@@ -236,9 +238,8 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
         self.exp_status, self.__local_gen_meas.instr_id = self.pwr_control.process_iteration()
         self.__update_exp_status(self.exp_status)
 
-    def execute_machine_status(self) -> None: #pylint: disable=too-many-branches
-        """Execute the machine status
-        """
+    def execute_machine_status(self) -> None: #pylint: disable=too-many-branches, too-many-statements
+        """Execute the machine status """
         log.debug("Executing machine status")
         try:
             ## Process machine status
@@ -264,7 +265,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                         self.__iter +=1
                         self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT
                 elif self.__get_exp_status is _AppManCoreGetExpStatusE.WAIT:
-                    if self.__iter> _PERIOD_WAIT_EXP:
+                    if self.__iter> DEFAULT_PERIOD_WAIT_EXP:
                         self.__get_exp_status = _AppManCoreGetExpStatusE.GET_EXP
                     else:
                         self.__iter +=1
@@ -280,8 +281,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                     log.debug("Preparing experiment")
                     self.pwr_control.set_new_experiment(instructions= self.profile.instructions,
                                                         bat_pwr_range= self.battery.elec_ranges)
-                    ## Check the instructions are the same in order
-                    ## to execute the correct experiment
+                    # Check the instructions are the same in order to execute the correct experiment
                     if self.pwr_control.all_instructions == self.profile.instructions:
                         self.state = AppManCoreStatusE.EXECUTE_EXP
             elif self.state == AppManCoreStatusE.EXECUTE_EXP:

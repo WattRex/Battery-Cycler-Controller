@@ -35,10 +35,9 @@ from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE,
 
 #######################              ENUMS               #######################
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_PERIOD_ELECT_MEAS, DEFAULT_PERIOD_TEMP_MEAS
 #######################             CLASSES              #######################
-# TODO: SET PERIODIC TO RECEIVE ELECT AND TEMP MEASURES
-_PERIOD_ELECT_MEAS   = 25 # value *10ms
-_PERIOD_TEMP_MEAS    = 25 # value *10ms
 
 class MidDabsIncompatibleActionErrorC(Exception):
     """Exception raised when the action is not compatible with the device.
@@ -120,9 +119,9 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         self.epc        : DrvEpcDeviceC| None = None
         try:
             for dev in device:
-                if dev.device_type is CyclerDataDeviceTypeE.EPC:
+                if dev.device_type == CyclerDataDeviceTypeE.EPC:
                     can_id= 0
-                    if isinstance(dev.iface_name, str):
+                    if not dev.iface_name.isnumeric(): # isinstance(dev.iface_name, str),
                         can_id = int(dev.iface_name,16)
                     else:
                         can_id = int(dev.iface_name)
@@ -130,8 +129,8 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                     self.epc.open()
                     self.mapping_epc = dev.mapping_names
                     self.epc.set_periodic(ack_en = False,
-                        elect_en = True, elect_period = _PERIOD_ELECT_MEAS,
-                        temp_en = True, temp_period = _PERIOD_TEMP_MEAS)
+                        elect_en = True, elect_period = DEFAULT_PERIOD_ELECT_MEAS,
+                        temp_en = True, temp_period = DEFAULT_PERIOD_TEMP_MEAS)
                 # elif dev.device_type is CyclerDataDeviceTypeE.SOURCE:
                 #     self.source : DrvEaDeviceC = DrvEaDeviceC(
                 #                               DrvScpiHandlerC(device.link_conf.__dict__))
@@ -175,7 +174,12 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
             gen_meas.voltage = msg_elect_meas.ls_voltage
             gen_meas.current = msg_elect_meas.ls_current
             gen_meas.power   = msg_elect_meas.ls_power
-            status.pwr_mode = CyclerDataPwrModeE(msg_mode.mode.value)
+            ## There is no error mode in cycler device mode
+            if msg_mode.mode.value == 5:
+                pwr_mode = CyclerDataPwrModeE.WAIT
+            else:
+                pwr_mode = CyclerDataPwrModeE(msg_mode.mode.value)
+            status.pwr_mode = pwr_mode
             if self.mapping_epc is not None:
                 for key in self.mapping_epc.keys():
                     if 'temp' in key:
@@ -216,7 +220,12 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
     def _init__(self, device: List[CyclerDataDeviceC])->None:
-        super().__init__(device)
+        pwr_devices: List[CyclerDataDeviceC] = device.copy()
+        for dev in pwr_devices:
+            if dev.device_type not in (CyclerDataDeviceTypeE.EPC, CyclerDataDeviceTypeE.SOURCE,
+                                   CyclerDataDeviceTypeE.LOAD, CyclerDataDeviceTypeE.BISOURCE):
+                pwr_devices.remove(dev)
+        super().__init__(pwr_devices)
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
                     limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:
