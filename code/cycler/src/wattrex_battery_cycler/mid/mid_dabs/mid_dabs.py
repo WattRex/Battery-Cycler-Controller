@@ -24,7 +24,7 @@ from wattrex_driver_epc import DrvEpcDeviceC, DrvEpcDataC
 from wattrex_driver_base import DrvBaseStatusC
 from wattrex_driver_bms import DrvBmsDeviceC
 from wattrex_driver_flow import DrvFlowDeviceC
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE, CyclerDataDeviceC,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceTypeE, CyclerDataDeviceC,
                                 CyclerDataPwrLimitE, CyclerDataDeviceStatusC, CyclerDataExtMeasC,
                                 CyclerDataGenMeasC, CyclerDataAllStatusC, CyclerDataDeviceStatusE,
                                 CyclerDataPwrModeE)

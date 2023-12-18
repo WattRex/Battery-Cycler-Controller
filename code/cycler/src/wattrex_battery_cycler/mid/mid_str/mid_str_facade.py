@@ -24,7 +24,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbMasterExperimentC, DrvDbBat
         DrvDbCacheExperimentC, DrvDbDetectedDeviceC, DrvDbUsedMeasuresC, DrvDbAvailableMeasuresC,
         transform_experiment_db)
 
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
             CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataExpStatusE, CyclerDataProfileC,
             CyclerDataBatteryC, CyclerDataDeviceC, CyclerDataDeviceTypeE, CyclerDataExperimentC,
             CyclerDataCyclerStationC, CyclerDataInstructionC, CyclerDataPwrRangeC,

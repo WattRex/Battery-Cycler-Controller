@@ -17,7 +17,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC, #pylint: disable= wrong-import-position
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataPwrRangeC, CyclerDataDeviceC, #pylint: disable= wrong-import-position
                         CyclerDataInstructionC, CyclerDataDeviceTypeE, CyclerDataPwrLimitE,
                         CyclerDataGenMeasC, CyclerDataPwrModeE, CyclerDataExpStatusE,
                         CyclerDataAlarmC, CyclerDataAllStatusC)
