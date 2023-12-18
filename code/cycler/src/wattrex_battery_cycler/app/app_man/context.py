@@ -8,8 +8,10 @@ in system_config_tool.
 
 #######################        MANDATORY IMPORTS         #######################
 from __future__ import annotations
+import sys
+import os
 #######################         GENERIC IMPORTS          #######################
-
+sys.path.append(os.path.dirname(__file__)+'/../../')
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 from system_logger_tool import Logger, sys_log_logger_get_module_logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
