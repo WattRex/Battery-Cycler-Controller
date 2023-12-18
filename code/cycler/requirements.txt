@@ -4,7 +4,7 @@ system-config-tool>=0.0.4
 system-logger-tool>=0.0.3
 system-shared-tool>=0.2.11
 
-wattrex-battery-cycler-datatypes>=0.0.14
+wattrex-cycler-datatypes>=0.0.14
 
 wattrex-driver-db>=0.0.12
 wattrex-driver-epc>=0.0.8

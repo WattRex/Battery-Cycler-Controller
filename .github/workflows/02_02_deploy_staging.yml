@@ -3,9 +3,7 @@
 name: Deploy cycler to STAGING
 
 on:
-  pull_request_review:
-    types: 
-      - submitted
+  workflow_call:
 
 jobs:
   # build-docker-image:
@@ -24,11 +22,11 @@ jobs:
   #         file: ./devops/docker/Dockerfile.cycler
   #         tags: wattrex-cycler:latest
   #         outputs: type=docker,dest=/tmp/wattrex-cycler.tar
-  #         push: false      
+  #         push: false
 
   launch-real-bat:
     name: Launch cycler controller in real environment
-    if: ${{ github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
+    # if: ${{ github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
     # needs: build-docker-image
-    uses: ./.github/workflows/staging_deploy_real_bat.yml
+    uses: ./.github/workflows/02_04_staging_deploy_real_bat.yml
     secrets: inherit

@@ -1,7 +1,7 @@
 system-logger-tool
 system-shared-tool
 wattrex-driver-mqtt
-wattrex-battery-cycler-datatypes
+wattrex-cycler-datatypes
 scpi-sniffer
 can-sniffer
 bitarray

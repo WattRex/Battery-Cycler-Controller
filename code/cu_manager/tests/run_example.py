@@ -22,7 +22,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.path.dirname(__file__)+'/../')
-from src.wattrex_battery_cycler_cu_manager import CuManagerNodeC
+from src.wattrex_cycler_cu_manager import CuManagerNodeC
 
 #######################          PROJECT IMPORTS         #######################
 

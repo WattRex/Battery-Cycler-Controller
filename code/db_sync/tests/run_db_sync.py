@@ -21,7 +21,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.path.dirname(__file__)+'/../')
-from src.wattrex_battery_cycler_db_sync import DbSyncNodeC
+from src.wattrex_cycler_db_sync import DbSyncNodeC
 
 #######################          PROJECT IMPORTS         #######################
 

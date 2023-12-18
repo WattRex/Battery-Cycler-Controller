@@ -39,6 +39,7 @@ services:
       - ./.cred.yaml:/cycler/devops/.cred.yaml
       - ./cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
       - ../log:/cycler/log
+      - ./config_params.yaml:/cycler/devops/config_params.yaml
     networks:
       - wattrex-net
     depends_on:

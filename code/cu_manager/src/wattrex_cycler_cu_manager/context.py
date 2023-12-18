@@ -35,9 +35,7 @@ DEFAULT_SCPI_QUEUE_PREFIX: str = 'DET_'             # Default prefix for the scp
 CONSTANTS_NAMES = ('DEFAULT_TX_CAN_NAME', 'DEFAULT_TX_SCPI_NAME',
                    'DEFAULT_RX_CAN_NAME', 'DEFAULT_DETECT_TIMEOUT',
                    'DEFAULT_DEV_PATH', 'DEFAULT_SCPI_QUEUE_PREFIX')
-# TODO: Remove section param when this will be used to create the cu_manager package #pylint: disable= fixme
+
 sys_conf_update_config_params(context=globals(),
                               constants_names=CONSTANTS_NAMES,
-                              section='wattrex_battery_cycler_cu_manager')
-# sys_conf_update_config_params(context=globals(),
-#                               constants_names=CONSTANTS_NAMES)
+                              section='wattrex_cycler_cu_manager')

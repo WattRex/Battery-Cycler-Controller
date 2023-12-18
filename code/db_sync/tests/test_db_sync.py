@@ -30,7 +30,7 @@ from wattrex_driver_db import (DrvDbSqlEngineC, DrvDbTypeE, DrvDbMasterExperimen
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/db_sync/')
-from src.wattrex_battery_cycler_db_sync import DbSyncNodeC
+from src.wattrex_cycler_db_sync import DbSyncNodeC
 
 
 #######################              ENUMS               #######################

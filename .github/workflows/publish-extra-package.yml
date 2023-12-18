@@ -1,0 +1,40 @@
+# This workflow deploy system tools to production environment
+
+name: Publish extra packages
+
+on:
+  workflow_call:
+    inputs:
+      is-production:
+        description: 'If true publish package to PyPi else to TestPyPi'
+        type: boolean
+        default: false
+
+jobs:
+
+  publish-datatypes-pkg-prod:
+    name: Build and publish datatypes package
+    uses: ./.github/workflows/build_publish_package.yml
+    with:
+      package-name: "${{ vars.DATATYPES_PACKAGE_NAME }}"
+      package-path: "code/datatypes"
+      source-path: "code/datatypes/src/${{ vars.DATATYPES_PACKAGE_NAME }}"
+      is-production: ${{ inputs.is-production }}
+
+  publish-db_sync-pkg-prod:
+    name: Build and publish db sync package
+    uses: ./.github/workflows/build_publish_package.yml
+    with:
+      package-name: "${{ vars.DB_SYNC_PACKAGE_NAME }}"
+      package-path: "code/db_sync"
+      source-path: "code/db_sync/src/${{ vars.DB_SYNC_PACKAGE_NAME }}"
+      is-production: ${{ inputs.is-production }}
+
+  publish-cu_manager-pkg-prod:
+    name: Build and publish cu_manager package
+    uses: ./.github/workflows/build_publish_package.yml
+    with:
+      package-name: "${{ vars.CU_MANAGER_PACKAGE_NAME }}"
+      package-path: "code/cu_manager"
+      source-path: "code/cu_manager/src/${{ vars.CU_MANAGER_PACKAGE_NAME }}"
+      is-production: ${{ inputs.is-production }}

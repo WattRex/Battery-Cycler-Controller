@@ -24,7 +24,6 @@ from bitarray import bitarray
 #######################       THIRD PARTY IMPORTS        #######################
 from can_sniffer import DrvCanCmdDataC, DrvCanFilterC, DrvCanCmdTypeE, DrvCanMessageC
 from scpi_sniffer import DrvScpiCmdDataC, DrvScpiCmdTypeE, DrvScpiSerialConfC
-from wattrex_battery_cycler_datatypes.comm_data import CommDataDeviceC
 from system_shared_tool import SysShdIpcChanC
 
 #######################          MODULE IMPORTS          #######################
@@ -32,6 +31,8 @@ from system_shared_tool import SysShdIpcChanC
 ######################             CONSTANTS              ######################
 from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
                     DEFAULT_DETECT_TIMEOUT, DEFAULT_DEV_PATH, DEFAULT_SCPI_QUEUE_PREFIX)
+#######################          PROJECT IMPORTS         #######################
+from wattrex_cycler_datatypes.comm_data import CommDataDeviceC
 
 #######################              CLASS               #######################
 all_devices = {
