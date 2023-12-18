@@ -1,0 +1,22 @@
+# This workflow deploys battery cycler datatypes|cu_manager|db_sync to development environment
+
+name: Publish DATATYPES|CU_MANAGER|DB_SYNC package - STAGING
+
+on:
+  push:
+    branches:
+      - 'datatypes'
+      - 'cu_manager'
+      - 'db_sync'
+
+jobs:
+
+  build-package-on-push:
+    name: QA and Build ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }} on push
+    uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
+    with:
+      package-name: ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}
+      package-path: "code/${{ github.ref_name }}"
+      source-path: "code/${{ github.ref_name }}/src/${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}"
+      python-version: "3.10"
+      is-test-package: true
