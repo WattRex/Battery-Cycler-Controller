@@ -14,20 +14,20 @@ on:
 jobs:
 
   publish-extra-pkg-prod:
-    if: ${{ github.event_name == 'pull_request_review' &&
-      github.event.review.state == 'approved' &&
-      github.event.pull_request.head.ref == 'develop' &&
-      github.event.pull_request.base.ref == 'master' }}
+    # if: ${{ github.event_name == 'pull_request_review' &&
+    #   github.event.review.state == 'approved' &&
+    #   github.event.pull_request.head.ref == 'develop' &&
+    #   github.event.pull_request.base.ref == 'master' }}
     name: Build and publish cycler extra package
     uses: ./.github/workflows/publish-extra-package.yml
     with:
       is-production: true
 
   publish-cycler-pkg-prod:
-    if: ${{ github.event_name == 'pull_request_review' &&
-      github.event.review.state == 'approved' &&
-      github.event.pull_request.head.ref == 'develop' &&
-      github.event.pull_request.base.ref == 'master' }}
+    # if: ${{ github.event_name == 'pull_request_review' &&
+    #   github.event.review.state == 'approved' &&
+    #   github.event.pull_request.head.ref == 'develop' &&
+    #   github.event.pull_request.base.ref == 'master' }}
     name: Build and publish cycler package
     uses: ./.github/workflows/build_publish_package.yml
     with:
@@ -38,7 +38,7 @@ jobs:
 
   publish-docker-image-cycler:
     name: Publish cycler docker image
-    needs: publish-cycler-pkg-prod
+    needs: [ publish-cycler-pkg-prod, publish-extra-pkg-prod ]
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
