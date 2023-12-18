@@ -5,6 +5,10 @@ name: Publish DATATYPES|CU_MANAGER|DB_SYNC package - STAGING
 on:
   pull_request_review:
     types: [submitted]
+    # branches:
+    #   - 'datatypes'
+    #   - 'cu_manager'
+    #   - 'db_sync'
 
 jobs:
 
@@ -37,3 +41,8 @@ jobs:
           verbose: true
           repository-url: https://test.pypi.org/legacy/
           packages-dir: ${{ github.event.pull_request.head.ref }}/dist/
+
+  deploy-staging:
+    name: Deploy cycler controller modifications to STAGING
+    needs: build-publish-package-on-pr
+    uses: ./.github/workflows/02_02_deploy_staging.yml
