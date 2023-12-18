@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 # users can install this project, e.g.:
 #
 # $ pip install <sampleproject>
-name = "wattrex_battery_cycler_datatypes"
+name = "wattrex-cycler-datatypes"
 
 # Versions should comply with PEP 440:
 # https://www.python.org/dev/peps/pep-0440/

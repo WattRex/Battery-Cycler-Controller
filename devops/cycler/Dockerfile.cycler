@@ -11,7 +11,7 @@ WORKDIR ${APP_PATH}
 ENV PATH="${PATH}:/home/${UG_NAME}/.local/bin"
 RUN pip install --upgrade pip
 RUN pip install pytest
-ADD --chown=${UG_NAME}:${UG_NAME} ./devops/config_params.yaml ./devops/config_params.yaml
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/config_params_example.yaml ./devops/config_params.yaml
 ENV CONFIG_FILE_PATH=${APP_PATH}/devops/config_params.yaml
 
 FROM cycler_base as cycler_test

@@ -23,7 +23,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_battery_cycler_datatypes.comm_data import CommDataCuC, CommDataHeartbeatC,\
+from wattrex_cycler_datatypes.comm_data import CommDataCuC, CommDataHeartbeatC,\
     CommDataDeviceC, CommDataRegisterTypeE
 from system_shared_tool import SysShdIpcChanC, SysShdNodeC, SysShdNodeStatusE
 

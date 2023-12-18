@@ -20,7 +20,7 @@ from system_shared_tool import (SysShdChanC, SysShdSharedObjC, SysShdNodeC,
                                 SysShdNodeStatusE)
 
 #######################          PROJECT IMPORTS         #######################
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataAllStatusC, CyclerDataGenMeasC,
                                         CyclerDataExtMeasC, CyclerDataAlarmC, CyclerDataMergeTagsC,
                                         CyclerDataCyclerStationC)
 from .context import * # pylint: disable=wildcard-import, unused-wildcard-import

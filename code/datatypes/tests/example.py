@@ -22,7 +22,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/datatypes/src/')
-from wattrex_battery_cycler_datatypes.comm_data import CommDataHeartbeatC
+from wattrex_cycler_datatypes.comm_data import CommDataHeartbeatC
 
 #######################          PROJECT IMPORTS         #######################
 from wattrex_driver_mqtt import DrvMqttDriverC
@@ -49,7 +49,7 @@ class EmulateCuC:
     def error_callback(self, data) -> None:
         '''
         Callback function for errors.
-        
+
         Args:
             data (str): The error message.
         '''

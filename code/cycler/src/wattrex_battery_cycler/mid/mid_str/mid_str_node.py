@@ -19,7 +19,7 @@ log = sys_log_logger_get_module_logger(__name__)
 #######################          PROJECT IMPORTS         #######################
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdChanC,
                         SysShdNodeStatusE)
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataAlarmC, CyclerDataGenMeasC,
                                               CyclerDataExtMeasC, CyclerDataAllStatusC,
                                               CyclerDataCyclerStationC, CyclerDataExpStatusE)
 

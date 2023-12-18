@@ -1,0 +1,61 @@
+    # This workflow deploys battery cycler datatypes|cu_manager|db_sync to development environment
+
+name: Deployment of DATATYPES|CU_MANAGER|DB_SYNC
+
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        description: 'Package name'
+        type: string
+        required: true
+      package-path:
+        description: 'Package path'
+        type: string
+        required: true
+      source-path:
+        description: 'Source path'
+        type: string
+        required: true
+      is-production:
+        description: 'If true publish package to PyPi else to TestPyPi'
+        type: boolean
+        default: false
+
+jobs:
+  build-package:
+    uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
+    with:
+      package-name: ${{ inputs.package-name}}
+      package-path: ${{ inputs.package-path}}
+      source-path: ${{ inputs.source-path}}
+      python-version: "3.10"
+      is-test-package: ${{ !inputs.is-production }}
+
+  publish-package:
+    name: Publish package to PyPi
+    needs: build-package
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.package-name}}
+          path: ${{ inputs.package-name}}/dist/
+
+      - name: Publish package to PyPI
+        if: ${{ inputs.is-production == true }}
+        uses: pypa/gh-action-pypi-publish@f8c70e705ffc13c3b4d1221169b84f12a75d6ca8
+        with:
+          verbose: true
+          packages-dir: ${{ inputs.package-name}}/dist/
+
+      - name: Publish package to TEST PyPI
+        if: ${{ inputs.is-production == false }}
+        uses: pypa/gh-action-pypi-publish@b7f401de30cb6434a1e19f805ff006643653240e #realse/v1.8.10
+        with:
+          verbose: true
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: ${{ inputs.package-name}}/dist/
