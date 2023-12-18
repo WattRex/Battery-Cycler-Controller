@@ -1,6 +1,6 @@
 # This workflow deploys battery cycler datatypes|cu_manager|db_sync to development environment
 
-name: Publish DATATYPES|CU_MANAGER|DB_SYNC package - STAGING
+name: Publish DATATYPES|CU_MANAGER|DB_SYNC package - DEVELOPMENT
 
 on:
   push:
