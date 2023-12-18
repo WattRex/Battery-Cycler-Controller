@@ -5,7 +5,7 @@ name: Deploy cycler to PRODUCTION
 on:
   push:
     branches:
-      - "mid_meas"
+      - "devops"
 
   pull_request_review:
     types:
