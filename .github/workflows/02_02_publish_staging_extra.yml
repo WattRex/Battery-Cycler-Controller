@@ -23,7 +23,7 @@ jobs:
       python-version: "3.10"
 
   publish-package:
-    name: Publish package ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} to PyPi
+    name: Publish package ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} to Test PyPi
     needs: build-package-on-pull-request
     runs-on: ubuntu-latest
     permissions:

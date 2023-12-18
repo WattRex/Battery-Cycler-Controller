@@ -3,6 +3,9 @@
 name: Deploy cycler to PRODUCTION
 
 on:
+  push:
+    branches:
+      - 'datatypes'
 
   pull_request_review:
     types:
