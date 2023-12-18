@@ -31,7 +31,7 @@ services:
       args:
         USER: ${USER_ID}
         GROUP: ${GROUP_ID}
-    image: wattrex-cycler-node
+    image: robertoaldea/wattrex-cycler-node
     restart: no
     user: ${USER_ID}:${GROUP_ID}
     ipc: host
@@ -50,11 +50,22 @@ services:
     build:
       context: ../
       dockerfile: ./devops/db_sync/Dockerfile.db_sync
-    image: wattrex-cycler-db-sync
+      target: ${CYCLER_TARGET}
+      args:
+        USER: ${USER_ID}
+        GROUP: ${GROUP_ID}
+    image: robertoaldea/wattrex-cycler-db-sync
     container_name: wattrex_cycler_db_sync
     restart: always
-    env_file:
-      - ./.cred.env
+    user: ${USER_ID}:${GROUP_ID}
+    ipc: host
+    volumes:
+      - ./db_sync/run_db_sync.py:/cycler/devops/db_sync/run_db_sync.py
+      - ./.cred.yaml:/cycler/devops/.cred.yaml
+      - ./db_sync/log_config.yaml:/cycler/devops/db_sync/log_config.yaml
+      - ../log:/cycler/log
+    networks:
+      - wattrex-net
     depends_on:
       cache_db:
         condition: service_healthy
