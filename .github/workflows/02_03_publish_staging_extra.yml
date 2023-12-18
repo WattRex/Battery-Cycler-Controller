@@ -44,5 +44,5 @@ jobs:
 
   deploy-staging:
     name: Deploy cycler controller modifications to STAGING
-    needs: build-publish-package-on-pr
+    needs: publish-package
     uses: ./.github/workflows/02_02_deploy_staging.yml
