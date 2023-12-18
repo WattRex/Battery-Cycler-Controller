@@ -21,7 +21,7 @@ jobs:
       source-path: "code/datatypes/src/${{ vars.DATATYPES_PACKAGE_NAME }}"
       is-production: ${{ inputs.is-production }}
 
-  publish-datatypes-pkg-prod:
+  publish-db_sync-pkg-prod:
     name: Build and publish db sync package
     uses: ./.github/workflows/build_publish_package.yml
     with:
@@ -30,7 +30,7 @@ jobs:
       source-path: "code/db_sync/src/${{ vars.DB_SYNC_PACKAGE_NAME }}"
       is-production: ${{ inputs.is-production }}
 
-  publish-datatypes-pkg-prod:
+  publish-cu_manager-pkg-prod:
     name: Build and publish cu_manager package
     uses: ./.github/workflows/build_publish_package.yml
     with:
