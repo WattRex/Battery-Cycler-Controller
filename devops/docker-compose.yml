@@ -33,7 +33,7 @@ services:
         GROUP: ${GROUP_ID}
     image: robertoaldea/wattrex-cycler-node:latest
     restart: no
-    user: ${USER_ID}:${GROUP_ID}
+    # user: ${USER_ID}:${GROUP_ID}
     ipc: host
     volumes:
       - ./.cred.yaml:/cycler/devops/.cred.yaml
@@ -57,7 +57,7 @@ services:
     image: robertoaldea/wattrex-cycler-db-sync:latest
     container_name: wattrex_cycler_db_sync
     restart: always
-    user: ${USER_ID}:${GROUP_ID}
+    #user: ${USER_ID}:${GROUP_ID}
     ipc: host
     volumes:
       - ./db_sync/run_db_sync.py:/cycler/devops/db_sync/run_db_sync.py
