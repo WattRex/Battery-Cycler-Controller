@@ -31,7 +31,7 @@ services:
       args:
         USER: ${USER_ID}
         GROUP: ${GROUP_ID}
-    image: robertoaldea/wattrex-cycler-node
+    image: robertoaldea/wattrex-cycler-node:latest
     restart: no
     user: ${USER_ID}:${GROUP_ID}
     ipc: host
@@ -54,7 +54,7 @@ services:
       args:
         USER: ${USER_ID}
         GROUP: ${GROUP_ID}
-    image: robertoaldea/wattrex-cycler-db-sync
+    image: robertoaldea/wattrex-cycler-db-sync:latest
     container_name: wattrex_cycler_db_sync
     restart: always
     user: ${USER_ID}:${GROUP_ID}
