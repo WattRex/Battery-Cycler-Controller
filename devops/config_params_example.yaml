@@ -5,7 +5,7 @@ system_shared_tool:
   DEFAULT_IPC_MSG_SIZE: 600
   DEFAULT_CHAN_TIMEOUT: 3
 
-wattrex_battery_cycler_cu_manager:
+wattrex_cycler_cu_manager:
   DEFAULT_TX_CAN_NAME         : 'TX_CAN'            # Default tx_can system queue name
   DEFAULT_TX_SCPI_NAME        : 'tx_scpi'           # Default tx_scpi system queue name
   DEFAULT_RX_CAN_NAME         : 'RX_CAN_QUEUE'      # Default rx_can system queue name
@@ -81,7 +81,7 @@ mid_dabs:
   DEFAULT_PERIOD_ELECT_MEAS   : 25 # Express in centiseconds
   DEFAULT_PERIOD_TEMP_MEAS    : 25 # Express in centiseconds
 
-wattrex_battery_cycler_db_sync:
+wattrex_cycler_db_sync:
   DEFAULT_CRED_FILEPATH       : './devops/.cred.yaml' # Path to the location of the credential file
   DEFAULT_SYNC_NODE_NAME      : 'SYNC'
   DEFAULT_COMP_UNIT           : 2
