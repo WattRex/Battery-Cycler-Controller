@@ -32,6 +32,7 @@ instance_new_cycler () {
     check_sniffer "can"
     check_sniffer "scpi"
     export CYCLER_TARGET=cycler_prod
+
     docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
     docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
@@ -139,6 +140,7 @@ case ${ARG1} in
         # echo "Initial Deploy"
         export CYCLER_TARGET=db_sync_prod
         docker compose ${DOCKER_COMPOSE_ARGS} pull db_sync
+        docker compose ${DOCKER_COMPOSE_ARGS} pull cycler
         initial_deploy
         ;;
     "build")
