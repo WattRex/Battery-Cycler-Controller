@@ -66,4 +66,3 @@ jobs:
       docker-group-arg: 69976 # wattrex
       docker-target: db_sync_prod
 
-
