@@ -20,7 +20,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataProfileC, CyclerDataExpStatusE,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataProfileC, CyclerDataExpStatusE,
             CyclerDataBatteryC, CyclerDataExperimentC, CyclerDataCyclerStationC)
 #######################          PROJECT IMPORTS         #######################
 

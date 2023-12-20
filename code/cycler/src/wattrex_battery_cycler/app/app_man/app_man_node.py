@@ -116,7 +116,7 @@ class AppManNodeC(SysShdNodeC): # pylint: disable=too-many-instance-attributes
         reqs_chan.send_data(request)
         response: MidStrCmdDataC = data_chan.receive_data()
         if response.error_flag:
-            log.critical(("Was imposible to get the cycler station info from the database. "))
+            log.critical(("It was imposible to get the cycler station info from the database."))
             self.status = SysShdNodeStatusE.INTERNAL_ERROR
         else:
             cs_info: CyclerDataCyclerStationC = response.station

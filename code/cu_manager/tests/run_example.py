@@ -16,7 +16,8 @@ from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, 
 
 #######################       LOGGER CONFIGURATION       #######################
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cu_manager/log_config.yaml', output_sub_folder='cu_manager')
+    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cu_manager/log_config.yaml',
+                                  output_sub_folder='cu_manager')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################

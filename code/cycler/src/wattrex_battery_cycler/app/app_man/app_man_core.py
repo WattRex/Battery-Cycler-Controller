@@ -212,7 +212,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
             log.debug("Profile with current and voltage")
             res = (profile.range.in_range_current(battery.elec_ranges) and
                 profile.range.in_range_voltage(battery.elec_ranges))
-        log.critical(f"Validating experiment: {res}")
+        log.debug(f"Validating experiment: {res}")
         return res
 
     def __update_exp_status(self, exp_status: CyclerDataExpStatusE) -> None:
@@ -288,7 +288,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                 log.debug("Executing experiment")
                 self.__execute_experiment()
                 ## Check if the experiment has finish and try to get the next one
-                log.critical(f"Experiment status: {self.exp_status}")
+                log.debug(f"Experiment status: {self.exp_status}")
                 if self.exp_status in (CyclerDataExpStatusE.FINISHED,
                                         CyclerDataExpStatusE.ERROR):
                     self.experiment = None

@@ -13,7 +13,7 @@ register: "DEBUG"
 
 ##### DRV ######
 wattrex_driver_db: 'INFO'
-wattrex_battery_cycler_datatypes.cycler_data: 'INFO'
+wattrex_cycler_datatypes.cycler_data: 'INFO'
 
 ##### SYS #####
 sys_abs.sys_conf: "ERROR"
