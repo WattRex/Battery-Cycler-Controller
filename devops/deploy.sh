@@ -22,10 +22,7 @@ initial_deploy () {
     python3 -m pip install SCPI-sniffer
     mkdir -p "${REPO_ROOT_DIR}/log"
 
-    # python3 -m pip install scpi-sniffer
-    # sudo sh -c 'echo 250 > /proc/sys/fs/mqueue/msg_max'
-    docker compose ${DOCKER_COMPOSE_ARGS} up cache_db -d
-    #docker compose ${DOCKER_COMPOSE_ARGS} up cache_db db_sync -d
+    docker compose ${DOCKER_COMPOSE_ARGS} up cache_db db_sync -d
 
     check_sniffer "can"
     check_sniffer "scpi"
@@ -34,7 +31,6 @@ initial_deploy () {
 instance_new_cycler () {
     check_sniffer "can"
     check_sniffer "scpi"
-    # check_sniffer "scpi"
     export CYCLER_TARGET=cycler_prod
     docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
     docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
@@ -127,7 +123,8 @@ fi
 # Check if the required files are present.
 required_file_list=("docker-compose.yml" ".cred.env" ".cred.yaml" "config_params.yaml"
                     "scpi/log_config.yaml" "cycler/log_config.yaml" "cu_manager/log_config.yaml"
-                    "can/log_config.yaml" "cache_db/createCacheCyclerTables.sql")
+                    "can/log_config.yaml" "cache_db/createCacheCyclerTables.sql"
+                    "db_sync/log_config.yaml" )
 for file in ${required_file_list}
 do
     file_path=${DEVOPS_DIR}/${file}
@@ -140,6 +137,14 @@ done
 case ${ARG1} in
     "")
         # echo "Initial Deploy"
+        export CYCLER_TARGET=db_sync_prod
+        docker compose ${DOCKER_COMPOSE_ARGS} pull db_sync
+        initial_deploy
+        ;;
+    "build")
+        # echo "Initial Deploy"
+        export CYCLER_TARGET=db_sync_local
+        docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) db_sync
         initial_deploy
         ;;
     "cycler")

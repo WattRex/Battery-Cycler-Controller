@@ -13,16 +13,15 @@ RUN pip install --upgrade pip
 RUN pip install pytest
 ADD --chown=${UG_NAME}:${UG_NAME} ./devops/config_params_example.yaml ./devops/config_params.yaml
 ENV CONFIG_FILE_PATH=${APP_PATH}/devops/config_params.yaml
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
 
 FROM cycler_base as cycler_test
 ARG UPDATE_REQS=default
 ADD --chown=${UG_NAME}:${UG_NAME} ./code/cycler ./code/cycler
-ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
 RUN pip install -r ./code/cycler/requirements.txt
 
 FROM cycler_base as cycler_prod
 ARG UPDATE_REQS=default
 RUN pip install wattrex-battery-cycler
-ADD --chown=${UG_NAME}:${UG_NAME} ./devops/cycler ./devops/cycler
 
 CMD ["python", "./devops/cycler/run_cycler.py"]

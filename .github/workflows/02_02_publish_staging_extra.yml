@@ -1,32 +1,20 @@
-# This workflow deploys battery cycler datatypes|cu_manager|db_sync to development environment
+# This workflow deploys battery cycler datatypes|cu_manager|db_sync to staging environment
 
 name: Publish DATATYPES|CU_MANAGER|DB_SYNC package - STAGING
 
 on:
-  push:
-    branches:
-      - 'datatypes'
-      - 'cu_manager'
-      - 'db_sync'
-
   pull_request_review:
     types: [submitted]
+    # branches:
+    #   - 'datatypes'
+    #   - 'cu_manager'
+    #   - 'db_sync'
 
 jobs:
 
-  build-package-on-push:
-    name: QA and Build ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }} on push
-    if: ${{ github.event_name == 'push' }}
-    uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
-    with:
-      package-name: ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}
-      package-path: "code/${{ github.ref_name }}"
-      source-path: "code/${{ github.ref_name }}/src/${{ vars.PREFIX_PACKAGE_NAME }}${{ github.ref_name }}"
-      python-version: "3.10"
-
   build-package-on-pull-request:
     name: QA and Build ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} on pull request
-    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && contains(fromJson(vars.PACKAGES_BRANCHES), github.event.pull_request.head.ref) }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && contains(fromJson(vars.EXTRA_PACKAGES_BRANCHES), github.event.pull_request.head.ref) }}
     uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
     with:
       package-name: ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }}
@@ -35,7 +23,7 @@ jobs:
       python-version: "3.10"
 
   publish-package:
-    name: Publish package ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} to PyPi
+    name: Publish package ${{ vars.PREFIX_PACKAGE_NAME }}${{ github.event.pull_request.head.ref }} to Test PyPi
     needs: build-package-on-pull-request
     runs-on: ubuntu-latest
     permissions:
@@ -53,3 +41,8 @@ jobs:
           verbose: true
           repository-url: https://test.pypi.org/legacy/
           packages-dir: ${{ github.event.pull_request.head.ref }}/dist/
+
+  deploy-staging:
+    name: Deploy cycler controller modifications to STAGING
+    needs: publish-package
+    uses: ./.github/workflows/02_03_deploy_staging.yml
