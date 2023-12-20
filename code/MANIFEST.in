@@ -1,3 +1,0 @@
-global-exclude tests/* 
-global-exclude *.egg-info
-global-exclude build/

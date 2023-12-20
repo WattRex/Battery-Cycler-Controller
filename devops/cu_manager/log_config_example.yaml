@@ -1,0 +1,19 @@
+---
+#YAML FILE START
+APP.APP_MODULE: "CRITICAL" #APP/APP_MODULE/APP_EXAMPLE.py
+
+__main__: "INFO"
+
+##### DEV ######
+wattrex_cycler_cu_manager: "DEBUG"
+src.wattrex_cycler_cu_manager: "DEBUG"
+
+##### DRV ######
+drv_mqtt: "DEBUG"
+
+##### SYS #####
+sys_abs.sys_conf: "ERROR"
+system_logger_tool: "ERROR"
+system_shared_tool: "ERROR"
+
+file_handlers: {}

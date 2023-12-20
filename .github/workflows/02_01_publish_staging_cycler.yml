@@ -1,0 +1,44 @@
+# This workflow deploys battery cycler controller to development environment
+
+name: Publish cycler package - STAGING
+
+on:
+
+  pull_request_review:
+    types: [submitted]
+    # branches:
+    #   - "app_diag"
+    #   - "app_man"
+    #   - "mid_meas"
+    #   - "mid_dabs"
+    #   - "mid_str"
+    #   - "mid_pwr"
+
+jobs:
+
+  detect-folder:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && contains(fromJson(vars.CYCLER_BRANCHES), github.event.pull_request.head.ref) }}
+    environment: development
+    outputs:
+      folder: ${{ steps.set-folder.outputs.folder }}
+    steps:
+      - name: "Set env variables"
+        id: set-folder
+        run: |
+          echo "folder=$(echo ${{ github.event.pull_request.head.ref }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
+
+  build-publish-package-on-pr:
+    name: Build and publish QA and Build battery controller on ${{ github.event.pull_request.head.ref }} pull request
+    needs: detect-folder
+    uses: ./.github/workflows/build_publish_package.yml
+    with:
+      package-name: "${{ vars.CYCLER_PACKAGE_NAME }}"
+      package-path: "code/cycler"
+      source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.event.pull_request.head.ref }}"
+      is-production: false
+
+  deploy-staging:
+    name: Deploy cycler controller modifications to STAGING
+    needs: build-publish-package-on-pr
+    uses: ./.github/workflows/02_03_deploy_staging.yml

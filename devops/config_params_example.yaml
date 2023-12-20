@@ -1,0 +1,89 @@
+---
+
+system_shared_tool:
+  DEFAULT_CHAN_NUM_MSG: 300
+  DEFAULT_IPC_MSG_SIZE: 600
+  DEFAULT_CHAN_TIMEOUT: 3
+
+wattrex_cycler_cu_manager:
+  DEFAULT_TX_CAN_NAME         : 'TX_CAN'            # Default tx_can system queue name
+  DEFAULT_TX_SCPI_NAME        : 'tx_scpi'           # Default tx_scpi system queue name
+  DEFAULT_RX_CAN_NAME         : 'RX_CAN_QUEUE'      # Default rx_can system queue name
+  DEFAULT_RX_SCPI_NAME        : 'RX_SCPI_QUEUE'     # Default rx_scpi system queue name
+  DEFAULT_DETECT_TIMEOUT      : 20                   # Default time to read asked devices answers
+
+wattrex_driver_db:
+  DEFAULT_CRED_FILEPATH: '~/roberto/cycler_controler/devops/.cred.yaml'
+
+wattrex_driver_epc:
+  DEFAULT_MAX_HS_VOLT             : 14100         # Max high side voltage the epc has as hardware limits
+  DEFAULT_MIN_HS_VOLT             : 5300          # Min high side voltage the epc has as hardware limits
+  DEFAULT_MAX_LS_VOLT             : 5100          # Max low side voltage the epc has as hardware limits
+  DEFAULT_MIN_LS_VOLT             : 400           # Min low side voltage the epc has as hardware limits
+  DEFAULT_MAX_LS_CURR             : 15500         # Max low side current the epc has as hardware limits
+  DEFAULT_MIN_LS_CURR             : -15500        # Min low side current the epc has as hardware limits
+  DEFAULT_MAX_LS_PWR              : 800           # Max low side power the epc has as hardware limits
+  DEFAULT_MIN_LS_PWR              : -800          # Min low side power the epc has as hardware limits
+  DEFAULT_MAX_TEMP                : 700           # Max temperature the epc has as hardware limits
+  DEFAULT_MIN_TEMP                : -200          # Min temperature the epc has as hardware limits
+  DEFAULT_MAX_MSG                 : 100           # Max number of allowed message per chan
+  DEFAULT_MAX_MESSAGE_SIZE        : 150           # Size of message sent through IPC message queue
+  DEFAULT_TX_CHAN                 : 'TX_CAN'      # Name of the TX channel in CAN
+  DEFAULT_RX_CHAN                 : 'RX_CAN_EPC'  # Name of the RX channel for epc
+  DEFAULT_MAX_READS               : 3000          # Max number of reads to get data
+
+wattrex_driver_bms:
+  DEFAULT_MAX_MSG             : 100 # Max number of allowed message per chan
+  DEFAULT_MAX_MESSAGE_SIZE    : 120 # Size of message sent through IPC message queue
+  DEFAULT_TX_CHAN             : 'TX_CAN' # Name of the TX channel in CAN
+  DEFAULT_RX_CHAN             : 'RX_CAN_BMS'  #Name of the RX channel
+  DEFAULT_MEASURE_NAMES       : ['vcell1', 'vcell2', 'vcell3', 'vcell4', 'vcell5', 'vcell6',
+                                  'vcell7', 'vcell8', 'vcell9', 'vcell10', 'vcell11', 'vcell12',
+                                  'vstack', 'temp1', 'temp2', 'temp3', 'temp4', 'pres1', 'pres2'] #Allowed measure names
+  DEFAULT_TIMEOUT_RESPONSE    : 30 # Expected time to get answer from BMS
+
+scpi_sniffer:
+  DEFAULT_TIMEOUT_SEND_MSG    : 0.1
+  DEFAULT_TIMEOUT_RX_MSG      : 0.02
+  DEFAULT_NODE_PERIOD         : 40
+  DEFAULT_NODE_NAME           : 'SCPI'
+
+  DEFAULT_CHAN_NUM_MSG        : 200 # Max number of allowed message per chan
+  DEFAULT_MAX_MSG_SIZE        : 350 # Size of message sent through IPC message queue
+  DEFAULT_TX_CHAN             : 'TX_SCPI' # Name of the TX channel in CAN
+  DEFAULT_RX_CHAN             : 'RX_SCPI_'  #Name of the RX channel for epc
+  DEFAULT_NUM_ATTEMPTS        : 10 # Max number of reads to get data
+
+can_sniffer:
+  DEFAULT_CHAN_NUM_MSG        : 200
+  DEFAULT_MAX_MSG_SIZE        : 300
+  DEFAULT_TIMEOUT_SEND_MSG    : 0.1
+  DEFAULT_TIMEOUT_RX_MSG      : 0.02
+  DEFAULT_NODE_PERIOD         : 40
+  DEFAULT_NODE_NAME           : 'CAN'
+  DEFAULT_TX_NAME             :  'TX_CAN'
+  DEFAULT_IFACE_NAME          : 'socketcan' # Name of the CAN interface
+  DEFAULT_IFACE_CHAN_NAME     : 'can0' # Name of the CAN interface channel
+
+################### CYCLER ###################
+
+mid_str:
+  DEFAULT_TIMEOUT_CONNECTION  : 5
+  DEFAULT_NODE_PERIOD         : 250 # Express in milliseconds
+  DEFAULT_NODE_NAME           : 'STR'
+  DEFAULT_CRED_FILEPATH       : './devops/.cred.yaml' # Path to the location of the credential file
+
+mid_meas:
+  DEFAULT_NODE_PERIOD         : 120 # Express in milliseconds
+  DEFAULT_NODE_NAME           : 'MEAS'
+
+mid_dabs:
+  DEFAULT_PERIOD_ELECT_MEAS   : 25 # Express in centiseconds
+  DEFAULT_PERIOD_TEMP_MEAS    : 25 # Express in centiseconds
+
+wattrex_cycler_db_sync:
+  DEFAULT_CRED_FILEPATH       : './devops/.cred.yaml' # Path to the location of the credential file
+  DEFAULT_SYNC_NODE_NAME      : 'SYNC'
+  DEFAULT_COMP_UNIT           : 2
+  DEFAULT_NODE_PERIOD         : 500 # ms # Period of the node
+

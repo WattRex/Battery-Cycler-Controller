@@ -3,6 +3,7 @@
 
 ### Project specific ###
 # Project specific 
+*.cu_id
 config.*
 *.ini
 *.cred.*
@@ -12,6 +13,7 @@ config.*
 *.yml
 *__version__.py
 .github/
+*code/cycler/tests/test_cycler.py
 
 
 ### Software IDEAS ###

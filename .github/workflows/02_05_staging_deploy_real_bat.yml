@@ -1,0 +1,49 @@
+# This workflow will deploy in development environment the cycler controller module
+
+name: Deploy cycler to STAGING - REAL BAT
+
+on: workflow_call
+
+env:
+  ENV_CRED_TO_DEPLOY: ${{ secrets.ENV_CRED_TO_DEPLOY }}
+  YAML_CRED_TO_DEPLOY: ${{ secrets.YAML_CRED_TO_DEPLOY }}
+
+jobs:
+  launch-real-bat:
+    environment: staging
+    name: Launch cycler controller in real environment
+    runs-on: [self-hosted, linux, ARM64, plc]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set secrets and log to deploy
+        run: |
+          echo "${{ secrets.ENV_CRED_TO_DEPLOY }}" > ./devops/.cred.env
+          echo "${{ secrets.YAML_CRED_TO_DEPLOY }}" > ./devops/.cred.yaml
+          echo "${{ vars.CONFIG_PARAMS }}" > ./devops/config_params.yaml
+          echo "${{ vars.LOG_CONFIG }}" > ./devops/log_config.yaml
+
+      - name: Execute deploy script
+        run: |
+          export XDG_RUNTIME_DIR="/run/user/$UID"
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+          chmod +x ./devops/deploy.sh
+          ./devops/deploy.sh
+
+      - name: Execute deploy container
+        id: pytest
+        continue-on-error: true
+        run: |
+          ./devops/deploy.sh test ${{ vars.CYCLER_STATION_ID }} ${{ github.event.pull_request.head.ref }}
+
+      - name: Clean up
+        run: |
+          echo "${{ steps.pytest.outcome }}"
+          mkdir -p /tmp/github_wattrex
+          rm -rf /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
+          cp -R ./log /tmp/github_wattrex/log_tests_${{ github.event.pull_request.head.ref }}
+          ./devops/deploy.sh force-stop
+          docker image prune -f
+          docker images -a
+          if [ "${{ steps.pytest.outcome }}" = "failure" ]; then exit 1; fi

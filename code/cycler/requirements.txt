@@ -1,0 +1,17 @@
+func_timeout>=4.3.5
+
+system-config-tool>=0.0.4
+system-logger-tool>=0.0.3
+system-shared-tool>=0.2.11
+
+wattrex-cycler-datatypes>=0.0.14
+
+wattrex-driver-db>=0.0.12
+wattrex-driver-epc>=0.0.8
+wattrex-driver-bms>=0.0.2
+wattrex-driver-flow>=0.0.3
+wattrex-driver-ea>=0.0.2
+wattrex-driver-rs>=0.0.1
+wattrex-driver-bk>=0.0.1
+
+# SCPI-sniffer>=0.0.3

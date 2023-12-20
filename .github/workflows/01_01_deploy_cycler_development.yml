@@ -1,0 +1,39 @@
+# This workflow deploys battery cycler controller to development environment
+
+name: Build cycler - DEVELOPMENT
+
+on:
+
+  push:
+    branches:
+      - "app_diag"
+      - "app_man"
+      - "mid_data"
+      - "mid_meas"
+      - "mid_dabs"
+      - "mid_str"
+      - "mid_pwr"
+
+jobs:
+
+  detect-folder:
+    runs-on: ubuntu-latest
+    environment: development
+    outputs:
+      folder: ${{ steps.set-folder.outputs.folder }}
+    steps:
+      - name: "Set env variables"
+        id: set-folder
+        run: |
+          echo "folder=$(echo ${{ github.ref_name }} | cut -d'_' -f 1)" >> $GITHUB_OUTPUT
+
+  build-package:
+    name: QA and Build battery controller on ${{ github.ref_name }} push
+    needs: detect-folder
+    uses: WattRex/System-Tools/.github/workflows/build_python_package.yml@develop
+    with:
+      package-name: "${{ vars.CYCLER_PACKAGE_NAME }}"
+      package-path: "code/cycler"
+      source-path: "code/cycler/src/${{ vars.CYCLER_PACKAGE_NAME }}/${{ needs.detect-folder.outputs.folder }}/${{ github.ref_name }}"
+      python-version: "3.10"
+      is-test-package: true

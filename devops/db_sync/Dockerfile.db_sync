@@ -1,0 +1,26 @@
+FROM python:3.10-bullseye as db_sync_base
+ARG USER=default
+ARG GROUP=default
+ENV U_ID=${USER}
+ENV G_UID=${GROUP}
+ENV UG_NAME=wattrex
+RUN addgroup --system --gid ${G_UID} ${UG_NAME} && adduser --system --gid ${G_UID} --uid ${U_ID} ${UG_NAME}
+USER ${UG_NAME}
+ENV APP_PATH=/cycler
+WORKDIR ${APP_PATH}
+ENV PATH="${PATH}:/home/${UG_NAME}/.local/bin"
+RUN pip install --upgrade pip
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/config_params_example.yaml ./devops/config_params.yaml
+ENV CONFIG_FILE_PATH=${APP_PATH}/devops/config_params.yaml
+ADD --chown=${UG_NAME}:${UG_NAME} ./devops/db_sync ./devops/db_sync
+
+FROM db_sync_base as db_sync_local
+ARG UPDATE_REQS=default
+ADD --chown=${UG_NAME}:${UG_NAME} ./code/db_sync ./code/db_sync
+RUN pip install -r ./code/db_sync/requirements.txt
+CMD ["python", "./devops/db_sync/run_db_sync.py"]
+
+FROM db_sync_base as db_sync_prod
+ARG UPDATE_REQS=default
+RUN pip install wattrex-cycler-db-sync
+CMD ["python", "./devops/db_sync/run_db_sync.py"]

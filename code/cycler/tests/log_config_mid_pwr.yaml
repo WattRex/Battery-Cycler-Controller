@@ -1,0 +1,49 @@
+--- #YAML FILE START
+app.app_diag: "CRITICAL" #app/app_MODULE/app_EXAMPLE.py
+
+__main__: "DEBUG"
+
+##### app #####
+app.app_SALG: "INFO"
+app.app_DIAG: "WARN"
+app.app_STRG: "WARN"
+app.app_man: 'DEBUG'
+src.wattrex_battery_cycler.app.app_man: 'DEBUG'
+
+##### mid #####
+mid.mid_pwr: "DEBUG"
+mid.mid_dabs: 'DEBUG'
+src.wattrex_battery_cycler.mid.mid_dabs: "DEBUG"
+src.wattrex_battery_cycler.mid.mid_str: "DEBUG"
+src.wattrex_battery_cycler.mid.mid_meas: "DEBUG"
+src.wattrex_battery_cycler.mid.mid_pwr: "DEBUG"
+mid.mid_str: "INFO"
+mid.mid_meas: "DEBUG"
+mid_dabs: 'DEBUG'
+
+##### drv ######
+wattrex_driver_db: 'INFO'
+wattrex_driver_epc: 'WARNING'
+wattrex_driver_bms: 'WARNING'
+wattrex_driver_flow: 'INFO'
+wattrex_driver_ea: 'INFO'
+wattrex_driver_rs: 'INFO'
+wattrex_driver_pwr: 'INFO'
+wattrex_driver_bk: 'INFO'
+wattrex_driver_base: 'INFO'
+wattrex_cycler_datatypes.cycler_data: 'INFO'
+scpi_sniffer: 'INFO'
+can_sniffer: 'INFO'
+
+##### sys #####
+system_shared_tool: "INFO"
+system_config_tool: "INFO"
+system_logger_tool: "INFO"
+
+test_app_man: 'DEBUG'
+test_mid_dabs: 'DEBUG'
+test_mid_pwr: 'DEBUG'
+test_mid_str_node: 'DEBUG'
+file_handlers: {
+  # "log_can" : [ drv.drv_can, drv.drv_epc ],
+}

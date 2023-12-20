@@ -1,0 +1,29 @@
+[Unit]
+#Service's description
+Description=scpi_sniffer
+#Service that has to be started before this one is started
+After=default.target
+#Max number of retries in a specified time interval
+StartLimitBurst=3
+#Time interval
+StartLimitIntervalSec=15
+
+[Service]
+#Type of service
+Type=simple
+#Restart policy
+Restart=always
+#Restart service after 3 seconds if it crashes
+RestartSec=3
+
+#Instructions executed before the service execution
+#ExecStartPre=
+
+#Main service execution
+ExecStart=/usr/bin/python3 ${SRC_PATH}/scpi/scpi_node.py
+
+#Instructions executed after the service execution
+ExecStopPost=echo "Scpi-sniffer service main execution ended."
+
+[Install]
+WantedBy=default.target

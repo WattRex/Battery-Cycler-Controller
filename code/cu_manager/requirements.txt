@@ -1,0 +1,7 @@
+system-logger-tool
+system-shared-tool
+wattrex-driver-mqtt
+wattrex-cycler-datatypes
+scpi-sniffer
+can-sniffer
+bitarray
