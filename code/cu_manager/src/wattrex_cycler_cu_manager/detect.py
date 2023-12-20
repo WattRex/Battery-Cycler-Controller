@@ -26,13 +26,14 @@ from can_sniffer import DrvCanCmdDataC, DrvCanFilterC, DrvCanCmdTypeE, DrvCanMes
 from scpi_sniffer import DrvScpiCmdDataC, DrvScpiCmdTypeE, DrvScpiSerialConfC
 from system_shared_tool import SysShdIpcChanC
 
+#######################          PROJECT IMPORTS         #######################
+from wattrex_cycler_datatypes.comm_data import CommDataDeviceC #pylint: disable= wrong-import-order
+
 #######################          MODULE IMPORTS          #######################
 
 ######################             CONSTANTS              ######################
 from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
                     DEFAULT_DETECT_TIMEOUT, DEFAULT_DEV_PATH, DEFAULT_SCPI_QUEUE_PREFIX)
-#######################          PROJECT IMPORTS         #######################
-from wattrex_cycler_datatypes.comm_data import CommDataDeviceC #pylint: disable= wrong-import-position
 
 #######################              CLASS               #######################
 all_devices = {

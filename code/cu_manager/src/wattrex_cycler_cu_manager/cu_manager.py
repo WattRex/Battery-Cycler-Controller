@@ -9,7 +9,7 @@ from datetime import datetime
 from os import path
 import subprocess
 from time import sleep
-from threading import Event, Thread
+from threading import Event
 from typing import List, Dict
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -185,11 +185,10 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         log.info(f"Launching CS: {cs_id}")
         self.active_cs[cs_id] = datetime.now()
         # TODO: fix it, raise an error due to bad credential configuration # pylint: disable=fixme
-        self.cycler_deploy_processes.append(subprocess.Popen(['./devops/deploy.sh', 'cycler', f'{cs_id}'],
-                                                 stdout=subprocess.PIPE,
-                                                 stderr=subprocess.PIPE,
-                                                 universal_newlines=True,
-                                                 check=False))
+        self.cycler_deploy_processes.append(
+            subprocess.Popen(['./devops/deploy.sh', # pylint: disable=consider-using-with
+                            'cycler', f'{cs_id}'], stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,universal_newlines=True))
 
     def process_iteration(self) -> None:
         '''
