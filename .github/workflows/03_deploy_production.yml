@@ -3,7 +3,6 @@
 name: Deploy cycler to PRODUCTION
 
 on:
-
   pull_request_review:
     types:
       - submitted
