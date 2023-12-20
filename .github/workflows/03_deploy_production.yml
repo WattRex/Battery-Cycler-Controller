@@ -55,16 +55,3 @@ jobs:
       docker-user-arg: 69976 # wattrex
       docker-group-arg: 69976 # wattrex
       docker-target: db_sync_prod
-
-  publish-docker-image-db-sync:
-    name: Publish db-sync docker image
-    needs:  [ publish-cycler-pkg-prod, publish-extra-pkg-prod ]
-    uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
-    secrets:
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
-    with:
-      dockerfile-path: ./devops/db_sync/Dockerfile.db_sync
-      docker-repo-name: wattrex-cycler-db-sync
-      is-develop: false
-      docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
-
