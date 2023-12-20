@@ -3,6 +3,7 @@
 name: Deploy cycler to PRODUCTION
 
 on:
+
   pull_request_review:
     types:
       - submitted
@@ -17,10 +18,7 @@ jobs:
       is-production: true
 
   publish-cycler-pkg-prod:
-    if: ${{ github.event_name == 'pull_request_review' &&
-      github.event.review.state == 'approved' &&
-      github.event.pull_request.head.ref == 'develop' &&
-      github.event.pull_request.base.ref == 'master' }}
+    if: ${{ github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && github.event.pull_request.head.ref == 'develop' && github.event.pull_request.base.ref == 'master' }}
     name: Build and publish cycler package
     uses: ./.github/workflows/build_publish_package.yml
     with:
@@ -31,7 +29,7 @@ jobs:
 
   publish-docker-image-cycler:
     name: Publish cycler docker image
-    needs: publish-cycler-pkg-prod
+    needs: [ publish-cycler-pkg-prod, publish-extra-pkg-prod ]
     uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
@@ -42,6 +40,22 @@ jobs:
       docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
       docker-user-arg: 69976 # wattrex
       docker-group-arg: 69976 # wattrex
+      docker-target: cycler_prod
+
+  publish-docker-image-db-sync:
+    name: Publish db-sync docker image
+    needs: [ publish-cycler-pkg-prod, publish-extra-pkg-prod ]
+    uses: WattRex/Battery-Experiments-Manager/.github/workflows/docker_image.yml@develop
+    secrets:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD_RALDEA }}
+    with:
+      dockerfile-path: ./devops/db_sync/Dockerfile.db_sync
+      docker-repo-name: wattrex-cycler-db-sync
+      is-develop: false
+      docker-user: ${{ vars.DOCKER_USERNAME_RALDEA }}
+      docker-user-arg: 69976 # wattrex
+      docker-group-arg: 69976 # wattrex
+      docker-target: db_sync_prod
 
   publish-docker-image-db-sync:
     name: Publish db-sync docker image
