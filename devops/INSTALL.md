@@ -17,7 +17,7 @@ exit
 # Login to new user
 su - wattrex
 ```
-
+2. Change system queue sizes. For this, follow this guide: [](https://github.com/WattRex/System-Tools/tree/develop/code/sys_shd)
 2. Execute deploy script to deploy containers for db synchronizer and CAN and SCPI sniffers
 ```bash
 ./devops/deploy.sh
