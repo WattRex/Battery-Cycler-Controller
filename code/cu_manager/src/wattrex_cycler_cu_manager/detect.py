@@ -32,7 +32,7 @@ from system_shared_tool import SysShdIpcChanC
 from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_NAME,
                     DEFAULT_DETECT_TIMEOUT, DEFAULT_DEV_PATH, DEFAULT_SCPI_QUEUE_PREFIX)
 #######################          PROJECT IMPORTS         #######################
-from wattrex_cycler_datatypes.comm_data import CommDataDeviceC
+from wattrex_cycler_datatypes.comm_data import CommDataDeviceC #pylint: disable= wrong-import-position
 
 #######################              CLASS               #######################
 all_devices = {
@@ -83,7 +83,7 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
         self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
 
-    def process_detection(self) -> None:
+    def process_detection(self) -> List[CommDataDeviceC]:
         '''
         Process detection of connected devices using CAN and SCPI.
         '''
@@ -127,6 +127,7 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         self.__tx_can.close()
         self.__tx_scpi.close()
         self.__rx_can.terminate()
+        return self.det_bms + self.det_epc + self.det_ea + self.det_rs + self.det_flow
 
     def __reset_detected(self) -> None:
         '''

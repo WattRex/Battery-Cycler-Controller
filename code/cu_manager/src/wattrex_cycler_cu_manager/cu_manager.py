@@ -9,7 +9,7 @@ from datetime import datetime
 from os import path
 import subprocess
 from time import sleep
-import threading
+from threading import Event, Thread
 from typing import List, Dict
 
 #######################       THIRD PARTY IMPORTS        #######################
@@ -40,7 +40,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
     Cu Manager Class to instanciate a CU Manager Node
     '''
 
-    def __init__(self, working_flag : threading.Event, cycle_period : int,
+    def __init__(self, working_flag : Event, cycle_period : int,
                  cu_id_file_path : str = './devops/cu_manager/.cu_id') -> None:
         '''
         Initialize the CU manager node.
@@ -54,8 +54,9 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
                                                          launch_callback=self.launch_cs,
                                                          detect_callback=self.process_detect,
                                                          store_cu_info_cb=self.store_cu_info_cb)
+        self.cycler_deploy_processes : List[subprocess.Popen] = []
         # self.sync_node : MidSyncNoceC = MidSyncNoceC()
-        self.working_flag_sync : threading.Event = threading.Event()
+        self.working_flag_sync : Event = Event()
         self.working_flag_sync.set()
 
         self.working_flag = working_flag
@@ -70,7 +71,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
                 self.client_mqtt.subscribe_cu(cu_id=self.cu_id, mac=self.cu_info.mac)
                 log.info(f"Device previously registered with id: {self.cu_id}")
         else:
-            self.registered = threading.Event()
+            self.registered = Event()
             self.registered.clear()
             self.register_cu()
             log.info(f"Device registered with id: {self.cu_id}")
@@ -157,6 +158,17 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
             hb = CommDataHeartbeatC(cu_id=self.cu_id)
             self.client_mqtt.publish_heartbeat(hb)
 
+    def process_cycler_deploy_processes(self) -> None:
+        '''
+        Process the cycler deploy processes
+        '''
+        for process in self.cycler_deploy_processes:
+            if process.poll() is not None:
+                self.cycler_deploy_processes.remove(process)
+                log.info(f"CS deployed: {process.args[2]}")
+                log.info(f"CS ({process.args[2]}) deploy process return code: {process.stdout}")
+                self.active_cs[int(process.args[2])] = datetime.now()
+
 
     def __gather_heartbeat(self) -> bool:
         # TODO: implement this @roberto # pylint: disable=fixme
@@ -173,12 +185,11 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         log.info(f"Launching CS: {cs_id}")
         self.active_cs[cs_id] = datetime.now()
         # TODO: fix it, raise an error due to bad credential configuration # pylint: disable=fixme
-        result = subprocess.run(['./devops/deploy.sh', 'cycler', f'{cs_id}'],
-                    stdout=subprocess.PIPE,
-                    universal_newlines=True,
-                    check=False)
-        log.critical(result.stdout)
-
+        self.cycler_deploy_processes.append(subprocess.Popen(['./devops/deploy.sh', 'cycler', f'{cs_id}'],
+                                                 stdout=subprocess.PIPE,
+                                                 stderr=subprocess.PIPE,
+                                                 universal_newlines=True,
+                                                 check=False))
 
     def process_iteration(self) -> None:
         '''
@@ -186,6 +197,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         '''
         self.client_mqtt.process_iteration()
         self.process_heartbeat()
+        self.process_cycler_deploy_processes()
 
 
     def sync_shd_data(self) -> None:
