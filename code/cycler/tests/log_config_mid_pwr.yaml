@@ -31,7 +31,7 @@ wattrex_driver_rs: 'INFO'
 wattrex_driver_pwr: 'INFO'
 wattrex_driver_bk: 'INFO'
 wattrex_driver_base: 'INFO'
-wattrex_battery_cycler_datatypes.cycler_data: 'INFO'
+wattrex_cycler_datatypes.cycler_data: 'INFO'
 scpi_sniffer: 'INFO'
 can_sniffer: 'INFO'
 

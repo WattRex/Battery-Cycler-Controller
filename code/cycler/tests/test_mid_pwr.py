@@ -19,7 +19,7 @@ main_logger = SysLogLoggerC(file_log_levels="devops/cycler/log_config.yaml",
 log: Logger = sys_log_logger_get_module_logger(name="test_mid_pwr")
 from system_shared_tool import SysShdSharedObjC, SysShdNodeStatusE
 #######################       THIRD PARTY IMPORTS        #######################
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
                 CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataAllStatusC,
                 CyclerDataMergeTagsC, CyclerDataPwrRangeC, CyclerDataInstructionC,
                 CyclerDataPwrModeE, CyclerDataPwrLimitE, CyclerDataAlarmC, CyclerDataExpStatusE)

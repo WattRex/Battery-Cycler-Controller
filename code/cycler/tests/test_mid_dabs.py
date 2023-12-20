@@ -25,7 +25,7 @@ from can_sniffer import DrvCanNodeC
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC, MidDabsExtraMeterC
-from wattrex_battery_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
+from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
                                     CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataPwrLimitE,
                                         CyclerDataExtMeasC, CyclerDataAllStatusC)
 

@@ -150,7 +150,7 @@ dependencies = {file = ["requirements.txt"]}
 "Homepage" = "https://github.com/WattRex/Battery-Cycler-Controller/"
 "Bug Reports" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
 "Bug Tracker" = "https://github.com/WattRex/Battery-Cycler-Controller/issues"
-"Source" = "https://github.com/WattRex/Battery-Cycler-Controller/code/cu_manager/src/wattrex_battery_cycler_cu_manager"
+"Source" = "https://github.com/WattRex/Battery-Cycler-Controller/code/cu_manager/src/wattrex_cycler_cu_manager"
 "Funding" = "https://donate.pypi.org"
 # "Say Thanks!" = "http://saythanks.io/to/example"
 
