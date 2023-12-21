@@ -198,15 +198,12 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         self.process_heartbeat()
         self.process_cycler_deploy_processes()
 
-
-    def sync_shd_data(self) -> None:
-        '''Sync shared data with the sync node.
-        '''
-
-
     def stop(self) -> None:
-        '''Stop the stream .
         '''
+        Stop the stream .
+        '''
+        log.critical(f"Stopping CU_Manager...")
         self.client_mqtt.close()
+        self.detector.close()
 
 #######################            FUNCTIONS             #######################
