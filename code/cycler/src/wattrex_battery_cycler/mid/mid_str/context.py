@@ -27,7 +27,7 @@ from system_config_tool import sys_conf_update_config_params
 DEFAULT_TIMEOUT_CONNECTION: int = 5
 DEFAULT_NODE_PERIOD: int        = 250 # Express in milliseconds
 DEFAULT_NODE_NAME: str          = 'STR'
-DEFAULT_CRED_FILEPATH : str = './devops/.cred.yaml' # Path to the location of the credential file
+DEFAULT_CRED_FILEPATH : str = './config/.cred.yaml' # Path to the location of the credential file
 
 CONSTANTS_NAMES = ('DEFAULT_TIMEOUT_CONNECTION', 'DEFAULT_NODE_PERIOD', 'DEFAULT_NODE_NAME',
                    'DEFAULT_CRED_FILEPATH')

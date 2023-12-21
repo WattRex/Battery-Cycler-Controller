@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Cu Manager
+Cum Manager
 """
 #######################        MANDATORY IMPORTS         #######################
 
@@ -15,11 +15,9 @@ from typing import List, Dict
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
-from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, Logger
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 
 #######################       LOGGER CONFIGURATION       #######################
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
@@ -41,7 +39,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
     '''
 
     def __init__(self, working_flag : Event, cycle_period : int,
-                 cu_id_file_path : str = './devops/cu_manager/.cu_id') -> None:
+                 cu_id_file_path : str = ) -> None:
         '''
         Initialize the CU manager node.
         '''

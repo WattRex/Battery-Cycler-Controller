@@ -17,7 +17,7 @@ from sqlalchemy import select, text, delete
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 sys.path.append(os.getcwd())
 from system_logger_tool import Logger, SysLogLoggerC, sys_log_logger_get_module_logger
-main_logger = SysLogLoggerC(file_log_levels="devops/db_sync/log_config.yaml",
+main_logger = SysLogLoggerC(file_log_levels="config/db_sync/log_config.yaml",
                             output_sub_folder='tests')
 log: Logger = sys_log_logger_get_module_logger(name="test_db_sync")
 

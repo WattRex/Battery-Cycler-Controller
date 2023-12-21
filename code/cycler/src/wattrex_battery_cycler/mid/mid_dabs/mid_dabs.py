@@ -11,9 +11,7 @@ from typing import List #, Dict
 
 #######################       THIRD PARTY IMPORTS        #######################
 
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels= 'log_config.yaml')
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from scpi_sniffer       import DrvScpiSerialConfC
