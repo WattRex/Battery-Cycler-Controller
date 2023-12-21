@@ -35,7 +35,8 @@ from .detect import DetectorC
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
+class CuManagerNodeC(SysShdNodeC):
     '''
     Cu Manager Class to instanciate a CU Manager Node
     '''
@@ -198,15 +199,16 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         self.process_heartbeat()
         self.process_cycler_deploy_processes()
 
-
     def sync_shd_data(self) -> None:
         '''Sync shared data with the sync node.
         '''
 
-
     def stop(self) -> None:
-        '''Stop the stream .
         '''
+        Stop the stream .
+        '''
+        log.critical("Stopping CU_Manager...")
         self.client_mqtt.close()
+        self.detector.close()
 
 #######################            FUNCTIONS             #######################
