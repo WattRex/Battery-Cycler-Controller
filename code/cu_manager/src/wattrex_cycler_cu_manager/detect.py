@@ -269,6 +269,9 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         return can_id, serial_number, hw_ver
 
     def close(self) -> None:
+        '''
+        Close used ipc channels
+        '''
         ## Closing conections with queues
         if isinstance(self.__tx_can, SysShdIpcChanC):
             self.__tx_can.close()
