@@ -30,6 +30,9 @@ from .cu_broker_client import BrokerClientC
 from .register import get_cu_info
 from .detect import DetectorC
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_CU_ID_PATH
+
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -39,7 +42,7 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
     '''
 
     def __init__(self, working_flag : Event, cycle_period : int,
-                 cu_id_file_path : str = ) -> None:
+                 cu_id_file_path : str = DEFAULT_CU_ID_PATH) -> None:
         '''
         Initialize the CU manager node.
         '''
@@ -203,8 +206,11 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
 
 
     def stop(self) -> None:
-        '''Stop the stream .
         '''
+        Stop the stream .
+        '''
+        log.critical("Stopping CU_Manager...")
         self.client_mqtt.close()
+        self.detector.close()
 
 #######################            FUNCTIONS             #######################

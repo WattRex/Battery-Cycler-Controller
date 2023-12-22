@@ -124,10 +124,6 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.REMOVE_FILTER,
                                         payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
                                                 chan_name=DEFAULT_RX_CAN_NAME)))
-        ## Closing conections with queues
-        self.__tx_can.close()
-        self.__tx_scpi.close()
-        self.__rx_can.terminate()
         return self.det_bms + self.det_epc + self.det_ea + self.det_rs + self.det_flow
 
     def __reset_detected(self) -> None:
@@ -271,3 +267,16 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         # The last bits correspond to the serial number
         serial_number = str(ba2int(msg_bits[24:32]))
         return can_id, serial_number, hw_ver
+
+    def close(self) -> None:
+        '''
+        Close used ipc channels
+        '''
+        ## Closing conections with queues
+        if isinstance(self.__tx_can, SysShdIpcChanC):
+            self.__tx_can.close()
+        if isinstance(self.__tx_scpi, SysShdIpcChanC):
+            self.__tx_scpi.close()
+        if isinstance(self.__rx_can, SysShdIpcChanC):
+            self.__rx_can.terminate()
+        log.critical("Closing channels used by detector")

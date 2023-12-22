@@ -11,11 +11,9 @@ from pickle import dumps, loads
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
-from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, Logger
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 
 #######################       LOGGER CONFIGURATION       #######################
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='../log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
@@ -26,6 +24,9 @@ from wattrex_driver_mqtt import DrvMqttDriverC
 
 #######################          MODULE IMPORTS          #######################
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_CRED_PATH
+
 #######################              ENUMS               #######################
 _REGISTER_TOPIC = '/register'
 _INFORM_TOPIC = '/inform_reg'
@@ -33,7 +34,6 @@ _SUFFIX_TX_DET_DEV = '/detected_dev'
 _SUFFIX_TX_HB = '/heartbeat'
 _SUFFIX_RX_DET = '/req_detect'
 _SUFFIX_RX_LAUNCH = '/launch'
-
 
 
 #######################             CLASSES              #######################
@@ -45,7 +45,7 @@ class BrokerClientC():
     def __init__(self, error_callback : Callable, launch_callback : Callable,\
                 detect_callback : Callable, store_cu_info_cb : Callable) -> None:
         self.mqtt : DrvMqttDriverC = DrvMqttDriverC(error_callback=error_callback,
-                                                    cred_path='./devops/.cred.yaml')
+                                                    cred_path=DEFAULT_CRED_PATH)
         self.__launch_cb : Callable = launch_callback
         self.__detect_cb : Callable = detect_callback
         self.__store_cu_info_cb : Callable = store_cu_info_cb
