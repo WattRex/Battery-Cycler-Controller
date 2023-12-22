@@ -1,32 +1,17 @@
---- #YAML FILE START
+---
+#YAML FILE START
 
 __main__: "DEBUG"
 
-##### app #####
-app.app_man: "DEBUG"
-app.app_diag: "DEBUG"
+##### DB SYNC #####
+wattrex_cycler_db_sync: "INFO"
+db_sync.src.wattrex_cycler_db_sync: "DEBUG"
+##### DRV ######
+scpi_sniffer: "DEBUG"
 
-##### mid #####
-mid.mid_dabs: "DEBUG"
-mid.mid_meas: "DEBUG"
-mid.mid_data: "DEBUG"
-mid.mid_str: "DEBUG"
+##### SYS #####
+system_logger_tool: "ERROR"
+system_shared_tool: "ERROR"
+system_config_tool: "ERROR"
 
-##### drv ######
-wattrex_driver_epc: 'WARNING'
-wattrex_driver_ea: 'INFO'
-wattrex_driver_rs: 'INFO'
-wattrex_driver_pwr: 'INFO'
-wattrex_driver_bk: 'INFO'
-scpi_sniffer: 'INFO'
-can_sniffer: 'INFO'
-
-##### sys #####
-system_shared_tool: "INFO"
-system_config_tool: "INFO"
-system_logger_tool: "INFO"
-
-test_mid_dabs: 'DEBUG'
-file_handlers: {
-  # "log_can" : [ drv.drv_can, drv.drv_epc ],
-}
+file_handlers: {}

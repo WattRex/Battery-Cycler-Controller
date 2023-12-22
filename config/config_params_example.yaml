@@ -13,6 +13,8 @@ wattrex_cycler_cu_manager:
   DEFAULT_DETECT_TIMEOUT      : 2                   # Default time to read asked devices answers
   # Default path to file which stores cu_id
   DEFAULT_CU_ID_PATH          : './config/cu_manager/.cu_id'
+  # Default path to credential file for rabbitmq
+  DEFAULT_CRED_PATH      : './config/.cred.yaml'
 
 wattrex_driver_db:
   DEFAULT_CRED_FILEPATH: '~/roberto/cycler_controler/config/.cred.yaml'
@@ -20,7 +22,7 @@ wattrex_driver_db:
 wattrex_driver_epc:
   DEFAULT_MAX_HS_VOLT             : 14100         # Max high side voltage the epc has as hardware limits
   DEFAULT_MIN_HS_VOLT             : 5300          # Min high side voltage the epc has as hardware limits
-  DEFAULT_MAX_LS_VOLT             : 5100          # Max low side voltage the epc has as hardware limits
+  DEFAULT_MAX_LS_VOLT             : 9000 #5100          # Max low side voltage the epc has as hardware limits
   DEFAULT_MIN_LS_VOLT             : 400           # Min low side voltage the epc has as hardware limits
   DEFAULT_MAX_LS_CURR             : 15500         # Max low side current the epc has as hardware limits
   DEFAULT_MIN_LS_CURR             : -15500        # Min low side current the epc has as hardware limits
@@ -68,10 +70,14 @@ can_sniffer:
   DEFAULT_IFACE_CHAN_NAME     : 'can0' # Name of the CAN interface channel
 
 ################### CYCLER ###################
+app_man:
+  DEFAULT_PERIOD_CYCLE_MAN    : 300 # Express in milliseconds
+  DEFAULT_CS_MNG_NODE_NAME    : 'MANAGER'
+  DEFAULT_PERIOD_WAIT_EXP     : 10 # Periods of the cycle manager
 
 mid_str:
   DEFAULT_TIMEOUT_CONNECTION  : 5
-  DEFAULT_NODE_PERIOD         : 250 # Express in milliseconds
+  DEFAULT_NODE_PERIOD         : 200 # Express in milliseconds
   DEFAULT_NODE_NAME           : 'STR'
   DEFAULT_CRED_FILEPATH       : './config/.cred.yaml' # Path to the location of the credential file
 
@@ -89,7 +95,3 @@ wattrex_cycler_db_sync:
   DEFAULT_COMP_UNIT           : 2
   DEFAULT_NODE_PERIOD         : 500 # ms # Period of the node
 
-app_man:
-  DEFAULT_PERIOD_CYCLE_MAN    : 800 # Express in milliseconds
-  DEFAULT_CS_MNG_NODE_NAME    : 'MANAGER'
-  DEFAULT_PERIOD_WAIT_EXP     : 10 # Periods of the cycle manager
