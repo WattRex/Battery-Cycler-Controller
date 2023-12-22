@@ -108,15 +108,20 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     '''Instanciates an object enable to measure but are also power devices.
     '''
     def __init__(self, device: list [CyclerDataDeviceC]) -> None:
-        self.device_type: CyclerDataDeviceTypeE = device[0].device_type
-        self._dev_db_id: int = device[0].dev_db_id
+        pwr_devices: List[CyclerDataDeviceC] = device.copy()
+        for dev in pwr_devices:
+            log.critical(f"Devices attr: {dev.__dict__}")
+            if not dev.is_control:
+                pwr_devices.remove(dev)
+        self.device_type: CyclerDataDeviceTypeE = pwr_devices[0].device_type
+        self._dev_db_id: int = pwr_devices[0].dev_db_id
         ## Commented for first version
         # self.bisource   : DrvEaDeviceC | None = None
         # self.source     : DrvEaDeviceC | None = None
         # self.load       : DrvRsDeviceC | None = None
         self.epc        : DrvEpcDeviceC| None = None
         try:
-            for dev in device:
+            for dev in pwr_devices:
                 if dev.device_type == CyclerDataDeviceTypeE.EPC:
                     can_id= 0
                     if not dev.iface_name.isnumeric(): # isinstance(dev.iface_name, str),
@@ -218,12 +223,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
     """Instanciates an object enable to control the devices.
     """
     def _init__(self, device: List[CyclerDataDeviceC])->None:
-        pwr_devices: List[CyclerDataDeviceC] = device.copy()
-        for dev in pwr_devices:
-            if dev.device_type not in (CyclerDataDeviceTypeE.EPC, CyclerDataDeviceTypeE.SOURCE,
-                                   CyclerDataDeviceTypeE.LOAD, CyclerDataDeviceTypeE.BISOURCE):
-                pwr_devices.remove(dev)
-        super().__init__(pwr_devices)
+        super().__init__(device)
 
     def set_cv_mode(self,volt_ref: int, limit_ref: int,
                     limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:

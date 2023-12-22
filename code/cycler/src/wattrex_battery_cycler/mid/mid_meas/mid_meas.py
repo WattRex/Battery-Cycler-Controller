@@ -52,8 +52,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self.working_flag = working_flag
         self.__extra_meter: List[MidDabsExtraMeterC] = []
         for dev in devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
-                                CyclerDataDeviceTypeE.FLOW):
+            if not dev.is_control:
                 self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
         self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
