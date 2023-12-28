@@ -160,6 +160,7 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
               None.
         """
         ## Check if is initialized to none
+        self.is_control = False
         if device_type is not None:
             device_type = CyclerDataDeviceTypeE(device_type)
         self.dev_db_id : int|None = dev_db_id
@@ -170,6 +171,19 @@ class CyclerDataDeviceC: # pylint: disable=too-many-instance-attributes
         self.iface_name :str|int| None = iface_name
         self.mapping_names : Dict| None = mapping_names
         self.link_conf: CyclerDataLinkConfC|None = link_configuration
+
+    def check_power_device(self) -> None:
+        """
+        Checks if the device is a power device.
+        If the device type is one of the power device types (EPC, LOAD, SOURCE, BISOURCE),
+        sets the is_control attribute to True.
+        """
+        list_pwr_devices: list[CyclerDataDeviceTypeE]= [CyclerDataDeviceTypeE.EPC,
+                                    CyclerDataDeviceTypeE.LOAD,
+                    CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.BISOURCE]
+        if self.device_type in list_pwr_devices:
+            self.is_control = True
+
 
 class CyclerDataCyclerStationC:
     '''

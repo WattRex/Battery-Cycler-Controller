@@ -2,12 +2,13 @@
 
 DEVOPS_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" && pwd )
 REPO_ROOT_DIR=$( cd "${DEVOPS_DIR}/../" && pwd)
-ENV_FILE=.cred.env
+CONFIG_DIR="${REPO_ROOT_DIR}/config"
+ENV_FILE=".cred.env"
 DOCKER_FOLDER=./
 DOCKER_COMPOSE=docker-compose.yml
 CYCLER_SRC_DIR="${REPO_ROOT_DIR}/code/cycler"
 INT_RE='^[0-9]+$'
-DOCKER_COMPOSE_ARGS="-f ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${DEVOPS_DIR}/${ENV_FILE}"
+DOCKER_COMPOSE_ARGS="-f ${DEVOPS_DIR}/${DOCKER_FOLDER}/${DOCKER_COMPOSE} --env-file ${CONFIG_DIR}/${ENV_FILE}"
 
 ARG1=$1
 ARG2=$2
@@ -62,7 +63,7 @@ check_sniffer () {
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up can sniffer"
             systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}
-            systemctl --user set-environment CONFIG_FILE_PATH=${DEVOPS_DIR}/config_params.yaml
+            systemctl --user set-environment CONFIG_FILE_PATH=${CONFIG_DIR}/config_params.yaml
             systemctl --user enable ${DEVOPS_DIR}/can/can_sniffer.service
             systemctl --user start can_sniffer.service
         else
@@ -75,7 +76,7 @@ check_sniffer () {
         if ! [[ $? -eq 0 ]]; then
             echo "Setting up scpi sniffer"
             systemctl --user set-environment SRC_PATH=${DEVOPS_DIR}
-            systemctl --user set-environment CONFIG_FILE_PATH=${DEVOPS_DIR}/config_params.yaml
+            systemctl --user set-environment CONFIG_FILE_PATH=${CONFIG_DIR}/config_params.yaml
             systemctl --user enable ${DEVOPS_DIR}/scpi/scpi_sniffer.service
             systemctl --user start scpi_sniffer.service
         else
@@ -107,7 +108,7 @@ force_stop () {
 
 
 # MAIN
-if ! [ -f "${DEVOPS_DIR}/${ENV_FILE}" ]; then
+if ! [ -f "${CONFIG_DIR}/${ENV_FILE}" ]; then
     >&2 echo "[ERROR] .cred.env file not found"
     exit 2
 fi
@@ -123,16 +124,22 @@ else
 fi
 
 # Check if the required files are present.
-required_file_list=("docker-compose.yml" ".cred.env" ".cred.yaml" "config_params.yaml"
-                    "scpi/log_config.yaml" "cycler/log_config.yaml" "cu_manager/log_config.yaml"
-                    "can/log_config.yaml" "cache_db/createCacheCyclerTables.sql"
-                    "db_sync/log_config.yaml" )
-for file in ${required_file_list}
+required_file_list=("${DEVOPS_DIR}/docker-compose.yml"
+                    "${DEVOPS_DIR}/cache_db/createCacheCyclerTables.sql"
+                    "${CONFIG_DIR}/.cred.env"
+                    "${CONFIG_DIR}/.cred.yaml"
+                    "${CONFIG_DIR}/config_params.yaml"
+                    "${CONFIG_DIR}/scpi/log_config.yaml"
+                    "${CONFIG_DIR}/cycler/log_config.yaml"
+                    "${CONFIG_DIR}/cu_manager/log_config.yaml"
+                    "${CONFIG_DIR}/can/log_config.yaml"
+                    "${CONFIG_DIR}/db_sync/log_config.yaml" )
+
+for file_path in ${required_file_list}
 do
-    file_path=${DEVOPS_DIR}/${file}
     if [ ! -f ${file_path} ]; then
-    echo "${file_path} not found"
-    exit 1
+        echo "${file_path} not found"
+        exit 1
     fi
 done
 

@@ -6,14 +6,17 @@ __main__: "INFO"
 
 ##### DEV ######
 wattrex_cycler_cu_manager: "DEBUG"
-src.wattrex_cycler_cu_manager: "DEBUG"
+cu_manager.src.wattrex_cycler_cu_manager: "DEBUG"
 
 ##### DRV ######
-drv_mqtt: "DEBUG"
+wattrex_driver_mqtt: "ERROR"
+can_sniffer: "ERROR"
+scpi_sniffer: "ERROR"
 
 ##### SYS #####
 sys_abs.sys_conf: "ERROR"
 system_logger_tool: "ERROR"
 system_shared_tool: "ERROR"
+system_config_tool: "ERROR"
 
 file_handlers: {}

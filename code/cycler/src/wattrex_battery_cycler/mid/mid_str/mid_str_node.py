@@ -85,7 +85,7 @@ class MidStrNodeC(SysShdNodeC): #pylint: disable= too-many-instance-attributes
         '''
         #Check which type of command has been received and matchs the payload type
         if command.cmd_type == MidStrReqCmdE.GET_NEW_EXP:
-            log.info('Getting new experiment info from database')
+            log.debug('Getting new experiment info from database')
             exp_info, battery_info, profile_info = self.db_iface.get_start_queued_exp()
             if exp_info is not None:
                 self.__actual_exp_id = exp_info.exp_id
