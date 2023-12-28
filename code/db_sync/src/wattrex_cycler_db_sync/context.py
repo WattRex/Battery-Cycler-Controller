@@ -23,7 +23,7 @@ from system_config_tool import sys_conf_update_config_params
 
 ######################             CONSTANTS              ######################
 # For further information check out README.md
-DEFAULT_CRED_FILEPATH : str = 'devops/.cred.yaml' # Max number of allowed message per chan
+DEFAULT_CRED_FILEPATH : str = 'config/.cred.yaml' # Max number of allowed message per chan
 DEFAULT_SYNC_NODE_NAME: str = 'SYNC'
 DEFAULT_COMP_UNIT: int = 1
 DEFAULT_NODE_PERIOD: int = 200 # ms # Period of the node

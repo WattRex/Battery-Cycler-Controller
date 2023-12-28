@@ -17,14 +17,15 @@ from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, 
 #######################       LOGGER CONFIGURATION       #######################
 CS_ID = os.getenv("CSID")
 if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./devops/cycler/log_config.yaml',
+    cycler_logger = SysLogLoggerC(file_log_levels='./config/cycler/log_config.yaml',
                                   output_sub_folder=f'cycler_{CS_ID}')
 log: Logger = sys_log_logger_get_module_logger(__name__)
-log.critical(f'CS_ID: {CS_ID}')
+log.info(f'CS_ID: {CS_ID}')
 
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.getcwd()+'/code/cycler/')
-from src.wattrex_battery_cycler.app.app_man import AppManNodeC
+# sys.path.append(os.path.dirname(__file__)+'/../../code/')
+# from cycler.src.wattrex_battery_cycler.app.app_man import AppManNodeC
+from wattrex_battery_cycler.app.app_man import AppManNodeC
 
 #######################          PROJECT IMPORTS         #######################
 

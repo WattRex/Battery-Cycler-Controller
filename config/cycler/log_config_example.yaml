@@ -1,0 +1,37 @@
+---
+#YAML FILE START
+APP.APP_MODULE: "CRITICAL" #APP/APP_MODULE/APP_EXAMPLE.py
+test_mid_dabs: "DEBUG"
+
+__main__: "INFO"
+
+##### DEV ######
+cu_broker_client: "DEBUG"
+cu_manager: "DEBUG"
+detect: "INFO"
+register: "DEBUG"
+
+##### DRV ######
+wattrex_driver_epc: "ERROR"
+wattrex_driver_db: "ERROR"
+wattrex_driver_base : "ERROR"
+wattrex_driver_bms: "ERROR"
+wattrex_driver_flow : "ERROR"
+can_sniffer: "INFO"
+scpi_sniffer: "ERROR"
+
+##### SYS #####
+sys_abs.sys_conf: "ERROR"
+system_logger_tool: "ERROR"
+system_shared_tool: "INFO"
+system_config_tool: "ERROR"
+
+##### CYCLER #####
+cycler.src.wattrex_battery_cycler.app.app_man: "INFO"
+wattrex_cycler_datatypes.cycler_data: "INFO"
+mid.mid_str: "INFO"
+mid.mid_dabs  : "INFO"
+mid.mid_meas  : "INFO"
+mid.mid_pwr   : "INFO"
+
+file_handlers: {}

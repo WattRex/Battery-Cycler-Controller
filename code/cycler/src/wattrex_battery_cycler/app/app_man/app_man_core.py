@@ -246,6 +246,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
             if self.state == AppManCoreStatusE.GET_EXP:
                 ## Wait for cs status to continue
                 if self.__get_exp_status is _AppManCoreGetExpStatusE.GET_EXP:
+                    log.info("Searching for new experiment")
                     self.__fetch_new_exp()
                     self.__request_cs_status()
                     self.__get_exp_status = _AppManCoreGetExpStatusE.WAIT_CS
@@ -288,7 +289,7 @@ class AppManCoreC: #pylint: disable=too-many-instance-attributes
                 log.debug("Executing experiment")
                 self.__execute_experiment()
                 ## Check if the experiment has finish and try to get the next one
-                log.debug(f"Experiment status: {self.exp_status}")
+                log.info(f"Experiment status: {self.exp_status}")
                 if self.exp_status in (CyclerDataExpStatusE.FINISHED,
                                         CyclerDataExpStatusE.ERROR):
                     self.experiment = None

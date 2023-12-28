@@ -14,7 +14,7 @@ services:
     environment:
       TZ: Europe/Berlin
     env_file:
-      - ./.cred.env
+      - ../config/.cred.env
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u${MARIADB_ROOT_USER}", "-p${MARIADB_ROOT_PASSWORD}"]
       interval: 10s
@@ -36,10 +36,10 @@ services:
     # user: ${USER_ID}:${GROUP_ID}
     ipc: host
     volumes:
-      - ./.cred.yaml:/cycler/devops/.cred.yaml
-      - ./cycler/log_config.yaml:/cycler/devops/cycler/log_config.yaml
+      - ../config/.cred.yaml:/cycler/config/.cred.yaml
+      - ../config/cycler/log_config.yaml:/cycler/config/cycler/log_config.yaml
       - ../log:/cycler/log
-      - ./config_params.yaml:/cycler/devops/config_params.yaml
+      - ../config/config_params.yaml:/cycler/config/config_params.yaml
     networks:
       - wattrex-net
     depends_on:
@@ -61,8 +61,8 @@ services:
     ipc: host
     volumes:
       - ./db_sync/run_db_sync.py:/cycler/devops/db_sync/run_db_sync.py
-      - ./.cred.yaml:/cycler/devops/.cred.yaml
-      - ./db_sync/log_config.yaml:/cycler/devops/db_sync/log_config.yaml
+      - ../config/.cred.yaml:/cycler/config/.cred.yaml
+      - ../config/db_sync/log_config.yaml:/cycler/config/db_sync/log_config.yaml
       - ../log:/cycler/log
     networks:
       - wattrex-net

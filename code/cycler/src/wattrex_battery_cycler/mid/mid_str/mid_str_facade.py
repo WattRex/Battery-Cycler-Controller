@@ -86,7 +86,6 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             filter( DrvDbMasterExperimentC.Status == DrvDbExpStatusE.QUEUED.value,
             DrvDbMasterExperimentC.CSID == self.cs_id).order_by(
                 DrvDbMasterExperimentC.DateCreation.asc()).all()
-        log.critical(f"Experiment fetched: {exp_result}")
         if len(exp_result) != 0:
             exp_result: DrvDbMasterExperimentC = exp_result[0]
             exp : CyclerDataExperimentC = CyclerDataExperimentC()
@@ -106,7 +105,6 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             log.debug(f"Experiment fetched: {exp.__dict__}, {battery.__dict__}, {profile.__dict__}")
         else:
             log.debug("No experiment found")
-            log.info(f"No experiment found {exp_result}")
         return exp, battery, profile
 
     ## All methods that get information will gather the info from the master db
@@ -224,6 +222,7 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             for db_name, att_name in MAPPING_DEV_DB.items():
                 if att_name == "device_type":
                     setattr(device, att_name, CyclerDataDeviceTypeE(getattr(comp_dev_res,db_name)))
+                    device.check_power_device()
                 elif db_name in detected_dev_res.__dict__:
                     setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
@@ -323,7 +322,8 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
             ext_meas.UsedMeasID = key.split('_')[-1]
             ext_meas.MeasID = self.meas_id
             ext_meas.Value = getattr(self.ext_meas,key)
-            self.__cache_db.session.add(ext_meas)
+            if ext_meas.Value is not None:
+                self.__cache_db.session.add(ext_meas)
 
     def turn_cycler_station_deprecated(self, exp_id: int|None) -> None:
         """Method to turn a cycler station to deprecated.

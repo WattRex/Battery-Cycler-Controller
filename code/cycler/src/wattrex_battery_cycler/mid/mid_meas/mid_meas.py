@@ -9,15 +9,13 @@ from typing import List
 from threading import Event
 #######################       THIRD PARTY IMPORTS        #######################
 
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger, Logger
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels= 'log_config.yaml')
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC,
                                 SysShdNodeStatusE)
 from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataGenMeasC,
-            CyclerDataDeviceTypeE, CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC)
+            CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC)
 
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
@@ -54,8 +52,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         self.working_flag = working_flag
         self.__extra_meter: List[MidDabsExtraMeterC] = []
         for dev in devices:
-            if dev.device_type in (CyclerDataDeviceTypeE.BK, CyclerDataDeviceTypeE.BMS,
-                                CyclerDataDeviceTypeE.FLOW):
+            if not dev.is_control:
                 self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
         self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)

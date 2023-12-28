@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Cu Manager
+Cum Manager
 """
 #######################        MANDATORY IMPORTS         #######################
 
@@ -15,11 +15,9 @@ from typing import List, Dict
 #######################       THIRD PARTY IMPORTS        #######################
 
 #######################    SYSTEM ABSTRACTION IMPORTS    #######################
-from system_logger_tool import sys_log_logger_get_module_logger, SysLogLoggerC, Logger
+from system_logger_tool import sys_log_logger_get_module_logger, Logger
 
 #######################       LOGGER CONFIGURATION       #######################
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./log_config.yaml')
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
@@ -32,16 +30,20 @@ from .cu_broker_client import BrokerClientC
 from .register import get_cu_info
 from .detect import DetectorC
 
+######################             CONSTANTS              ######################
+from .context import DEFAULT_CU_ID_PATH
+
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
+class CuManagerNodeC(SysShdNodeC):
     '''
     Cu Manager Class to instanciate a CU Manager Node
     '''
 
     def __init__(self, working_flag : Event, cycle_period : int,
-                 cu_id_file_path : str = './devops/cu_manager/.cu_id') -> None:
+                 cu_id_file_path : str = DEFAULT_CU_ID_PATH) -> None:
         '''
         Initialize the CU manager node.
         '''
@@ -198,15 +200,16 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         self.process_heartbeat()
         self.process_cycler_deploy_processes()
 
-
     def sync_shd_data(self) -> None:
         '''Sync shared data with the sync node.
         '''
 
-
     def stop(self) -> None:
-        '''Stop the stream .
         '''
+        Stop the stream .
+        '''
+        log.critical("Stopping CU_Manager...")
         self.client_mqtt.close()
+        self.detector.close()
 
 #######################            FUNCTIONS             #######################

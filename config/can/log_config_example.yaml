@@ -1,0 +1,14 @@
+---
+#YAML FILE START
+
+__main__: "DEBUG"
+
+##### DRV ######
+can_sniffer: "DEBUG"
+
+##### SYS #####
+sys_abs.sys_conf: "ERROR"
+system_logger_tool: "ERROR"
+system_shared_tool: "WARNING"
+
+file_handlers: {}

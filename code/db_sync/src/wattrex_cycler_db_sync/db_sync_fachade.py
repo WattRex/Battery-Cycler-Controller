@@ -15,9 +15,7 @@ import os
 
 #######################      SYSTEM ABSTRACTION IMPORTS  #######################
 path.append(os.getcwd())
-from system_logger_tool import SysLogLoggerC, sys_log_logger_get_module_logger # pylint: disable=wrong-import-position
-if __name__ == '__main__':
-    cycler_logger = SysLogLoggerC(file_log_levels='./log_config.yaml')
+from system_logger_tool import sys_log_logger_get_module_logger # pylint: disable=wrong-import-position
 log = sys_log_logger_get_module_logger(__name__)
 
 #######################          PROJECT IMPORTS         #######################
