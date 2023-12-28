@@ -23,7 +23,7 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 log.info(f'CS_ID: {CS_ID}')
 
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.path.dirname(__file__)+'/../../code/')
+# sys.path.append(os.path.dirname(__file__)+'/../../code/')
 # from cycler.src.wattrex_battery_cycler.app.app_man import AppManNodeC
 from wattrex_battery_cycler.app.app_man import AppManNodeC
 

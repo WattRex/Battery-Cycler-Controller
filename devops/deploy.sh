@@ -19,8 +19,9 @@ export GROUP_ID=$(id -g)
 
 initial_deploy () {
     force_stop
-    python3 -m pip install can-sniffer
-    python3 -m pip install SCPI-sniffer
+    python3 -m pip install --upgrade can-sniffer
+    python3 -m pip install --upgrade SCPI-sniffer
+    python3 -m pip install --upgrade wattrex-cycler-cu-manager
     mkdir -p "${REPO_ROOT_DIR}/log"
 
     docker compose ${DOCKER_COMPOSE_ARGS} up cache_db db_sync -d
@@ -34,7 +35,7 @@ instance_new_cycler () {
     check_sniffer "scpi"
     export CYCLER_TARGET=cycler_prod
 
-    docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
+    #docker compose ${DOCKER_COMPOSE_ARGS} build --build-arg UPDATE_REQS=$(date +%s) cycler
     docker compose ${DOCKER_COMPOSE_ARGS} run -d -e CSID=${1} --name wattrex_cycler_node_${1} cycler
 }
 
