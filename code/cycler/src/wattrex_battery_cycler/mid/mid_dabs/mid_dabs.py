@@ -110,7 +110,6 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
     def __init__(self, device: list [CyclerDataDeviceC]) -> None:
         pwr_devices: List[CyclerDataDeviceC] = device.copy()
         for dev in pwr_devices:
-            log.critical(f"Devices attr: {dev.__dict__}")
             if not dev.is_control:
                 pwr_devices.remove(dev)
         self.device_type: CyclerDataDeviceTypeE = pwr_devices[0].device_type
