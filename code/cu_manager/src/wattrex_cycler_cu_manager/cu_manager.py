@@ -36,7 +36,8 @@ from .context import DEFAULT_CU_ID_PATH
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
-class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
+class CuManagerNodeC(SysShdNodeC):
     '''
     Cu Manager Class to instanciate a CU Manager Node
     '''
@@ -199,11 +200,9 @@ class CuManagerNodeC(SysShdNodeC):  # pylint: disable=too-many-instance-attribut
         self.process_heartbeat()
         self.process_cycler_deploy_processes()
 
-
     def sync_shd_data(self) -> None:
         '''Sync shared data with the sync node.
         '''
-
 
     def stop(self) -> None:
         '''

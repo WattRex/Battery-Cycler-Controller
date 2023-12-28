@@ -20,7 +20,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 #######################          MODULE IMPORTS          #######################
-sys.path.append(os.path.dirname(__file__)+'/../../code')
+#sys.path.append(os.path.dirname(__file__)+'/../../code')
 # from cu_manager.src.wattrex_cycler_cu_manager import CuManagerNodeC
 from wattrex_cycler_cu_manager import CuManagerNodeC
 
