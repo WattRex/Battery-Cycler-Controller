@@ -24,7 +24,7 @@ First of all, you need to launch the script with the following command. This com
 ```
 To launch CU MANAGER node, inside the folder of the repository:
 ```
-export CONFIG_FILE_PATH=devops/config_params.yaml
+export CONFIG_FILE_PATH=config/config_params.yaml
 pip install wattrex-battery-cycler-cu-manager
 python3 /devops/cu_manager/run_cu_node.py
 ```
