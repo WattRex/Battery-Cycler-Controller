@@ -26,7 +26,7 @@ To launch CU MANAGER node, inside the folder of the repository:
 ```
 export CONFIG_FILE_PATH=config/config_params.yaml
 pip install wattrex-cycler-cu-manager
-python3 /devops/cu_manager/run_cu_node.py
+python3 devops/cu_manager/run_cu_node.py
 ```
 To deploy a battery cycler instance, you need to launch the script with the following command changing the _<cycler_station_id>_ with the id of the station you want to deploy:
 ```
