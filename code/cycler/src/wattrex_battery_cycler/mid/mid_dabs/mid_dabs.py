@@ -222,8 +222,9 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                 status.pwr_mode = CyclerDataPwrModeE(res_source.mode.value)
             else:
                 gen_meas.voltage = res_load.voltage
-                gen_meas.current = res_load.current
-                gen_meas.power   = res_load.power
+                # The current is negative because the load is consuming power
+                gen_meas.current = res_load.current*-1
+                gen_meas.power   = res_load.power*-1
                 status.pwr_mode = CyclerDataPwrModeE(res_load.mode.value)
             if self.mapping_load is not None:
                 for key in self.mapping_load.keys():
