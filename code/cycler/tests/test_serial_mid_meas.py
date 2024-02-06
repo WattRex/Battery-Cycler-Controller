@@ -25,6 +25,7 @@ from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataD
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_meas import MidMeasNodeC
+from src.wattrex_battery_cycler.mid.mid_dabs import MidDabsPwrDevC
 
 #######################              CLASS               #######################
 
@@ -42,6 +43,7 @@ class TestChannels:
             frame ([type]): [description]
         """
         log.critical(msg='You pressed Ctrl+C! Stopping test...')
+        self.load_source.close()
         self._meas_working_flag.clear()
         sleep(2)
         # self._can_working_flag.clear()
@@ -93,38 +95,22 @@ class TestChannels:
                         'baudrate':9600, 'timeout':1, 'write_timeout':1},
             'load':{'port': '/dev/wattrex/loads/RS_79E047AE41D5', 'separator':'\n',
                         'baudrate':115200, 'timeout':1, 'write_timeout':1}
-        }
+            }
         devices: List[CyclerDataDeviceC] = []
-        # request = ['EPC']
-        if set(['SOURCE-LOAD']).issubset(request.param):
-            test_load_info = CyclerDataDeviceC(dev_db_id= 0, model = 'b',
-                        manufacturer= 'RS', device_type= CyclerDataDeviceTypeE.LOAD,
-                        iface_name= conf_param['load']['port'],
-                        link_configuration= CyclerDataLinkConfC(**conf_param['load']),
-                        mapping_names= {'voltage': 1, 'current': 2, 'power': 3})
-            test_load_info.check_power_device()
-            test_source_info = CyclerDataDeviceC(dev_db_id= 1, model = 'b',
-                                    manufacturer= 'EA', device_type= CyclerDataDeviceTypeE.SOURCE,
-                                    iface_name= conf_param['source']['port'],
-                                    link_configuration= CyclerDataLinkConfC(**conf_param['source']),
-                                    mapping_names= {'voltage': 4, 'current': 5, 'power': 6})
-            test_source_info.check_power_device()
-            devices: List[CyclerDataDeviceC] = [test_source_info, test_load_info]
-        elif {'EPC'} <= conf_param.keys():
-            conf_param_epc = conf_param[next(iter(conf_param))]
-            # self._can_working_flag = Event() #pylint: disable= attribute-defined-outside-init
-            # self._can_working_flag.set()
-            # can = DrvCanNodeC(tx_buffer_size= 100, working_flag = self._can_working_flag,
-            #                     cycle_period= 50)
-            # can.start()
-            # sleep(2)
-            conf_param_epc['device_type'] = CyclerDataDeviceTypeE(conf_param_epc['device_type'])
-            devices: List[CyclerDataDeviceC] = [CyclerDataDeviceC(**conf_param_epc)]
-        ### ADD EXTRA METERS
-        if {'BMS'} <= conf_param.keys():
-            conf_param = conf_param['BMS']
-            conf_param['device_type'] = CyclerDataDeviceTypeE(conf_param['device_type'])
-            devices.append(CyclerDataDeviceC(**conf_param))
+        test_load_info = CyclerDataDeviceC(dev_db_id= 0, model = 'b',
+                                manufacturer= 'RS', device_type= CyclerDataDeviceTypeE.LOAD,
+                                iface_name= conf_param['load']['port'],
+                                link_configuration= CyclerDataLinkConfC(**conf_param['load']),
+                                mapping_names= {'voltage': 1, 'current': 2, 'power': 3})
+        test_load_info.check_power_device()
+        test_source_info = CyclerDataDeviceC(dev_db_id= 1, model = 'b',
+                                manufacturer= 'EA', device_type= CyclerDataDeviceTypeE.SOURCE,
+                                iface_name= conf_param['source']['port'],
+                                link_configuration= CyclerDataLinkConfC(**conf_param['source']),
+                                mapping_names= {'voltage': 4, 'current': 5, 'power': 6})
+        test_source_info.check_power_device()
+        devices: List[CyclerDataDeviceC] = [test_source_info, test_load_info]
+        self.load_source = MidDabsPwrDevC(device=[test_load_info, test_source_info])
         log.info(msg=f"Devices: {devices}")
         tags = CyclerDataMergeTagsC(status_attrs= [],
                                     gen_meas_attrs= ['instr_id'],
@@ -138,38 +124,27 @@ class TestChannels:
                                      shared_status = all_status,
                                      working_flag = self._meas_working_flag, devices = devices,
                                      excl_tags= tags)
-        ext_meas_list= ['hs_voltage_1', 'temp_body_2', 'temp_anod_3', 'temp_amb_4', 'vcell1_1',
-                'vcell2_2', 'vcell3_3', 'vcell4_4', 'vcell5_5', 'vcell6_6', 'vcell7_7', 'vcell8_8',
-                'vcell9_9', 'vcell10_10', 'vcell11_11', 'vcell12_12', 'vstack_13', 'temp1_14',
-                'temp2_15', 'temp3_16', 'temp4_17', 'pres1_18', 'pres2_19']
         try:
             mid_meas_node.start()
             i=0
             while mid_meas_node.status is not SysShdNodeStatusE.OK:
                 sleep(1)
+            self.load_source.set_cc_mode(-100)
             while i<10:
                 tic = time()
                 log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
                 # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
                 data_ext = ext_meas.read()
-                epc_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in ext_meas_list[0:4]]
-                log.info(f"Measuring: external measures epc=   {epc_ext}")
-                bms_ext = [f"{attr}: {data_ext.__dict__[attr]}"  for attr in ext_meas_list[4:]]
-                log.info(f"Measuring: external measures bms=   {bms_ext}")
+                log.info(f"Measuring: external measures =   {data_ext.__dict__}")
                 data_status = all_status.read()
                 log.info(f"Status epc:{data_status.pwr_dev.name}")
-                att_name = [attr for attr in data_status.__dict__.keys() if 'extra_meter' in attr]
-                if len(att_name)>0:
-                    log.info(f"Status bms:{getattr(data_status, att_name[0]).name}")
-                if data_status.pwr_dev.error_code != 0:
-                    log.error((f"Reading error {data_status.pwr_dev.name}, "
-                              f"code: {data_status.pwr_dev.error_code}"))
                 while time()-tic <= 1:
                     pass
                 i+=1
+            self.load_source.disable()
         except Exception as err:
             log.error(msg=f"Exception: {err}")
-
+        self.load_source.close()
         self._meas_working_flag.clear()
         sleep(2)
         # self._can_working_flag.clear()
@@ -181,7 +156,7 @@ class TestChannels:
         """
         signal(SIGINT, self.signal_handler)
 
-    @mark.parametrize("set_environ", [["EPC"]], indirect=["set_environ"])
+    @mark.parametrize("set_environ", [["SERIAL"]], indirect=["set_environ"])
     def test_normal_op(self, config, set_environ) -> None: #pylint: disable= unused-argument
         """Test the machine status .
 
