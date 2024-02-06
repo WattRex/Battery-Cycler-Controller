@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import List
 #######################         GENERIC IMPORTS          #######################
 from threading import Event
+from math import ceil
 #######################       THIRD PARTY IMPORTS        #######################
 
 from system_logger_tool import sys_log_logger_get_module_logger, Logger
@@ -15,13 +16,13 @@ log: Logger = sys_log_logger_get_module_logger(__name__)
 from system_shared_tool import (SysShdSharedObjC, SysShdNodeC, SysShdNodeParamsC, SysShdErrorC,
                                 SysShdNodeStatusE)
 from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataGenMeasC,
-            CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC)
+            CyclerDataExtMeasC, CyclerDataAllStatusC, CyclerDataMergeTagsC, CyclerDataDeviceTypeE)
 
 #######################          MODULE IMPORTS          #######################
 from ..mid_dabs import MidDabsPwrMeterC, MidDabsExtraMeterC #pylint: disable= relative-beyond-top-level
 #######################          PROJECT IMPORTS         #######################
 ######################             CONSTANTS              ######################
-from .context import DEFAULT_NODE_PERIOD, DEFAULT_NODE_NAME
+from .context import DEFAULT_NODE_PERIOD, DEFAULT_NODE_NAME, DEFAULT_SERIAL_PERIOD
 #######################              ENUMS               #######################
 
 #######################             CLASSES              #######################
@@ -47,7 +48,7 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
         - excl_tags: Tags of excluded attributes.
         - meas_params: Node parameters.
         '''
-        super().__init__(name= DEFAULT_NODE_NAME,cycle_period= DEFAULT_NODE_PERIOD,
+        super().__init__(name= DEFAULT_NODE_NAME, cycle_period= DEFAULT_NODE_PERIOD,
                         working_flag= working_flag, node_params= meas_params)
         self.working_flag = working_flag
         self.__extra_meter: List[MidDabsExtraMeterC] = []
@@ -55,6 +56,11 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
             if not dev.is_control:
                 self.__extra_meter.append(MidDabsExtraMeterC(dev))
                 devices.remove(dev)
+        self.__iter_period = -1
+        self.__hyper_period_serial = -1
+        if devices[0].device_type is not CyclerDataDeviceTypeE.EPC:
+            self.__hyper_period_serial = ceil(DEFAULT_SERIAL_PERIOD/DEFAULT_NODE_PERIOD)
+            log.critical(f"Hyper period serial: {self.__hyper_period_serial}")
         self.__pwr_dev: MidDabsPwrMeterC = MidDabsPwrMeterC(devices)
         self.globlal_gen_meas: SysShdSharedObjC = shared_gen_meas
         self.globlal_ext_meas: SysShdSharedObjC = shared_ext_meas
@@ -82,8 +88,17 @@ class MidMeasNodeC(SysShdNodeC): #pylint: disable=too-many-instance-attributes
     def process_iteration(self) -> None:
         """Processes a single iteration.
         """
-        # Update the measurements and status of the devices.
-        self.__pwr_dev.update(self._gen_meas, self._ext_meas, self._all_status)
+        ## If the power device is serial, the measurements will be updated every second,
+        # instead of the period stablished, to not saturate the serial communication.
+        # It is not possible to go faster than 1 second, so the period will be 1 second.
+        if self.__hyper_period_serial > 0:
+            self.__iter_period += 1
+            if self.__iter_period > self.__hyper_period_serial:
+                self.__pwr_dev.update(self._gen_meas, self._ext_meas, self._all_status)
+                self.__iter_period = 0
+        else:
+            # Update the measurements and status of the devices.
+            self.__pwr_dev.update(self._gen_meas, self._ext_meas, self._all_status)
         # Update the measurements and status of the extra devices.
         for dev in self.__extra_meter:
             dev.update(ext_meas= self._ext_meas, status= self._all_status)
