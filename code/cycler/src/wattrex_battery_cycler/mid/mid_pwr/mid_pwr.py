@@ -49,7 +49,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         self.instr_init_time: int = 0
         self.local_gen_meas: CyclerDataGenMeasC = CyclerDataGenMeasC()
         self.local_status: CyclerDataAllStatusC = CyclerDataAllStatusC()
-        self.__last_mode: CyclerDataPwrModeE = CyclerDataPwrModeE.WAIT
+        self.__last_mode: CyclerDataPwrModeE = CyclerDataPwrModeE.DISABLE
         self.__pwr_direction: _MidPwrDirectionE = _MidPwrDirectionE.WAIT
         self.__alarm_callback: Callable = alarm_callback
         self.__limit_active: bool = False
@@ -78,31 +78,25 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         Returns:
             bool: [Return True if the instruction is in the appropriate way otherwise False]
         """
-        inst_limits = True
+        inst_limits = False
+        self.__get_pwr_direction()
         if self.actual_inst.mode is not CyclerDataPwrModeE.CP_MODE:
-            if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
-                if self.actual_inst.limit_ref > (int(time())-self.instr_init_time):
-                    inst_limits = False
-            elif self.__pwr_direction is _MidPwrDirectionE.CHARGE:
+            if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                 if (self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE and
-                        self.actual_inst.limit_ref < self.local_gen_meas.voltage):
-                    inst_limits = False
+                        self.actual_inst.limit_ref <= self.local_gen_meas.voltage):
+                    inst_limits = True
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT and
-                        self.actual_inst.limit_ref < self.local_gen_meas.current):
-                    inst_limits = False
-                elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER and
-                        self.actual_inst.limit_ref < self.local_gen_meas.power):
-                    inst_limits = False
+                        self.actual_inst.limit_ref <= self.pwr_limits.curr_max):
+                    inst_limits = True
             elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                 if (self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE and
-                        self.actual_inst.limit_ref > self.local_gen_meas.voltage):
-                    inst_limits = False
+                        self.actual_inst.limit_ref >= self.pwr_limits.volt_min):
+                    inst_limits = True
                 elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT and
-                        self.actual_inst.limit_ref > self.local_gen_meas.current):
-                    inst_limits = False
-                elif (self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER and
-                        self.actual_inst.limit_ref > self.local_gen_meas.power):
-                    inst_limits = False
+                        self.actual_inst.limit_ref >= self.pwr_limits.curr_min):
+                    inst_limits = True
+            elif self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
+                inst_limits = True
         else:
             log.error("The CP mode is not valid without epc device")
             raise ValueError("The CP mode is not valid without epc device")
@@ -127,20 +121,33 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         """
         if self.actual_inst.instr_id is not None:
             if self.actual_inst.mode is CyclerDataPwrModeE.CV_MODE:
-                self.pwr_dev.set_cv_mode(volt_ref= self.actual_inst.ref,
-                        limit_type= self.actual_inst.limit_type,
-                        limit_ref= self.actual_inst.limit_ref,
-                        actual_voltage= self.local_gen_meas.voltage)
+                if self.pwr_dev.device_type is CyclerDataDeviceTypeE.EPC:
+                    self.pwr_dev.set_cv_mode(volt_ref= self.actual_inst.ref,
+                            limit_type= self.actual_inst.limit_type,
+                            limit_ref= self.actual_inst.limit_ref)
+                else:
+                    self.pwr_dev.set_cv_mode(volt_ref= self.actual_inst.ref,
+                            limit_ref= self.pwr_limits.curr_max,
+                            actual_voltage= self.local_gen_meas.voltage,
+                            actual_current= self.local_gen_meas.current)
             elif self.actual_inst.mode is CyclerDataPwrModeE.CC_MODE:
-                self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
-                                        limit_ref= self.actual_inst.limit_ref,
-                                        limit_type= self.actual_inst.limit_type)
+                if self.pwr_dev.device_type is CyclerDataDeviceTypeE.EPC:
+                    self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
+                                            limit_ref= self.actual_inst.limit_ref,
+                                            limit_type= self.actual_inst.limit_type)
+                else:
+                    self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
+                                        limit_ref= self.pwr_limits.volt_max)
             elif self.actual_inst.mode is CyclerDataPwrModeE.CP_MODE:
                 self.pwr_dev.set_cp_mode(self.actual_inst.ref,
                                         limit_type= self.actual_inst.limit_type,
                                         limit_ref = self.actual_inst.limit_ref)
             elif self.actual_inst.mode is CyclerDataPwrModeE.WAIT:
-                self.pwr_dev.set_wait_mode(time_ref= self.actual_inst.ref)
+                try:
+                    self.pwr_dev.set_wait_mode(time_ref= self.actual_inst.ref)
+                except Exception as err:
+                    log.error(f"Error while setting wait mode: {err}")
+                    raise Exception("Error while setting wait mode") from err
             elif self.actual_inst.mode is CyclerDataPwrModeE.DISABLE:
                 self.pwr_dev.disable()
             else:
@@ -198,6 +205,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
                         status = CyclerDataExpStatusE.RUNNING
                     else:
                         self.actual_inst.instr_id = None
+                        self.__last_mode = CyclerDataPwrModeE.DISABLE
                         status = CyclerDataExpStatusE.FINISHED
                 elif (self.local_status.pwr_mode is not CyclerDataPwrModeE.DISABLE and
                     self.__last_mode is CyclerDataPwrModeE.DISABLE):
@@ -208,31 +216,39 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
 
             ##############################  SERIAL DEVICE CONTROL ##############################
             else:
-                if (self.local_status.pwr_mode is CyclerDataPwrModeE.DISABLE and
+                # Before reading the next instruction,
+                # check if the actual instruction is running
+                log.debug(("Actual mode is instruction mode: "
+                           f"{self.actual_inst.mode is self.local_status.pwr_mode}"))
+                log.debug(f"Actual instr id: {self.actual_inst.instr_id}")
+                if (self.actual_inst.instr_id is not None and
                     self.__last_mode is not CyclerDataPwrModeE.DISABLE):
-                    # Before reading the next instruction,
-                    # check if the actual instruction is running
-                    if (self.actual_inst.mode is self.local_status.pwr_mode and
-                        self.actual_inst.instr_id is not None):
+                    status = CyclerDataExpStatusE.RUNNING
+                    if self.actual_inst.mode is self.local_status.pwr_mode:
                         #Check if the instruction limits has been reached
                         inst_finished = self.__instruction_limit()
-                        self.__last_mode = self.actual_inst.mode
-                        status = CyclerDataExpStatusE.RUNNING
                         if inst_finished:
                             #Check if there are more instructions to read
                             if len(self.all_instructions) > 0:
                                 self.actual_inst = self.all_instructions.pop(0)
-                                log.warning(f"New instruction: {self.actual_inst.__dict__}")
-                                if self.__check_instr_limits():
-                                    self.__apply_instruction()
-                                    self.__last_mode = CyclerDataPwrModeE.DISABLE
-                                    status = CyclerDataExpStatusE.RUNNING
-                                else:
-                                    self.actual_inst.instr_id = None
-                                    status = CyclerDataExpStatusE.ERROR
+                                self.__apply_instruction()
+                                self.__last_mode = self.actual_inst.mode
+                                status = CyclerDataExpStatusE.RUNNING
                             else:
                                 self.actual_inst.instr_id = None
+                                self.__last_mode = CyclerDataPwrModeE.DISABLE
                                 status = CyclerDataExpStatusE.FINISHED
+                else:
+                    #Check if there are more instructions to read
+                    if len(self.all_instructions) > 0:
+                        self.actual_inst = self.all_instructions.pop(0)
+                        self.__apply_instruction()
+                        self.__last_mode = self.actual_inst.mode
+                        status = CyclerDataExpStatusE.RUNNING
+                    else:
+                        self.actual_inst.instr_id = None
+                        self.__last_mode = CyclerDataPwrModeE.DISABLE
+                        status = CyclerDataExpStatusE.FINISHED
         else:
             status = CyclerDataExpStatusE.ERROR
             # TODO: Add alarms callback #pylint: disable= fixme
@@ -254,37 +270,46 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
             if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
                 if self.actual_inst.limit_ref < (int(time_ns()*1e-6)-self.instr_init_time):
                     res = True
+                    # self.pwr_dev.disable()
                     self.__limit_active = False
             # Check if the voltage limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
-                    if self.actual_inst.limit_ref >= self.local_gen_meas.voltage:
+                    if self.actual_inst.limit_ref <= self.local_gen_meas.voltage:
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
-                    if self.actual_inst.limit_ref <= self.local_gen_meas.voltage:
+                    if self.actual_inst.limit_ref >= self.local_gen_meas.voltage:
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
             # Check if the current limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
-                    if self.actual_inst.limit_ref <= self.local_gen_meas.current:
+                    if self.actual_inst.limit_ref >= self.local_gen_meas.current:
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
-                    if self.actual_inst.limit_ref >= self.local_gen_meas.current:
+                    if abs(self.actual_inst.limit_ref) >= abs(self.local_gen_meas.current):
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
             # Check if the power limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                     if self.actual_inst.limit_ref >= self.local_gen_meas.power:
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                     if self.actual_inst.limit_ref <= self.local_gen_meas.power:
+                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
+        if res:
+            log.warning(f"Limit reached: {self.actual_inst.__dict__}")
         return res
 
     def close(self):
