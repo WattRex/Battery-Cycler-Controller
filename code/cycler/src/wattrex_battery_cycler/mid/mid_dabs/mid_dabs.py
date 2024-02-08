@@ -226,10 +226,16 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                 gen_meas.current = res_load.current*-1
                 gen_meas.power   = res_load.power*-1
                 status.pwr_mode = CyclerDataPwrModeE(res_load.mode.value)
+            if res_source.mode.value == 0 and res_load.mode.value == 4:
+                status.pwr_mode = CyclerDataPwrModeE.WAIT
             if self.mapping_load is not None:
                 for key in self.mapping_load.keys():
-                    setattr(ext_meas, key+'_'+str(self.mapping_load[key]),
-                            getattr(res_load, key))
+                    if 'power' in key or 'current' in key:
+                        setattr(ext_meas, key+'_'+str(self.mapping_load[key]),
+                                getattr(res_load, key)*-1)
+                    else:
+                        setattr(ext_meas, key+'_'+str(self.mapping_load[key]),
+                                getattr(res_load, key))
             if self.mapping_source is not None:
                 for key in self.mapping_source.keys():
                     setattr(ext_meas, key+'_'+str(self.mapping_source[key]),
@@ -257,9 +263,10 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
     def _init__(self, device: List[CyclerDataDeviceC])->None:
         super().__init__(device)
 
-    def set_cv_mode(self,volt_ref: int, limit_ref: int = None,
-                    limit_type: CyclerDataPwrLimitE = None,
-                    actual_voltage: int = None) -> CyclerDataDeviceStatusE:
+    def set_cv_mode(self,volt_ref: int, limit_ref: int|None = None,
+                    limit_type: CyclerDataPwrLimitE|None = None,
+                    actual_voltage: int|None = None,
+                    actual_current: int|None = None) -> CyclerDataDeviceStatusE:
         """Set the CV mode with the given voltage and current limit.
         To set cv mode in epc must have argument limit_type
         Args:
@@ -280,9 +287,14 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
         #     except ValueError as err:
         #         res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
-            if actual_voltage is not None and actual_voltage<volt_ref:
+            if ((actual_voltage is not None and actual_voltage<volt_ref) and
+                (actual_current is not None and actual_current>=0)):
                 self.load.disable()
-                self.source.set_cv_mode(volt_ref, limit_ref)
+                try:
+                    self.source.set_cv_mode(volt_ref, limit_ref)
+                except ValueError as err:
+                    log.error(f"Error while setting CV mode {err}")
+                    raise err
             # if limit_ref>0:
             #     self.load.disable()
             #     self.source.set_cv_mode(volt_ref, limit_ref)
@@ -297,8 +309,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                                                     "CV mode."))
         return res
 
-    def set_cc_mode(self, current_ref: int, limit_ref: int= None,
-                    limit_type: CyclerDataPwrLimitE = None) -> CyclerDataDeviceStatusE:
+    def set_cc_mode(self, current_ref: int, limit_ref: int|None= None,
+                    limit_type: CyclerDataPwrLimitE|None = None) -> CyclerDataDeviceStatusE:
         """Set the CC mode with the given current and voltage limit.
             To set cc mode in epc must have argument limit_type
         Args:
@@ -364,7 +376,9 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                 log.error(f"Error while setting WAIT mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         else:
-            self.disable()
+            if self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
+                self.source.set_wait_mode()
+                self.load.set_wait_mode()
         return res
 
     def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
