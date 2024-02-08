@@ -21,7 +21,7 @@ from system_shared_tool import SysShdSharedObjC, SysShdNodeStatusE
 # from can_sniffer import DrvCanNodeC
 from wattrex_cycler_datatypes.cycler_data import (CyclerDataDeviceC, CyclerDataDeviceTypeE,
                 CyclerDataLinkConfC, CyclerDataGenMeasC, CyclerDataExtMeasC, CyclerDataAllStatusC,
-                CyclerDataMergeTagsC)
+                CyclerDataMergeTagsC, CyclerDataPwrModeE)
 #######################          MODULE IMPORTS          #######################
 sys.path.append(os.getcwd()+'/code/cycler/')
 from src.wattrex_battery_cycler.mid.mid_meas import MidMeasNodeC
@@ -129,6 +129,7 @@ class TestChannels:
             i=0
             while mid_meas_node.status is not SysShdNodeStatusE.OK:
                 sleep(1)
+            log.critical(msg="Starting the test, CC MODE")
             self.load_source.set_cc_mode(-100)
             while i<10:
                 tic = time()
@@ -137,11 +138,51 @@ class TestChannels:
                 data_ext = ext_meas.read()
                 log.info(f"Measuring: external measures =   {data_ext.__dict__}")
                 data_status = all_status.read()
-                log.info(f"Status epc:{data_status.pwr_dev.name}")
+                log.info(f"Status pwr:{data_status.pwr_dev.name}")
+                log.info(f"Mode pwr: {data_status.pwr_mode.name}")
                 while time()-tic <= 1:
                     pass
                 i+=1
             self.load_source.disable()
+            while all_status.read().pwr_mode != CyclerDataPwrModeE.DISABLE:
+                tic = time()
+                log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
+                # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
+                data_ext = ext_meas.read()
+                log.info(f"Measuring: external measures =   {data_ext.__dict__}")
+                data_status = all_status.read()
+                log.info(f"Status pwr:{data_status.pwr_dev.name}")
+                log.info(f"Mode pwr: {data_status.pwr_mode.name}")
+                while time()-tic <= 1:
+                    pass
+            log.critical(msg="Starting the test, CV MODE")
+            self.load_source.set_cv_mode(volt_ref= 13000, limit_ref=1000,
+                                        actual_voltage=gen_meas.read().voltage)
+            i=0
+            while i<10:
+                tic = time()
+                log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
+                # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
+                data_ext = ext_meas.read()
+                log.info(f"Measuring: external measures =   {data_ext.__dict__}")
+                data_status = all_status.read()
+                log.info(f"Status pwr:{data_status.pwr_dev.name}")
+                log.info(f"Mode pwr: {data_status.pwr_mode.name}")
+                while time()-tic <= 1:
+                    pass
+                i+=1
+            self.load_source.disable()
+            while all_status.read().pwr_mode != CyclerDataPwrModeE.DISABLE:
+                tic = time()
+                log.info(f"Measuring: {gen_meas.read().voltage}mV and {gen_meas.read().current}mA")
+                # log.info(f"Measuring: hs_voltage =  {ext_meas.read().hs_voltage_1} mV")
+                data_ext = ext_meas.read()
+                log.info(f"Measuring: external measures =   {data_ext.__dict__}")
+                data_status = all_status.read()
+                log.info(f"Status pwr:{data_status.pwr_dev.name}")
+                log.info(f"Mode pwr: {data_status.pwr_mode.name}")
+                while time()-tic <= 1:
+                    pass
         except Exception as err:
             log.error(msg=f"Exception: {err}")
         self.load_source.close()
