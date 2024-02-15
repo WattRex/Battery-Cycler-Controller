@@ -120,6 +120,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         """Function to apply the instruction to the device
         """
         if self.actual_inst.instr_id is not None:
+            log.warning(f"New instruction: {self.actual_inst.__dict__}")
             if self.actual_inst.mode is CyclerDataPwrModeE.CV_MODE:
                 if self.pwr_dev.device_type is CyclerDataDeviceTypeE.EPC:
                     self.pwr_dev.set_cv_mode(volt_ref= self.actual_inst.ref,
@@ -136,8 +137,12 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
                                             limit_ref= self.actual_inst.limit_ref,
                                             limit_type= self.actual_inst.limit_type)
                 else:
-                    self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
+                    if self.actual_inst.ref >= 0:
+                        self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
                                         limit_ref= self.pwr_limits.volt_max)
+                    else:
+                        self.pwr_dev.set_cc_mode(current_ref= self.actual_inst.ref,
+                                        limit_ref= self.pwr_limits.volt_min)
             elif self.actual_inst.mode is CyclerDataPwrModeE.CP_MODE:
                 self.pwr_dev.set_cp_mode(self.actual_inst.ref,
                                         limit_type= self.actual_inst.limit_type,
@@ -270,46 +275,39 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
             if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
                 if self.actual_inst.limit_ref < (int(time_ns()*1e-6)-self.instr_init_time):
                     res = True
-                    # self.pwr_dev.disable()
                     self.__limit_active = False
             # Check if the voltage limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.VOLTAGE:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                     if self.actual_inst.limit_ref <= self.local_gen_meas.voltage:
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                     if self.actual_inst.limit_ref >= self.local_gen_meas.voltage:
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
             # Check if the current limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.CURRENT:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                     if self.actual_inst.limit_ref >= self.local_gen_meas.current:
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                     if abs(self.actual_inst.limit_ref) >= abs(self.local_gen_meas.current):
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
             # Check if the power limit is reached
             elif self.actual_inst.limit_type is CyclerDataPwrLimitE.POWER:
                 if self.__pwr_direction is _MidPwrDirectionE.CHARGE:
                     if self.actual_inst.limit_ref >= self.local_gen_meas.power:
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
                 elif self.__pwr_direction is _MidPwrDirectionE.DISCHARGE:
                     if self.actual_inst.limit_ref <= self.local_gen_meas.power:
-                        # self.pwr_dev.disable()
                         res = True
                         self.__limit_active = False
         if res:
-            log.warning(f"Limit reached: {self.actual_inst.__dict__}")
+            log.debug(f"Limit reached: {self.actual_inst.__dict__}")
         return res
 
     def close(self):
