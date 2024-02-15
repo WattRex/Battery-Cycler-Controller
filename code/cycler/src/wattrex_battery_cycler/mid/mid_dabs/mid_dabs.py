@@ -91,7 +91,7 @@ class MidDabsExtraMeterC:
                 setattr(status, 'extra_meter_'+str(self._dev_db_id), state)
         elif isinstance(self.device, DrvBkDeviceC):
             bk_state = CyclerDataDeviceStatusC(error= res.status.error_code,
-                                                dev_id= self._dev_db_id)
+                                                dev_db_id= self._dev_db_id)
             setattr(status, 'extra_meter_'+str(self._dev_db_id), bk_state)
         for key in self.__mapping_attr.keys():
             setattr(ext_meas, key+'_'+str(self.__mapping_attr[key]),
@@ -202,10 +202,14 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                     else:
                         setattr(ext_meas, key+'_'+str(self.mapping_epc[key]),
                                 getattr(msg_elect_meas, key))
-        # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
-        #     res: DrvEaDataC = self.bisource.get_data()
-        #     status.pwr_dev = CyclerDataDeviceStatusC(error= res.status.error_code,
-        #                                             dev_db_id= self._dev_db_id[0])
+        elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+            res_bisource: DrvEaDataC = self.bisource.get_data()
+            status.pwr_dev = CyclerDataDeviceStatusC(error= res_bisource.status.error_code,
+                                                    dev_db_id= self._dev_db_id[0])
+            gen_meas.voltage = res_bisource.voltage
+            gen_meas.current = res_bisource.current
+            gen_meas.power   = res_bisource.power
+            status.pwr_mode = CyclerDataPwrModeE(res_bisource.mode.value)
         elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
             res_source: DrvEaDataC = self.source.get_data()
             status.source = CyclerDataDeviceStatusC(error= res_source.status.error_code,
@@ -248,8 +252,8 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
         try:
             if self.device_type is CyclerDataDeviceTypeE.EPC:
                 self.epc.close()
-            # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
-            #     self.bisource.close()
+            elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+                self.bisource.close()
             elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
                 self.source.close()
                 self.load.close()
@@ -281,11 +285,11 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             except ValueError as err:
                 log.error(f"Error while setting CV mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
-        # elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
-        #     try:
-        #         self.bisource.set_cv_mode(volt_ref, limit_ref)
-        #     except ValueError as err:
-        #         res = CyclerDataDeviceStatusE.INTERNAL_ERROR
+        elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
+            try:
+                self.bisource.set_cv_mode(volt_ref, limit_ref)
+            except ValueError as err:
+                res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
             if ((actual_voltage is not None and actual_voltage<volt_ref) and
                 (actual_current is not None and actual_current>=0)):
@@ -295,9 +299,6 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
                 except ValueError as err:
                     log.error(f"Error while setting CV mode {err}")
                     raise err
-            # if limit_ref>0:
-            #     self.load.disable()
-            #     self.source.set_cv_mode(volt_ref, limit_ref)
             else:
                 # TODO: upgrade DrvRs to write limits when setting modes
                 # This todo is not possible, the load device doesn't allow to set limits
@@ -325,8 +326,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             except ValueError as err:
                 log.error(f"Error while setting CC mode {err}")
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
-        # elif self.device_type is  CyclerDataDeviceTypeE.BISOURCE:
-        #     self.bisource.set_cc_mode(current_ref, limit_ref)
+        elif self.device_type is  CyclerDataDeviceTypeE.BISOURCE:
+            self.bisource.set_cc_mode(current_ref, limit_ref)
         elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
             if current_ref>0:
                 self.load.disable()
@@ -379,6 +380,8 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             if self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
                 self.source.set_wait_mode()
                 self.load.set_wait_mode()
+            else:
+                self.bisource.set_wait_mode()
         return res
 
     def set_limits(self, ls_volt: tuple | None = None, ls_curr: tuple | None = None,
