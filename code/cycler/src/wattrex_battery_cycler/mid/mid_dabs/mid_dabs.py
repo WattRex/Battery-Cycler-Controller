@@ -68,13 +68,13 @@ class MidDabsExtraMeterC:
             self.device : DrvBmsDeviceC = DrvBmsDeviceC(can_id= can_id)
         elif device.device_type is CyclerDataDeviceTypeE.FLOW:
             self.device : DrvFlowDeviceC = DrvFlowDeviceC(
-                                    config= DrvScpiSerialConfC(port= device.iface_name,
-                                                               **device.link_conf.__dict__),
-                                    rx_chan_name= "RX_SCPI_"+str(self._dev_db_id))
+                            config= DrvScpiSerialConfC(port= device.iface_name,
+                                                        **device.link_conf.__dict__),
+                            rx_chan_name= "RX_SCPI_"+str(self._dev_db_id))
         elif device.device_type is CyclerDataDeviceTypeE.BK:
             self.device : DrvBkDeviceC = DrvBkDeviceC(
-                                              DrvScpiSerialConfC(port= device.iface_name,
-                                                                 **device.link_conf.__dict__))
+                                    DrvScpiSerialConfC(port= device.iface_name,
+                                                        **device.link_conf.__dict__))
 
     def update(self, ext_meas: CyclerDataExtMeasC, status: CyclerDataAllStatusC) -> None:
         """Update the external measurements from bms or bk data.
@@ -144,19 +144,19 @@ class MidDabsPwrMeterC: #pylint: disable= too-many-instance-attributes
                         temp_en = True, temp_period = DEFAULT_PERIOD_TEMP_MEAS)
                 elif dev.device_type is CyclerDataDeviceTypeE.SOURCE:
                     self.source : DrvEaDeviceC = DrvEaDeviceC(
-                                              DrvScpiSerialConfC(port= dev.iface_name,
-                                                                 **dev.link_conf.__dict__))
+                                    DrvScpiSerialConfC(port= dev.iface_name,
+                                                        **dev.link_conf.__dict__))
                     self.mapping_source = dev.mapping_names
                 elif dev.device_type is CyclerDataDeviceTypeE.LOAD:
                     # TODO: Update SCPI not needing handler
                     self.load : DrvRsDeviceC = DrvRsDeviceC(
-                                              DrvScpiSerialConfC(port= dev.iface_name,
-                                                                 **dev.link_conf.__dict__))
+                                    DrvScpiSerialConfC(port= dev.iface_name,
+                                                        **dev.link_conf.__dict__))
                     self.mapping_load = dev.mapping_names
                 elif self.device_type is CyclerDataDeviceTypeE.BISOURCE:
                     self.bisource : DrvEaDeviceC = DrvEaDeviceC(
-                                              DrvScpiSerialConfC(port= dev.iface_name,
-                                                                 **dev.link_conf.__dict__))
+                                DrvScpiSerialConfC(port= dev.iface_name,
+                                                    **dev.link_conf.__dict__))
                     self.mapping_bisource = dev.mapping_names
                 else:
                     log.error(f"The dessire device doesn't have type {self.device_type}")
@@ -291,7 +291,7 @@ class MidDabsPwrDevC(MidDabsPwrMeterC):
             except ValueError as err:
                 res = CyclerDataDeviceStatusE.INTERNAL_ERROR
         elif self.device_type in (CyclerDataDeviceTypeE.SOURCE, CyclerDataDeviceTypeE.LOAD):
-            if ((actual_voltage is not None and actual_voltage<volt_ref) and
+            if ((actual_voltage is not None and actual_voltage<volt_ref*1.1) and
                 (actual_current is not None and actual_current>=0)):
                 self.load.disable()
                 try:
