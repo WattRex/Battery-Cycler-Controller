@@ -20,7 +20,7 @@ if __name__ == '__main__':
 log: Logger = sys_log_logger_get_module_logger(__name__)
 
 sys.path.append(os.getcwd()+'/code/cu_manager/')
-from src.wattrex_battery_cycler_cu_manager.detect import DetectorC
+from src.wattrex_cycler_cu_manager.detect import DetectorC
 # from can_sniffer import DrvCanNodeC
 
 # can_working_flag = Event()
@@ -35,5 +35,9 @@ for epc in detector.det_epc:
     log.info(f"Detected epc: {epc.link_name}")
 for bms in detector.det_bms:
     log.info(f"Detected bms: {bms.link_name}")
-for ea in detector.det_ea:
-    log.info(f"Detected bms: {ea.link_name}")
+for ea in detector.det_source:
+    log.info(f"Detected ea: {ea.link_name}")
+for load in detector.det_load:
+    log.info(f"Detected load: {load.link_name}")
+for bisource in detector.det_bisource:
+    log.info(f"Detected bisource: {bisource.link_name}")

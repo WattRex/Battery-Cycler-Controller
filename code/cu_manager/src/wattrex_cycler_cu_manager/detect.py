@@ -38,16 +38,16 @@ from .context import (DEFAULT_TX_CAN_NAME, DEFAULT_TX_SCPI_NAME, DEFAULT_RX_CAN_
 #######################              CLASS               #######################
 all_devices = {
     'EPC': (0x13, 0x80), # Range of can ids for the registered EPCs (0x80 excluded, max value 0x7F)
-    'EA': {}, # Dict with info from the ea devices registered
-    'RS': {} # Dict with info from the rs devices registered
 }
 ## The models corresponds to the bits of the serial number to know which sensor has.
 comp_dev = {
-    'EPC': {'Model_0': 2, 'Model_1': 4, 'Model_2': 5, 'Model_3': 6, 'Model_4': 7, 'Model_5': 8,
-            'Model_6': 9, 'Model_7': 10, 'Model_8': 11, 'Model_9': 12, 'Model_A': 13,
-            'Model_B': 14, 'Model_C': 15, 'Model_D': 16, 'Model_E': 17},
-    'EA': {'VIRTUAL': 1},
-    'RS': {},
+    'EPC': {'Model_0': 2},
+            ## Future models of EPCs
+            # , 'Model_1': 4, 'Model_2': 5, 'Model_3': 6, 'Model_4': 7, 'Model_5': 8,
+            # 'Model_6': 9, 'Model_7': 10, 'Model_8': 11, 'Model_9': 12, 'Model_A': 13,
+            # 'Model_B': 14, 'Model_C': 15, 'Model_D': 16, 'Model_E': 17},
+    'EA': {'VIRTUAL': 1, 'PS_2042-20_B': 4, 'PSB_10200-420': 6},
+    'RS': {'RS-KEL103': 5},
     'BK': {},
     'BMS': 3,
     'FLOW': {},
@@ -61,27 +61,33 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         self.__cu_id = cu_id
         self.det_bms: List[CommDataDeviceC] = []
         self.det_epc: List[CommDataDeviceC] = []
-        self.det_ea: List[CommDataDeviceC] = []
-        self.det_rs: List[CommDataDeviceC] = []
+        self.det_source: List[CommDataDeviceC] = []
+        self.det_bisource: List[CommDataDeviceC] = []
+        self.det_load: List[CommDataDeviceC] = []
         self.det_flow: List[CommDataDeviceC] = []
+        self.det_bk: List[CommDataDeviceC] = []
         self.found_scpi_devs: Dict[str, Dict[str, bool]] = {
             ## The bool indicates if the device has responded
             ## Example: 'source': {'EA_1': False, 'EA_2': False},
+            'bisource': {},
             'source': {},
-            'load': {},
+            'loads': {},
             'bk': {},
             'flow': {},
         }
-        self.__reqs_flow: bool = False #pylint: disable= unused-private-member
+        self.__reqs_flow: bool = False
         self.__reqs_sources: bool = False
-        self.__reqs_rs: bool = False #pylint: disable= unused-private-member
+        self.__reqs_bisources: bool = False
+        self.__reqs_loads: bool = False
         self.__reqs_epc: bool = False
-        ## Create the queues for CAN messages # TODO: Uncomment when can is working #pylint: disable= fixme
-        self.__tx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_CAN_NAME)
-        self.__rx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_RX_CAN_NAME,
-                                                        max_message_size= 400)
+        self.__reqs_bk: bool = False
+
+
+        ## Create the queues for CAN messages
+        self.__tx_can: SysShdIpcChanC
+        self.__rx_can: SysShdIpcChanC
         ## Create the queues for SCPI messages
-        self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
+        self.__tx_scpi: SysShdIpcChanC
         self.__rx_scpi : Dict[str, SysShdIpcChanC] = {}
 
     def process_detection(self) -> List[CommDataDeviceC]:
@@ -91,14 +97,17 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         ## Reset detected devices lists
         self.__reset_detected()
         self.__find_scpi_devs()
-        ## Add filter to the can bus to receive all messages # TODO: Uncomment when can is working #pylint: disable= fixme
+        ## Add filter to the can bus to receive all messages
         self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.ADD_FILTER,
                                         payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
                                                                 chan_name=DEFAULT_RX_CAN_NAME)))
-        ## Request detections
+        # ## Request detections
         self.detect_epc()
-        ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
-        # self.detect_sources()
+        self.detect_sources()
+        self.detect_bisources()
+        self.detect_flow()
+        self.detect_loads()
+        self.detect_bk()
         log.info("START DETECT DEVICES LOOP")
         initial_time = time()
         while (initial_time + DEFAULT_DETECT_TIMEOUT) > time():
@@ -112,35 +121,49 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
                     self.detect_epc(msg_can)
                 else:
                     log.error(f"Unknown device with can id {msg_can.addr}")
-            ## TODO: Uncomment when scpi devices are implemented #pylint: disable= fixme
-            # self.detect_sources()
-            # while not self.__rx_scpi.is_empty():
-            #     msg: DrvScpiCmdDataC = self.__rx_scpi.receive_data()
-            #     # TODO: Add detection of ea, rs and flow
-            #     if msg.data_type == DrvScpiCmdTypeE.MESSAGE:
-            #         pass
+            ## Process detection of scpi devices
+            self.detect_sources()
+            self.detect_bisources()
+            self.detect_flow()
+            self.detect_loads()
+            self.detect_bk()
 
-        ## TODO: Uncomment when can is working
         self.__tx_can.send_data(DrvCanCmdDataC(data_type= DrvCanCmdTypeE.REMOVE_FILTER,
                                         payload= DrvCanFilterC(addr= 0x000, mask= 0x000,
                                                 chan_name=DEFAULT_RX_CAN_NAME)))
-        return self.det_bms + self.det_epc + self.det_ea + self.det_rs + self.det_flow
+
+        ## Close the channels
+        self.close()
+        all_devices_detected  = self.det_bms + self.det_epc + self.det_source + self.det_load +\
+                                self.det_flow + self.det_bisource
+        return all_devices_detected
 
     def __reset_detected(self) -> None:
         '''
         Reset the detection of connected devices.
         '''
+        ## Create the queues for CAN messages
+        self.__tx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_CAN_NAME)
+        self.__rx_can: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_RX_CAN_NAME,
+                                                        max_message_size= 400)
+        ## Create the queues for SCPI messages
+        self.__tx_scpi: SysShdIpcChanC = SysShdIpcChanC(name= DEFAULT_TX_SCPI_NAME)
+
         self.det_bms.clear()
+        self.det_bisource.clear()
         self.det_epc.clear()
-        self.det_ea.clear()
-        self.det_rs.clear()
+        self.det_source.clear()
+        self.det_load.clear()
         self.det_flow.clear()
+        self.det_bk.clear()
         for dev_dict,_ in self.found_scpi_devs.items():
             self.found_scpi_devs[dev_dict].clear() #pylint: disable= unnecessary-dict-index-lookup
         self.__reqs_flow = False #pylint: disable= unused-private-member
         self.__reqs_sources = False
-        self.__reqs_rs = False #pylint: disable= unused-private-member
+        self.__reqs_bisources = False
+        self.__reqs_loads = False #pylint: disable= unused-private-member
         self.__reqs_epc = False
+        self.__reqs_bk = False
 
     def __find_scpi_devs(self) -> None:
         '''
@@ -193,6 +216,67 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
                                            link_name= can_id)
                 self.det_epc.append(dev_data)
 
+    def detect_loads(self):
+        '''
+        Detect the sources connected to the cycler.
+        '''
+        if not self.__reqs_loads: #pylint: disable= too-many-nested-blocks
+            ## Create a queue for each SCPI connected device
+            for load_name in self.found_scpi_devs['loads']:
+                try:
+                    self.__rx_scpi[load_name] = SysShdIpcChanC(
+                                                name= DEFAULT_SCPI_QUEUE_PREFIX+load_name,
+                                                max_message_size=400)
+                except Exception as exc:
+                    log.error(f"Error creating queue for load: {exc}")
+                    self.close()
+                    raise exc
+                self.__tx_scpi.send_data(DrvScpiCmdDataC(
+                                            data_type=DrvScpiCmdTypeE.ADD_DEV,
+                                            port=DEFAULT_DEV_PATH+'loads/'+load_name,
+                                            rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+load_name,
+                                            payload=DrvScpiSerialConfC(
+                                                port=DEFAULT_DEV_PATH+'loads/'+load_name,
+                                                separator='\n', timeout = 0.8,
+                                                write_timeout = 0.8, parity = PARITY_ODD,
+                                                baudrate = 115200)
+                                            )
+                                        )
+                ## Request info for the source
+                if load_name.startswith('RS'):
+                    self.__tx_scpi.send_data(DrvScpiCmdDataC(data_type=DrvScpiCmdTypeE.WRITE_READ,
+                                                port=DEFAULT_DEV_PATH+'loads/'+load_name,
+                                                payload="*IDN?"))
+            self.__reqs_loads = True
+        else:
+            for load_name in self.found_scpi_devs['loads']:
+                if not self.found_scpi_devs['loads'][load_name]:
+                    ## Try to read its queue for response
+                    msg_load: DrvScpiCmdDataC|None = \
+                                            self.__rx_scpi[load_name].receive_data_unblocking()
+                    if msg_load is not None:
+                        if load_name.startswith('RS'):
+                            try:
+                                load_serial_number = msg_load.payload[0].split(':')[-1]
+                                load_model = msg_load.payload[0].split(' ')[0]
+                            except Exception as exc:
+                                log.error((f"Error parsing loads response: {exc} | "
+                                        f"Response received (__dict__): {msg_load.__dict__}"))
+                            else:
+                                log.critical(f"Load found: {msg_load.__dict__}")
+                                self.det_load.append(CommDataDeviceC(cu_id=self.__cu_id,
+                                                            comp_dev_id= comp_dev['RS'][load_model],
+                                                            serial_number=load_serial_number,
+                                                            link_name=load_name))
+
+                        self.found_scpi_devs['loads'][load_name] = True
+                        self.__tx_scpi.send_data(DrvScpiCmdDataC(
+                                                data_type=DrvScpiCmdTypeE.DEL_DEV,
+                                                port=DEFAULT_DEV_PATH+'loads/'+load_name,
+                                                rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+load_name)
+                                        )
+                        self.__rx_scpi.pop(load_name).terminate()
+
     def detect_sources(self):
         '''
         Detect the sources connected to the cycler.
@@ -200,20 +284,23 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         if not self.__reqs_sources: #pylint: disable= too-many-nested-blocks
             ## Create a queue for each SCPI connected device
             for source_name in self.found_scpi_devs['source']:
-                self.__rx_scpi[source_name] = SysShdIpcChanC(
+                try:
+                    self.__rx_scpi[source_name] = SysShdIpcChanC(
                                                 name= DEFAULT_SCPI_QUEUE_PREFIX+source_name,
-                                                max_message_size=400)
+                                                max_message_size=500)
+                except Exception as exc:
+                    log.error(f"Error creating queue for source: {exc}")
+                    self.close()
+                    raise exc
                 self.__tx_scpi.send_data(DrvScpiCmdDataC(
-                                                data_type=DrvScpiCmdTypeE.ADD_DEV,
-                                                port=DEFAULT_DEV_PATH+'source/'+source_name,
-                                                rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+source_name,
-                                                payload=DrvScpiSerialConfC(
-                                                        port=DEFAULT_DEV_PATH+'source/'+source_name,
-                                                        separator='\n', timeout = 0.8,
-                                                        write_timeout = 0.8, parity = PARITY_ODD,
-                                                        baudrate = 9600)
-                                                )
-                                        )
+                                data_type=DrvScpiCmdTypeE.ADD_DEV,
+                                port=DEFAULT_DEV_PATH+'source/'+source_name,
+                                rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+source_name,
+                                payload=DrvScpiSerialConfC(
+                                        port=DEFAULT_DEV_PATH+'source/'+source_name,
+                                        separator='\n', timeout = 0.8,
+                                        write_timeout = 0.8, parity = PARITY_ODD,
+                                        baudrate = 9600)))
                 ## Request info for the source
                 if source_name.startswith('EA'):
                     self.__tx_scpi.send_data(DrvScpiCmdDataC(data_type=DrvScpiCmdTypeE.WRITE_READ,
@@ -236,7 +323,7 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
                                            f"Response received (__dict__): {msg_source.__dict__}"))
                             else:
                                 log.critical(f"EA found: {msg_source.__dict__}")
-                                self.det_ea.append(CommDataDeviceC(cu_id=self.__cu_id,
+                                self.det_source.append(CommDataDeviceC(cu_id=self.__cu_id,
                                                             comp_dev_id= comp_dev['EA'][ea_model],
                                                             serial_number=ea_serial_number,
                                                             link_name=source_name))
@@ -245,13 +332,88 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
                         self.__tx_scpi.send_data(DrvScpiCmdDataC(
                                                 data_type=DrvScpiCmdTypeE.DEL_DEV,
                                                 port=DEFAULT_DEV_PATH+'source/'+source_name,
-                                                )
+                                                rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+source_name)
                                         )
+                        self.__rx_scpi.pop(source_name).terminate()
 
-    def detect_flow(self, msg: DrvScpiCmdDataC):
+    def detect_bisources(self):
+        '''
+        Detect the sources connected to the cycler.
+        '''
+        if not self.__reqs_bisources: #pylint: disable= too-many-nested-blocks
+            ## Create a queue for each SCPI connected device
+            for bisource_name in self.found_scpi_devs['bisource']:
+                try:
+                    self.__rx_scpi[bisource_name] = SysShdIpcChanC(
+                                                name= DEFAULT_SCPI_QUEUE_PREFIX+bisource_name,
+                                                max_message_size=400)
+                except Exception as exc:
+                    log.error(f"Error creating queue for bisource: {exc}")
+                    self.close()
+                    raise exc
+                self.__tx_scpi.send_data(DrvScpiCmdDataC(
+                                            data_type=DrvScpiCmdTypeE.ADD_DEV,
+                                            port=DEFAULT_DEV_PATH+'bisource/'+bisource_name,
+                                            rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+bisource_name,
+                                            payload=DrvScpiSerialConfC(
+                                                port=DEFAULT_DEV_PATH+'bisource/'+bisource_name,
+                                                separator='\n', timeout = 0.8,
+                                                write_timeout = 0.8, parity = PARITY_ODD,
+                                                baudrate = 9600)
+                                            )
+                                        )
+                ## Request info for the source
+                if bisource_name.startswith('EPS'):
+                    self.__tx_scpi.send_data(DrvScpiCmdDataC(data_type=DrvScpiCmdTypeE.WRITE_READ,
+                                                port=DEFAULT_DEV_PATH+'bisource/'+bisource_name,
+                                                payload=":*IDN?"))
+            self.__reqs_bisources = True
+        else:
+            for bisource_name in self.found_scpi_devs['bisource']:
+                if not self.found_scpi_devs['bisource'][bisource_name]:
+                    ## Try to read its queue for response
+                    msg_bisource: DrvScpiCmdDataC|None = \
+                                            self.__rx_scpi[bisource_name].receive_data_unblocking()
+                    if msg_bisource is not None:
+                        if bisource_name.startswith('EPS'):
+                            try:
+                                bi_serial_number = msg_bisource.payload[0].split(', ')[2]
+                                bi_model = msg_bisource.payload[0].split(', ')[1].replace(' ', '_')
+                            except Exception as exc:
+                                log.error((f"Error parsing Bisource response: {exc} | "
+                                        f"Response received (__dict__): {msg_bisource.__dict__}"))
+                            else:
+                                log.critical(f"BiSource found: {msg_bisource.__dict__}")
+                                self.det_bisource.append(CommDataDeviceC(cu_id=self.__cu_id,
+                                                            comp_dev_id= comp_dev['EA'][bi_model],
+                                                            serial_number=bi_serial_number,
+                                                            link_name=bisource_name))
+
+                        self.found_scpi_devs['bisource'][bisource_name] = True
+                        self.__tx_scpi.send_data(DrvScpiCmdDataC(
+                                            data_type=DrvScpiCmdTypeE.DEL_DEV,
+                                            port=DEFAULT_DEV_PATH+'bisource/'+bisource_name,
+                                            rx_chan_name=DEFAULT_SCPI_QUEUE_PREFIX+bisource_name)
+                                        )
+                        self.__rx_scpi.pop(bisource_name).terminate()
+
+    def detect_flow(self):
         '''
         Detect the flow connected to the cycler.
         '''
+        if not self.__reqs_flow:
+            self.__reqs_flow = True
+        else:
+            pass
+
+    def detect_bk(self):
+        '''
+        Detect the bk connected to the cycler.
+        '''
+        if not self.__reqs_bk:
+            self.__reqs_bk = True
+        else:
+            pass
 
     def __parse_epc_msg(self, msg: DrvCanMessageC) -> Tuple[int, str, bitarray]:
         msg_bits = int2ba(int.from_bytes(msg.payload,'little'),length=64, endian='little')
@@ -273,10 +435,10 @@ class DetectorC: #pylint: disable= too-many-instance-attributes
         Close used ipc channels
         '''
         ## Closing conections with queues
+        if isinstance(self.__rx_can, SysShdIpcChanC):
+            self.__rx_can.terminate()
         if isinstance(self.__tx_can, SysShdIpcChanC):
             self.__tx_can.close()
         if isinstance(self.__tx_scpi, SysShdIpcChanC):
             self.__tx_scpi.close()
-        if isinstance(self.__rx_can, SysShdIpcChanC):
-            self.__rx_can.terminate()
         log.critical("Closing channels used by detector")
