@@ -148,11 +148,12 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                     if att_name == 'mode':
                         setattr(instruction, att_name,
                                 CyclerDataPwrModeE(MAPPING_INSTR_MODES[getattr(inst_res,db_name)]))
-                    elif instruction.mode != CyclerDataPwrModeE.WAIT and att_name == 'limit_type':
+                    elif (instruction.mode != CyclerDataPwrModeE.DISABLE and
+                          att_name == 'limit_type'):
                         setattr(instruction, att_name,
                             CyclerDataPwrLimitE(MAPPING_INSTR_LIMIT_MODES[getattr(inst_res,db_name)]
                                                 ))
-                    elif instruction.mode != CyclerDataPwrModeE.WAIT and att_name == 'limit_ref':
+                    elif instruction.mode != CyclerDataPwrModeE.DISABLE and att_name == 'limit_ref':
                         setattr(instruction, att_name, getattr(inst_res,db_name))
                     else:
                         setattr(instruction, att_name, getattr(inst_res,db_name))
@@ -223,6 +224,23 @@ class MidStrFacadeC: #pylint: disable= too-many-instance-attributes
                 if att_name == "device_type":
                     setattr(device, att_name, CyclerDataDeviceTypeE(getattr(comp_dev_res,db_name)))
                     device.check_power_device()
+                    log.critical(device.device_type)
+                elif att_name == "iface_name":
+                    if comp_dev_res.DeviceType is DrvDbDeviceTypeE.SOURCE.value:
+                        setattr(device, att_name,
+                                "/dev/wattrex/source/"+getattr(detected_dev_res,db_name))
+                    elif comp_dev_res.DeviceType is DrvDbDeviceTypeE.LOAD.value:
+                        setattr(device, att_name,
+                                "/dev/wattrex/loads/"+getattr(detected_dev_res,db_name))
+                    elif comp_dev_res.DeviceType is DrvDbDeviceTypeE.BISOURCE.value:
+                        setattr(device, att_name,
+                                "/dev/wattrex/bisource/"+getattr(detected_dev_res,db_name))
+                    elif comp_dev_res.DeviceType is DrvDbDeviceTypeE.FLOW.value:
+                        setattr(device, att_name,
+                                "/dev/wattrex/flow/"+getattr(detected_dev_res,db_name))
+                    elif comp_dev_res.DeviceType is DrvDbDeviceTypeE.BK.value:
+                        setattr(device, att_name,
+                                "/dev/wattrex/bk/"+getattr(detected_dev_res,db_name))
                 elif db_name in detected_dev_res.__dict__:
                     setattr(device, att_name, getattr(detected_dev_res,db_name))
                 else:
