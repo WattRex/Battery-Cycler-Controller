@@ -223,12 +223,12 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
             else:
                 # Before reading the next instruction,
                 # check if the actual instruction is running
-                log.debug(("Actual mode is instruction mode: "
-                           f"{self.actual_inst.mode is self.local_status.pwr_mode}"))
-                log.debug(f"Actual instr id: {self.actual_inst.instr_id}")
                 if (self.actual_inst.instr_id is not None and
                     self.__last_mode is not CyclerDataPwrModeE.DISABLE):
                     status = CyclerDataExpStatusE.RUNNING
+                    log.debug((f"Actual mode {self.local_status.pwr_mode} is instruction mode "
+                            f"{self.actual_inst.mode}: {self.actual_inst.mode is self.local_status.pwr_mode}"))
+                    log.debug(f"Actual instr id: {self.actual_inst.instr_id}")
                     if self.actual_inst.mode is self.local_status.pwr_mode:
                         #Check if the instruction limits has been reached
                         inst_finished = self.__instruction_limit()
@@ -252,6 +252,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
                         status = CyclerDataExpStatusE.RUNNING
                     else:
                         self.actual_inst.instr_id = None
+                        self.pwr_dev.disable()
                         self.__last_mode = CyclerDataPwrModeE.DISABLE
                         status = CyclerDataExpStatusE.FINISHED
         else:
@@ -265,6 +266,7 @@ class MidPwrControlC: #pylint: disable= too-many-instance-attributes
         """
         res = False
         ## If the limit is not active, activate it
+        log.debug(f"Instr limit is: {self.actual_inst.limit_type}")
         if not self.__limit_active:
             if self.actual_inst.limit_type is CyclerDataPwrLimitE.TIME:
                 self.instr_init_time = int(time_ns()*1e-6)
